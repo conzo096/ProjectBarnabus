@@ -1,5 +1,9 @@
 #pragma once
 
+//#include <GL\glew.h>
+//#include <glm\glm.hpp>
+//#include <GLFW\glfw3.h>
+
 namespace BarnabusGameEngine
 {
 	class BarnabusGameEngine
@@ -13,5 +17,7 @@ namespace BarnabusGameEngine
 	public:
 		bool StartGameEngine();
 
+	protected:
+		//GLFWwindow* window;
 	};
 }
