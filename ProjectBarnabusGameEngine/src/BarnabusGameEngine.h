@@ -1,8 +1,10 @@
 #pragma once
 
-//#include <GL\glew.h>
-//#include <glm\glm.hpp>
-//#include <GLFW\glfw3.h>
+#define GLEW_STATIC
+
+#include <GL\glew.h>
+#include <glm\glm.hpp>
+#include <GLFW\glfw3.h>
 
 namespace BarnabusGameEngine
 {
@@ -18,6 +20,6 @@ namespace BarnabusGameEngine
 		bool StartGameEngine();
 
 	protected:
-		//GLFWwindow* window;
+		GLFWwindow* window;
 	};
 }
