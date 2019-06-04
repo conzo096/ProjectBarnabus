@@ -1,5 +1,5 @@
 #include <iostream>
-#include "BarnabusGameEngine.h"
+#include "GameEngine/BarnabusGameEngine.h"
 
 int main()
 {
