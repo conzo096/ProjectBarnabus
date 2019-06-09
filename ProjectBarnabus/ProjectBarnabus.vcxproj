@@ -20,10 +20,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GameEngine\BarnabusGameEngine.cpp" />
+    <ClCompile Include="src\GameEngine\Game.cpp" />
+    <ClCompile Include="src\Game\BarnabusGame.cpp" />
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\GameEngine\BarnabusGameEngine.h" />
+    <ClInclude Include="src\GameEngine\Game.h" />
+    <ClInclude Include="src\GameEngine\Singleton.h" />
+    <ClInclude Include="src\Game\BarnabusGame.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
