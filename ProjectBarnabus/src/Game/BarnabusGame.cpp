@@ -4,7 +4,7 @@
 #include <GLFW\glfw3.h>
 #include "BarnabusGame.h"
 #include "../GameEngine/BarnabusGameEngine.h"
-
+#include "../GameEngine/FreeCamera.h"
 BarnabusGame::BarnabusGame()
 {
 
@@ -17,16 +17,24 @@ BarnabusGame::~BarnabusGame()
 
 bool BarnabusGame::LoadGameContent()
 {
+	auto cameraComponent = std::make_unique<FreeCamera>(70);
+	camera.AddComponent(std::move(cameraComponent));
 	return true;
 }
 
 bool BarnabusGame::Update(double deltaTime)
 {
+	camera.Update(deltaTime);
 	// Close the window if it has been asked too.
-	if (BarnabusGameEngine::Get().ShouldWindowClose())
+	if (BarnabusGameEngine::Get().ShouldWindowClose() || glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	{
 		return false;
+	}
 	else
+	{
 		return true;
+	}
+
 	return false;
 }
 

@@ -13,6 +13,12 @@
     <ClCompile Include="src\GameEngine\Game.cpp">
       <Filter>Source Files\GameEngine</Filter>
     </ClCompile>
+    <ClCompile Include="src\GameEngine\Entity.cpp">
+      <Filter>Source Files\GameEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\FreeCamera.cpp">
+      <Filter>Source Files\GameEngine\Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -36,6 +42,12 @@
     <Filter Include="Source Files\Game">
       <UniqueIdentifier>{ef758e9c-6003-4b69-a515-692bce125ed8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\GameEngine\Camera">
+      <UniqueIdentifier>{6a06b53a-755b-471c-9081-dfc725408d10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameEngine\Camera">
+      <UniqueIdentifier>{f9b78e22-a4fc-4771-b914-c94dda599314}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\GameEngine\BarnabusGameEngine.h">
@@ -49,6 +61,18 @@
     </ClInclude>
     <ClInclude Include="src\GameEngine\Singleton.h">
       <Filter>Header Files\GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Entity.h">
+      <Filter>Header Files\GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Transform.h">
+      <Filter>Header Files\GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Camera.h">
+      <Filter>Header Files\GameEngine\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\FreeCamera.h">
+      <Filter>Header Files\GameEngine\Camera</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

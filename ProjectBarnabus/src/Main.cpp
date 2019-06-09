@@ -9,7 +9,6 @@ int main()
 
 	BarnabusGameEngine::Get().SetGame(myGame);
 	BarnabusGameEngine::Get().StartGame();
-	system("pause");
-	
+
 	return 0;
 }
