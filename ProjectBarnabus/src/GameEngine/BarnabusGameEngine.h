@@ -19,13 +19,16 @@ class BarnabusGameEngine : public Singleton<BarnabusGameEngine>
 {
 private:
 	bool InitialiseGameEngine();
-protected:
 public:
 	bool StartGame();
+
+	GLFWwindow* GetWindow();
+	void SetGame(Game* newGame);
+	int ShouldWindowClose();
+private:
+	bool running = true;
 	Game* game;
 	GLFWwindow* window;
-private:
-	bool applicationActive;
 protected:
 	double time;
 	double lastTime;

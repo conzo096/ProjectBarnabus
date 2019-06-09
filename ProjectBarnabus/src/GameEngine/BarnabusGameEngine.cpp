@@ -2,6 +2,21 @@
 #include <iostream>
 #include <time.h>  
 
+GLFWwindow* BarnabusGameEngine::GetWindow()
+{
+	return window;
+}
+
+void BarnabusGameEngine::SetGame(Game* newGame)
+{
+	game = newGame;
+}
+
+int BarnabusGameEngine::ShouldWindowClose()
+{
+	return glfwWindowShouldClose(window);
+}
+
 bool BarnabusGameEngine::InitialiseGameEngine()
 {
 	std::cout << "InitialiseGameEngine" << std::endl;
@@ -46,32 +61,21 @@ bool BarnabusGameEngine::InitialiseGameEngine()
 
 bool BarnabusGameEngine::StartGame()
 {
-	applicationActive = InitialiseGameEngine();
-	if (!applicationActive)
-	{
-		std::cout << "Game engine failed to load!" << std::endl;
-	}
+	InitialiseGameEngine();
+	game->LoadGameContent();
 
-	if (applicationActive)
-	{
-		applicationActive = game->LoadGameContent();
-		if (!applicationActive)
-		{
-			std::cout << "Game content was not able to be loaded!" << std::endl;
-		}
-	}
-
-	while (applicationActive)
+	while (running)
 	{
 		double deltaTime = (clock() - lastTime) / CLOCKS_PER_SEC;
 		time += deltaTime * 60;
 		lastTime = clock();
 
-		applicationActive = game->Update(deltaTime);
-		if (applicationActive)
-		{
-			applicationActive = game->Render(deltaTime);
-		}
+		running = game->Update(deltaTime);
+		game->Render(deltaTime);
+
+		// process events.
+		glfwPollEvents();
+		
 	}
 	glfwTerminate();
 	return true;
