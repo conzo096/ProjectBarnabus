@@ -19,6 +19,9 @@
     <ClCompile Include="src\GameEngine\FreeCamera.cpp">
       <Filter>Source Files\GameEngine\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="src\GameEngine\GLShader.cpp">
+      <Filter>Source Files\GameEngine\Shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -48,6 +51,15 @@
     <Filter Include="Header Files\GameEngine\Camera">
       <UniqueIdentifier>{f9b78e22-a4fc-4771-b914-c94dda599314}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\GameEngine\Shader">
+      <UniqueIdentifier>{0e415067-cbb1-43f9-99e6-573fe22700cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameEngine\Shader">
+      <UniqueIdentifier>{a531f362-76d8-4fd9-ae5b-8f43acd23fe4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders">
+      <UniqueIdentifier>{fef1edcf-0c09-485a-bed7-06e47e22ee84}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\GameEngine\BarnabusGameEngine.h">
@@ -74,5 +86,16 @@
     <ClInclude Include="src\GameEngine\FreeCamera.h">
       <Filter>Header Files\GameEngine\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="src\GameEngine\GLShader.h">
+      <Filter>Header Files\GameEngine\Shader</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\Shaders\Basic.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\Shaders\Basic.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

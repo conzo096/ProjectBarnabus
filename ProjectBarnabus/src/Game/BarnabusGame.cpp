@@ -19,6 +19,7 @@ bool BarnabusGame::LoadGameContent()
 {
 	auto cameraComponent = std::make_unique<FreeCamera>(70);
 	camera.AddComponent(std::move(cameraComponent));
+
 	return true;
 }
 

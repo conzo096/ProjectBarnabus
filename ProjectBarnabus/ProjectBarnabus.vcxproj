@@ -23,6 +23,7 @@
     <ClCompile Include="src\GameEngine\Entity.cpp" />
     <ClCompile Include="src\GameEngine\FreeCamera.cpp" />
     <ClCompile Include="src\GameEngine\Game.cpp" />
+    <ClCompile Include="src\GameEngine\GLShader.cpp" />
     <ClCompile Include="src\Game\BarnabusGame.cpp" />
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
@@ -32,9 +33,14 @@
     <ClInclude Include="src\GameEngine\Entity.h" />
     <ClInclude Include="src\GameEngine\FreeCamera.h" />
     <ClInclude Include="src\GameEngine\Game.h" />
+    <ClInclude Include="src\GameEngine\GLShader.h" />
     <ClInclude Include="src\GameEngine\Singleton.h" />
     <ClInclude Include="src\GameEngine\Transform.h" />
     <ClInclude Include="src\Game\BarnabusGame.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\Shaders\Basic.frag" />
+    <None Include="res\Shaders\Basic.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
