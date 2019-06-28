@@ -20,6 +20,7 @@ public:
 	bool AddShaderFromFile(const char* fileName, GLSLSHADERTYPE type);
 	bool Link();
 	bool IsLinked();
+	void CreateProgram();
 	void Use();
 	void SetUniform(const char* name, const float val);
 	void SetUniform(const char* name, const int val);

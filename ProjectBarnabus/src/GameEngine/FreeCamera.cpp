@@ -73,7 +73,7 @@ void FreeCamera::Update(double deltaTime)
 	glfwGetCursorPos(BarnabusGameEngine::Get().GetWindow(), &cursorX, &cursorY);
 }
 
-void FreeCamera::Move(CameraMovement direction, float dist)
+void FreeCamera::Move(CameraMovement direction, double dist)
 {
 	switch (direction)
 	{

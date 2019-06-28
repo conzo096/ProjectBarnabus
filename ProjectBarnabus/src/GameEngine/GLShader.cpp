@@ -2,11 +2,10 @@
 
 #include <fstream>
 #include <vector>
-
+#include <iostream>
 
 GLShader::GLShader() 
 {
-	program = glCreateProgram();
 }
 
 GLShader::~GLShader()
@@ -50,12 +49,12 @@ bool GLShader::AddShaderFromFile(const char* fileName, GLSLSHADERTYPE type)
 			//The maxLength includes the NULL character
 			std::vector<GLchar> infoLog(maxLength);
 			glGetShaderInfoLog(vertexShader, maxLength, &maxLength, &infoLog[0]);
+			std::cout << std::string(infoLog.begin(), infoLog.end());
 			//We don't need the shader anymore.
 			glDeleteShader(vertexShader);
 			return false;
 		}
 		glAttachShader(program, vertexShader);
-//		glDeleteShader(vertexShader);
 	}
 	else if (type == FRAGMENT)
 	{
@@ -72,12 +71,12 @@ bool GLShader::AddShaderFromFile(const char* fileName, GLSLSHADERTYPE type)
 			//The maxLength includes the NULL character
 			std::vector<GLchar> infoLog(maxLength);
 			glGetShaderInfoLog(fragmentShader, maxLength, &maxLength, &infoLog[0]);
+			std::cout << std::string(infoLog.begin(), infoLog.end());
 			//We don't need the shader anymore.
 			glDeleteShader(fragmentShader);
 			return false;
 		}
 		glAttachShader(program, fragmentShader);
-//		glDeleteShader(fragmentShader);
 	}
 	// Need to apply check to test if it is geometry.
 	else if (type == GEOMETRY)
@@ -98,6 +97,7 @@ bool GLShader::AddShaderFromFile(const char* fileName, GLSLSHADERTYPE type)
 			//The maxLength includes the NULL character
 			std::vector<GLchar> infoLog(maxLength);
 			glGetShaderInfoLog(geometryShader, maxLength, &maxLength, &infoLog[0]);
+			std::cout << std::string(infoLog.begin(), infoLog.end());
 			//We don't need the shader anymore.
 			glDeleteShader(geometryShader);
 			return false;
@@ -111,14 +111,15 @@ bool GLShader::AddShaderFromFile(const char* fileName, GLSLSHADERTYPE type)
 bool GLShader::Link()
 {
 	glLinkProgram(program);
-	GLint isLinked = 0;
-	glGetProgramiv(program, GL_LINK_STATUS, static_cast<int *>(&isLinked));
+	GLint isLinked;
+	glGetProgramiv(program, GL_LINK_STATUS, &isLinked);
 	if (isLinked == GL_FALSE)
 	{
 		GLint maxLength = 0;
 		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength);
 		std::vector<GLchar> infoLog(maxLength);
 		glGetProgramInfoLog(program, maxLength, &maxLength, &infoLog[0]);
+		std::cout << std::string(infoLog.begin(), infoLog.end());
 		//We don't need the program anymore.
 		glDeleteProgram(program);
 		return false;
@@ -134,6 +135,11 @@ bool GLShader::IsLinked()
 	if (isLinked == GL_FALSE)
 		return false;
 	return true;
+}
+
+void GLShader::CreateProgram()
+{
+	program = glCreateProgram();
 }
 
 void GLShader::SetUniform(const char* name, float val)

@@ -1,17 +1,36 @@
 #version 440
 
-// Model view projection matrix
-uniform mat4 MVP;
+const int MAX_JOINTS = 50;//max joints allowed in a skeleton
+const int MAX_WEIGHTS = 3;//max number of joints that can affect a vertex
 
-layout (location = 0) in vec3 position;
-layout (location = 3) in vec2 tex_coord_in;
+//layout (location = 0) in vec3 in_position;
+//layout (location = 1) in vec2 in_textureCoords;
+//layout (location = 2) in vec3 in_normal;
+//layout (location = 3) in ivec3 in_jointIndices;
+//layout (location = 4) in vec3 in_weights;
 
-layout (location = 0) out vec2 tex_coord_out;
+//layout (location = 0) out vec2 pass_textureCoords;
+//layout (location = 1) out vec3 pass_normal;
+
+//uniform mat4 jointTransforms[MAX_JOINTS];
+//uniform mat4 projectionViewMatrix;
 
 void main()
 {
-	// Calculate screen position of vertex
-	gl_Position = vec4(position, 1.0);
-	// Output texture coordinate to fragement shader
-	tex_coord_out = tex_coord_in;
+//	vec4 totalLocalPos = vec4(0.0);
+//	vec4 totalNormal = vec4(0.0);
+	
+//	for(int i=0;i<MAX_WEIGHTS;i++)
+//	{
+//		mat4 jointTransform = jointTransforms[in_jointIndices[i]];
+//		vec4 posePosition = jointTransform * vec4(in_position, 1.0);
+//		totalLocalPos += posePosition * in_weights[i];
+		
+//		vec4 worldNormal = jointTransform * vec4(in_normal, 0.0);
+//		totalNormal += worldNormal * in_weights[i];
+//	}
+	
+	gl_Position = vec4(1.0); // * totalLocalPos;
+	//pass_normal = totalNormal.xyz;
+	//pass_textureCoords = in_textureCoords;
 }

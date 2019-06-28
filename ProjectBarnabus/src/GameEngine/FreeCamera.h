@@ -20,7 +20,7 @@ private:
 
 
 private:
-	void Move(CameraMovement direction, float dist);
+	void Move(CameraMovement direction, double dist);
 
 public:
 	// Create free camera

@@ -17,11 +17,15 @@
       <Filter>Source Files\GameEngine</Filter>
     </ClCompile>
     <ClCompile Include="src\GameEngine\FreeCamera.cpp">
-      <Filter>Source Files\GameEngine\Camera</Filter>
+      <Filter>Source Files\GameEngine\Components\Camera</Filter>
     </ClCompile>
     <ClCompile Include="src\GameEngine\GLShader.cpp">
       <Filter>Source Files\GameEngine\Shader</Filter>
     </ClCompile>
+    <ClCompile Include="src\GameEngine\ModelUtils.cpp">
+      <Filter>Source Files\GameEngine\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\AnimatedComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -45,12 +49,6 @@
     <Filter Include="Source Files\Game">
       <UniqueIdentifier>{ef758e9c-6003-4b69-a515-692bce125ed8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\GameEngine\Camera">
-      <UniqueIdentifier>{6a06b53a-755b-471c-9081-dfc725408d10}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\GameEngine\Camera">
-      <UniqueIdentifier>{f9b78e22-a4fc-4771-b914-c94dda599314}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\GameEngine\Shader">
       <UniqueIdentifier>{0e415067-cbb1-43f9-99e6-573fe22700cb}</UniqueIdentifier>
     </Filter>
@@ -59,6 +57,36 @@
     </Filter>
     <Filter Include="Resource Files\Shaders">
       <UniqueIdentifier>{fef1edcf-0c09-485a-bed7-06e47e22ee84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameEngine\Components">
+      <UniqueIdentifier>{b7907742-9000-4851-ae06-cc0b2065ef58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameEngine\Components\Camera">
+      <UniqueIdentifier>{f9b78e22-a4fc-4771-b914-c94dda599314}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameEngine\Components\Model">
+      <UniqueIdentifier>{905df795-57ec-4210-acac-736a3fcd753b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameEngine\Components">
+      <UniqueIdentifier>{dd3ef1f5-0e4c-4a4a-9c2d-88a52cafd345}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameEngine\Components\Camera">
+      <UniqueIdentifier>{6a06b53a-755b-471c-9081-dfc725408d10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameEngine\Components\Model">
+      <UniqueIdentifier>{5d59ef46-8f26-4c54-9492-d63512e631e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameEngine\Utils">
+      <UniqueIdentifier>{4519311f-b60a-4387-a3eb-5668e96888a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameEngine\Utils">
+      <UniqueIdentifier>{321dcdb9-138f-4ef0-b325-7aa2381933d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Models">
+      <UniqueIdentifier>{e78acbe7-9dab-4c84-a8d5-c622acba3760}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Models\Animated">
+      <UniqueIdentifier>{03920e20-70d9-4db1-bc48-5bb46d0421c9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -81,13 +109,22 @@
       <Filter>Header Files\GameEngine</Filter>
     </ClInclude>
     <ClInclude Include="src\GameEngine\Camera.h">
-      <Filter>Header Files\GameEngine\Camera</Filter>
+      <Filter>Header Files\GameEngine\Components\Camera</Filter>
     </ClInclude>
     <ClInclude Include="src\GameEngine\FreeCamera.h">
-      <Filter>Header Files\GameEngine\Camera</Filter>
+      <Filter>Header Files\GameEngine\Components\Camera</Filter>
     </ClInclude>
     <ClInclude Include="src\GameEngine\GLShader.h">
       <Filter>Header Files\GameEngine\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\AnimatedComponent.h">
+      <Filter>Header Files\GameEngine\Components\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\ModelUtils.h">
+      <Filter>Header Files\GameEngine\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Bone.h">
+      <Filter>Header Files\GameEngine\Components\Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -96,6 +133,9 @@
     </None>
     <None Include="res\Shaders\Basic.vert">
       <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\Models\AnimatedModels\model.dae">
+      <Filter>Resource Files\Models\Animated</Filter>
     </None>
   </ItemGroup>
 </Project>
