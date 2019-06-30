@@ -25,6 +25,7 @@ public:
 	GLFWwindow* GetWindow();
 	void SetGame(Game* newGame);
 	int ShouldWindowClose();
+
 private:
 	bool running = true;
 	Game* game;

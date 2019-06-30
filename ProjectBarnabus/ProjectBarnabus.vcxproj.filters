@@ -4,9 +4,6 @@
     <ClCompile Include="src\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameEngine\BarnabusGameEngine.cpp">
-      <Filter>Source Files\GameEngine</Filter>
-    </ClCompile>
     <ClCompile Include="src\Game\BarnabusGame.cpp">
       <Filter>Source Files\Game</Filter>
     </ClCompile>
@@ -22,10 +19,27 @@
     <ClCompile Include="src\GameEngine\GLShader.cpp">
       <Filter>Source Files\GameEngine\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameEngine\ModelUtils.cpp">
-      <Filter>Source Files\GameEngine\Utils</Filter>
+    <ClCompile Include="src\GameEngine\Joint.cpp">
+      <Filter>Source Files\GameEngine\Components\Model</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameEngine\AnimatedComponent.cpp" />
+    <ClCompile Include="src\GameEngine\AnimatedModel.cpp">
+      <Filter>Source Files\GameEngine\Components\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\MeshData.cpp">
+      <Filter>Source Files\GameEngine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Model.cpp">
+      <Filter>Source Files\GameEngine\Components\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Animator.cpp">
+      <Filter>Source Files\GameEngine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\BarnabusGameEngine.cpp">
+      <Filter>Source Files\GameEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Renderer.cpp">
+      <Filter>Source Files\GameEngine\Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -76,17 +90,17 @@
     <Filter Include="Source Files\GameEngine\Components\Model">
       <UniqueIdentifier>{5d59ef46-8f26-4c54-9492-d63512e631e1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\GameEngine\Utils">
-      <UniqueIdentifier>{4519311f-b60a-4387-a3eb-5668e96888a5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\GameEngine\Utils">
-      <UniqueIdentifier>{321dcdb9-138f-4ef0-b325-7aa2381933d6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource Files\Models">
       <UniqueIdentifier>{e78acbe7-9dab-4c84-a8d5-c622acba3760}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resource Files\Models\Animated">
       <UniqueIdentifier>{03920e20-70d9-4db1-bc48-5bb46d0421c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameEngine\Renderer">
+      <UniqueIdentifier>{cb25d239-cde2-47d6-b36d-bd5ef1526f90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameEngine\Renderer">
+      <UniqueIdentifier>{8aeb3186-3dbb-47a2-b8bb-d86c91be75f8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -117,14 +131,23 @@
     <ClInclude Include="src\GameEngine\GLShader.h">
       <Filter>Header Files\GameEngine\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="src\GameEngine\AnimatedComponent.h">
+    <ClInclude Include="src\GameEngine\Joint.h">
       <Filter>Header Files\GameEngine\Components\Model</Filter>
     </ClInclude>
-    <ClInclude Include="src\GameEngine\ModelUtils.h">
-      <Filter>Header Files\GameEngine\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GameEngine\Bone.h">
+    <ClInclude Include="src\GameEngine\AnimatedModel.h">
       <Filter>Header Files\GameEngine\Components\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Animator.h">
+      <Filter>Header Files\GameEngine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Model.h">
+      <Filter>Header Files\GameEngine\Components\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\MeshData.h">
+      <Filter>Header Files\GameEngine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Renderer.h">
+      <Filter>Header Files\GameEngine\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

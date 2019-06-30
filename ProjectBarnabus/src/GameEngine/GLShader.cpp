@@ -115,6 +115,7 @@ bool GLShader::Link()
 	glGetProgramiv(program, GL_LINK_STATUS, &isLinked);
 	if (isLinked == GL_FALSE)
 	{
+		linked = false;
 		GLint maxLength = 0;
 		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength);
 		std::vector<GLchar> infoLog(maxLength);
@@ -124,6 +125,8 @@ bool GLShader::Link()
 		glDeleteProgram(program);
 		return false;
 	}
+
+	linked = true;
 	return true;
 }
 

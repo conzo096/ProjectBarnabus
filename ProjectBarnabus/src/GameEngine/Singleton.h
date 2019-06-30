@@ -15,5 +15,5 @@ public:
 		 static std::unique_ptr<T> instance(new T());
 		// Dereference the pointer to get the data.
 		 return *instance.get();
-	}
+ 	}
 };

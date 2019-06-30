@@ -1,7 +1,7 @@
 #pragma once
 #include "../GameEngine/Game.h"
 #include "../GameEngine/Entity.h"
-
+#include "../GameEngine/GLShader.h"
 class BarnabusGame : public Game
 {
 public:
@@ -15,4 +15,5 @@ public:
 private:
 	Entity camera;
 	Entity animation;
+	GLShader shaderTest;
 };
