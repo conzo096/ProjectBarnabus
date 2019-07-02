@@ -10,7 +10,8 @@
 
 Model::Model(const std::string & fileName) : Component("Model")
 {
-	data.type = GL_TRIANGLES;
+	data.SetType(GL_TRIANGLES);
+
 	// Create model importer
 	Assimp::Importer loadModel;
 	// Read in the model data 
@@ -43,18 +44,18 @@ Model::Model(const std::string & fileName) : Component("Model")
 		for (unsigned int j = 0; j < modelMesh->mNumVertices; j++)
 		{
 			aiVector3D pos = modelMesh->mVertices[j];
-			data.vertices.push_back(glm::vec3(pos.x, pos.y, pos.z));
+			data.InsertVertex(glm::vec3(pos.x, pos.y, pos.z));
 			aiVector3D norm = modelMesh->mNormals[j];
-			data.normals.push_back(glm::vec3(norm.x, norm.y, norm.z));
+			data.InsertNormal(glm::vec3(norm.x, norm.y, norm.z));
 			if (modelMesh->HasVertexColors(0))
 			{
 				aiColor4D colour = modelMesh->mColors[0][j];
-				data.colours.push_back(glm::vec4(colour.r, colour.g, colour.b, colour.a));
+				data.InsertColour(glm::vec4(colour.r, colour.g, colour.b, colour.a));
 			}
 			else
-				data.colours.push_back(glm::vec4(0.7, 0.7, 0.7, 1.0));
+				data.InsertColour(glm::vec4(0.7, 0.7, 0.7, 1.0));
 			auto texCoord = modelMesh->mTextureCoords[0][j];
-			data.textureCoords.push_back(glm::vec2(texCoord.x, texCoord.y));
+			data.InsertTextureCoordinate(glm::vec2(texCoord.x, texCoord.y));
 		}
 
 		// If we have face information, then add to index buffer
@@ -65,7 +66,7 @@ Model::Model(const std::string & fileName) : Component("Model")
 				aiFace modelFace = modelMesh->mFaces[j];
 				for (GLuint l = 0; l < 3; l++)
 				{
-					data.indices.push_back(vertex_begin + modelFace.mIndices[l]);
+					data.InsertIndex(vertex_begin + modelFace.mIndices[l]);
 				}
 			}
 		}
@@ -81,7 +82,7 @@ Model::~Model()
 
 void Model::SetShader(GLShader& shader)
 {
-	data.shader = shader;
+	data.SetShader(&shader);
 }
 
 void Model::Update(double deltaTime)
@@ -92,5 +93,5 @@ void Model::Update(double deltaTime)
 
 void Model::Render()
 {
-	Renderer::Get().meshesToRender.push_back(data);
+	Renderer::Get().AddMesh(data);
 }

@@ -16,5 +16,5 @@ void main()
 	gl_Position = MVP * vec4(position, 1);
 	// Output texture coordinate to fragement shader
 	tex_coord_out = tex_coord_in;
-	baseColourOut = baseColour;
+	baseColourOut = vec4(position,1);
 }

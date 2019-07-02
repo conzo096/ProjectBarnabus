@@ -1,5 +1,6 @@
 #include "GLShader.h"
-
+#include "MeshData.h"
+ 
 #include <fstream>
 #include <vector>
 #include <iostream>
@@ -178,6 +179,17 @@ GLuint GLShader::GetUniformLocation(std::string& name)
 {
 	const GLuint loc = glGetUniformLocation(program, name.c_str());
 	return loc;
+}
+
+void GLShader::UpdateUniforms(const MeshData & meshData)
+{
+}
+
+void GLShader::DrawMesh(MeshData& meshData) const
+{
+	glBindVertexArray(meshData.GetVao());
+	glDrawElements(meshData.GetType(), meshData.GetIndices().size(), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
 }
 
 void GLShader::Use()

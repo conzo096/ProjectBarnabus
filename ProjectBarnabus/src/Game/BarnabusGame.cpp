@@ -1,12 +1,14 @@
 #include <time.h>  
-#include <GL\glew.h>
-#include <glm\glm.hpp>
-#include <GLFW\glfw3.h>
 #include "BarnabusGame.h"
 #include "../GameEngine/BarnabusGameEngine.h"
 #include "../GameEngine/FreeCamera.h"
-#include "../GameEngine/Model.h"
+#include "../GameEngine/AnimatedModel.h"
 #include "../GameEngine/Renderer.h"
+
+#include <GL\glew.h>
+#include <glm\glm.hpp>
+#include <GLFW\glfw3.h>
+
 BarnabusGame::BarnabusGame()
 {
 
@@ -28,7 +30,7 @@ bool BarnabusGame::LoadGameContent()
 	camera.AddComponent(std::move(cameraComponent));
 
 	std::string fileName("res\\Models\\AnimatedModels\\model.dae");
-	auto modelComponent = std::make_unique<Model>(fileName);
+	auto modelComponent = std::make_unique<AnimatedModel>(fileName);
 	modelComponent->SetShader(shaderTest);
 
 	animation.AddComponent(std::move(modelComponent));

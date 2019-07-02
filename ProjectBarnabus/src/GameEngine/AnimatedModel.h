@@ -1,34 +1,15 @@
 #pragma once
-#include "Entity.h"
-#include "Joint.h"
-#include "MeshData.h"
+#include "Model.h"
+#include "Bone.h"
 
-//class Animator;
+#include <map>
 
-class AnimatedModel : public Component
+class AnimatedModel : public Model
 {
 public:
 
-	AnimatedModel(/*Texture texture,*/ Joint rootJoint, int jointCount);
+	AnimatedModel(const std::string& fileName);
 
-	void LoadModel(std::string fileName);
-
-
-	std::vector<glm::mat4> GetJointTransforms();
-	void AddJointsToArray(Joint& headJoint, std::vector<glm::mat4>& jointMatrices);
-
-	void Update(double delta) override;
-	void Render() override;
-
-
-
-	//Skin 
-	MeshData model;
-	//Texture texture;
-
-	// Skeleton
-	Joint rootJoint;
-	int jointCount;
-
-	//Animator animator;
+	std::vector<Bone> bones;
+	std::map<std::string, int> boneMapping;
 };

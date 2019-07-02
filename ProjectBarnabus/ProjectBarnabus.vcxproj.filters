@@ -10,17 +10,11 @@
     <ClCompile Include="src\GameEngine\Game.cpp">
       <Filter>Source Files\GameEngine</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameEngine\Entity.cpp">
-      <Filter>Source Files\GameEngine</Filter>
-    </ClCompile>
     <ClCompile Include="src\GameEngine\FreeCamera.cpp">
       <Filter>Source Files\GameEngine\Components\Camera</Filter>
     </ClCompile>
     <ClCompile Include="src\GameEngine\GLShader.cpp">
-      <Filter>Source Files\GameEngine\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GameEngine\Joint.cpp">
-      <Filter>Source Files\GameEngine\Components\Model</Filter>
+      <Filter>Source Files\GameEngine\Renderer\Shader</Filter>
     </ClCompile>
     <ClCompile Include="src\GameEngine\AnimatedModel.cpp">
       <Filter>Source Files\GameEngine\Components\Model</Filter>
@@ -39,6 +33,12 @@
     </ClCompile>
     <ClCompile Include="src\GameEngine\Renderer.cpp">
       <Filter>Source Files\GameEngine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Entity.cpp">
+      <Filter>Source Files\GameEngine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\AnimationShader.cpp">
+      <Filter>Source Files\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -62,9 +62,6 @@
     </Filter>
     <Filter Include="Source Files\Game">
       <UniqueIdentifier>{ef758e9c-6003-4b69-a515-692bce125ed8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\GameEngine\Shader">
-      <UniqueIdentifier>{0e415067-cbb1-43f9-99e6-573fe22700cb}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\GameEngine\Shader">
       <UniqueIdentifier>{a531f362-76d8-4fd9-ae5b-8f43acd23fe4}</UniqueIdentifier>
@@ -102,6 +99,15 @@
     <Filter Include="Source Files\GameEngine\Renderer">
       <UniqueIdentifier>{8aeb3186-3dbb-47a2-b8bb-d86c91be75f8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Game\Shaders">
+      <UniqueIdentifier>{ad227d5e-a389-42bf-a434-3c072ee55533}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameEngine\Renderer\Shader">
+      <UniqueIdentifier>{0e415067-cbb1-43f9-99e6-573fe22700cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameEngine\Renderer\Animation">
+      <UniqueIdentifier>{307179bf-98a5-415f-bb89-30e6350d0f0c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\GameEngine\BarnabusGameEngine.h">
@@ -116,9 +122,6 @@
     <ClInclude Include="src\GameEngine\Singleton.h">
       <Filter>Header Files\GameEngine</Filter>
     </ClInclude>
-    <ClInclude Include="src\GameEngine\Entity.h">
-      <Filter>Header Files\GameEngine</Filter>
-    </ClInclude>
     <ClInclude Include="src\GameEngine\Transform.h">
       <Filter>Header Files\GameEngine</Filter>
     </ClInclude>
@@ -131,14 +134,8 @@
     <ClInclude Include="src\GameEngine\GLShader.h">
       <Filter>Header Files\GameEngine\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="src\GameEngine\Joint.h">
-      <Filter>Header Files\GameEngine\Components\Model</Filter>
-    </ClInclude>
     <ClInclude Include="src\GameEngine\AnimatedModel.h">
       <Filter>Header Files\GameEngine\Components\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GameEngine\Animator.h">
-      <Filter>Header Files\GameEngine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\GameEngine\Model.h">
       <Filter>Header Files\GameEngine\Components\Model</Filter>
@@ -148,6 +145,27 @@
     </ClInclude>
     <ClInclude Include="src\GameEngine\Renderer.h">
       <Filter>Header Files\GameEngine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Entity.h">
+      <Filter>Header Files\GameEngine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\AnimationShader.h">
+      <Filter>Header Files\Game\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Animator.h">
+      <Filter>Header Files\GameEngine\Renderer\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\KeyFrame.h">
+      <Filter>Header Files\GameEngine\Renderer\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Animation.h">
+      <Filter>Header Files\GameEngine\Renderer\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Bone.h">
+      <Filter>Header Files\GameEngine\Components\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\NodeAnim.h">
+      <Filter>Header Files\GameEngine\Components\Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

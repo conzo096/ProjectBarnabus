@@ -26,28 +26,32 @@
     <ClCompile Include="src\GameEngine\FreeCamera.cpp" />
     <ClCompile Include="src\GameEngine\Game.cpp" />
     <ClCompile Include="src\GameEngine\GLShader.cpp" />
-    <ClCompile Include="src\GameEngine\Joint.cpp" />
     <ClCompile Include="src\GameEngine\MeshData.cpp" />
     <ClCompile Include="src\GameEngine\Model.cpp" />
     <ClCompile Include="src\GameEngine\Renderer.cpp" />
+    <ClCompile Include="src\Game\AnimationShader.cpp" />
     <ClCompile Include="src\Game\BarnabusGame.cpp" />
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\GameEngine\AnimatedModel.h" />
+    <ClInclude Include="src\GameEngine\Animation.h" />
     <ClInclude Include="src\GameEngine\Animator.h" />
     <ClInclude Include="src\GameEngine\BarnabusGameEngine.h" />
+    <ClInclude Include="src\GameEngine\Bone.h" />
     <ClInclude Include="src\GameEngine\Camera.h" />
     <ClInclude Include="src\GameEngine\Entity.h" />
     <ClInclude Include="src\GameEngine\FreeCamera.h" />
     <ClInclude Include="src\GameEngine\Game.h" />
     <ClInclude Include="src\GameEngine\GLShader.h" />
-    <ClInclude Include="src\GameEngine\Joint.h" />
+    <ClInclude Include="src\GameEngine\NodeAnim.h" />
+    <ClInclude Include="src\GameEngine\KeyFrame.h" />
     <ClInclude Include="src\GameEngine\MeshData.h" />
     <ClInclude Include="src\GameEngine\Model.h" />
     <ClInclude Include="src\GameEngine\Renderer.h" />
     <ClInclude Include="src\GameEngine\Singleton.h" />
     <ClInclude Include="src\GameEngine\Transform.h" />
+    <ClInclude Include="src\Game\AnimationShader.h" />
     <ClInclude Include="src\Game\BarnabusGame.h" />
   </ItemGroup>
   <ItemGroup>

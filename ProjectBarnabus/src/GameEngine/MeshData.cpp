@@ -31,3 +31,88 @@ void MeshData::InitialiseMesh()
 
 
 }
+
+void MeshData::SetType(GLenum meshType)
+{
+	meshType = type;
+}
+
+GLenum MeshData::GetType()
+{
+	return type;
+}
+
+unsigned int MeshData::GetVao()
+{
+	return VAO;
+}
+
+unsigned int MeshData::GetVbo()
+{
+	return VBO;
+}
+
+unsigned int MeshData::GetEbo()
+{
+	return EBO;
+}
+
+void MeshData::InsertVertex(glm::vec3 vertex)
+{
+	vertices.push_back(vertex);
+}
+
+void MeshData::InsertColour(glm::vec4 colour)
+{
+	colours.push_back(colour);
+}
+
+void MeshData::InsertTextureCoordinate(glm::vec2 textureCoord)
+{
+	textureCoords.push_back(textureCoord);
+}
+
+void MeshData::InsertNormal(glm::vec3 normal)
+{
+	normals.push_back(normal);
+}
+
+void MeshData::InsertIndex(unsigned int index)
+{
+	indices.push_back(index);
+}
+
+std::vector<glm::vec3> MeshData::GetVertices()
+{
+	return vertices;
+}
+
+std::vector<glm::vec4> MeshData::GetColours()
+{
+	return colours;
+}
+
+std::vector<glm::vec2> MeshData::GetTextureCoordinates()
+{
+	return textureCoords;
+}
+
+std::vector<glm::vec3> MeshData::GetNormals()
+{
+	return normals;
+}
+
+std::vector<unsigned int> MeshData::GetIndices()
+{
+	return indices;
+}
+
+void MeshData::SetShader(GLShader* meshShader)
+{
+	shader = meshShader;
+}
+
+GLShader* MeshData::GetShader() const
+{
+	return shader;
+}

@@ -3,6 +3,9 @@
 #include <string>
 #include <GL/glew.h>
 #include <GL/GL.h>
+
+class MeshData;
+
 class GLShader
 {
 public:
@@ -27,6 +30,9 @@ public:
 
 	GLuint GetUniformLocation(const char* name);
 	GLuint GetUniformLocation(std::string& name);
+
+	virtual void UpdateUniforms(const MeshData& meshData);
+	virtual void DrawMesh(MeshData& meshData) const;
 
 private:
 	bool FileExists(const std::string& fileName);
