@@ -46,17 +46,18 @@ public:
 	void ResizeBoneData(unsigned int size);
 	void InsertBoneDataAt(unsigned int location, int vertexLocation, float vertexWeight);
 
+	// Move these to private.
 	std::vector<glm::mat4> transforms;
+	std::vector<Vertex> vertices;
+	std::vector<VertexBoneData> bonesData;
 private:
 
 	// Skin
 	GLenum type = GL_TRIANGLES;
 	unsigned int VAO, VBO, EBO, BONES;
 
-	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
 	
-	std::vector<VertexBoneData> bonesData;
 
 	
 	// Shader for rendering the mesh.

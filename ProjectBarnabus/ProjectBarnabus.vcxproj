@@ -28,7 +28,6 @@
     <ClCompile Include="src\GameEngine\GLShader.cpp" />
     <ClCompile Include="src\GameEngine\MeshData.cpp" />
     <ClCompile Include="src\GameEngine\Model.cpp" />
-    <ClCompile Include="src\GameEngine\Node.cpp" />
     <ClCompile Include="src\GameEngine\Renderer.cpp" />
     <ClCompile Include="src\Game\AnimationShader.cpp" />
     <ClCompile Include="src\Game\BarnabusGame.cpp" />

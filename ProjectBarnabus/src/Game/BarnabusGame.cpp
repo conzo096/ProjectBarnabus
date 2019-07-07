@@ -26,16 +26,24 @@ bool BarnabusGame::LoadGameContent()
 	shaderTest.AddShaderFromFile("res\\Shaders\\Basic.frag", GLShader::FRAGMENT);
 	shaderTest.Link();
 
-	auto cameraComponent = std::make_unique<FreeCamera>(70);
-	camera.AddComponent(std::move(cameraComponent));
-
 	animation.SetPosition(camera.GetPosition());
 	std::string fileName("res\\Models\\AnimatedModels\\LimitedWeights.dae");
 	auto modelComponent = std::make_unique<AnimatedModel>(fileName);
 	modelComponent->SetShader(shaderTest);
 	modelComponent->InitModel();
 
+	auto cameraComponent = std::make_unique<FreeCamera>(70);
+	cameraComponent->SetPosition(animation.GetPosition() - glm::dvec3(0, -5, -20));
+
+
 	animation.AddComponent(std::move(modelComponent));
+
+	animation.SetPosition(glm::vec3(0));
+	animation.SetRotation(glm::vec3(180, cameraComponent->GetRotation().y, cameraComponent->GetRotation().z));
+	animation.UpdateTransforms();
+
+	camera.AddComponent(std::move(cameraComponent));
+
 	return true;
 }
 

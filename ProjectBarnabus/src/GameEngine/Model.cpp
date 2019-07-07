@@ -100,7 +100,7 @@ void Model::InitModel()
 void Model::Update(double deltaTime)
 {
 	data.SetTransform(GetTransform());
-	data.UpdateTransforms();
+	//data.UpdateTransforms();
 }
 
 void Model::Render()

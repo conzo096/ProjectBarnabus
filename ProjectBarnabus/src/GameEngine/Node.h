@@ -12,5 +12,4 @@ public:
 	glm::mat4 transformation;
 	Node* parent;
 
-	Node* FindNode(std::string name);
 };

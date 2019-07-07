@@ -4,6 +4,8 @@
 #include <glm\gtc\type_ptr.hpp>
 #include <glm/gtx/string_cast.hpp>
 
+#define DEBUG_VERTICES 0
+
 void AnimationShader::UpdateUniforms(const MeshData& meshData)
 {
 	Use();
@@ -24,4 +26,25 @@ void AnimationShader::UpdateUniforms(const MeshData& meshData)
 		const auto transform = glm::mat4(meshData.transforms.at(i));
 		glUniformMatrix4fv(index, 1, GL_TRUE, glm::value_ptr(transform));
 	}
+
+#if DEBUG_VERTICES
+
+	for (int i = 0; i < meshData.vertices.size(); i++)
+	{
+		auto vertex = glm::vec4(meshData.vertices[i].position, 1);
+		auto weights = meshData.bonesData[i].weights;
+		auto boneIds = meshData.bonesData[i].vertexIds;
+
+		glm::vec4 vertexOut =
+			(meshData.transforms[boneIds[0]] * vertex) * weights[0] +
+			(meshData.transforms[boneIds[1]] * vertex) * weights[1] +
+			(meshData.transforms[boneIds[2]] * vertex) * weights[2] +
+			(meshData.transforms[boneIds[3]] * vertex) * weights[3];
+
+		std::cout << glm::to_string(mvp * vertexOut) << std::endl;
+	}
+	
+
+#endif // DEBUG_VERTICES
+
 }
