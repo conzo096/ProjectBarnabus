@@ -29,9 +29,11 @@ bool BarnabusGame::LoadGameContent()
 	auto cameraComponent = std::make_unique<FreeCamera>(70);
 	camera.AddComponent(std::move(cameraComponent));
 
-	std::string fileName("res\\Models\\AnimatedModels\\model.dae");
+	animation.SetPosition(camera.GetPosition());
+	std::string fileName("res\\Models\\AnimatedModels\\LimitedWeights.dae");
 	auto modelComponent = std::make_unique<AnimatedModel>(fileName);
 	modelComponent->SetShader(shaderTest);
+	modelComponent->InitModel();
 
 	animation.AddComponent(std::move(modelComponent));
 	return true;

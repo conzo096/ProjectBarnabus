@@ -7,19 +7,19 @@
 
 struct PositionKey
 {
-	int timeStamp;
+	float timeStamp;
 	glm::vec3 position;
 };
 
 struct ScalingKey
 {
-	int timeStamp;
+	float timeStamp;
 	glm::vec3 scale;
 };
 
 struct RotationKey
 {
-	int timeStamp;
+	float timeStamp;
 	glm::quat rotation;
 };
 
@@ -30,4 +30,5 @@ struct NodeAnim
 	std::vector<ScalingKey> scalingKeys;
 	std::vector<RotationKey> rotationKeys;
 
+	std::vector<NodeAnim*> children;
 };

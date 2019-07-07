@@ -7,6 +7,8 @@ class Animation
 {
 public:
 
-	std::vector<KeyFrame> keyframes;
+	std::string name;
+	float ticksPerSecond;
+	std::vector<NodeAnim*> keyframes;
 	float animationLength;
 };

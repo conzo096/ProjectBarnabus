@@ -7,6 +7,4 @@ public:
 
 	void UpdateUniforms(const MeshData& meshData) override;
 
-
-
 };

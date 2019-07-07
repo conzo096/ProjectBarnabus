@@ -28,6 +28,7 @@
     <ClCompile Include="src\GameEngine\GLShader.cpp" />
     <ClCompile Include="src\GameEngine\MeshData.cpp" />
     <ClCompile Include="src\GameEngine\Model.cpp" />
+    <ClCompile Include="src\GameEngine\Node.cpp" />
     <ClCompile Include="src\GameEngine\Renderer.cpp" />
     <ClCompile Include="src\Game\AnimationShader.cpp" />
     <ClCompile Include="src\Game\BarnabusGame.cpp" />
@@ -44,6 +45,7 @@
     <ClInclude Include="src\GameEngine\FreeCamera.h" />
     <ClInclude Include="src\GameEngine\Game.h" />
     <ClInclude Include="src\GameEngine\GLShader.h" />
+    <ClInclude Include="src\GameEngine\Node.h" />
     <ClInclude Include="src\GameEngine\NodeAnim.h" />
     <ClInclude Include="src\GameEngine\KeyFrame.h" />
     <ClInclude Include="src\GameEngine\MeshData.h" />

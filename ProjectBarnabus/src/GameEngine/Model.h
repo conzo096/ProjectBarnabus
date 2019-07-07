@@ -3,6 +3,7 @@
 #include "MeshData.h"
 
 #include "GLShader.h"
+
 class Model : public Component
 {
 public:
@@ -11,6 +12,7 @@ public:
 	~Model();
 
 	void SetShader(GLShader& shader);
+	void InitModel();
 
 	void Update(double deltaTime) override;
 	void Render() override;

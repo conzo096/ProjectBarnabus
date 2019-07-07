@@ -14,7 +14,10 @@ private:
 	glm::dmat4 transform;
 
 public:
-	Transform() : scale(glm::dvec3(1.0f)), rotation(glm::dquat()), position(glm::dvec3()) {}
+	Transform() : scale(glm::dvec3(1.0f)), rotation(glm::dquat()), position(glm::dvec3())
+	{ 
+		changed = true;
+	}
 
 	Transform(glm::dvec3 pos, glm::dvec3 rot, glm::dvec3 scale) : Transform()
 	{

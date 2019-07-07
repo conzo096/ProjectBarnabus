@@ -43,19 +43,28 @@ Model::Model(const std::string & fileName) : Component("Model")
 
 		for (unsigned int j = 0; j < modelMesh->mNumVertices; j++)
 		{
+			Vertex vert;
+
 			aiVector3D pos = modelMesh->mVertices[j];
-			data.InsertVertex(glm::vec3(pos.x, pos.y, pos.z));
+			vert.position = glm::vec3(pos.x, pos.y, pos.z);
+
 			aiVector3D norm = modelMesh->mNormals[j];
-			data.InsertNormal(glm::vec3(norm.x, norm.y, norm.z));
+			vert.normal = glm::vec3(norm.x, norm.y, norm.z);
+			
 			if (modelMesh->HasVertexColors(0))
 			{
 				aiColor4D colour = modelMesh->mColors[0][j];
-				data.InsertColour(glm::vec4(colour.r, colour.g, colour.b, colour.a));
+				vert.color = glm::vec4(colour.r, colour.g, colour.b, colour.a);
 			}
 			else
-				data.InsertColour(glm::vec4(0.7, 0.7, 0.7, 1.0));
+			{
+				vert.color = glm::vec4(0.7, 0.7, 0.7, 1.0);
+			}
+			
 			auto texCoord = modelMesh->mTextureCoords[0][j];
-			data.InsertTextureCoordinate(glm::vec2(texCoord.x, texCoord.y));
+			vert.texCoords = glm::vec2(texCoord.x, texCoord.y);
+
+			data.InsertVertex(vert);
 		}
 
 		// If we have face information, then add to index buffer
@@ -72,8 +81,6 @@ Model::Model(const std::string & fileName) : Component("Model")
 		}
 		vertex_begin += modelMesh->mNumVertices;
 	}
-
-	data.InitialiseMesh();
 }
 
 Model::~Model()
@@ -83,6 +90,11 @@ Model::~Model()
 void Model::SetShader(GLShader& shader)
 {
 	data.SetShader(&shader);
+}
+
+void Model::InitModel()
+{
+	data.InitialiseMesh();
 }
 
 void Model::Update(double deltaTime)

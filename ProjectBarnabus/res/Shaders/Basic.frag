@@ -12,5 +12,7 @@ void main()
 {
 	//colour = texture(tex, tex_coord);
 	
+	//colour = vec4(1,0,0,1);
+	
 	colour = baseColour;
 }
