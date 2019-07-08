@@ -28,7 +28,7 @@ void main()
 	(gBones[boneIDs[2]] * vertexIn) * weights[2] +
 	(gBones[boneIDs[3]] * vertexIn) * weights[3];
 
-	gl_Position = MVP * vec4(vertexOut.xyz,1);
+	gl_Position = MVP * vec4(vertexIn.xyz,1);
 	// Output texture coordinate to fragement shader
 	tex_coord_out = tex_coord_in;
 	

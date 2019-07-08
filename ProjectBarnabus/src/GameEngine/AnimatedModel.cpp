@@ -76,15 +76,6 @@ AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
 	// This approach is limited to only having one mesh in the model, otherwise vertexids need to be 
 	// recalculated.
 
-	// Calculate this in generic model loading.
-	unsigned int totalVertices = 0;
-	for (int i = 0; i < model->mNumMeshes; i++)
-	{
-		totalVertices += model->mMeshes[i]->mNumVertices;
-	}
-	
-	data.ResizeBoneData(totalVertices);
-
 	for (int i = 0; i < model->mNumMeshes; i++)
 	{
 		auto mesh = model->mMeshes[i];
@@ -102,7 +93,7 @@ AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
 			{
 				unsigned int vertexId = aiBone->mWeights[k].mVertexId;
 				float weight = aiBone->mWeights[k].mWeight;
-				data.InsertBoneDataAt(vertexId,j, weight);
+				data[i].InsertBoneDataAt(vertexId,j, weight);
 			}
 		}	
 	}
@@ -156,23 +147,27 @@ void AnimatedModel::Update(double deltaTime)
 {
 	Model::Update(deltaTime);
 
-	totalTime += deltaTime;
-	//if (totalTime > animations[0]->animationLength)
-	totalTime = 0;
-	data.transforms.clear();
-
-	float TicksPerSecond =  animations[0]->ticksPerSecond !=0 ? animations[0]->ticksPerSecond : 20.0f;
-   	float TimeInTicks = totalTime * TicksPerSecond;
-	float AnimationTime = fmod(TimeInTicks, animations[0]->animationLength);
-
-	ReadNodeHeirarchy(AnimationTime, rootNode, glm::mat4(1));
-
-	data.transforms.resize(bones.size());
-
-
-	for (unsigned int i = 0; i < bones.size(); i++)
+	for (int i = 0; i < data.size(); i++)
 	{
-		data.transforms[i] = bones[i].finalTransformation;
+		auto mesh = data[i];
+		totalTime += deltaTime;
+		//if (totalTime > animations[0]->animationLength)
+		totalTime = 0;
+		mesh.transforms.clear();
+
+		float TicksPerSecond = animations[0]->ticksPerSecond != 0 ? animations[0]->ticksPerSecond : 20.0f;
+		float TimeInTicks = totalTime * TicksPerSecond;
+		float AnimationTime = fmod(TimeInTicks, animations[0]->animationLength);
+
+		ReadNodeHeirarchy(AnimationTime, rootNode, glm::mat4(1));
+
+		mesh.transforms.resize(bones.size());
+
+
+		for (unsigned int j = 0; j < bones.size(); j++)
+		{
+			mesh.transforms[j] = bones[j].finalTransformation;
+		}
 	}
 }
 

@@ -17,5 +17,5 @@ public:
 	void Update(double deltaTime) override;
 	void Render() override;
 
-	MeshData data;
+	std::vector<MeshData> data;
 };

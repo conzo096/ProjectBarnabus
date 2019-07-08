@@ -10,8 +10,6 @@
 
 Model::Model(const std::string & fileName) : Component("Model")
 {
-	data.SetType(GL_TRIANGLES);
-
 	// Create model importer
 	Assimp::Importer loadModel;
 	// Read in the model data 
@@ -37,6 +35,11 @@ Model::Model(const std::string & fileName) : Component("Model")
 	// Loop throw each sub-mesh.
 	for (unsigned int i = 0; i < model->mNumMeshes; i++)
 	{
+		MeshData mesh;
+		mesh.SetType(GL_TRIANGLES);
+
+		mesh.ResizeBoneData(model->mMeshes[i]->mNumVertices);
+
 		// Get the sub-mesh.
 		aiMesh *modelMesh = model->mMeshes[i];
 		// get the vertex positions.
@@ -64,7 +67,7 @@ Model::Model(const std::string & fileName) : Component("Model")
 			auto texCoord = modelMesh->mTextureCoords[0][j];
 			vert.texCoords = glm::vec2(texCoord.x, texCoord.y);
 
-			data.InsertVertex(vert);
+			mesh.InsertVertex(vert);
 		}
 
 		// If we have face information, then add to index buffer
@@ -75,11 +78,13 @@ Model::Model(const std::string & fileName) : Component("Model")
 				aiFace modelFace = modelMesh->mFaces[j];
 				for (GLuint l = 0; l < 3; l++)
 				{
-					data.InsertIndex(vertex_begin + modelFace.mIndices[l]);
+					mesh.InsertIndex(vertex_begin + modelFace.mIndices[l]);
 				}
 			}
 		}
 		vertex_begin += modelMesh->mNumVertices;
+
+		data.push_back(mesh);
 	}
 }
 
@@ -89,21 +94,32 @@ Model::~Model()
 
 void Model::SetShader(GLShader& shader)
 {
-	data.SetShader(&shader);
+	for (int i = 0; i < data.size(); i++)
+	{
+		data[i].SetShader(&shader);
+	}
 }
 
 void Model::InitModel()
 {
-	data.InitialiseMesh();
+	for (int i = 0; i < data.size(); i++)
+	{
+		data[i].InitialiseMesh();
+	}
 }
 
 void Model::Update(double deltaTime)
 {
-	data.SetTransform(GetTransform());
-	//data.UpdateTransforms();
+	for (int i = 0; i < data.size(); i++)
+	{
+		data[i].SetTransform(GetTransform());
+	}
 }
 
 void Model::Render()
 {
-	Renderer::Get().AddMesh(data);
+	for (int i = 0; i < data.size(); i++)
+	{
+		Renderer::Get().AddMesh(data[i]);
+	}
 }
