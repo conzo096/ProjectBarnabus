@@ -22,6 +22,18 @@ inline glm::mat4 aiMatrix4x4ToGlm(const aiMatrix4x4 from)
 	return to;
 }
 
+inline glm::mat4 FloatToGlm(const float from)
+{
+	glm::mat4 to;
+
+	to[0][0] = (GLfloat)from; to[0][1] = (GLfloat)from;  to[0][2] = (GLfloat)from; to[0][3] = (GLfloat)from;
+	to[1][0] = (GLfloat)from; to[1][1] = (GLfloat)from;  to[1][2] = (GLfloat)from; to[1][3] = (GLfloat)from;
+	to[2][0] = (GLfloat)from; to[2][1] = (GLfloat)from;  to[2][2] = (GLfloat)from; to[2][3] = (GLfloat)from;
+	to[3][0] = (GLfloat)from; to[3][1] = (GLfloat)from;  to[3][2] = (GLfloat)from; to[3][3] = (GLfloat)from;
+
+	return to;
+}
+
 inline glm::vec3 aiVec3ToGlm(const aiVector3D from)
 {
 	return glm::vec3(from.x, from.y, from.z);
@@ -145,15 +157,15 @@ void AnimatedModel::Update(double deltaTime)
 	Model::Update(deltaTime);
 
 	totalTime += deltaTime;
-	if (totalTime > animations[0]->animationLength)
-		totalTime = 0;
+	//if (totalTime > animations[0]->animationLength)
+	totalTime = 0;
 	data.transforms.clear();
 
 	float TicksPerSecond =  animations[0]->ticksPerSecond !=0 ? animations[0]->ticksPerSecond : 20.0f;
-	float TimeInTicks = totalTime * TicksPerSecond;
+   	float TimeInTicks = totalTime * TicksPerSecond;
 	float AnimationTime = fmod(TimeInTicks, animations[0]->animationLength);
 
-	ReadNodeHeirarchy(AnimationTime, rootNode, GetTransform());
+	ReadNodeHeirarchy(AnimationTime, rootNode, glm::mat4(1));
 
 	data.transforms.resize(bones.size());
 
