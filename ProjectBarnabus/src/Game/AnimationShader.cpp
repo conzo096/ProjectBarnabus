@@ -19,7 +19,7 @@ void AnimationShader::UpdateUniforms(const MeshData& meshData)
 
 	for (int i = 0; i < meshData.transforms.size(); i++)
 	{
-		std::string uniformName("gBones[" + std::to_string(i) + "]");
+		std::string uniformName("bones[" + std::to_string(i) + "]");
 		index = glGetUniformLocation(meshData.GetShader()->GetId(), uniformName.c_str());
 		//std::cout << glm::to_string(meshData.transforms[i]) << std::endl;
 
