@@ -14,12 +14,9 @@ Model::Model(const std::string & fileName) : Component("Model")
 	Assimp::Importer loadModel;
 	// Read in the model data 
 	const aiScene *model = loadModel.ReadFile(fileName, aiProcess_Triangulate
-		| aiProcess_GenSmoothNormals
-		| aiProcess_ValidateDataStructure
-		| aiProcess_FindInvalidData
-		| aiProcess_FixInfacingNormals
-		| aiProcess_ImproveCacheLocality
-		| aiProcess_GenUVCoords);
+		| aiProcess_FlipUVs
+		| aiProcess_JoinIdenticalVertices
+	);
 	// Check that data has been read in correctly
 	if (!model)
 	{

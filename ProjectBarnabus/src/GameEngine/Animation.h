@@ -9,6 +9,6 @@ public:
 
 	std::string name;
 	float ticksPerSecond;
-	std::vector<NodeAnim*> keyframes;
+	std::vector<NodeAnim*> nodes;
 	float animationLength;
 };

@@ -21,10 +21,9 @@ void AnimationShader::UpdateUniforms(const MeshData& meshData)
 	{
 		std::string uniformName("bones[" + std::to_string(i) + "]");
 		index = glGetUniformLocation(meshData.GetShader()->GetId(), uniformName.c_str());
-		//std::cout << glm::to_string(meshData.transforms[i]) << std::endl;
 
 		const auto transform = glm::mat4(meshData.transforms.at(i));
-		glUniformMatrix4fv(index, 1, GL_FALSE, glm::value_ptr(transform));
+		glUniformMatrix4fv(index, 1, GL_TRUE, glm::value_ptr(transform));
 	}
 
 #if DEBUG_VERTICES
@@ -43,8 +42,12 @@ void AnimationShader::UpdateUniforms(const MeshData& meshData)
 
 		std::cout << "====== Vertex ============" << std::endl;
 		std::cout << glm::to_string(vertex) << std::endl;
-		std::cout << "====== Vertex ============" << std::endl;
+		std::cout << "====== Vertex out ============" << std::endl;
 		std::cout << glm::to_string(vertexOut) << std::endl;
+		std::cout << "====== Vertex out (normalized) ============" << std::endl;
+		std::cout << glm::to_string(glm::normalize(vertexOut)) << std::endl;
+		std::cout << "====== Vertex out (with MVP) ============" << std::endl;
+		std::cout << glm::to_string( mvp* vertexOut) << std::endl;
 	}
 	
 

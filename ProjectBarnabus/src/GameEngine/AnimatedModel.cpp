@@ -10,17 +10,28 @@
 #include <glm/gtc/quaternion.hpp> 
 #include <glm/gtx/quaternion.hpp>
 
-inline glm::mat4 aiMatrix4x4ToGlm(const aiMatrix4x4 from)
+inline glm::mat3 aiMatrix3x3ToGlm(const aiMatrix3x3 &from)
 {
-	glm::mat4 to;
-
-	to[0][0] = (GLfloat)from.a1; to[0][1] = (GLfloat)from.b1;  to[0][2] = (GLfloat)from.c1; to[0][3] = (GLfloat)from.d1;
-	to[1][0] = (GLfloat)from.a2; to[1][1] = (GLfloat)from.b2;  to[1][2] = (GLfloat)from.c2; to[1][3] = (GLfloat)from.d2;
-	to[2][0] = (GLfloat)from.a3; to[2][1] = (GLfloat)from.b3;  to[2][2] = (GLfloat)from.c3; to[2][3] = (GLfloat)from.d3;
-	to[3][0] = (GLfloat)from.a4; to[3][1] = (GLfloat)from.b4;  to[3][2] = (GLfloat)from.c4; to[3][3] = (GLfloat)from.d4;
+	glm::mat3 to;
+	//the a,b,c,d in assimp is the row ; the 1,2,3,4 is the column
+	to[0][0] = from.a1; to[1][0] = from.a2;	to[2][0] = from.a3;
+	to[0][1] = from.b1; to[1][1] = from.b2;	to[2][1] = from.b3;
+	to[0][2] = from.c1; to[1][2] = from.c2;	to[2][2] = from.c3;
 
 	return to;
 }
+
+inline glm::mat4 aiMatrix4x4ToGlm(const aiMatrix4x4 &from)
+{
+	glm::mat4 to;
+	//the a,b,c,d in assimp is the row ; the 1,2,3,4 is the column
+	to[0][0] = from.a1; to[1][0] = from.a2;	to[2][0] = from.a3; to[3][0] = from.a4;
+	to[0][1] = from.b1; to[1][1] = from.b2;	to[2][1] = from.b3; to[3][1] = from.b4;
+	to[0][2] = from.c1; to[1][2] = from.c2;	to[2][2] = from.c3; to[3][2] = from.c4;
+	to[0][3] = from.d1; to[1][3] = from.d2;	to[2][3] = from.d3; to[3][3] = from.d4;
+	return to;
+}
+
 
 inline glm::mat4 FloatToGlm(const float from)
 {
@@ -34,6 +45,48 @@ inline glm::mat4 FloatToGlm(const float from)
 	return to;
 }
 
+inline glm::mat4 InitTranslationTransform(glm::vec3 position)
+{
+	glm::mat4 m;
+	m[0][0] = 1.0f; m[0][1] = 0.0f; m[0][2] = 0.0f; m[0][3] = position.x;
+	m[1][0] = 0.0f; m[1][1] = 1.0f; m[1][2] = 0.0f; m[1][3] = position.y;
+	m[2][0] = 0.0f; m[2][1] = 0.0f; m[2][2] = 1.0f; m[2][3] = position.z;
+	m[3][0] = 0.0f; m[3][1] = 0.0f; m[3][2] = 0.0f; m[3][3] = 1.0f;
+
+	return m;
+}
+
+inline glm::mat4 InitRotateTransform(const glm::quat& quat)
+{
+	glm::mat4 m;
+
+	float yy2 = 2.0f * quat.y * quat.y;
+	float xy2 = 2.0f * quat.x * quat.y;
+	float xz2 = 2.0f * quat.x * quat.z;
+	float yz2 = 2.0f * quat.y * quat.z;
+	float zz2 = 2.0f * quat.z * quat.z;
+	float wz2 = 2.0f * quat.w * quat.z;
+	float wy2 = 2.0f * quat.w * quat.y;
+	float wx2 = 2.0f * quat.w * quat.x;
+	float xx2 = 2.0f * quat.x * quat.x;
+	m[0][0] = -yy2 - zz2 + 1.0f;
+	m[0][1] = xy2 + wz2;
+	m[0][2] = xz2 - wy2;
+	m[0][3] = 0;
+	m[1][0] = xy2 - wz2;
+	m[1][1] = -xx2 - zz2 + 1.0f;
+	m[1][2] = yz2 + wx2;
+	m[1][3] = 0;
+	m[2][0] = xz2 + wy2;
+	m[2][1] = yz2 - wx2;
+	m[2][2] = -xx2 - yy2 + 1.0f;
+	m[2][3] = 0.0f;
+	m[3][0] = m[3][1] = m[3][2] = 0;
+	m[3][3] = 1.0f;
+
+	return m;
+}
+
 inline glm::vec3 aiVec3ToGlm(const aiVector3D from)
 {
 	return glm::vec3(from.x, from.y, from.z);
@@ -44,28 +97,14 @@ inline glm::quat aiQuatToGlm(const aiQuaternion from)
 	return glm::quat(from.x, from.y, from.z, from.w);
 }
 
-inline glm::mat3 aiMatrix3x3ToGlm(const aiMatrix3x3 &from)
-{
-	glm::mat3 to;
-	//the a,b,c,d in assimp is the row ; the 1,2,3,4 is the column
-	to[0][0] = from.a1; to[1][0] = from.a2; to[2][0] = from.a3;
-	to[0][1] = from.b1; to[1][1] = from.b2; to[2][1] = from.b3;
-	to[0][2] = from.c1; to[1][2] = from.c2; to[2][2] = from.c3;
-	return to;
-}
-
 AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
 {	
 	// Create model importer
 	Assimp::Importer loadModel;
 	// Read in the model data 
 	const aiScene *model = loadModel.ReadFile(fileName, aiProcess_Triangulate
-		| aiProcess_GenSmoothNormals
-		| aiProcess_ValidateDataStructure
-		| aiProcess_FindInvalidData
-		| aiProcess_FixInfacingNormals
-		| aiProcess_ImproveCacheLocality
-		| aiProcess_GenUVCoords);
+		| aiProcess_FlipUVs
+		| aiProcess_JoinIdenticalVertices);
 
 	if (!model->HasAnimations())
 	{
@@ -73,8 +112,6 @@ AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
 	}
 
 	m_GlobalInverseTransform = glm::inverse(aiMatrix4x4ToGlm(model->mRootNode->mTransformation));
-	// This approach is limited to only having one mesh in the model, otherwise vertexids need to be 
-	// recalculated.
 
 	for (int i = 0; i < model->mNumMeshes; i++)
 	{
@@ -84,7 +121,7 @@ AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
 			auto aiBone = mesh->mBones[j];
  			Bone bone;
 			bone.name = aiBone->mName.C_Str();
-			bone.offSet = glm::inverse(aiMatrix4x4ToGlm(aiBone->mOffsetMatrix));
+			bone.offSet = aiMatrix4x4ToGlm(aiBone->mOffsetMatrix);
 	
 			bones.push_back(bone);
 			boneMapping[bone.name] = j;
@@ -133,9 +170,10 @@ AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
 				RotationKey rotationKey;
 				rotationKey.timeStamp = channel->mRotationKeys[key].mTime;
 				rotationKey.rotation = aiQuatToGlm(channel->mRotationKeys[key].mValue);
+				node->rotationKeys.push_back(rotationKey);
 			}
 
-			newAnimation->keyframes.push_back(node);
+			newAnimation->nodes.push_back(node);
 		}
 		animations.push_back(newAnimation);
 	}
@@ -150,9 +188,10 @@ void AnimatedModel::Update(double deltaTime)
 	for (int i = 0; i < data.size(); i++)
 	{
 		auto& mesh = data[i];
+		//deltaTime = 0.0469999984f;
 		totalTime += deltaTime;
-		//if (totalTime > animations[0]->animationLength)
-		totalTime = 0;
+		if (totalTime > animations[0]->animationLength)
+			totalTime = 0;
 		mesh.transforms.clear();
 
 		float TicksPerSecond = animations[0]->ticksPerSecond != 0 ? animations[0]->ticksPerSecond : 20.0f;
@@ -190,13 +229,13 @@ void AnimatedModel::ReadNodeHeirarchy(float AnimationTime, const Node* pNode, co
 		// Interpolate rotation and generate rotation transformation matrix
 		glm::quat RotationQ;
 		CalcInterpolatedRotation(RotationQ, AnimationTime, pNodeAnim);
-		glm::mat4 RotationM = glm::mat4(1);
+		glm::mat4 RotationM(InitRotateTransform(RotationQ));
 
 		// Interpolate translation and generate translation transformation matrix
 		glm::vec3 Translation;
 		CalcInterpolatedPosition(Translation, AnimationTime, pNodeAnim);
 		glm::mat4 TranslationM;
-		TranslationM = glm::translate(glm::mat4(1),Translation);
+		TranslationM = InitTranslationTransform(Translation);
 
 		// Combine the above transformations
 		NodeTransformation = TranslationM * RotationM * ScalingM;
@@ -219,9 +258,9 @@ void AnimatedModel::ReadNodeHeirarchy(float AnimationTime, const Node* pNode, co
 
 const NodeAnim* AnimatedModel::FindNodeAnim(const Animation* animation, const std::string NodeName)
 {
-	for (int i = 0; i < animation->keyframes.size(); i++)
+	for (int i = 0; i < animation->nodes.size(); i++)
 	{
-		const NodeAnim* pNodeAnim = animation->keyframes[i];
+		const NodeAnim* pNodeAnim = animation->nodes[i];
 
 		if (std::string(pNodeAnim->name) == NodeName)
 		{
@@ -248,12 +287,6 @@ void AnimatedModel::LoadNodeTree(Node*& myRootNode, aiNode* rootNode, Node* pare
 
 void AnimatedModel::CalcInterpolatedScaling(glm::vec3 & Out, float AnimationTime, const NodeAnim * pNodeAnim)
 {
-	if (pNodeAnim->scalingKeys.size() == 0)
-	{
-		Out = glm::vec3(1.0);
-		return;
-	}
-
 	if (pNodeAnim->scalingKeys.size() == 1)
 	{
 		Out = pNodeAnim->scalingKeys[0].scale;
@@ -277,13 +310,6 @@ void AnimatedModel::CalcInterpolatedScaling(glm::vec3 & Out, float AnimationTime
 
 void AnimatedModel::CalcInterpolatedRotation(glm::quat & Out, float AnimationTime, const NodeAnim * pNodeAnim)
 {
-	// we need at least two values to interpolate...
-	if (pNodeAnim->rotationKeys.size() == 0)
-	{
-		Out = glm::quat(1.0,glm::vec3(1.0));
-		return;
-	}
-
 	if (pNodeAnim->rotationKeys.size() == 1)
 	{
 		Out = pNodeAnim->rotationKeys[0].rotation;
@@ -306,13 +332,6 @@ void AnimatedModel::CalcInterpolatedRotation(glm::quat & Out, float AnimationTim
 
 void AnimatedModel::CalcInterpolatedPosition(glm::vec3 & Out, float AnimationTime, const NodeAnim * pNodeAnim)
 {
-
-	if (pNodeAnim->positionKeys.size() == 0)
-	{
-		Out = glm::vec3(1.0);
-		return;
-	}
-
 	if (pNodeAnim->positionKeys.size() == 1)
 	{
 		Out = pNodeAnim->positionKeys[0].position;
@@ -333,7 +352,6 @@ void AnimatedModel::CalcInterpolatedPosition(glm::vec3 & Out, float AnimationTim
 
 int AnimatedModel::FindScaling(float AnimationTime, const NodeAnim * pNodeAnim)
 {
-	//assert(pNodeAnim->scalingKeys.size() > 0);
 
 	for (unsigned int i = 0; i < pNodeAnim->scalingKeys.size() - 1; i++)
 	{
@@ -343,39 +361,32 @@ int AnimatedModel::FindScaling(float AnimationTime, const NodeAnim * pNodeAnim)
 		}
 	}
 
-	//assert(0);
-
 	return 0;
 }
 
 int AnimatedModel::FindRotation(float AnimationTime, const NodeAnim* pNodeAnim)
 {
-	//assert(pNodeAnim->rotationKeys.size() > 0);
-
 	for (unsigned int i = 0; i < pNodeAnim->rotationKeys.size() - 1; i++)
 	{
-		if (AnimationTime < pNodeAnim->rotationKeys[i + 1].timeStamp) {
+		if (AnimationTime < pNodeAnim->rotationKeys[i + 1].timeStamp)
+		{
 			return i;
 		}
 	}
-
-	//assert(0);
 
 	return 0;
 }
 
 int AnimatedModel::FindPosition(float AnimationTime, const NodeAnim* pNodeAnim)
 {
-	//assert(pNodeAnim->positionKeys.size() > 0);
 
 	for (unsigned int i = 0; i < pNodeAnim->positionKeys.size() - 1; i++)
 	{
-		if (AnimationTime < pNodeAnim->positionKeys[i + 1].timeStamp) {
+		if (AnimationTime < pNodeAnim->positionKeys[i + 1].timeStamp)
+		{
 			return i;
 		}
 	}
-
-	//assert(0);
 
 	return 0;
 }
