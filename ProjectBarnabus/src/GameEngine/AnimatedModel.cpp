@@ -186,8 +186,8 @@ void AnimatedModel::Update(double deltaTime)
 	for (int i = 0; i < data.size(); i++)
 	{
 		auto& mesh = data[i];
-		totalTime = 0;
-		//totalTime += deltaTime;
+		//totalTime = 0;
+		totalTime += deltaTime;
 		if (totalTime > animations[0]->animationLength)
 			totalTime = 0;
 		mesh.transforms.clear();

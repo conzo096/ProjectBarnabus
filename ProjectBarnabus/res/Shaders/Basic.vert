@@ -32,8 +32,7 @@ void main()
 	gl_Position = MVP * vec4(vertexOut.xyz,1);
 	// Output texture coordinate to fragement shader
 	tex_coord_out = tex_coord_in;
-	
-	float dist = distance(vertexOut, vertexIn);
-	baseColourOut = normalize(vec4(dist,dist,dist,1));
+
+	baseColourOut = vertexOut;
 	baseColourOut.a = 1.0;
 }
