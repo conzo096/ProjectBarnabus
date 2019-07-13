@@ -10,26 +10,24 @@
 #include <glm/gtc/quaternion.hpp> 
 #include <glm/gtx/quaternion.hpp>
 
-inline glm::mat3 aiMatrix3x3ToGlm(const aiMatrix3x3 &from)
+inline glm::mat4 aiMatrix3x3ToGlm(const aiMatrix3x3 &from)
 {
-	glm::mat3 to;
-	//the a,b,c,d in assimp is the row ; the 1,2,3,4 is the column
-	to[0][0] = from.a1; to[1][0] = from.a2;	to[2][0] = from.a3;
-	to[0][1] = from.b1; to[1][1] = from.b2;	to[2][1] = from.b3;
-	to[0][2] = from.c1; to[1][2] = from.c2;	to[2][2] = from.c3;
-
-	return to;
+	glm::mat4 result;
+	result[0].x = from.a1; result[0].y = from.a2; result[0].z = from.a3;
+	result[1].x = from.b1; result[1].y = from.b2; result[1].z = from.b3;
+	result[2].x = from.c1; result[2].y = from.c2; result[2].z = from.c3;
+	return result;
 }
+
 
 inline glm::mat4 aiMatrix4x4ToGlm(const aiMatrix4x4 &from)
 {
-	glm::mat4 to;
-	//the a,b,c,d in assimp is the row ; the 1,2,3,4 is the column
-	to[0][0] = from.a1; to[1][0] = from.a2;	to[2][0] = from.a3; to[3][0] = from.a4;
-	to[0][1] = from.b1; to[1][1] = from.b2;	to[2][1] = from.b3; to[3][1] = from.b4;
-	to[0][2] = from.c1; to[1][2] = from.c2;	to[2][2] = from.c3; to[3][2] = from.c4;
-	to[0][3] = from.d1; to[1][3] = from.d2;	to[2][3] = from.d3; to[3][3] = from.d4;
-	return to;
+	glm::mat4 result;
+	result[0].x = from.a1; result[0].y = from.a2; result[0].z = from.a3; result[0].w = from.a4;
+	result[1].x = from.b1; result[1].y = from.b2; result[1].z = from.b3; result[1].w = from.b4;
+	result[2].x = from.c1; result[2].y = from.c2; result[2].z = from.c3; result[2].w = from.c4;
+	result[3].x = from.d1; result[3].y = from.d2; result[3].z = from.d3; result[3].w = from.d4;
+	return result;
 }
 
 
@@ -94,7 +92,7 @@ inline glm::vec3 aiVec3ToGlm(const aiVector3D from)
 
 inline glm::quat aiQuatToGlm(const aiQuaternion from)
 {
-	return glm::quat(from.x, from.y, from.z, from.w);
+	return glm::quat(glm::vec4(from.x, from.y, from.z, from.w));
 }
 
 AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
@@ -122,7 +120,8 @@ AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
  			Bone bone;
 			bone.name = aiBone->mName.C_Str();
 			bone.offSet = aiMatrix4x4ToGlm(aiBone->mOffsetMatrix);
-	
+			bone.inverseOffSet = glm::inverse(aiMatrix4x4ToGlm(aiBone->mOffsetMatrix));
+
 			bones.push_back(bone);
 			boneMapping[bone.name] = j;
 
@@ -148,7 +147,6 @@ AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
 			auto channel = animation->mChannels[j];
 			NodeAnim* node = new NodeAnim;
 			node->name = channel->mNodeName.C_Str();
-
 			for (int key = 0; key < channel->mNumPositionKeys; key++)
 			{
 				PositionKey positionKey;
@@ -188,8 +186,8 @@ void AnimatedModel::Update(double deltaTime)
 	for (int i = 0; i < data.size(); i++)
 	{
 		auto& mesh = data[i];
-		//deltaTime = 0.0469999984f;
-		totalTime += deltaTime;
+		totalTime = 0;
+		//totalTime += deltaTime;
 		if (totalTime > animations[0]->animationLength)
 			totalTime = 0;
 		mesh.transforms.clear();
@@ -325,7 +323,7 @@ void AnimatedModel::CalcInterpolatedRotation(glm::quat & Out, float AnimationTim
 	assert(Factor >= 0.0f && Factor <= 1.0f);
 	const glm::quat& StartRotationQ = pNodeAnim->rotationKeys[RotationIndex].rotation;
 	const glm::quat& EndRotationQ = pNodeAnim->rotationKeys[NextRotationIndex].rotation;
-	Out = glm::lerp(StartRotationQ, EndRotationQ, Factor);
+	Out = glm::slerp(StartRotationQ, EndRotationQ, Factor);
 	Out = glm::normalize(Out);
 
 }

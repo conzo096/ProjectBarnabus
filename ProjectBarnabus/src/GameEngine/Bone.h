@@ -42,6 +42,7 @@ struct Bone
 {
 	std::string name;
 	glm::mat4 offSet;
+	glm::mat4 inverseOffSet;
 
 	glm::dmat4 finalTransformation;
 };

@@ -23,7 +23,7 @@ void AnimationShader::UpdateUniforms(const MeshData& meshData)
 		index = glGetUniformLocation(meshData.GetShader()->GetId(), uniformName.c_str());
 
 		const auto transform = glm::mat4(meshData.transforms.at(i));
-		glUniformMatrix4fv(index, 1, GL_TRUE, glm::value_ptr(transform));
+		glUniformMatrix4fv(index, 1, GL_FALSE, glm::value_ptr(transform));
 	}
 
 #if DEBUG_VERTICES

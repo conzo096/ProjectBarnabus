@@ -30,5 +30,4 @@ struct NodeAnim
 	std::vector<ScalingKey> scalingKeys;
 	std::vector<RotationKey> rotationKeys;
 
-	std::vector<NodeAnim*> children;
 };
