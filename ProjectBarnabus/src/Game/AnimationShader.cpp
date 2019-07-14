@@ -22,7 +22,7 @@ void AnimationShader::UpdateUniforms(const MeshData& meshData)
  		std::string uniformName("bones[" + std::to_string(i) + "]");
 		index = glGetUniformLocation(meshData.GetShader()->GetId(), uniformName.c_str());
 
-		const auto transform = glm::mat4(meshData.transforms.at(i));
+		const auto& transform = meshData.transforms.at(i);
 		glUniformMatrix4fv(index, 1, GL_FALSE, glm::value_ptr(transform));
 	}
 

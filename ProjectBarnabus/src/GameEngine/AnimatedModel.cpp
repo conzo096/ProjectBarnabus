@@ -10,89 +10,24 @@
 #include <glm/gtc/quaternion.hpp> 
 #include <glm/gtx/quaternion.hpp>
 
-inline glm::mat4 aiMatrix3x3ToGlm(const aiMatrix3x3 &from)
+inline glm::mat4 aiMatrix4x4ToGlm(const aiMatrix4x4 &aiMat)
 {
-	glm::mat4 result;
-	result[0].x = from.a1; result[0].y = from.a2; result[0].z = from.a3;
-	result[1].x = from.b1; result[1].y = from.b2; result[1].z = from.b3;
-	result[2].x = from.c1; result[2].y = from.c2; result[2].z = from.c3;
-	return result;
+	return {
+	aiMat.a1, aiMat.b1, aiMat.c1, aiMat.d1,
+	aiMat.a2, aiMat.b2, aiMat.c2, aiMat.d2,
+	aiMat.a3, aiMat.b3, aiMat.c3, aiMat.d3,
+	aiMat.a4, aiMat.b4, aiMat.c4, aiMat.d4
+	};
 }
 
-
-inline glm::mat4 aiMatrix4x4ToGlm(const aiMatrix4x4 &from)
-{
-	glm::mat4 result;
-	result[0].x = from.a1; result[0].y = from.a2; result[0].z = from.a3; result[0].w = from.a4;
-	result[1].x = from.b1; result[1].y = from.b2; result[1].z = from.b3; result[1].w = from.b4;
-	result[2].x = from.c1; result[2].y = from.c2; result[2].z = from.c3; result[2].w = from.c4;
-	result[3].x = from.d1; result[3].y = from.d2; result[3].z = from.d3; result[3].w = from.d4;
-	return result;
-}
-
-
-inline glm::mat4 FloatToGlm(const float from)
-{
-	glm::mat4 to;
-
-	to[0][0] = (GLfloat)from; to[0][1] = (GLfloat)from;  to[0][2] = (GLfloat)from; to[0][3] = (GLfloat)from;
-	to[1][0] = (GLfloat)from; to[1][1] = (GLfloat)from;  to[1][2] = (GLfloat)from; to[1][3] = (GLfloat)from;
-	to[2][0] = (GLfloat)from; to[2][1] = (GLfloat)from;  to[2][2] = (GLfloat)from; to[2][3] = (GLfloat)from;
-	to[3][0] = (GLfloat)from; to[3][1] = (GLfloat)from;  to[3][2] = (GLfloat)from; to[3][3] = (GLfloat)from;
-
-	return to;
-}
-
-inline glm::mat4 InitTranslationTransform(glm::vec3 position)
-{
-	glm::mat4 m;
-	m[0][0] = 1.0f; m[0][1] = 0.0f; m[0][2] = 0.0f; m[0][3] = position.x;
-	m[1][0] = 0.0f; m[1][1] = 1.0f; m[1][2] = 0.0f; m[1][3] = position.y;
-	m[2][0] = 0.0f; m[2][1] = 0.0f; m[2][2] = 1.0f; m[2][3] = position.z;
-	m[3][0] = 0.0f; m[3][1] = 0.0f; m[3][2] = 0.0f; m[3][3] = 1.0f;
-
-	return m;
-}
-
-inline glm::mat4 InitRotateTransform(const glm::quat& quat)
-{
-	glm::mat4 m;
-
-	float yy2 = 2.0f * quat.y * quat.y;
-	float xy2 = 2.0f * quat.x * quat.y;
-	float xz2 = 2.0f * quat.x * quat.z;
-	float yz2 = 2.0f * quat.y * quat.z;
-	float zz2 = 2.0f * quat.z * quat.z;
-	float wz2 = 2.0f * quat.w * quat.z;
-	float wy2 = 2.0f * quat.w * quat.y;
-	float wx2 = 2.0f * quat.w * quat.x;
-	float xx2 = 2.0f * quat.x * quat.x;
-	m[0][0] = -yy2 - zz2 + 1.0f;
-	m[0][1] = xy2 + wz2;
-	m[0][2] = xz2 - wy2;
-	m[0][3] = 0;
-	m[1][0] = xy2 - wz2;
-	m[1][1] = -xx2 - zz2 + 1.0f;
-	m[1][2] = yz2 + wx2;
-	m[1][3] = 0;
-	m[2][0] = xz2 + wy2;
-	m[2][1] = yz2 - wx2;
-	m[2][2] = -xx2 - yy2 + 1.0f;
-	m[2][3] = 0.0f;
-	m[3][0] = m[3][1] = m[3][2] = 0;
-	m[3][3] = 1.0f;
-
-	return m;
-}
-
-inline glm::vec3 aiVec3ToGlm(const aiVector3D from)
+inline glm::vec3 aiVec3ToGlm(const aiVector3D &from)
 {
 	return glm::vec3(from.x, from.y, from.z);
 }
 
-inline glm::quat aiQuatToGlm(const aiQuaternion from)
+inline glm::quat aiQuatToGlm(const aiQuaternion &from)
 {
-	return glm::quat(glm::vec4(from.x, from.y, from.z, from.w));
+	return glm::quat(from.w,from.x,from.y,from.z);
 }
 
 AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
@@ -186,7 +121,6 @@ void AnimatedModel::Update(double deltaTime)
 	for (int i = 0; i < data.size(); i++)
 	{
 		auto& mesh = data[i];
-		//totalTime = 0;
 		totalTime += deltaTime;
 		if (totalTime > animations[0]->animationLength)
 			totalTime = 0;
@@ -214,7 +148,7 @@ void AnimatedModel::ReadNodeHeirarchy(float AnimationTime, const Node* pNode, co
 
 	const Animation* animation = animations[0];
 
-	glm::mat4 NodeTransformation(pNode->transformation);
+	glm::mat4 NodeTransformation = pNode->transformation;
 	const NodeAnim* pNodeAnim = FindNodeAnim(animation, NodeName);
 
 	if (pNodeAnim)
@@ -222,18 +156,18 @@ void AnimatedModel::ReadNodeHeirarchy(float AnimationTime, const Node* pNode, co
 		// Interpolate scaling and generate scaling transformation matrix
 		glm::vec3 Scaling;
 		CalcInterpolatedScaling(Scaling, AnimationTime, pNodeAnim);
-		glm::mat4 ScalingM(glm::scale(glm::mat4(1),Scaling));
+		glm::mat4 ScalingM = glm::scale(Scaling);
 
 		// Interpolate rotation and generate rotation transformation matrix
 		glm::quat RotationQ;
 		CalcInterpolatedRotation(RotationQ, AnimationTime, pNodeAnim);
-		glm::mat4 RotationM(InitRotateTransform(RotationQ));
+		glm::mat4 RotationM = glm::mat4_cast(RotationQ);
 
 		// Interpolate translation and generate translation transformation matrix
 		glm::vec3 Translation;
 		CalcInterpolatedPosition(Translation, AnimationTime, pNodeAnim);
 		glm::mat4 TranslationM;
-		TranslationM = InitTranslationTransform(Translation);
+		TranslationM = glm::translate(Translation);
 
 		// Combine the above transformations
 		NodeTransformation = TranslationM * RotationM * ScalingM;
@@ -274,7 +208,7 @@ void AnimatedModel::LoadNodeTree(Node*& myRootNode, aiNode* rootNode, Node* pare
 	myRootNode = new Node;
 	myRootNode->transformation = aiMatrix4x4ToGlm(rootNode->mTransformation);
 	myRootNode->name = rootNode->mName.C_Str();
-
+	myRootNode->parent = parent;
 	myRootNode->children.resize(rootNode->mNumChildren);
 
 	for (int i = 0; i < rootNode->mNumChildren; i++)
