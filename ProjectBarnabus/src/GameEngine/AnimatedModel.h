@@ -15,15 +15,15 @@ public:
 
 	void Update(double deltaTime) override;
 
-	void ReadNodeHeirarchy(float AnimationTime, const Node* pNode, const glm::mat4& ParentTransform);
+	void ReadNodeHeirarchy(float animationTime, const Node* pNode, const glm::mat4& parentTransform);
 
-	const NodeAnim* FindNodeAnim(const Animation* pAnimation, const std::string NodeName);
+	const NodeAnim* FindNodeAnim(const Animation* pAnimation, const std::string nodeName);
 
 
 	std::vector<Bone> bones;
 	std::map<std::string, int> boneMapping;
 
-	glm::mat4 m_GlobalInverseTransform;
+	glm::mat4 globalInverseTransform;
 	std::vector<Animation*> animations;
 
 	// Not implemented.
@@ -31,11 +31,11 @@ public:
 	float totalTime;
 private:
 	void LoadNodeTree(Node*& myRootNode, aiNode* rootNode,Node* parent);
-	void CalcInterpolatedScaling(glm::vec3& Out, float AnimationTime, const NodeAnim* pNodeAnim);
-	void CalcInterpolatedRotation(glm::quat& Out, float AnimationTime, const NodeAnim* pNodeAnim);
-	void CalcInterpolatedPosition(glm::vec3& Out, float AnimationTime, const NodeAnim* pNodeAnim);
+	void CalcInterpolatedScaling(glm::vec3& out, float animationTime, const NodeAnim* nodeAnim);
+	void CalcInterpolatedRotation(glm::quat& out, float animationTime, const NodeAnim* nodeAnim);
+	void CalcInterpolatedPosition(glm::vec3& out, float animationTime, const NodeAnim* nodeAnim);
 
-	int FindScaling(float AnimationTime, const NodeAnim* pNodeAnim);
-	int FindRotation(float AnimationTime, const NodeAnim* pNodeAnim);
-	int FindPosition(float AnimationTime, const NodeAnim* pNodeAnim);
+	int FindScaling(float animationTime, const NodeAnim* nodeAnim);
+	int FindRotation(float animationTime, const NodeAnim* nodeAnim);
+	int FindPosition(float animationTime, const NodeAnim* nodeAnim);
 };

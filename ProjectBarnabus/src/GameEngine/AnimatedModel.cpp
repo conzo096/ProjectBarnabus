@@ -44,7 +44,7 @@ AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
 		return;
 	}
 
-	m_GlobalInverseTransform = glm::inverse(aiMatrix4x4ToGlm(model->mRootNode->mTransformation));
+	globalInverseTransform = glm::inverse(aiMatrix4x4ToGlm(model->mRootNode->mTransformation));
 
 	for (int i = 0; i < model->mNumMeshes; i++)
 	{
@@ -128,9 +128,9 @@ void AnimatedModel::Update(double deltaTime)
 
 		float TicksPerSecond = animations[0]->ticksPerSecond != 0 ? animations[0]->ticksPerSecond : 20.0f;
 		float TimeInTicks = totalTime * TicksPerSecond;
-		float AnimationTime = fmod(TimeInTicks, animations[0]->animationLength);
+		float animationTime = fmod(TimeInTicks, animations[0]->animationLength);
 
-		ReadNodeHeirarchy(AnimationTime, rootNode, glm::mat4(1));
+		ReadNodeHeirarchy(animationTime, rootNode, glm::mat4(1));
 
 		mesh.transforms.resize(bones.size());
 
@@ -142,61 +142,61 @@ void AnimatedModel::Update(double deltaTime)
 	}
 }
 
-void AnimatedModel::ReadNodeHeirarchy(float AnimationTime, const Node* pNode, const glm::mat4 & ParentTransform)
+void AnimatedModel::ReadNodeHeirarchy(float animationTime, const Node* node, const glm::mat4 & parentTransform)
 {
-	std::string NodeName(pNode->name);
+	std::string nodeName(node->name);
 
 	const Animation* animation = animations[0];
 
-	glm::mat4 NodeTransformation = pNode->transformation;
-	const NodeAnim* pNodeAnim = FindNodeAnim(animation, NodeName);
+	glm::mat4 nodeTransformation = node->transformation;
+	const NodeAnim* nodeAnim = FindNodeAnim(animation, nodeName);
 
-	if (pNodeAnim)
+	if (nodeAnim)
 	{
 		// Interpolate scaling and generate scaling transformation matrix
-		glm::vec3 Scaling;
-		CalcInterpolatedScaling(Scaling, AnimationTime, pNodeAnim);
-		glm::mat4 ScalingM = glm::scale(Scaling);
+		glm::vec3 scaling;
+		CalcInterpolatedScaling(scaling, animationTime, nodeAnim);
+		glm::mat4 scalingM = glm::scale(scaling);
 
 		// Interpolate rotation and generate rotation transformation matrix
-		glm::quat RotationQ;
-		CalcInterpolatedRotation(RotationQ, AnimationTime, pNodeAnim);
-		glm::mat4 RotationM = glm::mat4_cast(RotationQ);
+		glm::quat rotation;
+		CalcInterpolatedRotation(rotation, animationTime, nodeAnim);
+		glm::mat4 rotationM = glm::mat4_cast(rotation);
 
 		// Interpolate translation and generate translation transformation matrix
-		glm::vec3 Translation;
-		CalcInterpolatedPosition(Translation, AnimationTime, pNodeAnim);
-		glm::mat4 TranslationM;
-		TranslationM = glm::translate(Translation);
+		glm::vec3 translation;
+		CalcInterpolatedPosition(translation, animationTime, nodeAnim);
+		glm::mat4 translationM;
+		translationM = glm::translate(translation);
 
 		// Combine the above transformations
-		NodeTransformation = TranslationM * RotationM * ScalingM;
+		nodeTransformation = translationM * rotationM * scalingM;
 	}
 
-	glm::mat4 GlobalTransformation = ParentTransform * NodeTransformation;
+	glm::mat4 globalTransformation = parentTransform * nodeTransformation;
 
-	if (boneMapping.find(NodeName) != boneMapping.end())
+	if (boneMapping.find(nodeName) != boneMapping.end())
 	{
-		unsigned int BoneIndex = boneMapping[NodeName];
-		bones[BoneIndex].finalTransformation = m_GlobalInverseTransform * GlobalTransformation * bones[BoneIndex].offSet;
+		unsigned int BoneIndex = boneMapping[nodeName];
+		bones[BoneIndex].finalTransformation = globalInverseTransform * globalTransformation * bones[BoneIndex].offSet;
 	}
 
-	for (unsigned int i = 0; i < pNode->children.size(); i++)
+	for (unsigned int i = 0; i < node->children.size(); i++)
 	{
-		ReadNodeHeirarchy(AnimationTime, pNode->children[i], GlobalTransformation);
+		ReadNodeHeirarchy(animationTime, node->children[i], globalTransformation);
 	}
 
 }
 
-const NodeAnim* AnimatedModel::FindNodeAnim(const Animation* animation, const std::string NodeName)
+const NodeAnim* AnimatedModel::FindNodeAnim(const Animation* animation, const std::string nodeName)
 {
 	for (int i = 0; i < animation->nodes.size(); i++)
 	{
-		const NodeAnim* pNodeAnim = animation->nodes[i];
+		const NodeAnim* nodeAnim = animation->nodes[i];
 
-		if (std::string(pNodeAnim->name) == NodeName)
+		if (std::string(nodeAnim->name) == nodeName)
 		{
-			return pNodeAnim;
+			return nodeAnim;
 		}
 	}
 
@@ -217,77 +217,77 @@ void AnimatedModel::LoadNodeTree(Node*& myRootNode, aiNode* rootNode, Node* pare
 	}
 }
 
-void AnimatedModel::CalcInterpolatedScaling(glm::vec3 & Out, float AnimationTime, const NodeAnim * pNodeAnim)
+void AnimatedModel::CalcInterpolatedScaling(glm::vec3 & out, float animationTime, const NodeAnim * nodeAnim)
 {
-	if (pNodeAnim->scalingKeys.size() == 1)
+	if (nodeAnim->scalingKeys.size() == 1)
 	{
-		Out = pNodeAnim->scalingKeys[0].scale;
+		out = nodeAnim->scalingKeys[0].scale;
 		return;
 	}
 
-	unsigned int ScalingIndex = FindScaling(AnimationTime, pNodeAnim);
-	unsigned int NextScalingIndex = (ScalingIndex + 1);
+	unsigned int scalingIndex = FindScaling(animationTime, nodeAnim);
+	unsigned int nextScalingIndex = (scalingIndex + 1);
 
-	float DeltaTime = (float)(pNodeAnim->scalingKeys[NextScalingIndex].timeStamp - pNodeAnim->scalingKeys[ScalingIndex].timeStamp);
-	float Factor = (AnimationTime - (float)pNodeAnim->scalingKeys[ScalingIndex].timeStamp) / DeltaTime;
+	float deltaTime = nodeAnim->scalingKeys[nextScalingIndex].timeStamp - nodeAnim->scalingKeys[scalingIndex].timeStamp;
+	float factor = (animationTime - nodeAnim->scalingKeys[scalingIndex].timeStamp) / deltaTime;
 
-	assert(Factor >= 0.0f && Factor <= 1.0f);
+	assert(factor >= 0.0f && factor <= 1.0f);
 
-	const glm::vec3 Start = pNodeAnim->scalingKeys[ScalingIndex].scale;
-	const glm::vec3 End = pNodeAnim->scalingKeys[NextScalingIndex].scale;
-	glm::vec3 Delta = End - Start;
-	Out = Start + Factor * Delta;
+	const glm::vec3 start = nodeAnim->scalingKeys[scalingIndex].scale;
+	const glm::vec3 end = nodeAnim->scalingKeys[nextScalingIndex].scale;
+	glm::vec3 delta = end - start;
+	out = start + factor * delta;
 
 }
 
-void AnimatedModel::CalcInterpolatedRotation(glm::quat & Out, float AnimationTime, const NodeAnim * pNodeAnim)
+void AnimatedModel::CalcInterpolatedRotation(glm::quat & out, float animationTime, const NodeAnim * nodeAnim)
 {
-	if (pNodeAnim->rotationKeys.size() == 1)
+	if (nodeAnim->rotationKeys.size() == 1)
 	{
-		Out = pNodeAnim->rotationKeys[0].rotation;
+		out = nodeAnim->rotationKeys[0].rotation;
 		return;
 	}
 
-	unsigned int RotationIndex = FindRotation(AnimationTime, pNodeAnim);
-	unsigned int NextRotationIndex = (RotationIndex + 1);
-	assert(NextRotationIndex < pNodeAnim->rotationKeys.size());
+	unsigned int rotationIndex = FindRotation(animationTime, nodeAnim);
+	unsigned int nextRotationIndex = (rotationIndex + 1);
+	assert(nextRotationIndex < nodeAnim->rotationKeys.size());
 	
-	float DeltaTime = (float)(pNodeAnim->rotationKeys[NextRotationIndex].timeStamp - pNodeAnim->rotationKeys[RotationIndex].timeStamp);
-	float Factor = (AnimationTime - (float)pNodeAnim->rotationKeys[RotationIndex].timeStamp) / DeltaTime;
-	assert(Factor >= 0.0f && Factor <= 1.0f);
-	const glm::quat& StartRotationQ = pNodeAnim->rotationKeys[RotationIndex].rotation;
-	const glm::quat& EndRotationQ = pNodeAnim->rotationKeys[NextRotationIndex].rotation;
-	Out = glm::slerp(StartRotationQ, EndRotationQ, Factor);
-	Out = glm::normalize(Out);
+	float deltaTime = nodeAnim->rotationKeys[nextRotationIndex].timeStamp - nodeAnim->rotationKeys[rotationIndex].timeStamp;
+	float factor = (animationTime - nodeAnim->rotationKeys[rotationIndex].timeStamp) / deltaTime;
+	assert(factor >= 0.0f && factor <= 1.0f);
+	const glm::quat& startRotationQ = nodeAnim->rotationKeys[rotationIndex].rotation;
+	const glm::quat& endRotationQ = nodeAnim->rotationKeys[nextRotationIndex].rotation;
+	out = glm::slerp(startRotationQ, endRotationQ, factor);
+	out = glm::normalize(out);
 
 }
 
-void AnimatedModel::CalcInterpolatedPosition(glm::vec3 & Out, float AnimationTime, const NodeAnim * pNodeAnim)
+void AnimatedModel::CalcInterpolatedPosition(glm::vec3 & out, float animationTime, const NodeAnim * nodeAnim)
 {
-	if (pNodeAnim->positionKeys.size() == 1)
+	if (nodeAnim->positionKeys.size() == 1)
 	{
-		Out = pNodeAnim->positionKeys[0].position;
+		out = nodeAnim->positionKeys[0].position;
 		return;
 	}
 
-	unsigned int PositionIndex = FindPosition(AnimationTime, pNodeAnim);
-	unsigned int NextPositionIndex = (PositionIndex + 1);
-	assert(NextPositionIndex < pNodeAnim->positionKeys.size());
-	float DeltaTime = (float)(pNodeAnim->positionKeys[NextPositionIndex].timeStamp - pNodeAnim->positionKeys[PositionIndex].timeStamp);
-	float Factor = (AnimationTime - (float)pNodeAnim->positionKeys[PositionIndex].timeStamp) / DeltaTime;
-	assert(Factor >= 0.0f && Factor <= 1.0f);
-	const glm::vec3 Start = pNodeAnim->positionKeys[PositionIndex].position;
-	const glm::vec3 End = pNodeAnim->positionKeys[NextPositionIndex].position;
-	glm::vec3 Delta = End - Start;
-	Out = Start + Factor * Delta;
+	unsigned int positionIndex = FindPosition(animationTime, nodeAnim);
+	unsigned int nextPositionIndex = (positionIndex + 1);
+	assert(nextPositionIndex < nodeAnim->positionKeys.size());
+	float deltaTime = nodeAnim->positionKeys[nextPositionIndex].timeStamp - nodeAnim->positionKeys[positionIndex].timeStamp;
+	float factor = (animationTime - nodeAnim->positionKeys[positionIndex].timeStamp) / deltaTime;
+	assert(factor >= 0.0f && factor <= 1.0f);
+	const glm::vec3 start = nodeAnim->positionKeys[positionIndex].position;
+	const glm::vec3 end = nodeAnim->positionKeys[nextPositionIndex].position;
+	glm::vec3 delta = end - start;
+	out = start + factor * delta;
 }
 
-int AnimatedModel::FindScaling(float AnimationTime, const NodeAnim * pNodeAnim)
+int AnimatedModel::FindScaling(float animationTime, const NodeAnim * nodeAnim)
 {
 
-	for (unsigned int i = 0; i < pNodeAnim->scalingKeys.size() - 1; i++)
+	for (unsigned int i = 0; i < nodeAnim->scalingKeys.size() - 1; i++)
 	{
-		if (AnimationTime < (float)pNodeAnim->scalingKeys[i + 1].timeStamp)
+		if (animationTime < nodeAnim->scalingKeys[i + 1].timeStamp)
 		{
 			return i;
 		}
@@ -296,11 +296,11 @@ int AnimatedModel::FindScaling(float AnimationTime, const NodeAnim * pNodeAnim)
 	return 0;
 }
 
-int AnimatedModel::FindRotation(float AnimationTime, const NodeAnim* pNodeAnim)
+int AnimatedModel::FindRotation(float animationTime, const NodeAnim* nodeAnim)
 {
-	for (unsigned int i = 0; i < pNodeAnim->rotationKeys.size() - 1; i++)
+	for (unsigned int i = 0; i < nodeAnim->rotationKeys.size() - 1; i++)
 	{
-		if (AnimationTime < pNodeAnim->rotationKeys[i + 1].timeStamp)
+		if (animationTime < nodeAnim->rotationKeys[i + 1].timeStamp)
 		{
 			return i;
 		}
@@ -309,12 +309,12 @@ int AnimatedModel::FindRotation(float AnimationTime, const NodeAnim* pNodeAnim)
 	return 0;
 }
 
-int AnimatedModel::FindPosition(float AnimationTime, const NodeAnim* pNodeAnim)
+int AnimatedModel::FindPosition(float animationTime, const NodeAnim* nodeAnim)
 {
 
-	for (unsigned int i = 0; i < pNodeAnim->positionKeys.size() - 1; i++)
+	for (unsigned int i = 0; i < nodeAnim->positionKeys.size() - 1; i++)
 	{
-		if (AnimationTime < pNodeAnim->positionKeys[i + 1].timeStamp)
+		if (animationTime < nodeAnim->positionKeys[i + 1].timeStamp)
 		{
 			return i;
 		}
