@@ -31,9 +31,9 @@ public:
 	float totalTime;
 private:
 	void LoadNodeTree(Node*& myRootNode, aiNode* rootNode,Node* parent);
-	void CalcInterpolatedScaling(glm::vec3& out, float animationTime, const NodeAnim* nodeAnim);
-	void CalcInterpolatedRotation(glm::quat& out, float animationTime, const NodeAnim* nodeAnim);
-	void CalcInterpolatedPosition(glm::vec3& out, float animationTime, const NodeAnim* nodeAnim);
+	glm::vec3 CalcInterpolatedScaling(float animationTime, const NodeAnim* nodeAnim);
+	glm::quat CalcInterpolatedRotation(float animationTime, const NodeAnim* nodeAnim);
+	glm::vec3 CalcInterpolatedPosition(float animationTime, const NodeAnim* nodeAnim);
 
 	int FindScaling(float animationTime, const NodeAnim* nodeAnim);
 	int FindRotation(float animationTime, const NodeAnim* nodeAnim);
