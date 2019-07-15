@@ -40,7 +40,7 @@ void MeshData::InitialiseMesh()
 		glBufferData(GL_ARRAY_BUFFER, sizeof(VertexBoneData) * bonesData.size(), &bonesData[0], GL_STATIC_DRAW);
 
 		glEnableVertexAttribArray(BUFFERS::BONE_ID);
-		glVertexAttribIPointer(BUFFERS::BONE_ID, 4, GL_INT, sizeof(VertexBoneData), (void*)offsetof(VertexBoneData, vertexIds));
+		glVertexAttribIPointer(BUFFERS::BONE_ID, 4, GL_INT, sizeof(VertexBoneData), (void*)offsetof(VertexBoneData, boneIds));
 
 		glEnableVertexAttribArray(BUFFERS::BONE_WEIGHT);
 		glVertexAttribPointer(BUFFERS::BONE_WEIGHT, 4, GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), (void*)offsetof(VertexBoneData, weights));

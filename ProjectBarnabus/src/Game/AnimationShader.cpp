@@ -32,7 +32,7 @@ void AnimationShader::UpdateUniforms(const MeshData& meshData)
 	{
 		auto vertex = glm::vec4(meshData.vertices[i].position, 1);
 		auto weights = meshData.bonesData[i].weights;
-		auto boneIds = meshData.bonesData[i].vertexIds;
+		auto boneIds = meshData.bonesData[i].boneIds;
 
 		glm::vec4 vertexOut =
 			(meshData.transforms[boneIds[0]] * vertex) * weights[0] +

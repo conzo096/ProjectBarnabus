@@ -1,33 +1,22 @@
 #pragma once
-#include <iostream>
 #include <glm/glm.hpp>
 #include <vector>
 
 #define NUM_BONES_PER_VERTEX 4
-
 #define ARRAY_SIZE_IN_ELEMENTS(a) (sizeof(a)/sizeof(a[0]))
-
-#define ZERO_MEM(a) memset(a, 0, sizeof(a))
 
 struct VertexBoneData
 {
-
-	VertexBoneData()
-	{
-		ZERO_MEM(weights);
-		ZERO_MEM(vertexIds);
-	}
-
 	float weights[NUM_BONES_PER_VERTEX];
-	int vertexIds[NUM_BONES_PER_VERTEX];
+	int boneIds[NUM_BONES_PER_VERTEX];
 
 	void AddBoneData(unsigned int boneId, float weight)
 	{
-		for (unsigned i = 0; i < ARRAY_SIZE_IN_ELEMENTS(vertexIds); i++)
+		for (unsigned int i = 0; i < ARRAY_SIZE_IN_ELEMENTS(boneIds); i++)
 		{
 			if (weights[i] == 0.0)
 			{
-				vertexIds[i] = boneId;
+				boneIds[i] = boneId;
 				weights[i] = weight;
 				return;
 			}

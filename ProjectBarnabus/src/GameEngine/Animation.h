@@ -1,5 +1,4 @@
 #pragma once
-#include "KeyFrame.h"
 #include "NodeAnim.h"
 
 class Animation
@@ -19,5 +18,4 @@ private:
 	std::string name;
 	float ticksPerSecond;
 	float animationLength;
-
 };

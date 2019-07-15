@@ -45,7 +45,6 @@
     <ClInclude Include="src\GameEngine\GLShader.h" />
     <ClInclude Include="src\GameEngine\Node.h" />
     <ClInclude Include="src\GameEngine\NodeAnim.h" />
-    <ClInclude Include="src\GameEngine\KeyFrame.h" />
     <ClInclude Include="src\GameEngine\MeshData.h" />
     <ClInclude Include="src\GameEngine\Model.h" />
     <ClInclude Include="src\GameEngine\Renderer.h" />
