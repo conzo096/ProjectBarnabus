@@ -153,13 +153,13 @@ void AnimatedModel::ReadNodeHeirarchy(float animationTime, const Node* node, con
 	if (nodeAnim)
 	{
 		// Interpolate scaling and generate scaling transformation matrix
-		glm::mat4 scaling = glm::scale(CalcInterpolatedScaling(animationTime, nodeAnim));
+		glm::mat4 scaling = glm::scale(CalculateInterpolatedScaling(animationTime, nodeAnim));
 
 		// Interpolate rotation and generate rotation transformation matrix
-		glm::mat4 rotation = glm::mat4_cast(CalcInterpolatedRotation(animationTime, nodeAnim));
+		glm::mat4 rotation = glm::mat4_cast(CalculateInterpolatedRotation(animationTime, nodeAnim));
 
 		// Interpolate translation and generate translation transformation matrix
-		glm::mat4 translation = glm::translate(CalcInterpolatedPosition(animationTime, nodeAnim));
+		glm::mat4 translation = glm::translate(CalculateInterpolatedPosition(animationTime, nodeAnim));
 
 		// Combine the above transformations
 		nodeTransformation = translation * rotation * scaling;
@@ -209,7 +209,7 @@ void AnimatedModel::LoadNodeTree(Node*& myRootNode, aiNode* rootNode, Node* pare
 	}
 }
 
-glm::vec3 AnimatedModel::CalcInterpolatedScaling(float animationTime, const NodeAnim * nodeAnim)
+glm::vec3 AnimatedModel::CalculateInterpolatedScaling(float animationTime, const NodeAnim * nodeAnim)
 {
 	if (nodeAnim->scalingKeys.size() == 1)
 	{
@@ -230,7 +230,7 @@ glm::vec3 AnimatedModel::CalcInterpolatedScaling(float animationTime, const Node
 	return start + factor * delta;
 }
 
-glm::quat AnimatedModel::CalcInterpolatedRotation(float animationTime, const NodeAnim * nodeAnim)
+glm::quat AnimatedModel::CalculateInterpolatedRotation(float animationTime, const NodeAnim * nodeAnim)
 {
 	if (nodeAnim->rotationKeys.size() == 1)
 	{
@@ -249,7 +249,7 @@ glm::quat AnimatedModel::CalcInterpolatedRotation(float animationTime, const Nod
 	return glm::normalize(glm::slerp(startRotationQ, endRotationQ, factor));
 }
 
-glm::vec3 AnimatedModel::CalcInterpolatedPosition(float animationTime, const NodeAnim * nodeAnim)
+glm::vec3 AnimatedModel::CalculateInterpolatedPosition(float animationTime, const NodeAnim * nodeAnim)
 {
 	if (nodeAnim->positionKeys.size() == 1)
 	{
