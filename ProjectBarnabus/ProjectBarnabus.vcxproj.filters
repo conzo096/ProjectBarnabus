@@ -25,9 +25,6 @@
     <ClCompile Include="src\GameEngine\Model.cpp">
       <Filter>Source Files\GameEngine\Components\Model</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameEngine\Animator.cpp">
-      <Filter>Source Files\GameEngine\Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="src\GameEngine\BarnabusGameEngine.cpp">
       <Filter>Source Files\GameEngine</Filter>
     </ClCompile>
@@ -152,9 +149,6 @@
     </ClInclude>
     <ClInclude Include="src\Game\AnimationShader.h">
       <Filter>Header Files\Game\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GameEngine\Animator.h">
-      <Filter>Header Files\GameEngine\Renderer\Animation</Filter>
     </ClInclude>
     <ClInclude Include="src\GameEngine\KeyFrame.h">
       <Filter>Header Files\GameEngine\Renderer\Animation</Filter>
