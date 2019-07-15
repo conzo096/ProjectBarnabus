@@ -73,9 +73,9 @@ AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
 	{
 		auto animation = model->mAnimations[i];
 		Animation* newAnimation = new Animation;
-		newAnimation->animationLength = animation->mDuration;
-		newAnimation->name = animation->mName.C_Str();
-		newAnimation->ticksPerSecond = animation->mTicksPerSecond;
+		newAnimation->SetAnimationLength(animation->mDuration);
+		newAnimation->SetName(animation->mName.C_Str());
+		newAnimation->SetTicksPerSecond(animation->mTicksPerSecond);
 
 		for (int j = 0; j < animation->mNumChannels; j++)
 		{
@@ -125,9 +125,9 @@ void AnimatedModel::Update(double deltaTime)
 
 		mesh.transforms.clear();
 
-		float ticksPerSecond = animations[0]->ticksPerSecond != 0 ? animations[0]->ticksPerSecond : 20.0f;
+		float ticksPerSecond = animations[0]->GetTicksPerSecond() != 0 ? animations[0]->GetTicksPerSecond() : 20.0f;
 		float timeInTicks = totalTime * ticksPerSecond;
-		float animationTime = fmod(timeInTicks, animations[0]->animationLength);
+		float animationTime = fmod(timeInTicks, animations[0]->GetAnimationLength());
 
 		ReadNodeHeirarchy(animationTime, rootNode, glm::mat4(1));
 

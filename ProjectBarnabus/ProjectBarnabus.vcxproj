@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GameEngine\AnimatedModel.cpp" />
+    <ClCompile Include="src\GameEngine\Animation.cpp" />
     <ClCompile Include="src\GameEngine\Animator.cpp" />
     <ClCompile Include="src\GameEngine\BarnabusGameEngine.cpp" />
     <ClCompile Include="src\GameEngine\Entity.cpp" />

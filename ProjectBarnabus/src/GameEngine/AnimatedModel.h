@@ -26,7 +26,6 @@ public:
 	glm::mat4 globalInverseTransform;
 	std::vector<Animation*> animations;
 
-	// Not implemented.
 	Node* rootNode;
 	float totalTime;
 private:
