@@ -109,11 +109,10 @@ AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
 
 			newAnimation->nodes.push_back(node);
 		}
-		animations.push_back(newAnimation);
+		animations.insert(std::pair<std::string, std::shared_ptr<Animation>>(newAnimation->GetName(),newAnimation));
 	}
 
 	LoadNodeTree(rootNode, model->mRootNode, NULL);
-	animator.SetCurrentAnimation(animations[0]);
 }
 
 void AnimatedModel::Update(double deltaTime)
@@ -127,7 +126,6 @@ void AnimatedModel::Update(double deltaTime)
 
 		mesh.transforms.clear();
 
-
 		float ticksPerSecond = animator.GetCurrentAnimation()->GetTicksPerSecond() != 0 ? animator.GetCurrentAnimation()->GetTicksPerSecond() : 20.0f;
 		float timeInTicks = animator.GetAnimationTime() * ticksPerSecond;
 		float animationTime = fmod(timeInTicks, animator.GetCurrentAnimation()->GetAnimationLength());
@@ -136,12 +134,33 @@ void AnimatedModel::Update(double deltaTime)
 
 		mesh.transforms.resize(bones.size());
 
-
-		for (unsigned int j = 0; j < bones.size(); j++)
+		if (!animator.GetCurrentAnimation())
 		{
-			mesh.transforms[j] = bones[j].finalTransformation;
+			for (unsigned int j = 0; j < bones.size(); j++)
+			{
+				mesh.transforms[j] = glm::mat4(1);
+			}
+		}
+		else
+		{
+			for (unsigned int j = 0; j < bones.size(); j++)
+			{
+				mesh.transforms[j] = bones[j].finalTransformation;
+			}
 		}
 	}
+}
+
+void AnimatedModel::SetAnimation(std::string animationName)
+{
+	const auto animation = animations.find(animationName);
+	if (animation == animations.end())
+	{
+		assert(animation != animations.end());
+		std::cout << "Animation not found with key: " + animationName << std::endl;
+	}
+
+	animator.SetCurrentAnimation(animation->second);
 }
 
 void AnimatedModel::ReadNodeHeirarchy(float animationTime, const Node* node, const glm::mat4 & parentTransform)

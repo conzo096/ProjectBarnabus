@@ -31,6 +31,7 @@ bool BarnabusGame::LoadGameContent()
 	auto modelComponent = std::make_unique<AnimatedModel>(fileName);
 	modelComponent->SetShader(shaderTest);
 	modelComponent->InitModel();
+	modelComponent->SetAnimation("");
 
 	auto cameraComponent = std::make_unique<FreeCamera>(70);
 	cameraComponent->SetPosition(animation.GetPosition() - glm::dvec3(0, -5, -20));

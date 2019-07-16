@@ -20,6 +20,11 @@ void Animator::SetCurrentAnimation(std::shared_ptr<Animation> animation)
 	currentAnimation = animation;
 }
 
+void Animator::ClearCurrentAnimation()
+{
+	currentAnimation = 0;
+}
+
 void Animator::Update(double deltaTime)
 {
 	float delta = deltaTime * speed;

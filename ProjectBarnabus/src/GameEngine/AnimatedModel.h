@@ -16,6 +16,7 @@ public:
 
 	void Update(double deltaTime) override;
 
+	void SetAnimation(std::string animationName);
 private:
 
 	void ReadNodeHeirarchy(float animationTime, const Node* pNode, const glm::mat4& parentTransform);
@@ -35,7 +36,7 @@ private:
 	std::map<std::string, int> boneMapping;
 
 	glm::mat4 globalInverseTransform;
-	std::vector<std::shared_ptr<Animation>> animations;
+	std::map<std::string, std::shared_ptr<Animation>> animations;
 
 	Animator animator;
 	Node* rootNode;
