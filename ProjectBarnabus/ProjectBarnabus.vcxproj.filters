@@ -38,6 +38,7 @@
       <Filter>Source Files\Game</Filter>
     </ClCompile>
     <ClCompile Include="src\GameEngine\Animation.cpp" />
+    <ClCompile Include="src\GameEngine\Animator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -161,6 +162,9 @@
     </ClInclude>
     <ClInclude Include="src\GameEngine\Node.h">
       <Filter>Header Files\GameEngine\Components\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Animator.h">
+      <Filter>Header Files\GameEngine\Renderer\Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -9,6 +9,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp> 
 #include <glm/gtx/quaternion.hpp>
+#include <memory>
 
 inline glm::mat4 aiMatrix4x4ToGlm(const aiMatrix4x4 &aiMat)
 {
@@ -72,7 +73,7 @@ AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
 	for (int i = 0; i < model->mNumAnimations; i++)
 	{
 		auto animation = model->mAnimations[i];
-		Animation* newAnimation = new Animation;
+		std::shared_ptr<Animation> newAnimation = std::make_shared<Animation>();
 		newAnimation->SetAnimationLength(animation->mDuration);
 		newAnimation->SetName(animation->mName.C_Str());
 		newAnimation->SetTicksPerSecond(animation->mTicksPerSecond);
@@ -112,22 +113,24 @@ AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
 	}
 
 	LoadNodeTree(rootNode, model->mRootNode, NULL);
+	animator.SetCurrentAnimation(animations[0]);
 }
 
 void AnimatedModel::Update(double deltaTime)
 {
 	Model::Update(deltaTime);
+	animator.Update(deltaTime);
 
 	for (int i = 0; i < data.size(); i++)
 	{
 		auto& mesh = data[i];
-		totalTime += deltaTime;
 
 		mesh.transforms.clear();
 
-		float ticksPerSecond = animations[0]->GetTicksPerSecond() != 0 ? animations[0]->GetTicksPerSecond() : 20.0f;
-		float timeInTicks = totalTime * ticksPerSecond;
-		float animationTime = fmod(timeInTicks, animations[0]->GetAnimationLength());
+
+		float ticksPerSecond = animator.GetCurrentAnimation()->GetTicksPerSecond() != 0 ? animator.GetCurrentAnimation()->GetTicksPerSecond() : 20.0f;
+		float timeInTicks = animator.GetAnimationTime() * ticksPerSecond;
+		float animationTime = fmod(timeInTicks, animator.GetCurrentAnimation()->GetAnimationLength());
 
 		ReadNodeHeirarchy(animationTime, rootNode, glm::mat4(1));
 
@@ -145,7 +148,7 @@ void AnimatedModel::ReadNodeHeirarchy(float animationTime, const Node* node, con
 {
 	std::string nodeName(node->name);
 
-	const Animation* animation = animations[0];
+	const std::shared_ptr<Animation> animation = animator.GetCurrentAnimation();
 
 	glm::mat4 nodeTransformation = node->transformation;
 	const NodeAnim* nodeAnim = FindNodeAnim(animation, nodeName);
@@ -180,7 +183,7 @@ void AnimatedModel::ReadNodeHeirarchy(float animationTime, const Node* node, con
 
 }
 
-const NodeAnim* AnimatedModel::FindNodeAnim(const Animation* animation, const std::string nodeName)
+const NodeAnim* AnimatedModel::FindNodeAnim(const std::shared_ptr<Animation> animation, const std::string nodeName)
 {
 	for (int i = 0; i < animation->nodes.size(); i++)
 	{

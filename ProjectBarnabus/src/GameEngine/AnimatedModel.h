@@ -3,6 +3,7 @@
 #include "Node.h"
 #include "NodeAnim.h"
 #include "Animation.h"
+#include "Animator.h"
 #include <map>
 
 class aiNode;
@@ -18,7 +19,7 @@ public:
 private:
 
 	void ReadNodeHeirarchy(float animationTime, const Node* pNode, const glm::mat4& parentTransform);
-	const NodeAnim* FindNodeAnim(const Animation* pAnimation, const std::string nodeName);
+	const NodeAnim* FindNodeAnim(const std::shared_ptr<Animation> pAnimation, const std::string nodeName);
 
 	void LoadNodeTree(Node*& myRootNode, aiNode* rootNode,Node* parent);
 	glm::vec3 CalculateInterpolatedScaling(float animationTime, const NodeAnim* nodeAnim);
@@ -34,8 +35,8 @@ private:
 	std::map<std::string, int> boneMapping;
 
 	glm::mat4 globalInverseTransform;
-	std::vector<Animation*> animations;
+	std::vector<std::shared_ptr<Animation>> animations;
 
+	Animator animator;
 	Node* rootNode;
-	float totalTime;
 };
