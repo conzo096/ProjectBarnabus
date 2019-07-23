@@ -6,7 +6,7 @@
 
 #define DEBUG_VERTICES 0
 
-void AnimationShader::UpdateUniforms(const MeshData& meshData)
+void AnimationShader::UpdateUniforms(MeshData& meshData)
 {
 	Use();
 
@@ -25,6 +25,10 @@ void AnimationShader::UpdateUniforms(const MeshData& meshData)
 		const auto& transform = meshData.transforms.at(i);
 		glUniformMatrix4fv(index, 1, GL_FALSE, glm::value_ptr(transform));
 	}
+
+	glActiveTexture(GL_TEXTURE0);
+	auto texture = meshData.GetTexture();
+	glBindTexture(GL_TEXTURE_2D, texture.GetTextureId());
 
 #if DEBUG_VERTICES
 

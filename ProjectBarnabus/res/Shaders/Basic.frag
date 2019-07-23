@@ -3,14 +3,15 @@
 uniform sampler2D tex;
 
 // Incoming texture coordinate
-layout(location = 0) in vec2 tex_coord;
+layout(location = 0) in vec2 texCoord;
 layout (location = 1) in vec4 baseColour;
 // Outgoing fragment colour
 layout(location = 0) out vec4 colour;
 
+uniform sampler2D ourTexture;
 void main()
 {
-	//colour = texture(tex, tex_coord);
+	colour = texture(tex, texCoord);
 	
-	colour = baseColour;
+	//colour = baseColour;
 }

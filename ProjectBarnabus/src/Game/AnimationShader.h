@@ -5,6 +5,6 @@ class AnimationShader : public GLShader
 {
 public:
 
-	void UpdateUniforms(const MeshData& meshData) override;
+	void UpdateUniforms(MeshData& meshData) override;
 
 };

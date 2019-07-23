@@ -1,6 +1,7 @@
 #pragma once
 #include "Transform.h"
 #include "Bone.h"
+#include "Texture.h"
 #include "GLShader.h"
 #include <glm/glm.hpp>
 #include <GL/glew.h>
@@ -46,6 +47,8 @@ public:
 	void ResizeBoneData(unsigned int size);
 	void InsertBoneDataAt(unsigned int location, int vertexLocation, float vertexWeight);
 
+	void SetTexture(Texture tex);
+	const Texture& GetTexture();
 	// Move these to private.
 	std::vector<glm::mat4> transforms;
 	std::vector<Vertex> vertices;
@@ -55,11 +58,8 @@ private:
 	// Skin
 	GLenum type = GL_TRIANGLES;
 	unsigned int VAO, VBO, EBO, BONES;
-
 	std::vector<unsigned int> indices;
-	
-
-	
+	Texture texture;
 	// Shader for rendering the mesh.
 	GLShader* shader;
 

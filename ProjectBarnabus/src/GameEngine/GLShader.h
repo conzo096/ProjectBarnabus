@@ -31,7 +31,7 @@ public:
 	GLuint GetUniformLocation(const char* name);
 	GLuint GetUniformLocation(std::string& name);
 
-	virtual void UpdateUniforms(const MeshData& meshData);
+	virtual void UpdateUniforms(MeshData& meshData);
 	virtual void DrawMesh(MeshData& meshData) const;
 
 private:

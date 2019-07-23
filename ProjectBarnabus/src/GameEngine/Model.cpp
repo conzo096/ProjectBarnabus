@@ -81,6 +81,10 @@ Model::Model(const std::string & fileName) : Component("Model")
 		}
 		vertex_begin += modelMesh->mNumVertices;
 
+		// todo If the mesh has a texture associated with the mesh, use it here.
+		Texture texture;
+		texture.LoadTexture("res\\Textures\\test.png");
+		mesh.SetTexture(texture);
 		data.push_back(mesh);
 	}
 }

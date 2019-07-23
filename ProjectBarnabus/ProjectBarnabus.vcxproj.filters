@@ -37,10 +37,17 @@
     <ClCompile Include="src\Game\AnimationShader.cpp">
       <Filter>Source Files\Game</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameEngine\Animation.cpp" />
-    <ClCompile Include="src\GameEngine\Animator.cpp" />
+    <ClCompile Include="src\GameEngine\Texture.cpp">
+      <Filter>Source Files\GameEngine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Animation.cpp">
+      <Filter>Source Files\GameEngine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Animator.cpp">
+      <Filter>Source Files\GameEngine\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\GameEngine\stb_image.cpp">
-      <Filter>Source Files\GameEngine</Filter>
+      <Filter>Source Files\GameEngine\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

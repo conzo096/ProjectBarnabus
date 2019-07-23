@@ -118,3 +118,13 @@ void MeshData::InsertBoneDataAt(unsigned int location, int vertexLocation, float
 {
 	bonesData[location].AddBoneData(vertexLocation, vertexWeight);
 }
+
+void MeshData::SetTexture(Texture tex)
+{
+	texture = tex;
+}
+
+const Texture& MeshData::GetTexture()
+{
+	return texture;
+}

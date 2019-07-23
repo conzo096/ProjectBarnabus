@@ -181,7 +181,7 @@ GLuint GLShader::GetUniformLocation(std::string& name)
 	return loc;
 }
 
-void GLShader::UpdateUniforms(const MeshData & meshData)
+void GLShader::UpdateUniforms(MeshData & meshData)
 {
 }
 

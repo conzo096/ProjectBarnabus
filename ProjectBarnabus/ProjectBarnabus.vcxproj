@@ -31,6 +31,7 @@
     <ClCompile Include="src\GameEngine\Model.cpp" />
     <ClCompile Include="src\GameEngine\Renderer.cpp" />
     <ClCompile Include="src\GameEngine\stb_image.cpp" />
+    <ClCompile Include="src\GameEngine\Texture.cpp" />
     <ClCompile Include="src\Game\AnimationShader.cpp" />
     <ClCompile Include="src\Game\BarnabusGame.cpp" />
     <ClCompile Include="src\Main.cpp" />
