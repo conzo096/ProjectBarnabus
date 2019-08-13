@@ -1,7 +1,7 @@
 #include <time.h>  
 #include "BarnabusGame.h"
 #include "../GameEngine/BarnabusGameEngine.h"
-#include "../GameEngine/FreeCamera.h"
+#include "../GameEngine/ArcBallCamera.h"
 #include "../GameEngine/AnimatedModel.h"
 #include "../GameEngine/Renderer.h"
 
@@ -33,13 +33,11 @@ bool BarnabusGame::LoadGameContent()
 	modelComponent->InitModel();
 	modelComponent->SetAnimation("");
 
-	auto cameraComponent = std::make_unique<FreeCamera>(70);
-	cameraComponent->SetPosition(animation.GetPosition() - glm::dvec3(0, -5, -20));
+	auto cameraComponent = std::make_unique<ArcBallCamera>();
 
 
 	animation.AddComponent(std::move(modelComponent));
 
-	animation.SetPosition(glm::vec3(0));
 	animation.SetRotation(glm::vec3(180, cameraComponent->GetRotation().y, cameraComponent->GetRotation().z));
 	animation.UpdateTransforms();
 
@@ -51,8 +49,9 @@ bool BarnabusGame::LoadGameContent()
 bool BarnabusGame::Update(double deltaTime)
 {
 	camera.Update(deltaTime);
+	camera.GetComponent<ArcBallCamera>().SetTarget(animation.GetPosition());
 	animation.Update(deltaTime);
-	Renderer::Get().SetFreeCamera(camera.GetComponent<FreeCamera>().GetProjection() * camera.GetComponent<FreeCamera>().GetView());
+	Renderer::Get().SetCameraViewProjection(camera.GetComponent<ArcBallCamera>().GetProjection() * camera.GetComponent<ArcBallCamera>().GetView());
 	// Close the window if it has been asked too.
 	if (BarnabusGameEngine::Get().ShouldWindowClose() || glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{

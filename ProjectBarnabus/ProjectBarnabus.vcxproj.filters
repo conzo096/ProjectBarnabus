@@ -49,6 +49,9 @@
     <ClCompile Include="src\GameEngine\stb_image.cpp">
       <Filter>Source Files\GameEngine\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\GameEngine\ArcBallCamera.cpp">
+      <Filter>Source Files\GameEngine\Components\Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -181,6 +184,9 @@
     </ClInclude>
     <ClInclude Include="src\GameEngine\Texture.h">
       <Filter>Header Files\GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\ArcBallCamera.h">
+      <Filter>Header Files\GameEngine\Components\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

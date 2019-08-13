@@ -11,7 +11,7 @@ public:
 	~Renderer();
 
 	void Render();
-	void SetFreeCamera(glm::mat4 camera);
+	void SetCameraViewProjection(glm::mat4 camera);
 
 	void AddMesh(MeshData md);
 	const std::vector<MeshData>& GetMeshesToRender();

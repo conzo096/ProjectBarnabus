@@ -30,7 +30,7 @@ void Renderer::Render()
 
 }
 
-void Renderer::SetFreeCamera(glm::mat4 camera)
+void Renderer::SetCameraViewProjection(glm::mat4 camera)
 {
 	cameraVP = camera;
 }
