@@ -18,8 +18,8 @@ void ArcBallCamera::Update(double deltaTime)
 	glfwGetCursorPos(BarnabusGameEngine::Get().GetWindow(), &currentX, &currentY);
 
 	// Calculate delta of cursor positions from last frame
-	double deltaX = (currentX - cursorX);
-	double deltaY = (cursorY - currentY);
+	double deltaX = currentX - cursorX;
+	double deltaY = currentY - cursorY;
 
 	// Multiply deltas by ratios to get change in orientation
 	deltaX *= ratioWidth;
@@ -31,7 +31,7 @@ void ArcBallCamera::Update(double deltaTime)
 		Rotate(deltaX, deltaY);
 	}
 
-	glm::dquat rotation(glm::dvec3(xAxisRotation, yAxisRotation, 0));
+	glm::dquat rotation(glm::dvec3(yAxisRotation, xAxisRotation, 0));
 	glm::dvec3 newPosition = target + (rotation * glm::dvec3(0, 0, distanceFromTarget));
 	up = rotation * glm::dvec3(0, 1, 0);
 	SetPosition(newPosition);
@@ -45,6 +45,6 @@ void ArcBallCamera::Update(double deltaTime)
 // Rotates the camera around the target
 void ArcBallCamera::Rotate(float delta_X, float delta_Y)
 {
-	xAxisRotation += delta_X;
-	yAxisRotation += -delta_Y;
+	xAxisRotation += delta_X * 0.5;
+	yAxisRotation += delta_Y * 0.5;
 }

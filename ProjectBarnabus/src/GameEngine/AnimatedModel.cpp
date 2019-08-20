@@ -2,6 +2,7 @@
 #include "Entity.h"
 #include "Renderer.h"
 #include "NodeAnim.h"
+#include "BarnabusGameEngine.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/PostProcess.h>
@@ -9,6 +10,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp> 
 #include <glm/gtx/quaternion.hpp>
+#include <GLFW/glfw3.h>
 #include <memory>
 
 inline glm::mat4 aiMatrix4x4ToGlm(const aiMatrix4x4 &aiMat)
@@ -118,6 +120,29 @@ AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
 void AnimatedModel::Update(double deltaTime)
 {
 	Model::Update(deltaTime);
+	animator.SetState(PAUSE);
+	// todo move this to a user movement component
+	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_W) == GLFW_PRESS)
+	{
+		GetParent()->Move(glm::dvec3(0, 0, 1)*deltaTime);
+		animator.SetState(PLAY);
+	}
+	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_S) == GLFW_PRESS)
+	{
+		GetParent()->Move(glm::dvec3(0, 0, -1)*deltaTime);
+		animator.SetState(REWIND);
+	}
+	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_A) == GLFW_PRESS)
+	{
+		GetParent()->Move(glm::dvec3(-1, 0, 0)*deltaTime);
+		animator.SetState(PLAY);
+	}
+	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_D) == GLFW_PRESS)
+	{
+		GetParent()->Move(glm::dvec3(1, 0, 0)*deltaTime);
+		animator.SetState(PLAY);
+	}
+
 	animator.Update(deltaTime);
 
 	for (int i = 0; i < data.size(); i++)
@@ -125,7 +150,7 @@ void AnimatedModel::Update(double deltaTime)
 		auto& mesh = data[i];
 
 		mesh.transforms.clear();
-
+	
 		float ticksPerSecond = animator.GetCurrentAnimation()->GetTicksPerSecond() != 0 ? animator.GetCurrentAnimation()->GetTicksPerSecond() : 20.0f;
 		float timeInTicks = animator.GetAnimationTime() * ticksPerSecond;
 		float animationTime = fmod(timeInTicks, animator.GetCurrentAnimation()->GetAnimationLength());

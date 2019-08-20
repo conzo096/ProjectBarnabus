@@ -49,9 +49,10 @@ bool BarnabusGame::LoadGameContent()
 bool BarnabusGame::Update(double deltaTime)
 {
 	camera.Update(deltaTime);
-	camera.GetComponent<ArcBallCamera>().SetTarget(animation.GetPosition());
+	camera.GetComponent<ArcBallCamera>().SetTarget(animation.GetPosition() + glm::dvec3(0,5,0));
 	animation.Update(deltaTime);
 	Renderer::Get().SetCameraViewProjection(camera.GetComponent<ArcBallCamera>().GetProjection() * camera.GetComponent<ArcBallCamera>().GetView());
+
 	// Close the window if it has been asked too.
 	if (BarnabusGameEngine::Get().ShouldWindowClose() || glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{

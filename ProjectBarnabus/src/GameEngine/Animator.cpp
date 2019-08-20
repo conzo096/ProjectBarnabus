@@ -1,4 +1,5 @@
 #include "Animator.h"
+#include "AnimatedModel.h"
 
 float Animator::GetSpeed()
 {
@@ -8,6 +9,16 @@ float Animator::GetSpeed()
 void Animator::SetSpeed(float newSpeed)
 {
 	speed = newSpeed;
+}
+
+void Animator::SetState(AnimationState newState)
+{
+	state = newState;
+}
+
+AnimationState Animator::GetState()
+{
+	return state;
 }
 
 std::shared_ptr<Animation> Animator::GetCurrentAnimation()
@@ -22,14 +33,36 @@ void Animator::SetCurrentAnimation(std::shared_ptr<Animation> animation)
 
 void Animator::ClearCurrentAnimation()
 {
-	currentAnimation = 0;
+	currentAnimation = NULL;
 }
 
 void Animator::Update(double deltaTime)
 {
 	float delta = deltaTime * speed;
 
-	currentAnimationTime += delta;
+	switch (state)
+	{
+	case STOP: 
+		currentAnimationTime = 0;
+		break;
+	case PLAY:
+		currentAnimationTime += delta;
+		break;
+	case REWIND:
+		currentAnimationTime -= delta;
+		if (currentAnimationTime < 0 )
+		{
+			if (currentAnimation)
+			{
+				currentAnimationTime = currentAnimation->GetAnimationLength();
+			}
+		}
+		break;
+	case PAUSE:
+	default:
+		break;
+	}
+
 }
 
 float Animator::GetAnimationTime()

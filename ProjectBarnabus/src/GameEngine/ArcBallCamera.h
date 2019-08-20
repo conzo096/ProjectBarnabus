@@ -9,7 +9,7 @@ private:
 	// Rotation around the y-axis of the target
 	float yAxisRotation = 0.0f;
 	// Distance of the camera from the target
-	float distanceFromTarget = 50.0f;
+	float distanceFromTarget = 25.0f;
 	// The current field of view
 	float fieldOfView;
 	// Cursor's current position

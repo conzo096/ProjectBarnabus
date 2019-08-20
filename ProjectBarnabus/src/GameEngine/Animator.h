@@ -11,6 +11,7 @@ enum AnimationState
 	STOP,
 	REWIND
 };
+
 class Animator
 {
 public:
@@ -18,6 +19,8 @@ public:
 	float GetSpeed();
 	void SetSpeed(float newSpeed);
 
+	void SetState(AnimationState newState);
+	AnimationState GetState();
 	std::shared_ptr<Animation> GetCurrentAnimation();
 	void SetCurrentAnimation(std::shared_ptr<Animation>animation);
 	void ClearCurrentAnimation();
@@ -25,7 +28,7 @@ public:
 	float GetAnimationTime();
 private:
 	float speed = 1;
-	float currentAnimationTime;
+	float currentAnimationTime = 0;
 
 	AnimationState state;
 

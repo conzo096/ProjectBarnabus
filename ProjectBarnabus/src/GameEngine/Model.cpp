@@ -8,6 +8,10 @@
 #include <glm/gtc/quaternion.hpp> 
 #include <GL/glew.h>
 
+Model::Model() : Component("Model")
+{
+}
+
 Model::Model(const std::string & fileName) : Component("Model")
 {
 	// Create model importer

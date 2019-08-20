@@ -7,7 +7,7 @@
 class Model : public Component
 {
 public:
-
+	Model();
 	Model(const std::string& fileName);
 	~Model();
 
