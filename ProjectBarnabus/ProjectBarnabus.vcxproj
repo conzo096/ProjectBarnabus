@@ -35,6 +35,7 @@
     <ClCompile Include="src\GameEngine\Texture.cpp" />
     <ClCompile Include="src\Game\AnimationShader.cpp" />
     <ClCompile Include="src\Game\BarnabusGame.cpp" />
+    <ClCompile Include="src\Game\RedShader.cpp" />
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -60,11 +61,14 @@
     <ClInclude Include="src\GameEngine\Transform.h" />
     <ClInclude Include="src\Game\AnimationShader.h" />
     <ClInclude Include="src\Game\BarnabusGame.h" />
+    <ClInclude Include="src\Game\RedShader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\Models\AnimatedModels\model.dae" />
-    <None Include="res\Shaders\Basic.frag" />
-    <None Include="res\Shaders\Basic.vert" />
+    <None Include="res\Shaders\BasicAnimation.frag" />
+    <None Include="res\Shaders\BasicAnimation.vert" />
+    <None Include="res\Shaders\Red.frag" />
+    <None Include="res\Shaders\Red.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

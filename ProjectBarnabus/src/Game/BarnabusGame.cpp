@@ -21,28 +21,34 @@ BarnabusGame::~BarnabusGame()
 
 bool BarnabusGame::LoadGameContent()
 {
-	shaderTest.CreateProgram();
-	shaderTest.AddShaderFromFile("res\\Shaders\\Basic.vert",GLShader::VERTEX);
-	shaderTest.AddShaderFromFile("res\\Shaders\\Basic.frag", GLShader::FRAGMENT);
-	shaderTest.Link();
+	animationShader.CreateProgram();
+	animationShader.AddShaderFromFile("res\\Shaders\\BasicAnimation.vert",GLShader::VERTEX);
+	animationShader.AddShaderFromFile("res\\Shaders\\BasicAnimation.frag", GLShader::FRAGMENT);
+	animationShader.Link();
+
+	redShader.CreateProgram();
+	redShader.AddShaderFromFile("res\\Shaders\\Red.vert", GLShader::VERTEX);
+	redShader.AddShaderFromFile("res\\Shaders\\Red.frag", GLShader::FRAGMENT);
+	redShader.Link();
 
 	animation.SetPosition(camera.GetPosition());
 	std::string fileName("res\\Models\\AnimatedModels\\LimitedWeights.dae");
-	auto modelComponent = std::make_unique<AnimatedModel>(fileName);
-	modelComponent->SetShader(shaderTest);
-	modelComponent->InitModel();
-	modelComponent->SetAnimation("");
-
+	auto animatedModelComponent = std::make_unique<AnimatedModel>(fileName);
+	animatedModelComponent->SetShader(animationShader);
+	animatedModelComponent->InitModel();
+	animatedModelComponent->SetAnimation("");
 	auto cameraComponent = std::make_unique<ArcBallCamera>();
+	animation.AddComponent(std::move(animatedModelComponent));
 
-
-	animation.AddComponent(std::move(modelComponent));
-
-	animation.SetRotation(glm::vec3(180, cameraComponent->GetRotation().y, cameraComponent->GetRotation().z));
-	animation.UpdateTransforms();
+	animation.SetRotation(glm::vec3(180, animation.GetRotation().y, animation.GetRotation().z));
 
 	camera.AddComponent(std::move(cameraComponent));
 
+	fileName = "res\\Models\\terrain.obj";
+	auto modelComponent = std::make_unique<Model>(fileName);
+	modelComponent->SetShader(redShader);
+	modelComponent->InitModel();
+	terrain.AddComponent(std::move(modelComponent));
 	return true;
 }
 
@@ -51,6 +57,7 @@ bool BarnabusGame::Update(double deltaTime)
 	camera.Update(deltaTime);
 	camera.GetComponent<ArcBallCamera>().SetTarget(animation.GetPosition() + glm::dvec3(0,5,0));
 	animation.Update(deltaTime);
+	terrain.Update(deltaTime);
 	Renderer::Get().SetCameraViewProjection(camera.GetComponent<ArcBallCamera>().GetProjection() * camera.GetComponent<ArcBallCamera>().GetView());
 
 	// Close the window if it has been asked too.
@@ -69,7 +76,7 @@ bool BarnabusGame::Update(double deltaTime)
 bool BarnabusGame::Render(double deltaTime)
 {
 	animation.Render();
-
+	terrain.Render();
 	Renderer::Get().Render();
 
 	return true;
