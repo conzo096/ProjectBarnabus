@@ -40,7 +40,7 @@ public:
 	std::vector<VertexBoneData> GetBoneData();
 
 	void InsertVertex(Vertex vertex);
-
+	void InsertVertices(std::vector<Vertex> verts);
 	void SetShader(GLShader* meshShader);
 	GLShader* GetShader() const;
 

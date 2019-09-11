@@ -35,3 +35,13 @@ unsigned int Texture::GetTextureId()
 {
 	return textureId;
 }
+
+int Texture::GetWidth()
+{
+	return width;
+}
+
+int Texture::GetHeight()
+{
+	return height;
+}

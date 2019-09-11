@@ -28,10 +28,12 @@
     <ClCompile Include="src\GameEngine\FreeCamera.cpp" />
     <ClCompile Include="src\GameEngine\Game.cpp" />
     <ClCompile Include="src\GameEngine\GLShader.cpp" />
+    <ClCompile Include="src\GameEngine\HeightMapTexture.cpp" />
     <ClCompile Include="src\GameEngine\MeshData.cpp" />
     <ClCompile Include="src\GameEngine\Model.cpp" />
     <ClCompile Include="src\GameEngine\Renderer.cpp" />
     <ClCompile Include="src\GameEngine\stb_image.cpp" />
+    <ClCompile Include="src\GameEngine\Terrain.cpp" />
     <ClCompile Include="src\GameEngine\Texture.cpp" />
     <ClCompile Include="src\Game\AnimationShader.cpp" />
     <ClCompile Include="src\Game\BarnabusGame.cpp" />
@@ -50,6 +52,7 @@
     <ClInclude Include="src\GameEngine\FreeCamera.h" />
     <ClInclude Include="src\GameEngine\Game.h" />
     <ClInclude Include="src\GameEngine\GLShader.h" />
+    <ClInclude Include="src\GameEngine\HeightMapTexture.h" />
     <ClInclude Include="src\GameEngine\Node.h" />
     <ClInclude Include="src\GameEngine\NodeAnim.h" />
     <ClInclude Include="src\GameEngine\MeshData.h" />
@@ -57,6 +60,7 @@
     <ClInclude Include="src\GameEngine\Renderer.h" />
     <ClInclude Include="src\GameEngine\Singleton.h" />
     <ClInclude Include="src\GameEngine\stb_image.h" />
+    <ClInclude Include="src\GameEngine\Terrain.h" />
     <ClInclude Include="src\GameEngine\Texture.h" />
     <ClInclude Include="src\GameEngine\Transform.h" />
     <ClInclude Include="src\Game\AnimationShader.h" />

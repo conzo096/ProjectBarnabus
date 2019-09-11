@@ -99,6 +99,11 @@ void MeshData::InsertVertex(Vertex vertex)
 	vertices.push_back(vertex);
 }
 
+void MeshData::InsertVertices(std::vector<Vertex> verts)
+{
+	vertices = verts;
+}
+
 void MeshData::SetShader(GLShader* meshShader)
 {
 	shader = meshShader;
