@@ -1,12 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="src\Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Game\BarnabusGame.cpp">
-      <Filter>Source Files\Game</Filter>
-    </ClCompile>
     <ClCompile Include="src\GameEngine\Game.cpp">
       <Filter>Source Files\GameEngine</Filter>
     </ClCompile>
@@ -34,9 +28,6 @@
     <ClCompile Include="src\GameEngine\Entity.cpp">
       <Filter>Source Files\GameEngine\Components</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game\AnimationShader.cpp">
-      <Filter>Source Files\Game</Filter>
-    </ClCompile>
     <ClCompile Include="src\GameEngine\Texture.cpp">
       <Filter>Source Files\GameEngine\Renderer</Filter>
     </ClCompile>
@@ -51,9 +42,6 @@
     </ClCompile>
     <ClCompile Include="src\GameEngine\ArcBallCamera.cpp">
       <Filter>Source Files\GameEngine\Components\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Game\RedShader.cpp">
-      <Filter>Source Files\Game</Filter>
     </ClCompile>
     <ClCompile Include="src\GameEngine\HeightMapTexture.cpp">
       <Filter>Source Files\GameEngine</Filter>
@@ -75,14 +63,8 @@
     <Filter Include="Header Files\GameEngine">
       <UniqueIdentifier>{fd1afb78-b31f-4b41-a93d-14f070bc0e82}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Game">
-      <UniqueIdentifier>{1388426c-cabb-436c-9bff-d21f29f739d2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\GameEngine">
       <UniqueIdentifier>{5f3b7636-e37b-4f9b-a39a-b8f704370ccf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Game">
-      <UniqueIdentifier>{ef758e9c-6003-4b69-a515-692bce125ed8}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\GameEngine\Shader">
       <UniqueIdentifier>{a531f362-76d8-4fd9-ae5b-8f43acd23fe4}</UniqueIdentifier>
@@ -120,9 +102,6 @@
     <Filter Include="Source Files\GameEngine\Renderer">
       <UniqueIdentifier>{8aeb3186-3dbb-47a2-b8bb-d86c91be75f8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Game\Shaders">
-      <UniqueIdentifier>{ad227d5e-a389-42bf-a434-3c072ee55533}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\GameEngine\Renderer\Shader">
       <UniqueIdentifier>{0e415067-cbb1-43f9-99e6-573fe22700cb}</UniqueIdentifier>
     </Filter>
@@ -133,9 +112,6 @@
   <ItemGroup>
     <ClInclude Include="src\GameEngine\BarnabusGameEngine.h">
       <Filter>Header Files\GameEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Game\BarnabusGame.h">
-      <Filter>Header Files\Game</Filter>
     </ClInclude>
     <ClInclude Include="src\GameEngine\Game.h">
       <Filter>Header Files\GameEngine</Filter>
@@ -170,9 +146,6 @@
     <ClInclude Include="src\GameEngine\Entity.h">
       <Filter>Header Files\GameEngine\Components</Filter>
     </ClInclude>
-    <ClInclude Include="src\Game\AnimationShader.h">
-      <Filter>Header Files\Game\Shaders</Filter>
-    </ClInclude>
     <ClInclude Include="src\GameEngine\Animation.h">
       <Filter>Header Files\GameEngine\Renderer\Animation</Filter>
     </ClInclude>
@@ -196,9 +169,6 @@
     </ClInclude>
     <ClInclude Include="src\GameEngine\ArcBallCamera.h">
       <Filter>Header Files\GameEngine\Components\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Game\RedShader.h">
-      <Filter>Header Files\Game\Shaders</Filter>
     </ClInclude>
     <ClInclude Include="src\GameEngine\HeightMapTexture.h">
       <Filter>Header Files\GameEngine</Filter>
