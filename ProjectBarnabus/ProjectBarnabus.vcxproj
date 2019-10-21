@@ -137,6 +137,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)/include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>lib/win64</AdditionalLibraryDirectories>
@@ -144,7 +145,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(ProjectDir)lib\win64</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimp.lib;glew32s.lib;opengl32.lib;glfw3.lib;</AdditionalDependencies>
+      <AdditionalDependencies>assimpd.lib;glfw3dlld.lib;glew32d.lib;opengl32.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
