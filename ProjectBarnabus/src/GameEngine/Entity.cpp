@@ -12,7 +12,8 @@ Component::Component(const string &token) : token(token)
 	active = true;
 }
 
-Component::~Component() {
+Component::~Component()
+{
 	cout << "Goodbye from Component: " << token << endl;
 	entity = nullptr;
 	active = false;
@@ -31,7 +32,11 @@ Entity* Component::GetParent() const { return entity; }
 
 //############## ENTITY ##############
 
-Entity::Entity() { components.clear(); }
+Entity::Entity() 
+{
+	active = true;
+	components.clear();
+}
 
 Entity::~Entity()
 {	components.clear();
@@ -41,6 +46,18 @@ Entity::~Entity()
 const string Entity::GetName() const { return name; }
 
 void Entity::SetName(string const &name) { this->name = name; }
+
+void Entity::SetActive(bool a)
+{
+	active = a; 
+
+	for (auto &c : components)
+	{
+		c.second->SetActive(active);
+	}
+}
+
+bool Entity::IsActive() { return active; }
 
 void Entity::Update(const double delta)
 {

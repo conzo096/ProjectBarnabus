@@ -36,21 +36,22 @@ protected:
 	std::string name;
 	using map = std::map<std::type_index, std::unique_ptr<Component>>;
 	map components;
-
+	bool active;
 public:
 	Entity();
 	~Entity();
 
 	const std::string GetName() const;
 	void SetName(std::string const &name);
+	bool IsActive();
+	void SetActive(bool a);
+
 	void Update(const double delta);
 	void Render();
 
-	std::string modelName, textureName, shaderName;
-
-	template <typename T> T &GetComponent() const {
+	template <typename T> T &GetComponent() const
+	{
 		map::const_iterator iter = components.find(std::type_index(typeid(T)));
-
 		if (iter != components.end())
 		{
 			return *static_cast<T *>(iter->second.get());
@@ -65,14 +66,14 @@ public:
 		components[std::type_index(typeid(T))] = std::move(component);
 	}
 
-	// void RemoveComponent(Component &c);
-
 	// Will return a T component, or anything derived from a T component.
 	template <typename T> T *const GetCompatibleComponent()
 	{
-		for (auto &c : components) {
+		for (auto &c : components)
+		{
 			auto dd = dynamic_cast<T *>(&(*c.second));
-			if (dd) {
+			if (dd)
+			{
 				return dd;
 			}
 		}
