@@ -54,9 +54,6 @@
     <Filter Include="Header Files">
       <UniqueIdentifier>{b1d92fff-9496-4065-98a9-f4e7baa8edae}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{2adff385-2513-4888-9147-9a4c61944d3b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files">
       <UniqueIdentifier>{81343cab-fc3d-4fd3-ad29-2adee45425ed}</UniqueIdentifier>
     </Filter>
@@ -68,9 +65,6 @@
     </Filter>
     <Filter Include="Header Files\GameEngine\Shader">
       <UniqueIdentifier>{a531f362-76d8-4fd9-ae5b-8f43acd23fe4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\Shaders">
-      <UniqueIdentifier>{fef1edcf-0c09-485a-bed7-06e47e22ee84}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\GameEngine\Components">
       <UniqueIdentifier>{b7907742-9000-4851-ae06-cc0b2065ef58}</UniqueIdentifier>
@@ -89,12 +83,6 @@
     </Filter>
     <Filter Include="Source Files\GameEngine\Components\Model">
       <UniqueIdentifier>{5d59ef46-8f26-4c54-9492-d63512e631e1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\Models">
-      <UniqueIdentifier>{e78acbe7-9dab-4c84-a8d5-c622acba3760}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\Models\Animated">
-      <UniqueIdentifier>{03920e20-70d9-4db1-bc48-5bb46d0421c9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\GameEngine\Renderer">
       <UniqueIdentifier>{cb25d239-cde2-47d6-b36d-bd5ef1526f90}</UniqueIdentifier>
@@ -176,22 +164,5 @@
     <ClInclude Include="src\GameEngine\Terrain.h">
       <Filter>Header Files\GameEngine\Components\Model</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="res\Models\AnimatedModels\model.dae">
-      <Filter>Resource Files\Models\Animated</Filter>
-    </None>
-    <None Include="res\Shaders\BasicAnimation.frag">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="res\Shaders\BasicAnimation.vert">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="res\Shaders\Red.vert">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="res\Shaders\Red.frag">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
   </ItemGroup>
 </Project>
