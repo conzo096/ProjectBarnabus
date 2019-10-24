@@ -8,5 +8,5 @@ before_build:
 - cmd: nuget restore
 build:
   verbosity: minimal
-before_test:
-- cmd: x64\Debug\ProjectBarnabusTest.exe
+test_script:
+- x64\Debug\ProjectBarnabusTest.exe
