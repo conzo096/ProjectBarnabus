@@ -9,4 +9,4 @@ before_build:
 build:
   verbosity: minimal
 test_script:
-  - ctest -C Debug --no-compress-output -T Test .\ProjectBarnabus.sln
+  - ctest -C Debug --no-compress-output -T Test ProjectBarnabus.sln
