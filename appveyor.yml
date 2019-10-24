@@ -9,4 +9,4 @@ before_build:
 build:
   verbosity: minimal
 test_script:
-- x64\Debug\ProjectBarnabusTest.exe
+- x64\Debug\ProjectBarnabusTest.exe --gtest_output=xml:report.xml
