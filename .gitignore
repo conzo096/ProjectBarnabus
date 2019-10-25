@@ -38,3 +38,9 @@
 *.opendb
 *.db-wal
 *.db-shm
+
+#folders
+packages/*
+.vs/ProjectBarnabus/v15/*
+.vs/ProjectBarnabus/v15/*
+ProjectBarnabusTest/x64/Debug/*
