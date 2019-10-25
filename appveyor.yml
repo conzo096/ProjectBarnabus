@@ -10,3 +10,5 @@ build:
   verbosity: minimal
 test_script:
 - x64\Debug\ProjectBarnabusTest.exe --gtest_output=xml:report.xml
+- ps: $wc = New-Object 'System.Net.WebClient'
+- ps: $wc.UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path report.xml))
