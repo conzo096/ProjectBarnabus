@@ -42,5 +42,6 @@
 #folders
 packages/*
 .vs/ProjectBarnabus/v15/*
-.vs/ProjectBarnabus/v15/*
+.vs/ProjectBarnabus/ProjectBarnabus/v15/*
 ProjectBarnabusTest/x64/Debug/*
+x64/Debug/*
