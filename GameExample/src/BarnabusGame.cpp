@@ -22,10 +22,10 @@ bool BarnabusGame::LoadGameContent()
 	animationShader.AddShaderFromFile("res\\Shaders\\BasicAnimation.frag", GLShader::FRAGMENT);
 	animationShader.Link();
 
-	redShader.CreateProgram();
-	redShader.AddShaderFromFile("res\\Shaders\\Red.vert", GLShader::VERTEX);
-	redShader.AddShaderFromFile("res\\Shaders\\Red.frag", GLShader::FRAGMENT);
-	redShader.Link();
+	heightShader.CreateProgram();
+	heightShader.AddShaderFromFile("res\\Shaders\\Height.vert", GLShader::VERTEX);
+	heightShader.AddShaderFromFile("res\\Shaders\\Height.frag", GLShader::FRAGMENT);
+	heightShader.Link();
 
 	animation.SetPosition(camera.GetPosition());
 	std::string fileName("res\\Models\\AnimatedModels\\LimitedWeights.dae");
@@ -42,7 +42,7 @@ bool BarnabusGame::LoadGameContent()
 
 	fileName = "res\\Models\\terrain.obj";
 	auto modelComponent = std::make_unique<Model>(fileName);
-	modelComponent->SetShader(redShader);
+	modelComponent->SetShader(heightShader);
 	modelComponent->InitModel();
 	terrain.AddComponent(std::move(modelComponent));
 	return true;

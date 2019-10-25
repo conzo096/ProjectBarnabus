@@ -2,7 +2,7 @@
 #include "GameEngine/Game.h"
 #include "GameEngine/Entity.h"
 #include "AnimationShader.h"
-#include "RedShader.h"
+#include "HeightShader.h"
 class BarnabusGame : public Game
 {
 public:
@@ -18,6 +18,6 @@ private:
 	Entity animation;
 	Entity terrain;
 	AnimationShader animationShader;
-	RedShader redShader;
+	HeightShader heightShader;
 
 };
