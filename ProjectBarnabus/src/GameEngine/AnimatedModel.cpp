@@ -13,26 +13,42 @@
 #include <GLFW/glfw3.h>
 #include <memory>
 
-inline glm::mat4 aiMatrix4x4ToGlm(const aiMatrix4x4 &aiMat)
+namespace
 {
-	return {
-	aiMat.a1, aiMat.b1, aiMat.c1, aiMat.d1,
-	aiMat.a2, aiMat.b2, aiMat.c2, aiMat.d2,
-	aiMat.a3, aiMat.b3, aiMat.c3, aiMat.d3,
-	aiMat.a4, aiMat.b4, aiMat.c4, aiMat.d4
-	};
-}
+	inline glm::mat4 aiMatrix4x4ToGlm(const aiMatrix4x4 &aiMat)
+	{
+		return {
+		aiMat.a1, aiMat.b1, aiMat.c1, aiMat.d1,
+		aiMat.a2, aiMat.b2, aiMat.c2, aiMat.d2,
+		aiMat.a3, aiMat.b3, aiMat.c3, aiMat.d3,
+		aiMat.a4, aiMat.b4, aiMat.c4, aiMat.d4
+		};
+	}
 
-inline glm::vec3 aiVec3ToGlm(const aiVector3D &from)
-{
-	return glm::vec3(from.x, from.y, from.z);
-}
+	inline glm::vec3 aiVec3ToGlm(const aiVector3D &from)
+	{
+		return glm::vec3(from.x, from.y, from.z);
+	}
 
-inline glm::quat aiQuatToGlm(const aiQuaternion &from)
-{
-	return glm::quat(from.w,from.x,from.y,from.z);
-}
+	inline glm::quat aiQuatToGlm(const aiQuaternion &from)
+	{
+		return glm::quat(from.w, from.x, from.y, from.z);
+	}
 
+	void LoadNodeTree(Node*& myRootNode, aiNode* rootNode, Node* parent)
+	{
+		myRootNode = new Node;
+		myRootNode->transformation = aiMatrix4x4ToGlm(rootNode->mTransformation);
+		myRootNode->name = rootNode->mName.C_Str();
+		myRootNode->parent = parent;
+		myRootNode->children.resize(rootNode->mNumChildren);
+
+		for (int i = 0; i < rootNode->mNumChildren; i++)
+		{
+			LoadNodeTree(myRootNode->children[i], rootNode->mChildren[i], myRootNode);
+		}
+	}
+}
 AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
 {	
 	// Create model importer
@@ -240,20 +256,6 @@ const NodeAnim* AnimatedModel::FindNodeAnim(const std::shared_ptr<Animation> ani
 	}
 
 	return NULL;
-}
-
-void AnimatedModel::LoadNodeTree(Node*& myRootNode, aiNode* rootNode, Node* parent)
-{
-	myRootNode = new Node;
-	myRootNode->transformation = aiMatrix4x4ToGlm(rootNode->mTransformation);
-	myRootNode->name = rootNode->mName.C_Str();
-	myRootNode->parent = parent;
-	myRootNode->children.resize(rootNode->mNumChildren);
-
-	for (int i = 0; i < rootNode->mNumChildren; i++)
-	{
-		LoadNodeTree(myRootNode->children[i], rootNode->mChildren[i], myRootNode);
-	}
 }
 
 glm::vec3 AnimatedModel::CalculateInterpolatedScaling(float animationTime, const NodeAnim * nodeAnim)

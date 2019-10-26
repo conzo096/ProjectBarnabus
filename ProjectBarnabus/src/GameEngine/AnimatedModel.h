@@ -6,8 +6,6 @@
 #include "Animator.h"
 #include <map>
 
-class aiNode;
-
 class AnimatedModel : public Model
 {
 public:
@@ -22,7 +20,6 @@ private:
 	void ReadNodeHeirarchy(float animationTime, const Node* pNode, const glm::mat4& parentTransform);
 	const NodeAnim* FindNodeAnim(const std::shared_ptr<Animation> pAnimation, const std::string nodeName);
 
-	void LoadNodeTree(Node*& myRootNode, aiNode* rootNode,Node* parent);
 	glm::vec3 CalculateInterpolatedScaling(float animationTime, const NodeAnim* nodeAnim);
 	glm::quat CalculateInterpolatedRotation(float animationTime, const NodeAnim* nodeAnim);
 	glm::vec3 CalculateInterpolatedPosition(float animationTime, const NodeAnim* nodeAnim);
