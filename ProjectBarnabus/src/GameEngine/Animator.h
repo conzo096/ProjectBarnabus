@@ -24,7 +24,7 @@ public:
 	std::shared_ptr<Animation> GetCurrentAnimation();
 	void SetCurrentAnimation(std::shared_ptr<Animation>animation);
 	void ClearCurrentAnimation();
-	void Update(double deltaTime);
+	void Update(float deltaTime);
 	float GetAnimationTime();
 private:
 	float speed = 1;

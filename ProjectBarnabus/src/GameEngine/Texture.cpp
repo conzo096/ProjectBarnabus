@@ -5,7 +5,6 @@
 bool Texture::LoadTexture(std::string file)
 {
 	filePath = file;
-	unsigned int texture;
 	glBindTexture(GL_TEXTURE_2D, textureId);
 	
 	// set the texture wrapping/filtering options

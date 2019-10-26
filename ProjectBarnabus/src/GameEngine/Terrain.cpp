@@ -54,7 +54,7 @@ glm::vec3 Terrain::GetWorldPositionFromGrid(glm::vec3 worldPosition)
 	return destination;
 }
 
-double Terrain::GetWorldHeightPositionFromGrid(glm::vec3 worldPosition)
+float Terrain::GetWorldHeightPositionFromGrid(glm::vec3 worldPosition)
 {
 	// Convert world space to local space.
 	float terrainX = worldPosition.x - GetPosition().x;
@@ -67,7 +67,7 @@ double Terrain::GetWorldHeightPositionFromGrid(glm::vec3 worldPosition)
 		gridX < 0 || gridZ < 0)
 	{
 		// Position does not exist, return lowest possible value.
-		return std::numeric_limits<double>::lowest();
+		return std::numeric_limits<float>::lowest();
 	}
 
 	float xCoord = fmodf(terrainX, gridSquare);

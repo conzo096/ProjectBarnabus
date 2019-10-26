@@ -29,6 +29,6 @@ private:
 	Game* game;
 	GLFWwindow* window;
 protected:
-	double time;
-	double lastTime;
+	float time;
+	float lastTime;
 };

@@ -59,7 +59,7 @@ void Entity::SetActive(bool a)
 
 bool Entity::IsActive() { return active; }
 
-void Entity::Update(const double delta)
+void Entity::Update(const float delta)
 {
 	UpdateTransforms();
 	for (auto &c : components)

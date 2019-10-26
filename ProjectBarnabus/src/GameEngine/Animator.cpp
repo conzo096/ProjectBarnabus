@@ -36,7 +36,7 @@ void Animator::ClearCurrentAnimation()
 	currentAnimation = NULL;
 }
 
-void Animator::Update(double deltaTime)
+void Animator::Update(float deltaTime)
 {
 	float delta = deltaTime * speed;
 

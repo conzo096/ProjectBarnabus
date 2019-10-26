@@ -113,7 +113,7 @@ void Model::InitModel()
 	}
 }
 
-void Model::Update(double deltaTime)
+void Model::Update(float deltaTime)
 {
 	for (int i = 0; i < data.size(); i++)
 	{

@@ -7,11 +7,11 @@ class FreeCamera : public Camera
 {
 private:
 	// Current rotation on the x-axis
-	float pitch;
+	double pitch;
 	// Current rotation on the y-axis
-	float yaw;
+	double yaw;
 	// Camera's translation since previous frame
-	glm::dvec3 translation;
+	glm::vec3 translation;
 	// Cursor's current position
 	double cursorX;
 	double cursorY;
@@ -20,7 +20,7 @@ private:
 
 
 private:
-	void Move(CameraMovement direction, double dist);
+	void Move(CameraMovement direction, float dist);
 
 public:
 	// Create free camera
@@ -37,14 +37,14 @@ public:
 	~FreeCamera() {}
 
 	// Update free camera
-	void Update(double deltaTime) override;
+	void Update(float deltaTime) override;
 
 	// Get camera's current rotations
-	double GetPitch() const
+	float GetPitch() const
 	{
 		return GetPosition().x;
 	}
-	double GetYaw() const
+	float GetYaw() const
 	{
 		return GetPosition().y;
 	}
@@ -52,11 +52,11 @@ public:
 	// Set camera's current rotations
 	void SetYaw(float value)
 	{
-		SetPosition(glm::dvec3(GetPitch(), value, 0.0f));
+		SetPosition(glm::vec3(GetPitch(), value, 0.0f));
 	}
 	void SetPitch(float value)
 	{
-		SetPosition(glm::dvec3(value, GetYaw(), 0.0f));
+		SetPosition(glm::vec3(value, GetYaw(), 0.0f));
 	}
 
 	// Build projection matrix
@@ -66,7 +66,7 @@ public:
 	}
 
 	// Rotates the camera by the change in pitch and yaw
-	void Rotate(float deltaYaw, float deltaPitch)
+	void Rotate(double deltaYaw, double deltaPitch)
 	{
 		pitch += deltaPitch;
 		yaw -= deltaYaw;

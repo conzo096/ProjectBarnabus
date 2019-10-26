@@ -1,16 +1,16 @@
 #include "ArcBallCamera.h"
 #include "BarnabusGameEngine.h"
 
-void ArcBallCamera::Update(double deltaTime)
+void ArcBallCamera::Update(float deltaTime)
 {
 	glfwSetInputMode(BarnabusGameEngine::Get().GetWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	fieldOfView = 70;
 	projection = glm::perspective(fieldOfView, (float)1920 / 1080, 2.414f, 1000.0f);
 	// The ratio of pixels to rotation
-	double ratioWidth = fieldOfView / static_cast<float>(1920);
-	double ratioHeight = (fieldOfView * (static_cast<float>(1080)
-		/ static_cast<float>(1920)))
-		/ static_cast<float>(1080);
+	double ratioWidth = fieldOfView / 1920.0;
+	double ratioHeight = (fieldOfView * (1080.0
+		/ 1920.0))
+		/ 1080.0;
 
 	double currentX, currentY;
 
@@ -31,9 +31,9 @@ void ArcBallCamera::Update(double deltaTime)
 		Rotate(deltaX, deltaY);
 	}
 
-	glm::dquat rotation(glm::dvec3(yAxisRotation, xAxisRotation, 0));
-	glm::dvec3 newPosition = target + (rotation * glm::dvec3(0, 0, distanceFromTarget));
-	up = rotation * glm::dvec3(0, 1, 0);
+	glm::quat rotation(glm::vec3(yAxisRotation, xAxisRotation, 0));
+	glm::vec3 newPosition = target + (rotation * glm::vec3(0, 0, distanceFromTarget));
+	up = rotation * glm::vec3(0, 1, 0);
 	SetPosition(newPosition);
 
 	// Calculate the view matrix
@@ -43,7 +43,7 @@ void ArcBallCamera::Update(double deltaTime)
 }
 
 // Rotates the camera around the target
-void ArcBallCamera::Rotate(float delta_X, float delta_Y)
+void ArcBallCamera::Rotate(double delta_X, double delta_Y)
 {
 	xAxisRotation += delta_X * 0.5;
 	yAxisRotation += delta_Y * 0.5;

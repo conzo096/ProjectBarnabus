@@ -5,9 +5,9 @@ class ArcBallCamera : public Camera
 {
 private:
 	// Rotation around the x-axis of the target
-	float xAxisRotation = 0.0f;
+	double xAxisRotation = 0.0f;
 	// Rotation around the y-axis of the target
-	float yAxisRotation = 0.0f;
+	double yAxisRotation = 0.0f;
 	// Distance of the camera from the target
 	float distanceFromTarget = 25.0f;
 	// The current field of view
@@ -21,20 +21,20 @@ public:
 	// Destroys the arc ball camera
 	~ArcBallCamera() { }
 	// Gets the rotation of the camera around the x-axis
-	float GetXAxisRotation() const { return xAxisRotation; }
+	double GetXAxisRotation() const { return xAxisRotation; }
 	// Sets the rotation of the camera around the x-axis
-	void SetXAxisRotation(float value) { xAxisRotation = value; }
+	void SetXAxisRotation(double value) { xAxisRotation = value; }
 	// Gets the rotation of the camera around the y-axis
-	float GetYAxisRotation() const { return yAxisRotation; }
+	double GetYAxisRotation() const { return yAxisRotation; }
 	// Sets the rotation of the camera around the y-axis
-	void SetYAxisRotation(float value) { yAxisRotation = value; }
+	void SetYAxisRotation(double value) { yAxisRotation = value; }
 	// Gets the distance of the camera from the target
 	float GetDistance() const { return distanceFromTarget; }
 	// Sets the distance of the camera from the target
 	void SetDistance(float value) { distanceFromTarget = value; }
 	// Updates the camera
-	void Update(double deltaTime) override;
-	void Rotate(float delta_X, float delta_Y);
+	void Update(float deltaTime) override;
+	void Rotate(double delta_X, double delta_Y);
 	// Move the camera relative to the target
 	void Move(float magnitude) { distanceFromTarget += magnitude; }
 

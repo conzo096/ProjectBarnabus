@@ -22,7 +22,7 @@ public:
 	explicit Component(const std::string &token);
 
 	virtual ~Component();
-	virtual void Update(double delta) {};
+	virtual void Update(float delta) {};
 	virtual void Render() {};
 	bool IsActive();
 	void SetActive(bool b);
@@ -46,7 +46,7 @@ public:
 	bool IsActive();
 	void SetActive(bool a);
 
-	void Update(const double delta);
+	void Update(const float delta);
 	void Render();
 
 	template <typename T> T &GetComponent() const

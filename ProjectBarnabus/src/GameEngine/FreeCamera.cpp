@@ -2,14 +2,14 @@
 #include "BarnabusGameEngine.h"
 
 // Update free camera for this frame
-void FreeCamera::Update(double deltaTime)
+void FreeCamera::Update(float deltaTime)
 {
 	glfwSetInputMode(BarnabusGameEngine::Get().GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	fieldOfView = 70;
 	projection = glm::perspective(fieldOfView, (float)1920 / 1080, 2.414f, 1000.0f);
 	// The ratio of pixels to rotation
-	double ratioWidth = fieldOfView / static_cast<float>(1920);
-	double ratioHeight = (fieldOfView * (static_cast<float>(1080)
+	float ratioWidth = fieldOfView / static_cast<float>(1920);
+	float ratioHeight = (fieldOfView * (static_cast<float>(1080)
 		/ static_cast<float>(1920)))
 		/ static_cast<float>(1080);
 
@@ -17,7 +17,7 @@ void FreeCamera::Update(double deltaTime)
 	double currentY;
 
 	// The camera's movement speed
-	double moveSpeed = 25.0f;
+	float moveSpeed = 25.0f;
 
 	// Get current cursor position
 	glfwGetCursorPos(BarnabusGameEngine::Get().GetWindow(), &currentX, &currentY);
@@ -41,12 +41,12 @@ void FreeCamera::Update(double deltaTime)
 		Move(CameraMovement::RIGHT, deltaTime*moveSpeed);
 
 	// Calculate the forward direction (spherical co-ordinates to Cartesian co-ordinates)
-	glm::dvec3 temp_forward(cosf(pitch) * -sinf(yaw), sinf(pitch), -cosf(yaw) * cosf(pitch));
+	glm::dvec3 temp_forward(cos(pitch) * -sin(yaw), sin(pitch), -cos(yaw) * cos(pitch));
 	// Normalise forward direction
 	forward = glm::normalize(temp_forward);
 
 	// Create standard right vector and rotate it by the yaw
-	right = glm::dvec3(glm::eulerAngleY(yaw) * glm::dvec4(1.0f, 0.0f, 0.0f, 1.0f));
+	right = glm::vec3(glm::eulerAngleY(yaw) * glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 	// Normalise right
 	right = glm::normalize(right);
 
@@ -56,7 +56,7 @@ void FreeCamera::Update(double deltaTime)
 	up = glm::normalize(up);
 
 	// Update position by multiplying translation elements by forward, up and right
-	glm::dvec3 trans = translation.x * right;
+	glm::vec3 trans = translation.x * right;
 	trans += translation.y * up;
 	trans += translation.z * forward;
 
@@ -73,7 +73,7 @@ void FreeCamera::Update(double deltaTime)
 	glfwGetCursorPos(BarnabusGameEngine::Get().GetWindow(), &cursorX, &cursorY);
 }
 
-void FreeCamera::Move(CameraMovement direction, double dist)
+void FreeCamera::Move(CameraMovement direction, float dist)
 {
 	switch (direction)
 	{

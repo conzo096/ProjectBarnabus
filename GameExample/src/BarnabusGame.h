@@ -12,8 +12,8 @@ public:
 	~BarnabusGame();
 
 	bool LoadGameContent() override;
-	bool Update(double deltaTime) override;
-	bool Render(double deltaTime) override;
+	bool Update(float deltaTime) override;
+	bool Render(float deltaTime) override;
 
 private:
 	Entity camera;

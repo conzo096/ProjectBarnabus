@@ -133,29 +133,29 @@ AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
 	LoadNodeTree(rootNode, model->mRootNode, NULL);
 }
 
-void AnimatedModel::Update(double deltaTime)
+void AnimatedModel::Update(float deltaTime)
 {
 	Model::Update(deltaTime);
 	animator.SetState(PAUSE);
 	// todo move this to a user movement component
 	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_W) == GLFW_PRESS)
 	{
-		GetParent()->Move(glm::dvec3(0, 0, 6)*deltaTime);
+		GetParent()->Move(glm::vec3(0, 0, 6)*deltaTime);
 		animator.SetState(PLAY);
 	}
 	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_S) == GLFW_PRESS)
 	{
-		GetParent()->Move(glm::dvec3(0, 0, -6)*deltaTime);
+		GetParent()->Move(glm::vec3(0, 0, -6)*deltaTime);
 		animator.SetState(REWIND);
 	}
 	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_A) == GLFW_PRESS)
 	{
-		GetParent()->Move(glm::dvec3(6, 0, 0)*deltaTime);
+		GetParent()->Move(glm::vec3(6, 0, 0)*deltaTime);
 		animator.SetState(PLAY);
 	}
 	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_D) == GLFW_PRESS)
 	{
-		GetParent()->Move(glm::dvec3(-6, 0, 0)*deltaTime);
+		GetParent()->Move(glm::vec3(-6, 0, 0)*deltaTime);
 		animator.SetState(PLAY);
 	}
 

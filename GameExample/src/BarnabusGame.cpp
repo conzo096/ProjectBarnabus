@@ -52,10 +52,10 @@ bool BarnabusGame::LoadGameContent()
 	return true;
 }
 
-bool BarnabusGame::Update(double deltaTime)
+bool BarnabusGame::Update(float deltaTime)
 {
 	camera.Update(deltaTime);
-	camera.GetComponent<ArcBallCamera>().SetTarget(animation.GetPosition() + glm::dvec3(0,5,0));
+	camera.GetComponent<ArcBallCamera>().SetTarget(animation.GetPosition() + glm::vec3(0,5,0));
 
 	animation.Update(deltaTime);
 	terrain.Update(deltaTime);
@@ -77,7 +77,7 @@ bool BarnabusGame::Update(double deltaTime)
 	return false;
 }
 
-bool BarnabusGame::Render(double deltaTime)
+bool BarnabusGame::Render(float deltaTime)
 {
 	Renderer::Get().SetCameraViewProjection(camera.GetComponent<ArcBallCamera>().GetProjection() * camera.GetComponent<ArcBallCamera>().GetView());
 

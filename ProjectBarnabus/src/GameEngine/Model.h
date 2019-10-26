@@ -14,7 +14,7 @@ public:
 	void SetShader(GLShader& shader);
 	void InitModel();
 
-	void Update(double deltaTime) override;
+	void Update(float deltaTime) override;
 	void Render() override;
 
 	std::vector<MeshData> data;

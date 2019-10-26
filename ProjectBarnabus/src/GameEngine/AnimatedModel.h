@@ -12,7 +12,7 @@ public:
 
 	AnimatedModel(const std::string& fileName);
 
-	void Update(double deltaTime) override;
+	void Update(float deltaTime) override;
 
 	void SetAnimation(std::string animationName);
 private:

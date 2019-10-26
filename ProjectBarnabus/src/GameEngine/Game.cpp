@@ -17,13 +17,13 @@ bool Game::LoadGameContent()
 	return false;
 }
 
-bool Game::Update(double deltaTime)
+bool Game::Update(float deltaTime)
 {
 	std::cout << "Update with deltaTime: " << deltaTime << std::endl;
 	return false;
 }
 
-bool Game::Render(double deltaTime)
+bool Game::Render(float deltaTime)
 {
 	std::cout << "Render with deltaTime: " << deltaTime << std::endl;
 	return false;
