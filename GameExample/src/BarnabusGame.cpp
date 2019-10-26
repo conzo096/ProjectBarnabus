@@ -4,7 +4,7 @@
 #include "GameEngine/ArcBallCamera.h"
 #include "GameEngine/AnimatedModel.h"
 #include "GameEngine/Renderer.h"
-
+#include "GameEngine/Terrain.h"
 BarnabusGame::BarnabusGame()
 {
 
@@ -40,11 +40,12 @@ bool BarnabusGame::LoadGameContent()
 
 	camera.AddComponent(std::move(cameraComponent));
 
-	fileName = "res\\Models\\terrain.obj";
-	auto modelComponent = std::make_unique<Model>(fileName);
-	modelComponent->SetShader(heightShader);
-	modelComponent->InitModel();
-	terrain.AddComponent(std::move(modelComponent));
+	fileName = "res\\Textures\\HeightMapExample.jpg";
+	auto terrainComponent = std::make_unique<Terrain>(fileName, TerrainType::Image);
+	terrainComponent->SetPosition(glm::vec3(-120, 0, -120));
+	terrainComponent->SetShader(heightShader);
+	terrainComponent->InitModel();
+	terrain.AddComponent(std::move(terrainComponent));
 	return true;
 }
 
@@ -52,9 +53,13 @@ bool BarnabusGame::Update(double deltaTime)
 {
 	camera.Update(deltaTime);
 	camera.GetComponent<ArcBallCamera>().SetTarget(animation.GetPosition() + glm::dvec3(0,5,0));
+
 	animation.Update(deltaTime);
 	terrain.Update(deltaTime);
-	Renderer::Get().SetCameraViewProjection(camera.GetComponent<ArcBallCamera>().GetProjection() * camera.GetComponent<ArcBallCamera>().GetView());
+
+	// Resolve character position - will snap to grid position
+	animation.SetPosition(terrain.GetComponent<Terrain>().GetWorldPositionFromGrid(animation.GetPosition()) + glm::vec3(0, 0.5, 0));
+
 
 	// Close the window if it has been asked too.
 	if (BarnabusGameEngine::Get().ShouldWindowClose() || glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -71,6 +76,8 @@ bool BarnabusGame::Update(double deltaTime)
 
 bool BarnabusGame::Render(double deltaTime)
 {
+	Renderer::Get().SetCameraViewProjection(camera.GetComponent<ArcBallCamera>().GetProjection() * camera.GetComponent<ArcBallCamera>().GetView());
+
 	animation.Render();
 	terrain.Render();
 	Renderer::Get().Render();

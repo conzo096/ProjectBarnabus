@@ -8,9 +8,14 @@ Terrain::Terrain()
 	token = "Terrain";
 }
 
-Terrain::Terrain(const std::string filePath) : Terrain()
+Terrain::Terrain(const std::string filePath, TerrainType terrain) : Terrain()
 {
-	LoadTerrainFromHeightMap(filePath);
+	switch (terrain)
+	{
+		case Image:
+			LoadTerrainFromHeightMap(filePath);
+			break;
+	}
 }
 
 glm::vec3 Terrain::GetWorldPositionFromGrid(glm::vec3 worldPosition)
@@ -104,18 +109,18 @@ void Terrain::LoadTerrainFromHeightMap(const std::string heightMapPath)
 	std::vector<Vertex> vertices(heightMap.GetWidth()*heightMap.GetHeight());
 	int counter = 0;
 
-	heightPositionsGrid = new double*[heightMap.GetWidth()];
+	heightPositionsGrid = new float*[heightMap.GetWidth()];
 
 	for (int x = 0; x < heightMap.GetWidth(); x++)
 	{		
-		heightPositionsGrid[x] = new double[heightMap.GetWidth()];
+		heightPositionsGrid[x] = new float[heightMap.GetWidth()];
 		for (int z = 0; z < heightMap.GetHeight(); z++)
 		{
 			int index = z * heightMap.GetHeight() + x;
 			vertices.at(index).position = glm::vec3(float(x), (float)heightMap.GetData()[index], float(z));
 			vertices.at(index).texCoords = glm::vec2(x/heightMap.GetWidth(),z/heightMap.GetHeight());
 			vertices.at(index).color = glm::vec4(vertices.at(index).position,1);
-			heightPositionsGrid[x][z] = (glm::vec4(x,(float)heightMap.GetData()[index],z,1) * GetTransform()).y;
+			heightPositionsGrid[x][z] = (glm::vec4(vertices.at(index).position,1) * GetTransform()).y;
 		}
 	}
 	mesh.InsertVertices(vertices);

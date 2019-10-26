@@ -124,22 +124,22 @@ void AnimatedModel::Update(double deltaTime)
 	// todo move this to a user movement component
 	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_W) == GLFW_PRESS)
 	{
-		GetParent()->Move(glm::dvec3(0, 0, 1)*deltaTime);
+		GetParent()->Move(glm::dvec3(0, 0, 6)*deltaTime);
 		animator.SetState(PLAY);
 	}
 	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_S) == GLFW_PRESS)
 	{
-		GetParent()->Move(glm::dvec3(0, 0, -1)*deltaTime);
+		GetParent()->Move(glm::dvec3(0, 0, -6)*deltaTime);
 		animator.SetState(REWIND);
 	}
 	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_A) == GLFW_PRESS)
 	{
-		GetParent()->Move(glm::dvec3(-1, 0, 0)*deltaTime);
+		GetParent()->Move(glm::dvec3(6, 0, 0)*deltaTime);
 		animator.SetState(PLAY);
 	}
 	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_D) == GLFW_PRESS)
 	{
-		GetParent()->Move(glm::dvec3(1, 0, 0)*deltaTime);
+		GetParent()->Move(glm::dvec3(-6, 0, 0)*deltaTime);
 		animator.SetState(PLAY);
 	}
 

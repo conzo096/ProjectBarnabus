@@ -10,7 +10,7 @@ void main()
 	vec4 worldPosition = MVP * vec4(position, 1.0);
     gl_Position = worldPosition;
 
-	vec4 height = mix(vec4(0,0,0,1),vec4(1,1,1,1), mod(((position.y/255)*4),12));
+	vec4 height = mix(vec4(0,0,0,1),vec4(1,1,1,1), mod(((position.y/255)*2),12));
 	colour = height;
 }
 
