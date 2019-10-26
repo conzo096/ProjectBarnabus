@@ -46,6 +46,9 @@ bool BarnabusGame::LoadGameContent()
 	terrainComponent->SetShader(heightShader);
 	terrainComponent->InitModel();
 	terrain.AddComponent(std::move(terrainComponent));
+
+	ui.InitaliseAllQuads();
+
 	return true;
 }
 
@@ -82,5 +85,6 @@ bool BarnabusGame::Render(double deltaTime)
 	terrain.Render();
 	Renderer::Get().Render();
 
+	ui.Draw();
 	return true;
 }

@@ -1,8 +1,10 @@
 #pragma once
-#include "GameEngine/Game.h"
-#include "GameEngine/Entity.h"
+#include <GameEngine/Game.h>
+#include <GameEngine/Entity.h>
+
 #include "AnimationShader.h"
 #include "HeightShader.h"
+#include "GameUi.h"
 class BarnabusGame : public Game
 {
 public:
@@ -19,5 +21,6 @@ private:
 	Entity terrain;
 	AnimationShader animationShader;
 	HeightShader heightShader;
+	GameUi ui;
 
 };

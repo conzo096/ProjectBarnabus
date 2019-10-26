@@ -9,6 +9,7 @@
   <ItemGroup>
     <ClCompile Include="src\AnimationShader.cpp" />
     <ClCompile Include="src\BarnabusGame.cpp" />
+    <ClCompile Include="src\GameUi.cpp" />
     <ClCompile Include="src\HeightShader.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\RedShader.cpp" />
@@ -16,6 +17,7 @@
   <ItemGroup>
     <ClInclude Include="src\AnimationShader.h" />
     <ClInclude Include="src\BarnabusGame.h" />
+    <ClInclude Include="src\GameUi.h" />
     <ClInclude Include="src\HeightShader.h" />
     <ClInclude Include="src\RedShader.h" />
   </ItemGroup>

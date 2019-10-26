@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\User Interface">
+      <UniqueIdentifier>{65f033b4-20f7-489c-9261-436f42c781e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\User Interface">
+      <UniqueIdentifier>{4d58e4b9-9dd6-412e-af78-69edd1613d84}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AnimationShader.cpp">
@@ -30,6 +36,9 @@
     <ClCompile Include="src\HeightShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\GameUi.cpp">
+      <Filter>Source Files\User Interface</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AnimationShader.h">
@@ -43,6 +52,9 @@
     </ClInclude>
     <ClInclude Include="src\HeightShader.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameUi.h">
+      <Filter>Header Files\User Interface</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

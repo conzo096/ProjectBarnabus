@@ -49,6 +49,12 @@
     <ClCompile Include="src\GameEngine\Terrain.cpp">
       <Filter>Source Files\GameEngine\Components\Model</Filter>
     </ClCompile>
+    <ClCompile Include="src\GameEngine\UiDisplay.cpp">
+      <Filter>Source Files\GameEngine\User Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\UiQuad.cpp">
+      <Filter>Source Files\GameEngine\User Interface</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -95,6 +101,12 @@
     </Filter>
     <Filter Include="Header Files\GameEngine\Renderer\Animation">
       <UniqueIdentifier>{307179bf-98a5-415f-bb89-30e6350d0f0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameEngine\User Interface">
+      <UniqueIdentifier>{654d9722-5e21-4cba-93f7-e56e91530fc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameEngine\User Interface">
+      <UniqueIdentifier>{a6753fdd-f9e8-42e3-af04-41130375adf5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -163,6 +175,12 @@
     </ClInclude>
     <ClInclude Include="src\GameEngine\Terrain.h">
       <Filter>Header Files\GameEngine\Components\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\UiDisplay.h">
+      <Filter>Header Files\GameEngine\User Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\UiQuad.h">
+      <Filter>Header Files\GameEngine\User Interface</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,5 +1,4 @@
 #pragma once
-
 class Game
 {
 public:
@@ -8,4 +7,5 @@ public:
 	virtual bool LoadGameContent();
 	virtual bool Update(double deltaTime);
 	virtual bool Render(double deltaTime);
+
 };
