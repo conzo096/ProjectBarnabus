@@ -43,7 +43,7 @@ namespace
 		myRootNode->parent = parent;
 		myRootNode->children.resize(rootNode->mNumChildren);
 
-		for (int i = 0; i < rootNode->mNumChildren; i++)
+		for (unsigned int i = 0; i < rootNode->mNumChildren; i++)
 		{
 			LoadNodeTree(myRootNode->children[i], rootNode->mChildren[i], myRootNode);
 		}
@@ -65,10 +65,10 @@ AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
 
 	globalInverseTransform = glm::inverse(aiMatrix4x4ToGlm(model->mRootNode->mTransformation));
 
-	for (int i = 0; i < model->mNumMeshes; i++)
+	for (unsigned int i = 0; i < model->mNumMeshes; i++)
 	{
 		auto mesh = model->mMeshes[i];
-		for (int j = 0; j < mesh->mNumBones; j++)
+		for (unsigned int j = 0; j < mesh->mNumBones; j++)
 		{
 			auto aiBone = mesh->mBones[j];
  			Bone bone;
@@ -88,7 +88,7 @@ AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
 		}	
 	}
 
-	for (int i = 0; i < model->mNumAnimations; i++)
+	for (unsigned int i = 0; i < model->mNumAnimations; i++)
 	{
 		auto animation = model->mAnimations[i];
 		std::shared_ptr<Animation> newAnimation = std::make_shared<Animation>();
@@ -96,12 +96,12 @@ AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
 		newAnimation->SetName(animation->mName.C_Str());
 		newAnimation->SetTicksPerSecond(animation->mTicksPerSecond);
 
-		for (int j = 0; j < animation->mNumChannels; j++)
+		for (unsigned int j = 0; j < animation->mNumChannels; j++)
 		{
 			auto channel = animation->mChannels[j];
 			NodeAnim* node = new NodeAnim;
 			node->name = channel->mNodeName.C_Str();
-			for (int key = 0; key < channel->mNumPositionKeys; key++)
+			for (unsigned int key = 0; key < channel->mNumPositionKeys; key++)
 			{
 				PositionKey positionKey;
 				positionKey.timeStamp = channel->mPositionKeys[key].mTime;
@@ -109,7 +109,7 @@ AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
 				node->positionKeys.push_back(positionKey);
 			}
 
-			for (int key = 0; key < channel->mNumScalingKeys; key++)
+			for (unsigned int key = 0; key < channel->mNumScalingKeys; key++)
 			{
 				ScalingKey scalingKey;
 				scalingKey.timeStamp = channel->mScalingKeys[key].mTime;
@@ -117,7 +117,7 @@ AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
 				node->scalingKeys.push_back(scalingKey);
 			}
 
-			for (int key = 0; key < channel->mNumRotationKeys; key++)
+			for (unsigned int key = 0; key < channel->mNumRotationKeys; key++)
 			{
 				RotationKey rotationKey;
 				rotationKey.timeStamp = channel->mRotationKeys[key].mTime;

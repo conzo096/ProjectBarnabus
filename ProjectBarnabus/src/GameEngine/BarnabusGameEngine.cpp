@@ -68,7 +68,7 @@ bool BarnabusGameEngine::StartGame()
 	{
 		float deltaTime = (clock() - lastTime) / CLOCKS_PER_SEC;
 		time += deltaTime * 60;
-		lastTime = clock();
+		lastTime = static_cast<float>(clock());
 
 		running = game->Update(deltaTime);
 		game->Render(deltaTime);

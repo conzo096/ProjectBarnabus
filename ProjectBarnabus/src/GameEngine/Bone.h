@@ -33,5 +33,5 @@ struct Bone
 	glm::mat4 offSet;
 	glm::mat4 inverseOffSet;
 
-	glm::dmat4 finalTransformation;
+	glm::mat4 finalTransformation;
 };

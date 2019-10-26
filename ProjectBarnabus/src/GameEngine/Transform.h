@@ -11,10 +11,10 @@ private:
 	glm::vec3 position;
 	glm::quat rotation;
 	glm::vec3 scale;
-	glm::dmat4 transform;
+	glm::mat4 transform;
 
 public:
-	Transform() : scale(glm::vec3(1.0)), rotation(glm::quat()), position(glm::vec3()), transform(glm::dmat4(1))
+	Transform() : scale(glm::vec3(1.0)), rotation(glm::quat()), position(glm::vec3()), transform(glm::mat4(1))
 	{ 
 		changed = true;
 	}
@@ -58,6 +58,6 @@ public:
 	void SetScale(const glm::vec3 &v3) { scale = v3;  changed = true; }
 	void Scale(const glm::vec3 &v3) { scale *= v3; changed = true; }
 
-	const glm::dmat4 GetTransform() const { return transform; }
-	void SetTransform(const glm::dmat4 m4) { transform = m4; changed = true; }
+	const glm::mat4 GetTransform() const { return transform; }
+	void SetTransform(const glm::mat4 m4) { transform = m4; changed = true; }
 };

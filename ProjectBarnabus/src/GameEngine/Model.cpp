@@ -25,7 +25,7 @@ Model::Model(const std::string & fileName) : Component("Model")
 	if (!model)
 	{
 		// Display error
-		std::fprintf(stderr, "Data incorrectly read in at $s", fileName);
+		std::fprintf(stderr, "Data incorrectly read in at %s\n", fileName.c_str());
 		std::fprintf(stderr, loadModel.GetErrorString());
 		// Throw exception
 		throw std::runtime_error("Error reading in model file");

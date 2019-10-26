@@ -188,7 +188,7 @@ void GLShader::UpdateUniforms(MeshData & meshData)
 void GLShader::DrawMesh(MeshData& meshData) const
 {
 	glBindVertexArray(meshData.GetVao());
-	glDrawElements(meshData.GetType(), meshData.GetIndices().size(), GL_UNSIGNED_INT, 0);
+	glDrawElements(meshData.GetType(), static_cast<GLsizei>(meshData.GetIndices().size()), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 }
 
