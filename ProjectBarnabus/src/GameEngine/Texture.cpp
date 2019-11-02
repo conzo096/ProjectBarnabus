@@ -2,6 +2,18 @@
 #include <GL/glew.h>
 #include <iostream>
 
+Texture::Texture()
+{
+}
+
+Texture::Texture(GLuint w, GLuint h)
+{
+	width = w;
+	height = h;
+	glGenTextures(1, &textureId);
+	textureType = GL_TEXTURE_2D;
+}
+
 bool Texture::LoadTexture(std::string file)
 {
 	filePath = file;

@@ -194,7 +194,7 @@ void GLShader::DrawMesh(MeshData& meshData) const
 	}
 	else
 	{
-		glDrawArrays(meshData.GetType(), 0, meshData.vertices.size());
+		glDrawArrays(meshData.GetType(), 0, static_cast<GLsizei>(meshData.vertices.size()));
 	}
 	glBindVertexArray(0);
 }
