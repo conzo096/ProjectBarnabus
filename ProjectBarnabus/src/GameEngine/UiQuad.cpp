@@ -2,8 +2,11 @@
 #include <GL\glew.h>
 #include <GL/GL.h>
 
+#include "Renderer.h"
+
 UiQuad::UiQuad(): width(1),height(1), transparency(1.0f)
 {
+	mesh.SetType(GL_QUADS);
 	std::vector<glm::vec3> positions
 	{
 		glm::vec3(1.0f, 1.0f, 0.0f),
@@ -25,12 +28,15 @@ UiQuad::UiQuad(): width(1),height(1), transparency(1.0f)
 		Vertex v;
 		v.position = positions.at(i);
 		v.texCoords = tex_coords.at(i);
-		vertices.push_back(v);
+
+		mesh.InsertVertex(v);
 	}
 }
 
 UiQuad::UiQuad(glm::vec2 bottomLeft, glm::vec2 topRight) : transparency(1.0f)
 {
+	mesh.SetType(GL_QUADS);
+
 	width = topRight.x - bottomLeft.x;
 	height = topRight.y - bottomLeft.y;
 	
@@ -55,33 +61,27 @@ UiQuad::UiQuad(glm::vec2 bottomLeft, glm::vec2 topRight) : transparency(1.0f)
 		Vertex v;
 		v.position = positions.at(i);
 		v.texCoords = tex_coords.at(i);
-		vertices.push_back(v);
+
+		mesh.InsertVertex(v);
 	}
 }
 
 UiQuad::~UiQuad()
 {
-	glDeleteBuffers(1, &vao);
-	glDeleteBuffers(1, &vbo);
 }
 
 void UiQuad::InitQuad()
 {
-	glGenVertexArrays(1, &vao);
-	glGenBuffers(1, &vbo);
+	shader.CreateProgram();
+	shader.AddShaderFromFile("..\\ProjectBarnabus\\res\\shaders\\UI.vert", GLShader::VERTEX);
+	shader.AddShaderFromFile("..\\ProjectBarnabus\\res\\shaders\\UI.frag", GLShader::FRAGMENT);
+	shader.Link();
 
-	glBindVertexArray(vao);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
-
-	// vertex positions
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoords));
+	mesh.SetShader(&shader);
+	mesh.InitialiseMesh();
 }
 
 void UiQuad::Draw()
 {
+	Renderer::Get().AddMesh(mesh);
 }

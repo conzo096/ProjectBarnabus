@@ -63,7 +63,6 @@ bool BarnabusGame::Update(float deltaTime)
 	// Resolve character position - will snap to grid position
 	animation.SetPosition(terrain.GetComponent<Terrain>().GetWorldPositionFromGrid(animation.GetPosition()) + glm::vec3(0, 0.5, 0));
 
-
 	// Close the window if it has been asked too.
 	if (BarnabusGameEngine::Get().ShouldWindowClose() || glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
@@ -80,11 +79,12 @@ bool BarnabusGame::Update(float deltaTime)
 bool BarnabusGame::Render(float deltaTime)
 {
 	Renderer::Get().SetCameraViewProjection(camera.GetComponent<ArcBallCamera>().GetProjection() * camera.GetComponent<ArcBallCamera>().GetView());
+	
+	ui.Draw();
 
 	animation.Render();
 	terrain.Render();
 	Renderer::Get().Render();
 
-	ui.Draw();
 	return true;
 }

@@ -2,6 +2,8 @@
 #include <glm/glm.hpp>
 #include <vector>
 
+#include "GLShader.h"
+#include "MeshData.h"
 class UiQuad 
 {
 public: 
@@ -14,17 +16,10 @@ public:
 	void Draw();
 
 protected:
-	struct Vertex
-	{
-		glm::vec3 position;
-		glm::vec2 texCoords;
-	};
-
-	std::vector<Vertex> vertices;
 
 	float width, height;
-	unsigned int vbo;
-	unsigned int vao;
+
 	float transparency;
-	unsigned int shader, texture;
+	MeshData mesh;
+	GLShader shader;
 };

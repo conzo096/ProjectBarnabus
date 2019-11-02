@@ -10,8 +10,11 @@ void MeshData::InitialiseMesh()
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int),
-		&indices[0], GL_STATIC_DRAW);
+	if (indices.size() > 0)
+	{
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int),
+			&indices[0], GL_STATIC_DRAW);
+	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
@@ -51,7 +54,7 @@ void MeshData::InitialiseMesh()
 
 void MeshData::SetType(GLenum meshType)
 {
-	meshType = type;
+	type = meshType;
 }
 
 GLenum MeshData::GetType()

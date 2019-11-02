@@ -101,7 +101,7 @@ float Terrain::BarryCentric(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec2 
 
 void Terrain::LoadTerrainFromHeightMap(const std::string heightMapPath)
 {
-	MeshData mesh;// (vertices, indices);
+	MeshData mesh;
 
 	HeightMapTexture heightMap(heightMapPath);
 	width = heightMap.GetWidth();

@@ -56,7 +56,7 @@ public:
 private:
 
 	// Skin
-	GLenum type = GL_TRIANGLES;
+	GLenum type;
 	unsigned int VAO, VBO, EBO, BONES;
 	std::vector<unsigned int> indices;
 	Texture texture;
