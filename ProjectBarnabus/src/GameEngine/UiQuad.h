@@ -22,5 +22,4 @@ protected:
 
 	float transparency;
 	MeshData mesh;
-	GLShader shader;
 };

@@ -1,6 +1,5 @@
 #pragma once
 #include <GameEngine/GLShader.h>
-
 class UiShader : public GLShader
 {
 public:

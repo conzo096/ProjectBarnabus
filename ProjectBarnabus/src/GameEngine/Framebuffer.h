@@ -12,7 +12,7 @@ public:
 	~FrameBuffer();
 
 	GLuint GetFrameBuffer();
-	Texture GetFrameTexture();
+	Texture& GetFrameTexture();
 	Texture& GetDepthTexture();
 
 	void LoadFrameBuffer(int w, int h);

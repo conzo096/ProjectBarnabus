@@ -77,12 +77,6 @@ MeshData& UiQuad::GetMeshData()
 
 void UiQuad::InitQuad()
 {
-	shader.CreateProgram();
-	shader.AddShaderFromFile("..\\ProjectBarnabus\\res\\shaders\\UI.vert", GLShader::VERTEX);
-	shader.AddShaderFromFile("..\\ProjectBarnabus\\res\\shaders\\UI.frag", GLShader::FRAGMENT);
-	shader.Link();
-
-	mesh.SetShader(&shader);
 	mesh.InitialiseMesh();
 }
 

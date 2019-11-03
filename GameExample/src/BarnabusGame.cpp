@@ -47,6 +47,7 @@ bool BarnabusGame::LoadGameContent()
 	terrainComponent->InitModel();
 	terrain.AddComponent(std::move(terrainComponent));
 
+	ui.InitGameUi();
 	ui.InitaliseAllQuads();
 
 	return true;

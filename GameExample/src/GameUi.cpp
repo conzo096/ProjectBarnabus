@@ -5,9 +5,18 @@ GameUi::GameUi()
 {
 	// Create initial quad.
 	UiQuad* debugInformation = new UiQuad(glm::vec2(0.8,0.8),glm::vec2(1,1));
-	auto shader = new UiShader;
-	debugInformation->GetMeshData().SetShader(shader);
 	uiElements.insert(std::pair<std::string, UiQuad*>("debug", debugInformation));
+}
+
+void GameUi::InitGameUi()
+{
+	auto shader = new UiShader;
+	shader->CreateProgram();
+	shader->AddShaderFromFile("..\\ProjectBarnabus\\res\\shaders\\UI.vert", GLShader::VERTEX);
+	shader->AddShaderFromFile("..\\ProjectBarnabus\\res\\shaders\\UI.frag", GLShader::FRAGMENT);
+	shader->Link();
+
+	uiElements.at("debug")->GetMeshData().SetShader(shader);
 }
 
 GameUi::~GameUi()
@@ -20,6 +29,6 @@ GameUi::~GameUi()
 
 void GameUi::Draw()
 {
-	uiElements.at("debug")->GetMeshData().SetTexture(Renderer::Get().GetFrameBuffer("main").GetDepthTexture());
+	uiElements.at("debug")->GetMeshData().SetTexture(Renderer::Get().GetFrameBuffer("main").GetFrameTexture());
 	UiDisplay::Draw();
 }

@@ -14,7 +14,7 @@ GLuint FrameBuffer::GetFrameBuffer()
 	return bufferId;
 }
 
-Texture FrameBuffer::GetFrameTexture()
+Texture& FrameBuffer::GetFrameTexture()
 {
 	return frameTexture;
 }
