@@ -11,7 +11,7 @@ public:
 	~UiDisplay();
 
 	void InitaliseAllQuads();
-	void Draw();
+	virtual void Draw();
 
 protected:
 	std::map<std::string, UiQuad*> uiElements;

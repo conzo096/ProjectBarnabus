@@ -9,7 +9,7 @@ layout(location = 0) out vec4 colour;
 
 void main()
 {
-	//colour = texture(tex, tex_coord);
+	colour = texture(tex, tex_coord);
 	
-	colour = vec4(0,1,0,1);
+	//colour = vec4(0,1,0,1);
 }

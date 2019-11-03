@@ -1,5 +1,9 @@
 #include "FrameBuffer.h"
 
+FrameBuffer::FrameBuffer()
+{
+}
+
 FrameBuffer::~FrameBuffer()
 {
 	glDeleteFramebuffers(1, &bufferId);
@@ -15,7 +19,7 @@ Texture FrameBuffer::GetFrameTexture()
 	return frameTexture;
 }
 
-Texture FrameBuffer::GetDepthTexture()
+Texture& FrameBuffer::GetDepthTexture()
 {
 	return depthTexture;
 }
@@ -25,8 +29,6 @@ void FrameBuffer::LoadFrameBuffer(int w, int h)
 	// The draw buffer
 	static GLenum drawBuffer = GL_COLOR_ATTACHMENT0;
 
-	width = 1920;
-	height = 1080;
 	// Create textures with OpenGL
 	frameTexture = Texture(width, height);
 	depthTexture = Texture(width, height);

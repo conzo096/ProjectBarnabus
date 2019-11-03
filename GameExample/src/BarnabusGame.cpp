@@ -80,10 +80,10 @@ bool BarnabusGame::Render(float deltaTime)
 {
 	Renderer::Get().SetCameraViewProjection(camera.GetComponent<ArcBallCamera>().GetProjection() * camera.GetComponent<ArcBallCamera>().GetView());
 
-	ui.Draw();
-
 	animation.Render();
 	terrain.Render();
+	ui.Draw();
+
 	Renderer::Get().Render();
 
 	return true;

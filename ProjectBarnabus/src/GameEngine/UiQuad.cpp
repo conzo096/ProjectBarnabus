@@ -70,6 +70,11 @@ UiQuad::~UiQuad()
 {
 }
 
+MeshData& UiQuad::GetMeshData()
+{
+	return mesh;
+}
+
 void UiQuad::InitQuad()
 {
 	shader.CreateProgram();
@@ -83,5 +88,5 @@ void UiQuad::InitQuad()
 
 void UiQuad::Draw()
 {
-	Renderer::Get().AddMesh(mesh);
+	Renderer::Get().AddUiElement(mesh);
 }

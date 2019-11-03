@@ -6,4 +6,6 @@ class GameUi : public UiDisplay
 public:
 	GameUi();
 	~GameUi();
+
+	void Draw() override;
 };

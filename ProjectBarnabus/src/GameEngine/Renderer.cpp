@@ -1,9 +1,22 @@
 #include "Renderer.h"
 #include "BarnabusGameEngine.h"
+#include "GLShader.h"
 
 Renderer::Renderer()
 {
 	backgroundColour = glm::vec4(0.1f, 0.0f, 0.4f, 1.0f);
+	auto main = new FrameBuffer;
+	main->LoadFrameBuffer(1920,1080);
+	auto pair = std::pair<std::string, FrameBuffer*>(std::string("main"), main);
+	AddFramebuffer(pair);
+	auto ui = new FrameBuffer;
+	ui->LoadFrameBuffer(1920, 1080);
+	pair = std::pair<std::string, FrameBuffer*>(std::string("ui"), ui);
+	AddFramebuffer(pair);
+	auto finalPass = new FrameBuffer;
+	finalPass->LoadFrameBuffer(1920, 1080);
+	pair = std::pair<std::string, FrameBuffer*>(std::string("final"), finalPass);
+	framebuffers.insert(pair);
 }
 
 Renderer::~Renderer()
@@ -13,19 +26,30 @@ Renderer::~Renderer()
 
 void Renderer::Render()
 {
+	auto renderMeshes = [](auto& renderList)
+	{
+		for (int i = 0; i < renderList.size(); i++)
+		{
+			auto& mesh = renderList[i];
+			mesh.GetShader()->UpdateUniforms(mesh);
+			// Bind and draw model.
+			mesh.GetShader()->DrawMesh(mesh);
+		}
+		renderList.clear();
+	};
 
+	// Render main game.
 	glClearColor(backgroundColour.x,backgroundColour.y,backgroundColour.z,backgroundColour.w);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	for (int i = 0; i < meshesToRender.size(); i++)
-	{
-		MeshData& mesh = meshesToRender[i];
-		mesh.GetShader()->UpdateUniforms(mesh);
-		// Bind and draw model.
-		mesh.GetShader()->DrawMesh(mesh);
+	
+	GetFrameBuffer("main").BindFrameBuffer();
+	renderMeshes(meshesToRender);
+	
+	// render to screen
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	renderMeshes(uiElementsToRender);
+	
 
-	}
-
-	meshesToRender.clear();
 	glfwSwapBuffers(BarnabusGameEngine::Get().GetWindow());
 
 }
@@ -48,6 +72,21 @@ const std::vector<MeshData>& Renderer::GetMeshesToRender()
 glm::mat4 Renderer::GetCameraVP()
 {
 	return cameraVP;
+}
+
+void Renderer::AddUiElement(MeshData md)
+{
+	uiElementsToRender.push_back(md);
+}
+
+void Renderer::AddFramebuffer(std::pair<std::string, FrameBuffer*> pair)
+{
+	framebuffers.insert(pair);
+}
+
+FrameBuffer& Renderer::GetFrameBuffer(const std::string& buffer)
+{
+	return *framebuffers.at(buffer);
 }
 
 glm::vec4 Renderer::GetBackgroundColour()

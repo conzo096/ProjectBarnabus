@@ -1,4 +1,8 @@
 #include "MeshData.h"
+
+#include "GLShader.h"
+#include "Framebuffer.h"
+
 #include <GL/glew.h>
 
 void MeshData::InitialiseMesh()
@@ -117,6 +121,16 @@ GLShader* MeshData::GetShader() const
 	return shader;
 }
 
+void MeshData::SetFrameBuffer(FrameBuffer * framebuffer)
+{
+	buffer = framebuffer;
+}
+
+FrameBuffer * MeshData::GetFrameBuffer() const
+{
+	return buffer;
+}
+
 void MeshData::ResizeBoneData(unsigned int size)
 {
 	bonesData.resize(size);
@@ -127,7 +141,7 @@ void MeshData::InsertBoneDataAt(unsigned int location, int vertexLocation, float
 	bonesData[location].AddBoneData(vertexLocation, vertexWeight);
 }
 
-void MeshData::SetTexture(Texture tex)
+void MeshData::SetTexture(Texture& tex)
 {
 	texture = tex;
 }

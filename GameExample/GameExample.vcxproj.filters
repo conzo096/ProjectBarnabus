@@ -39,6 +39,9 @@
     <ClCompile Include="src\GameUi.cpp">
       <Filter>Source Files\User Interface</Filter>
     </ClCompile>
+    <ClCompile Include="src\UiShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AnimationShader.h">
@@ -55,6 +58,9 @@
     </ClInclude>
     <ClInclude Include="src\GameUi.h">
       <Filter>Header Files\User Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UiShader.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

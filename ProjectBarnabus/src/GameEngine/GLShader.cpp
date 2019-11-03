@@ -183,6 +183,7 @@ GLuint GLShader::GetUniformLocation(std::string& name)
 
 void GLShader::UpdateUniforms(MeshData & meshData)
 {
+	Use();
 }
 
 void GLShader::DrawMesh(MeshData& meshData) const

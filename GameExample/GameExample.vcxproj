@@ -13,6 +13,7 @@
     <ClCompile Include="src\HeightShader.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\RedShader.cpp" />
+    <ClCompile Include="src\UiShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AnimationShader.h" />
@@ -20,6 +21,7 @@
     <ClInclude Include="src\GameUi.h" />
     <ClInclude Include="src\HeightShader.h" />
     <ClInclude Include="src\RedShader.h" />
+    <ClInclude Include="src\UiShader.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

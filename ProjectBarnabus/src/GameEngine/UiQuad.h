@@ -11,8 +11,9 @@ public:
 	UiQuad(glm::vec2 bottomLeft, glm::vec2 topRight);
 	~UiQuad();
 
-	void InitQuad();
+	MeshData& GetMeshData();
 
+	void InitQuad();
 	void Draw();
 
 protected:
