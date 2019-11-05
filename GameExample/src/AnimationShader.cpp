@@ -26,9 +26,7 @@ void AnimationShader::UpdateUniforms(MeshData& meshData)
 		glUniformMatrix4fv(index, 1, GL_FALSE, glm::value_ptr(transform));
 	}
 
-	glActiveTexture(GL_TEXTURE0);
-	auto texture = meshData.GetTexture();
-	glBindTexture(GL_TEXTURE_2D, texture.GetTextureId());
+	glBindTexture(GL_TEXTURE_2D, meshData.GetTexture()->GetTextureId());
 
 #if DEBUG_VERTICES
 

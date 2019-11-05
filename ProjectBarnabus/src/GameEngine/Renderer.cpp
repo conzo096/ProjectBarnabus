@@ -39,14 +39,17 @@ void Renderer::Render()
 	};
 
 	// Render main game.
+	GetFrameBuffer("main").BindFrameBuffer();
+
 	glClearColor(backgroundColour.x,backgroundColour.y,backgroundColour.z,backgroundColour.w);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	
-	GetFrameBuffer("main").BindFrameBuffer();
+	glEnable(GL_DEPTH_TEST);
 	renderMeshes(meshesToRender);
 	
 	// render to screen
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glDisable(GL_DEPTH_TEST);
 	renderMeshes(uiElementsToRender);
 	
 

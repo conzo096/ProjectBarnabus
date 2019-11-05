@@ -51,8 +51,9 @@ public:
 	void ResizeBoneData(unsigned int size);
 	void InsertBoneDataAt(unsigned int location, int vertexLocation, float vertexWeight);
 
-	void SetTexture(Texture& tex);
-	const Texture& GetTexture();
+	void SetTexture(Texture* tex);
+	Texture* GetTexture();
+
 	// Move these to private.
 	std::vector<glm::mat4> transforms;
 	std::vector<Vertex> vertices;
@@ -63,7 +64,7 @@ private:
 	GLenum type;
 	unsigned int VAO, VBO, EBO, BONES;
 	std::vector<unsigned int> indices;
-	Texture texture;
+	Texture* texture;
 	FrameBuffer* buffer;
 	// Shader for rendering the mesh.
 	GLShader* shader;

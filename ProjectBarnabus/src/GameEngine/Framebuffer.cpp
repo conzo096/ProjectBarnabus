@@ -1,4 +1,5 @@
 #include "FrameBuffer.h"
+#include "Texture.h"
 
 FrameBuffer::FrameBuffer()
 {
@@ -14,12 +15,12 @@ GLuint FrameBuffer::GetFrameBuffer()
 	return bufferId;
 }
 
-Texture& FrameBuffer::GetFrameTexture()
+Texture* FrameBuffer::GetFrameTexture()
 {
 	return frameTexture;
 }
 
-Texture& FrameBuffer::GetDepthTexture()
+Texture* FrameBuffer::GetDepthTexture()
 {
 	return depthTexture;
 }
@@ -28,14 +29,15 @@ void FrameBuffer::LoadFrameBuffer(int w, int h)
 {
 	// The draw buffer
 	static GLenum drawBuffer = GL_COLOR_ATTACHMENT0;
-
+	width = w;
+	height = h;
 	// Create textures with OpenGL
-	frameTexture = Texture(width, height);
-	depthTexture = Texture(width, height);
+	frameTexture = new Texture(width, height);
+	depthTexture = new Texture(width, height);
 
 	// Bind image with OpenGL
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, frameTexture.GetTextureId());
+	glBindTexture(GL_TEXTURE_2D, frameTexture->GetTextureId());
 
 	// Create the image data
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
@@ -46,7 +48,7 @@ void FrameBuffer::LoadFrameBuffer(int w, int h)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, depthTexture.GetTextureId());
+	glBindTexture(GL_TEXTURE_2D, depthTexture->GetTextureId());
 	// Create the depth image data
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
 
@@ -61,8 +63,8 @@ void FrameBuffer::LoadFrameBuffer(int w, int h)
 
 
 	// Attach the frame and depth textures
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, frameTexture.GetTextureId(), 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture.GetTextureId(), 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, frameTexture->GetTextureId(), 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture->GetTextureId(), 0);
 
 	// Set draw buffer
 	glDrawBuffers(1, &drawBuffer);
