@@ -5,10 +5,6 @@
 
 void UiShader::UpdateUniforms(MeshData& meshData)
 {
-	Use();
-	// Bind Uniforms.
-	const auto mvp = Renderer::Get().GetCameraVP() * glm::mat4(meshData.GetTransform());
-
+	Use();	
 	glBindTexture(GL_TEXTURE_2D, meshData.GetTexture()->GetTextureId());
-
 }

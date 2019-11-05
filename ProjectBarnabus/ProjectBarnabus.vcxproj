@@ -13,6 +13,7 @@
     <ClCompile Include="src\GameEngine\ArcBallCamera.cpp" />
     <ClCompile Include="src\GameEngine\BarnabusGameEngine.cpp" />
     <ClCompile Include="src\GameEngine\Entity.cpp" />
+    <ClCompile Include="src\GameEngine\FinalPassShader.cpp" />
     <ClCompile Include="src\GameEngine\Framebuffer.cpp" />
     <ClCompile Include="src\GameEngine\FreeCamera.cpp" />
     <ClCompile Include="src\GameEngine\Game.cpp" />
@@ -36,6 +37,7 @@
     <ClInclude Include="src\GameEngine\Bone.h" />
     <ClInclude Include="src\GameEngine\Camera.h" />
     <ClInclude Include="src\GameEngine\Entity.h" />
+    <ClInclude Include="src\GameEngine\FinalPassShader.h" />
     <ClInclude Include="src\GameEngine\Framebuffer.h" />
     <ClInclude Include="src\GameEngine\FreeCamera.h" />
     <ClInclude Include="src\GameEngine\Game.h" />

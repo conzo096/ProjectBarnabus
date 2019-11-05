@@ -26,6 +26,10 @@ void AnimationShader::UpdateUniforms(MeshData& meshData)
 		glUniformMatrix4fv(index, 1, GL_FALSE, glm::value_ptr(transform));
 	}
 
+	GLint texLoc = glGetUniformLocation(GetId(), "tex");
+	glUniform1i(texLoc, 0);
+
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, meshData.GetTexture()->GetTextureId());
 
 #if DEBUG_VERTICES

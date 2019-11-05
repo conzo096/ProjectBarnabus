@@ -2,8 +2,11 @@
 #include "Singleton.h"
 #include "MeshData.h"
 #include "Framebuffer.h"
+#include "FinalPassShader.h"
+
 #include <vector>
 #include <map>
+class UiQuad;
 
 class Renderer : public Singleton<Renderer>
 {
@@ -33,4 +36,6 @@ private:
 	std::map<std::string, FrameBuffer*> framebuffers;
 	glm::vec4 backgroundColour;
 
+	UiQuad* screenQuad;
+	FinalPassShader shader;
 };

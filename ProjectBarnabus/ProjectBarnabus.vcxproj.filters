@@ -58,6 +58,9 @@
     <ClCompile Include="src\GameEngine\Framebuffer.cpp">
       <Filter>Source Files\GameEngine\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\GameEngine\FinalPassShader.cpp">
+      <Filter>Source Files\GameEngine\Renderer\Shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -187,6 +190,9 @@
     </ClInclude>
     <ClInclude Include="src\GameEngine\Framebuffer.h">
       <Filter>Header Files\GameEngine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\FinalPassShader.h">
+      <Filter>Header Files\GameEngine\Shader</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

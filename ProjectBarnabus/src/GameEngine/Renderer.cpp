@@ -1,6 +1,7 @@
 #include "Renderer.h"
 #include "BarnabusGameEngine.h"
 #include "GLShader.h"
+#include "UiQuad.h"
 
 Renderer::Renderer()
 {
@@ -13,10 +14,17 @@ Renderer::Renderer()
 	ui->LoadFrameBuffer(1920, 1080);
 	pair = std::pair<std::string, FrameBuffer*>(std::string("ui"), ui);
 	AddFramebuffer(pair);
-	auto finalPass = new FrameBuffer;
-	finalPass->LoadFrameBuffer(1920, 1080);
-	pair = std::pair<std::string, FrameBuffer*>(std::string("final"), finalPass);
-	framebuffers.insert(pair);
+
+	screenQuad = new UiQuad(glm::vec2(-1,-1), glm::vec2(1, 1));
+	screenQuad->InitQuad();
+
+	shader.CreateProgram();
+	shader.AddShaderFromFile("..\\ProjectBarnabus\\res\\shaders\\FinalPass.vert", GLShader::VERTEX);
+	shader.AddShaderFromFile("..\\ProjectBarnabus\\res\\shaders\\FinalPass.frag", GLShader::FRAGMENT);
+	shader.Link();
+
+	shader.gameTexture = GetFrameBuffer("main").GetFrameTexture();
+	shader.uiTexture = GetFrameBuffer("ui").GetFrameTexture();
 }
 
 Renderer::~Renderer()
@@ -40,18 +48,23 @@ void Renderer::Render()
 
 	// Render main game.
 	GetFrameBuffer("main").BindFrameBuffer();
-
 	glClearColor(backgroundColour.x,backgroundColour.y,backgroundColour.z,backgroundColour.w);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	renderMeshes(meshesToRender);
 	
 	// render to screen
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glClear(GL_COLOR_BUFFER_BIT);
+	GetFrameBuffer("ui").BindFrameBuffer();
+	glClearColor(backgroundColour.x, backgroundColour.y, backgroundColour.z,0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glDisable(GL_DEPTH_TEST);
 	renderMeshes(uiElementsToRender);
 	
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glDisable(GL_DEPTH_TEST);
+	shader.UpdateUniforms(screenQuad->GetMeshData());
+	shader.DrawMesh(screenQuad->GetMeshData());
 
 	glfwSwapBuffers(BarnabusGameEngine::Get().GetWindow());
 
