@@ -12,4 +12,11 @@ void HeightShader::UpdateUniforms(MeshData& meshData)
 	GLint index;
 	index = glGetUniformLocation(meshData.GetShader()->GetId(), "MVP");
 	glUniformMatrix4fv(index, 1, GL_FALSE, glm::value_ptr(mvp));
+
+	index = glGetUniformLocation(GetId(), "heightTexture");
+	glUniform1i(index, 0);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, meshData.GetTexture()->GetTextureId());
+
 }

@@ -35,6 +35,14 @@
       <Project>{bdea051c-068a-49e9-a13b-b6faf6c867c7}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="res\Shaders\BasicAnimation.frag" />
+    <None Include="res\Shaders\BasicAnimation.vert" />
+    <None Include="res\Shaders\Height.frag" />
+    <None Include="res\Shaders\Height.vert" />
+    <None Include="res\Shaders\Red.frag" />
+    <None Include="res\Shaders\Red.vert" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>

@@ -1,10 +1,13 @@
 #version 440
 
-layout (location = 0) in vec4 colour;
+uniform sampler2D heightTexture;
+
+layout(location = 0) in vec2 texCoord;
+
 layout (location = 0) out vec4 finalColour;
 
 void main()
 {    
-	finalColour = colour;
+	finalColour = texture(heightTexture, texCoord);
 }
 

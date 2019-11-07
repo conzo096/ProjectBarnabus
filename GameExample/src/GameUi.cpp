@@ -4,7 +4,7 @@
 GameUi::GameUi()
 {
 	// Create initial quad.
-	UiQuad* debugInformation = new UiQuad(glm::vec2(0,-1),glm::vec2(1,1));
+	UiQuad* debugInformation = new UiQuad(glm::vec2(0.6,0.6),glm::vec2(1,1));
 	uiElements.insert(std::pair<std::string, UiQuad*>("debug", debugInformation));
 }
 

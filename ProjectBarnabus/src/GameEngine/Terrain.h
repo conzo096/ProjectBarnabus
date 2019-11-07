@@ -3,6 +3,8 @@
 #include <Math.h>
 #include <limits>
 
+class HeightMapTexture;
+
 enum TerrainType
 {
 	Image,
@@ -21,9 +23,10 @@ public:
 
 private:
 	float BarryCentric(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec2 pos);
+	void LoadTerrainFromHeightMap(const std::string heightMapPath);
 private:
 	float** heightPositionsGrid;
 	int width = 0, height = 0;
-	void LoadTerrainFromHeightMap(const std::string heightMapPath);
+	HeightMapTexture* heightMap;
 };
 

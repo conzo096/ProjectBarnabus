@@ -19,6 +19,9 @@
     <Filter Include="Source Files\User Interface">
       <UniqueIdentifier>{4d58e4b9-9dd6-412e-af78-69edd1613d84}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Shaders">
+      <UniqueIdentifier>{0ef24028-90e2-4182-907b-f3afa78734f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AnimationShader.cpp">
@@ -62,5 +65,25 @@
     <ClInclude Include="src\UiShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\Shaders\BasicAnimation.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\Shaders\Height.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\Shaders\Height.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\Shaders\Red.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\Shaders\Red.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\Shaders\BasicAnimation.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
