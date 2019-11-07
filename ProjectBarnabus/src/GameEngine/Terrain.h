@@ -3,8 +3,6 @@
 #include <Math.h>
 #include <limits>
 
-class HeightMapTexture;
-
 enum TerrainType
 {
 	Image,
@@ -27,6 +25,5 @@ private:
 private:
 	float** heightPositionsGrid;
 	int width = 0, height = 0;
-	HeightMapTexture* heightMap;
 };
 

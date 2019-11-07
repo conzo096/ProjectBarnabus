@@ -97,45 +97,46 @@ void Terrain::LoadTerrainFromHeightMap(const std::string heightMapPath)
 {
 	MeshData mesh;
 
-	heightMap = new HeightMapTexture(heightMapPath);
-	width = heightMap->GetWidth();
-	height = heightMap->GetHeight();
-	std::vector<Vertex> vertices(heightMap->GetWidth()*heightMap->GetHeight());
+	HeightMapTexture heightMap(heightMapPath);
+	width = heightMap.GetWidth();
+	height = heightMap.GetHeight();
+	std::vector<Vertex> vertices(heightMap.GetWidth()*heightMap.GetHeight());
 	int counter = 0;
 
-	heightPositionsGrid = new float*[heightMap->GetWidth()];
+	heightPositionsGrid = new float*[heightMap.GetWidth()];
 
-	for (int x = 0; x < heightMap->GetWidth(); x++)
+	for (int x = 0; x < heightMap.GetWidth(); x++)
 	{		
-		heightPositionsGrid[x] = new float[heightMap->GetWidth()];
-		for (int z = 0; z < heightMap->GetHeight(); z++)
+		heightPositionsGrid[x] = new float[heightMap.GetWidth()];
+		for (int z = 0; z < heightMap.GetHeight(); z++)
 		{
-			int index = z * heightMap->GetHeight() + x;
-			vertices.at(index).position = glm::vec3(float(x), (float)heightMap->GetData()[index], float(z));
-			vertices.at(index).texCoords = glm::vec2(x/heightMap->GetWidth(),z/heightMap->GetHeight());
-			vertices.at(index).color = glm::vec4(glm::normalize(vertices.at(index).position),1);
+			int index = z * heightMap.GetHeight() + x;
+			vertices.at(index).position = glm::vec3(float(x), (float)heightMap.GetData()[index], float(z));
+			vertices.at(index).texCoords = glm::vec2(x/heightMap.GetWidth(),z/heightMap.GetHeight());
+
+			float heightPosition = vertices.at(index).position.y / 255;
+			vertices.at(index).color = glm::vec4(heightPosition, heightPosition, heightPosition,1);
 			heightPositionsGrid[x][z] = (glm::vec4(vertices.at(index).position,1) * GetTransform()).y;
 		}
 	}
 	mesh.InsertVertices(vertices);
 
 	int vertexCounter = 0;
-	for (int z = 0; z < heightMap->GetHeight() - 1; z++)
+	for (int z = 0; z < heightMap.GetHeight() - 1; z++)
 	{
-		for (int x = 0; x < (heightMap->GetWidth()-1); x++)
+		for (int x = 0; x < (heightMap.GetWidth()-1); x++)
 		{
-			mesh.InsertIndex(vertexCounter + x + heightMap->GetWidth());
-			mesh.InsertIndex(vertexCounter + x + (heightMap->GetWidth() + 1));
+			mesh.InsertIndex(vertexCounter + x + heightMap.GetWidth());
+			mesh.InsertIndex(vertexCounter + x + (heightMap.GetWidth() + 1));
 			mesh.InsertIndex(vertexCounter + x + 1);
 
-			mesh.InsertIndex(vertexCounter + x + heightMap->GetWidth());
+			mesh.InsertIndex(vertexCounter + x + heightMap.GetWidth());
 			mesh.InsertIndex(vertexCounter + x + 1);
 			mesh.InsertIndex(vertexCounter + x);
 		}
-		vertexCounter += heightMap->GetHeight();
+		vertexCounter += heightMap.GetHeight();
 	}
 
-	mesh.SetTexture(heightMap);
 	mesh.SetType(GL_TRIANGLES);
 	data.push_back(mesh);
 
