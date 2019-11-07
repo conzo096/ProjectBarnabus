@@ -10,12 +10,6 @@ Terrain::Terrain()
 
 Terrain::Terrain(const std::string filePath, TerrainType terrain) : Terrain()
 {
-	switch (terrain)
-	{
-		case Image:
-			LoadTerrainFromHeightMap(filePath);
-			break;
-	}
 }
 
 glm::vec3 Terrain::GetWorldPositionFromGrid(glm::vec3 worldPosition)
@@ -119,7 +113,7 @@ void Terrain::LoadTerrainFromHeightMap(const std::string heightMapPath)
 			int index = z * heightMap->GetHeight() + x;
 			vertices.at(index).position = glm::vec3(float(x), (float)heightMap->GetData()[index], float(z));
 			vertices.at(index).texCoords = glm::vec2(x/heightMap->GetWidth(),z/heightMap->GetHeight());
-			vertices.at(index).color = glm::vec4(vertices.at(index).position,1);
+			vertices.at(index).color = glm::vec4(glm::normalize(vertices.at(index).position),1);
 			heightPositionsGrid[x][z] = (glm::vec4(vertices.at(index).position,1) * GetTransform()).y;
 		}
 	}
@@ -144,5 +138,6 @@ void Terrain::LoadTerrainFromHeightMap(const std::string heightMapPath)
 	mesh.SetTexture(heightMap);
 	mesh.SetType(GL_TRIANGLES);
 	data.push_back(mesh);
+
 	InitModel();
 }

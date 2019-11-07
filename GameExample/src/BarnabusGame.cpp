@@ -42,6 +42,7 @@ bool BarnabusGame::LoadGameContent()
 
 	fileName = "res\\Textures\\HeightMap.png";
 	auto terrainComponent = std::make_unique<Terrain>(fileName, TerrainType::Image);
+	terrainComponent->LoadTerrainFromHeightMap(fileName);
 	terrainComponent->SetPosition(glm::vec3(-120, 0, -120));
 	terrainComponent->SetShader(heightShader);
 	terrainComponent->InitModel();

@@ -17,6 +17,9 @@ Texture::Texture(GLuint w, GLuint h)
 bool Texture::LoadTexture(std::string file)
 {
 	filePath = file;
+	textureType = GL_TEXTURE_2D;
+
+	glGenTextures(1, &textureId);
 	glBindTexture(GL_TEXTURE_2D, textureId);
 	
 	// set the texture wrapping/filtering options
@@ -27,9 +30,22 @@ bool Texture::LoadTexture(std::string file)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	// load and generate the texture
 	unsigned char *data = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
+	GLenum format;
+	switch (channels)
+	{
+	case 1:
+		format = GL_LUMINANCE;
+		break;
+	case 3:
+		format = GL_RGB;
+		break;
+	case 4:
+		format = GL_RGBA;
+		break;
+	}
 	if (data)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else

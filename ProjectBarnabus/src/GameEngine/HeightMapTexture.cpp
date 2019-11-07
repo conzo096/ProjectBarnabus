@@ -23,7 +23,7 @@ HeightMapTexture::HeightMapTexture(const std::string &filename)
 			format = GL_LUMINANCE;
 			break;
 		case 2:
-			format = GL_DEPTH_COMPONENT;
+			format = GL_LUMINANCE_ALPHA;
 			break;
 		case 3:
 			format = GL_RGB;

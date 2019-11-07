@@ -42,6 +42,7 @@ void Renderer::Render()
 			mesh.GetShader()->UpdateUniforms(mesh);
 			// Bind and draw model.
 			mesh.GetShader()->DrawMesh(mesh);
+			glBindVertexArray(0);
 		}
 		renderList.clear();
 	};
