@@ -1,10 +1,15 @@
 #include "AnimationShader.h"
-#include "GameEngine/Renderer.h"
 
+#include <GameEngine/Renderer.h>
 #include <glm\gtc\type_ptr.hpp>
 #include <glm/gtx/string_cast.hpp>
 
 #define DEBUG_VERTICES 0
+
+#if DEBUG_VERTICES
+#include <GameEngine/BarnabusGameEngine.h>
+#endif
+
 
 void AnimationShader::UpdateUniforms(MeshData& meshData)
 {
@@ -46,14 +51,14 @@ void AnimationShader::UpdateUniforms(MeshData& meshData)
 			(meshData.transforms[boneIds[2]] * vertex) * weights[2] +
 			(meshData.transforms[boneIds[3]] * vertex) * weights[3];
 
-		std::cout << "====== Vertex ============" << std::endl;
-		std::cout << glm::to_string(vertex) << std::endl;
-		std::cout << "====== Vertex out ============" << std::endl;
-		std::cout << glm::to_string(vertexOut) << std::endl;
-		std::cout << "====== Vertex out (normalized) ============" << std::endl;
-		std::cout << glm::to_string(glm::normalize(vertexOut)) << std::endl;
-		std::cout << "====== Vertex out (with MVP) ============" << std::endl;
-		std::cout << glm::to_string( mvp* vertexOut) << std::endl;
+		BarnabusGameEngine::Get().AddMessageLog(StringLog("====== Vertex ============", StringLog::Priority::Low));
+		BarnabusGameEngine::Get().AddMessageLog(StringLog(glm::to_string(vertex), StringLog::Priority::Low));
+		BarnabusGameEngine::Get().AddMessageLog(StringLog("====== Vertex out ============", StringLog::Priority::Low));
+		BarnabusGameEngine::Get().AddMessageLog(StringLog(glm::to_string(vertexOut), StringLog::Priority::Low));
+		BarnabusGameEngine::Get().AddMessageLog(StringLog("====== Vertex out (normalized) ============", StringLog::Priority::Low));
+		BarnabusGameEngine::Get().AddMessageLog(StringLog(glm::to_string(glm::normalize(vertexOut)), StringLog::Priority::Low));
+		BarnabusGameEngine::Get().AddMessageLog(StringLog("====== Vertex out (with MVP) ============", StringLog::Priority::Low));
+		BarnabusGameEngine::Get().AddMessageLog(StringLog(glm::to_string(mvp* vertexOut), StringLog::Priority::Low));
 	}
 	
 

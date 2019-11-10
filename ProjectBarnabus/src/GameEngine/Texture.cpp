@@ -1,4 +1,6 @@
 #include "Texture.h"
+#include "BarnabusGameEngine.h"
+ 
 #include <GL/glew.h>
 #include <iostream>
 
@@ -50,7 +52,7 @@ bool Texture::LoadTexture(std::string file)
 	}
 	else
 	{
-		std::cout << "Failed to load texture" << std::endl;
+		BarnabusGameEngine::Get().AddMessageLog(StringLog("Failed to load Texture at: " + file, StringLog::Priority::Critical));
 		return false;
 	}
 	stbi_image_free(data);

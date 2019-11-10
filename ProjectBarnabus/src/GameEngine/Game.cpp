@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Game.h"
+#include "BarnabusGameEngine.h"
 
 Game::Game()
 {
@@ -13,18 +14,18 @@ Game::~Game()
 
 bool Game::LoadGameContent()
 {
-	std::cout << "LoadGameContent" << std::endl;
+	BarnabusGameEngine::Get().AddMessageLog(StringLog( "Loading game content" , StringLog::Priority::Low ));
 	return false;
 }
 
 bool Game::Update(float deltaTime)
 {
-	std::cout << "Update with deltaTime: " << deltaTime << std::endl;
+	BarnabusGameEngine::Get().AddMessageLog(StringLog("Updating Game" , StringLog::Priority::Low ));
 	return false;
 }
 
 bool Game::Render(float deltaTime)
 {
-	std::cout << "Render with deltaTime: " << deltaTime << std::endl;
+	BarnabusGameEngine::Get().AddMessageLog(StringLog("Rendering Game", StringLog::Priority::Low ));
 	return false;
 }

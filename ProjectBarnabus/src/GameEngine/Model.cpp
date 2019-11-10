@@ -1,5 +1,6 @@
 #include "Model.h"
 #include "Renderer.h"
+#include "BarnabusGameEngine.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/PostProcess.h>
@@ -24,10 +25,8 @@ Model::Model(const std::string & fileName) : Component("Model")
 	// Check that data has been read in correctly
 	if (!model)
 	{
-		// Display error
-		std::fprintf(stderr, "Data incorrectly read in at %s\n", fileName.c_str());
-		std::fprintf(stderr, loadModel.GetErrorString());
-		// Throw exception
+		BarnabusGameEngine::Get().AddMessageLog(StringLog("Data incorrectly read in at " + fileName, StringLog::Priority::Critical));
+		BarnabusGameEngine::Get().AddMessageLog(StringLog(loadModel.GetErrorString(), StringLog::Priority::Critical));
 		throw std::runtime_error("Error reading in model file");
 	}
 	// Vectors to store model data.

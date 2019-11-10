@@ -1,7 +1,7 @@
 #include "Entity.h"
 #include <algorithm>
 #include <iostream>
-
+#include "BarnabusGameEngine.h"
 using namespace std;
 
 //############## COMPONENT ##############
@@ -14,7 +14,7 @@ Component::Component(const string &token) : token(token)
 
 Component::~Component()
 {
-	cout << "Goodbye from Component: " << token << endl;
+	BarnabusGameEngine::Get().AddMessageLog(StringLog("Goodbye from component " + token, StringLog::Priority::Low));
 	entity = nullptr;
 	active = false;
 	token.clear();
@@ -40,7 +40,7 @@ Entity::Entity()
 
 Entity::~Entity()
 {	components.clear();
-	cout << "Goodbye from Entity: " << name << endl;
+	BarnabusGameEngine::Get().AddMessageLog(StringLog("Goodbye from entity " + name, StringLog::Priority::Low));
 }
 
 const string Entity::GetName() const { return name; }

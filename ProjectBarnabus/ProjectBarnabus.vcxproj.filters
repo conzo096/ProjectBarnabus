@@ -61,6 +61,9 @@
     <ClCompile Include="src\GameEngine\FinalPassShader.cpp">
       <Filter>Source Files\GameEngine\Renderer\Shader</Filter>
     </ClCompile>
+    <ClCompile Include="src\GameEngine\StringLog.cpp">
+      <Filter>Source Files\GameEngine\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -113,6 +116,12 @@
     </Filter>
     <Filter Include="Header Files\GameEngine\User Interface">
       <UniqueIdentifier>{a6753fdd-f9e8-42e3-af04-41130375adf5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameEngine\Utils">
+      <UniqueIdentifier>{b6252640-1ab3-4a5d-82e9-6c94741fbf9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameEngine\Utils">
+      <UniqueIdentifier>{4a3e2160-adc3-4ccc-ad94-966ec9323431}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -193,6 +202,9 @@
     </ClInclude>
     <ClInclude Include="src\GameEngine\FinalPassShader.h">
       <Filter>Header Files\GameEngine\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\StringLog.h">
+      <Filter>Header Files\GameEngine\Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

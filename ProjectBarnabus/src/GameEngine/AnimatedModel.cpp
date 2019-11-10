@@ -198,7 +198,8 @@ void AnimatedModel::SetAnimation(std::string animationName)
 	if (animation == animations.end())
 	{
 		assert(animation != animations.end());
-		std::cout << "Animation not found with key: " + animationName << std::endl;
+		BarnabusGameEngine::Get().AddMessageLog(
+			StringLog("Animation not found with key: " + animationName, StringLog::Priority::Critical));
 	}
 
 	animator.SetCurrentAnimation(animation->second);

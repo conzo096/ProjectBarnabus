@@ -10,9 +10,10 @@
 #include <GL\glew.h>
 #include <glm\glm.hpp>
 #include <GLFW\glfw3.h>
+#include <vector>
 #include "Singleton.h"
 #include "Game.h"
-
+#include "StringLog.h"
 class BarnabusGameEngine : public Singleton<BarnabusGameEngine>
 {
 private:
@@ -23,12 +24,20 @@ public:
 	GLFWwindow* GetWindow();
 	void SetGame(Game* newGame);
 	int ShouldWindowClose();
+	void SetPriority(StringLog::Priority priority);
+	void AddMessageLog(StringLog& log);
+private:
+	void PrintLogs();
+protected:
+	float time;
+	float lastTime;
 
 private:
 	bool running = true;
 	Game* game;
 	GLFWwindow* window;
-protected:
-	float time;
-	float lastTime;
+
+	StringLog::Priority messagePriority = StringLog::Priority::None;
+	std::vector<StringLog> logs;
+
 };

@@ -3,7 +3,8 @@
 #include "BarnabusGame.h"
 int main()
 {
-	std::cout << "Start of project" << std::endl;
+	BarnabusGameEngine::Get().AddMessageLog(StringLog("Start of project", StringLog::Priority::Critical));
+
 	Game* myGame = new BarnabusGame;
 
 	BarnabusGameEngine::Get().SetGame(myGame);

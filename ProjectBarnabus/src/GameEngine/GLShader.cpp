@@ -1,6 +1,7 @@
 #include "GLShader.h"
 #include "MeshData.h"
- 
+#include "BarnabusGameEngine.h"
+
 #include <fstream>
 #include <vector>
 #include <iostream>
@@ -50,7 +51,7 @@ bool GLShader::AddShaderFromFile(const char* fileName, GLSLSHADERTYPE type)
 			//The maxLength includes the NULL character
 			std::vector<GLchar> infoLog(maxLength);
 			glGetShaderInfoLog(vertexShader, maxLength, &maxLength, &infoLog[0]);
-			std::cout << std::string(infoLog.begin(), infoLog.end());
+			BarnabusGameEngine::Get().AddMessageLog(StringLog(std::string(infoLog.begin(), infoLog.end()), StringLog::Priority::Critical));
 			//We don't need the shader anymore.
 			glDeleteShader(vertexShader);
 			return false;
@@ -72,7 +73,7 @@ bool GLShader::AddShaderFromFile(const char* fileName, GLSLSHADERTYPE type)
 			//The maxLength includes the NULL character
 			std::vector<GLchar> infoLog(maxLength);
 			glGetShaderInfoLog(fragmentShader, maxLength, &maxLength, &infoLog[0]);
-			std::cout << std::string(infoLog.begin(), infoLog.end());
+			BarnabusGameEngine::Get().AddMessageLog(StringLog(std::string(infoLog.begin(), infoLog.end()), StringLog::Priority::Critical));
 			//We don't need the shader anymore.
 			glDeleteShader(fragmentShader);
 			return false;
@@ -98,7 +99,7 @@ bool GLShader::AddShaderFromFile(const char* fileName, GLSLSHADERTYPE type)
 			//The maxLength includes the NULL character
 			std::vector<GLchar> infoLog(maxLength);
 			glGetShaderInfoLog(geometryShader, maxLength, &maxLength, &infoLog[0]);
-			std::cout << std::string(infoLog.begin(), infoLog.end());
+			BarnabusGameEngine::Get().AddMessageLog(StringLog(std::string(infoLog.begin(), infoLog.end()), StringLog::Priority::Critical));
 			//We don't need the shader anymore.
 			glDeleteShader(geometryShader);
 			return false;
@@ -121,7 +122,7 @@ bool GLShader::Link()
 		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength);
 		std::vector<GLchar> infoLog(maxLength);
 		glGetProgramInfoLog(program, maxLength, &maxLength, &infoLog[0]);
-		std::cout << std::string(infoLog.begin(), infoLog.end());
+		BarnabusGameEngine::Get().AddMessageLog(StringLog(std::string(infoLog.begin(), infoLog.end()), StringLog::Priority::Critical));
 		//We don't need the program anymore.
 		glDeleteProgram(program);
 		return false;
@@ -154,7 +155,7 @@ void GLShader::SetUniform(const char* name, float val)
 		glUniform1f(loc, val);
 	}
 	else
-		fprintf(stderr, "%s is not a parameter!",name);
+		BarnabusGameEngine::Get().AddMessageLog(StringLog(std::string("Following is not a named uniform location: %s ",name), StringLog::Priority::Critical));
 }
 
 void GLShader::SetUniform(const char* name, int val)
@@ -165,7 +166,7 @@ void GLShader::SetUniform(const char* name, int val)
 		glUniform1i(loc, val);
 	}
 	else
-		fprintf(stderr,"%s is not a parameter!",name);
+		BarnabusGameEngine::Get().AddMessageLog(StringLog(std::string("Following is not a named uniform location: %s ", name), StringLog::Priority::Critical));
 }
 
 // Returns -1 if location does not exist.
@@ -210,6 +211,6 @@ bool GLShader::FileExists(const std::string& fileName)
 	std::ifstream infile(fileName);
 	const bool good =  infile.good();
 	if(!good)
-		fprintf(stderr, "File %s does not exist!", fileName.c_str());
+		BarnabusGameEngine::Get().AddMessageLog(StringLog(std::string("File %s does not exist!", fileName.c_str()), StringLog::Priority::Critical));
 	return good;
 }
