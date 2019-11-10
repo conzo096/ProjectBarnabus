@@ -35,11 +35,6 @@
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ProjectBarnabus\ProjectBarnabus.vcxproj">
-      <Project>{bdea051c-068a-49e9-a13b-b6faf6c867c7}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="res\Shaders\BasicAnimation.frag" />
     <None Include="res\Shaders\BasicAnimation.vert" />
     <None Include="res\Shaders\Height.frag" />
@@ -95,6 +90,7 @@
     <ClCompile>
       <AdditionalIncludeDirectories>../ProjectBarnabus/src;../ProjectBarnabus/include</AdditionalIncludeDirectories>
       <SDLCheck>true</SDLCheck>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..\x64\Release</AdditionalLibraryDirectories>
