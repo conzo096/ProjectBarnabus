@@ -25,7 +25,7 @@ public:
 	void SetGame(Game* newGame);
 	int ShouldWindowClose();
 	void SetPriority(StringLog::Priority priority);
-	void AddMessageLog(StringLog& log);
+	void AddMessageLog(StringLog log);
 private:
 	void PrintLogs();
 protected:

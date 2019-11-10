@@ -22,7 +22,7 @@ void BarnabusGameEngine::SetPriority(StringLog::Priority priority)
 	messagePriority = priority;
 }
 
-void BarnabusGameEngine::AddMessageLog(StringLog & log)
+void BarnabusGameEngine::AddMessageLog(StringLog log)
 {
 	logs.push_back(log);
 }
