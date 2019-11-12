@@ -115,6 +115,15 @@
       <AdditionalLibraryDirectories>$(ProjectDir)lib\win64\debug</AdditionalLibraryDirectories>
       <AdditionalDependencies>assimpd.lib;glfw3dlld.lib;glew32d.lib;opengl32.lib</AdditionalDependencies>
     </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
+    <PostBuildEvent>
+      <Command>xcopy /Q /Y $(ProjectDir)bin\win64\Debug $(SolutionDir)$(Platform)\$(Configuration)</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copy dll</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
