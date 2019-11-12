@@ -135,6 +135,12 @@
       <AdditionalDependencies>assimp.lib;glfw3dll.lib;glew32.lib;opengl32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)lib\win64\release</AdditionalLibraryDirectories>
     </Lib>
+    <PostBuildEvent>
+      <Command>xcopy /Q /Y $(ProjectDir)bin\win64\Release $(SolutionDir)$(Platform)\$(Configuration)</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copy dll</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
