@@ -8,8 +8,6 @@
 class BarnabusGame : public Game
 {
 public:
-	BarnabusGame();
-	~BarnabusGame();
 
 	bool LoadGameContent() override;
 	bool Update(float deltaTime) override;

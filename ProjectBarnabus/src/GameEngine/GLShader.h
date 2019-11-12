@@ -34,9 +34,6 @@ public:
 	virtual void DrawMesh(MeshData& meshData) const;
 
 private:
-	bool FileExists(const std::string& fileName);
-
-private:
 	GLint program;
 	bool linked;
 	std::string logString;

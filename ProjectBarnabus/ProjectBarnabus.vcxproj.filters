@@ -43,9 +43,6 @@
     <ClCompile Include="src\GameEngine\ArcBallCamera.cpp">
       <Filter>Source Files\GameEngine\Components\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameEngine\HeightMapTexture.cpp">
-      <Filter>Source Files\GameEngine</Filter>
-    </ClCompile>
     <ClCompile Include="src\GameEngine\Terrain.cpp">
       <Filter>Source Files\GameEngine\Components\Model</Filter>
     </ClCompile>
@@ -63,6 +60,9 @@
     </ClCompile>
     <ClCompile Include="src\GameEngine\StringLog.cpp">
       <Filter>Source Files\GameEngine\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\HeightMapTexture.cpp">
+      <Filter>Source Files\GameEngine\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -179,14 +179,8 @@
     <ClInclude Include="src\GameEngine\stb_image.h">
       <Filter>Header Files\GameEngine</Filter>
     </ClInclude>
-    <ClInclude Include="src\GameEngine\Texture.h">
-      <Filter>Header Files\GameEngine</Filter>
-    </ClInclude>
     <ClInclude Include="src\GameEngine\ArcBallCamera.h">
       <Filter>Header Files\GameEngine\Components\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GameEngine\HeightMapTexture.h">
-      <Filter>Header Files\GameEngine</Filter>
     </ClInclude>
     <ClInclude Include="src\GameEngine\Terrain.h">
       <Filter>Header Files\GameEngine\Components\Model</Filter>
@@ -205,6 +199,12 @@
     </ClInclude>
     <ClInclude Include="src\GameEngine\StringLog.h">
       <Filter>Header Files\GameEngine\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\HeightMapTexture.h">
+      <Filter>Header Files\GameEngine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Texture.h">
+      <Filter>Header Files\GameEngine\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

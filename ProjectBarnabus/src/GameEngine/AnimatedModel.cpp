@@ -49,8 +49,11 @@ namespace
 		}
 	}
 }
+
 AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
 {	
+	token = "Animated Model";
+
 	// Create model importer
 	Assimp::Importer loadModel;
 	// Read in the model data 

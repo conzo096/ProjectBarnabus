@@ -5,15 +5,6 @@
 #include "GameEngine/AnimatedModel.h"
 #include "GameEngine/Renderer.h"
 #include "GameEngine/Terrain.h"
-BarnabusGame::BarnabusGame()
-{
-
-}
-
-BarnabusGame::~BarnabusGame()
-{
-
-}
 
 bool BarnabusGame::LoadGameContent()
 {

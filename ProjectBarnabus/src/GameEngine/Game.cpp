@@ -9,7 +9,6 @@ Game::Game()
 
 Game::~Game()
 {
-
 }
 
 bool Game::LoadGameContent()

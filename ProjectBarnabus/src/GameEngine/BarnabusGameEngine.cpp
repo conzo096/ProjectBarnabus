@@ -104,6 +104,12 @@ bool BarnabusGameEngine::StartGame()
 		glfwPollEvents();
 		
 	}
+	AddMessageLog(StringLog("Game now exiting", StringLog::Priority::Low));
+	PrintLogs();
 	glfwTerminate();
+
+	free(game);
+	game = nullptr;
+
 	return true;
 }

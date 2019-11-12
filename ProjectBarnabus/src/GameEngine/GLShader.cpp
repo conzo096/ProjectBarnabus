@@ -6,6 +6,22 @@
 #include <vector>
 #include <iostream>
 
+namespace {
+
+bool FileExists(const std::string& fileName)
+{
+	std::ifstream infile(fileName);
+	const bool good = infile.good();
+	if (!good)
+	{
+		BarnabusGameEngine::Get().AddMessageLog(StringLog(std::string("File %s does not exist!", fileName.c_str()), StringLog::Priority::Critical));
+	}
+	
+	return good;
+}
+
+}
+
 GLShader::GLShader() 
 {
 }
@@ -129,6 +145,9 @@ bool GLShader::Link()
 	}
 
 	linked = true;
+
+	BarnabusGameEngine::Get().AddMessageLog(StringLog("Created shader: TODO GET NAME ", StringLog::Priority::Low));
+
 	return true;
 }
 
@@ -204,13 +223,4 @@ void GLShader::DrawMesh(MeshData& meshData) const
 void GLShader::Use()
 {
 	glUseProgram(program);
-}
-
-bool GLShader::FileExists(const std::string& fileName)
-{
-	std::ifstream infile(fileName);
-	const bool good =  infile.good();
-	if(!good)
-		BarnabusGameEngine::Get().AddMessageLog(StringLog(std::string("File %s does not exist!", fileName.c_str()), StringLog::Priority::Critical));
-	return good;
 }

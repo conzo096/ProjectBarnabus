@@ -57,6 +57,8 @@ bool Texture::LoadTexture(std::string file)
 	}
 	stbi_image_free(data);
 
+	BarnabusGameEngine::Get().AddMessageLog(StringLog("Created texture: " + filePath, StringLog::Priority::Low));
+
 	return true;
 }
 

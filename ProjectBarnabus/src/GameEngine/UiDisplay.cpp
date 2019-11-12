@@ -1,5 +1,5 @@
 #include "UiDisplay.h"
-
+#include "BarnabusGameEngine.h"
 UiDisplay::UiDisplay()
 {
 }
@@ -15,6 +15,8 @@ void UiDisplay::InitaliseAllQuads()
 	{
 		pair.second->InitQuad();
 	}
+
+	BarnabusGameEngine::Get().AddMessageLog(StringLog("Initialised UI: TODO GET NAME", StringLog::Priority::Low));
 }
 
 void UiDisplay::Draw()

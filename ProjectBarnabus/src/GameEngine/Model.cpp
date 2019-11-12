@@ -13,7 +13,7 @@ Model::Model() : Component("Model")
 {
 }
 
-Model::Model(const std::string & fileName) : Component("Model")
+Model::Model(const std::string & fileName) : Model()
 {
 	// Create model importer
 	Assimp::Importer loadModel;

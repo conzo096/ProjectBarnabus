@@ -10,6 +10,7 @@ Component::Component(const string &token) : token(token)
 {
 	entity = nullptr;
 	active = true;
+	BarnabusGameEngine::Get().AddMessageLog(StringLog("Creating component " + token, StringLog::Priority::Low));
 }
 
 Component::~Component()

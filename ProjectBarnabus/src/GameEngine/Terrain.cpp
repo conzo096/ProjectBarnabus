@@ -1,6 +1,6 @@
 #include "Terrain.h"
 #include "HeightMapTexture.h"
-
+#include "BarnabusGameEngine.h"
 #include <vector>
 
 Terrain::Terrain()
@@ -141,4 +141,5 @@ void Terrain::LoadTerrainFromHeightMap(const std::string heightMapPath)
 	data.push_back(mesh);
 
 	InitModel();
+	BarnabusGameEngine::Get().AddMessageLog(StringLog("Terrain created from: " + heightMapPath, StringLog::Priority::Low));
 }
