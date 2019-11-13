@@ -20,7 +20,6 @@
     <ClCompile Include="src\GameEngine\FinalPassShader.cpp" />
     <ClCompile Include="src\GameEngine\Framebuffer.cpp" />
     <ClCompile Include="src\GameEngine\FreeCamera.cpp" />
-    <ClCompile Include="src\GameEngine\Game.cpp" />
     <ClCompile Include="src\GameEngine\GLShader.cpp" />
     <ClCompile Include="src\GameEngine\HeightMapTexture.cpp" />
     <ClCompile Include="src\GameEngine\MeshData.cpp" />
@@ -45,7 +44,7 @@
     <ClInclude Include="src\GameEngine\FinalPassShader.h" />
     <ClInclude Include="src\GameEngine\Framebuffer.h" />
     <ClInclude Include="src\GameEngine\FreeCamera.h" />
-    <ClInclude Include="src\GameEngine\Game.h" />
+    <ClInclude Include="src\GameEngine\IGame.h" />
     <ClInclude Include="src\GameEngine\GLShader.h" />
     <ClInclude Include="src\GameEngine\HeightMapTexture.h" />
     <ClInclude Include="src\GameEngine\Node.h" />

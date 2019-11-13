@@ -18,8 +18,6 @@ private:
 public:
 	// Creates a new arc_ball_camera
 	ArcBallCamera() : Camera("ArcBallCamera") { }
-	// Destroys the arc ball camera
-	~ArcBallCamera() { }
 	// Gets the rotation of the camera around the x-axis
 	double GetXAxisRotation() const { return xAxisRotation; }
 	// Sets the rotation of the camera around the x-axis

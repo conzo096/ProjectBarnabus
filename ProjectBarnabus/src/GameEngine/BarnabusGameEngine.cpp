@@ -7,9 +7,9 @@ GLFWwindow* BarnabusGameEngine::GetWindow()
 	return window;
 }
 
-void BarnabusGameEngine::SetGame(Game* newGame)
+void BarnabusGameEngine::SetGame(std::unique_ptr<IGame> newGame)
 {
-	game = newGame;
+	game = std::move(newGame);
 }
 
 int BarnabusGameEngine::ShouldWindowClose()
@@ -107,9 +107,7 @@ bool BarnabusGameEngine::StartGame()
 	AddMessageLog(StringLog("Game now exiting", StringLog::Priority::Low));
 	PrintLogs();
 	glfwTerminate();
-
-	free(game);
-	game = nullptr;
-
+	game.reset();
+	PrintLogs();
 	return true;
 }

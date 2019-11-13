@@ -5,9 +5,9 @@ int main()
 {
 	BarnabusGameEngine::Get().AddMessageLog(StringLog("Start of project", StringLog::Priority::Critical));
 
-	Game* myGame = new BarnabusGame;
+	std::unique_ptr<IGame> myGame = std::make_unique<BarnabusGame>();
 
-	BarnabusGameEngine::Get().SetGame(myGame);
+	BarnabusGameEngine::Get().SetGame(std::move(myGame));
 	BarnabusGameEngine::Get().StartGame();
 
 	return 0;

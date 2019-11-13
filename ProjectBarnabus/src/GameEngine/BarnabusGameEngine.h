@@ -12,7 +12,7 @@
 #include <GLFW\glfw3.h>
 #include <vector>
 #include "Singleton.h"
-#include "Game.h"
+#include "IGame.h"
 #include "StringLog.h"
 class BarnabusGameEngine : public Singleton<BarnabusGameEngine>
 {
@@ -22,7 +22,7 @@ public:
 	bool StartGame();
 
 	GLFWwindow* GetWindow();
-	void SetGame(Game* newGame);
+	void SetGame(std::unique_ptr<IGame> newGame);
 	int ShouldWindowClose();
 	void SetPriority(StringLog::Priority priority);
 	void AddMessageLog(StringLog log);
@@ -34,7 +34,7 @@ protected:
 
 private:
 	bool running = true;
-	Game* game;
+	std::unique_ptr<IGame> game = nullptr;
 	GLFWwindow* window;
 
 	StringLog::Priority messagePriority = StringLog::Priority::None;

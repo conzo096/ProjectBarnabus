@@ -33,9 +33,6 @@ public:
 		// Update cursor position
 		glfwGetCursorPos(BarnabusGameEngine::Get().GetWindow(), &cursorX, &cursorY);
 	}
-	// Destroy free camera
-	~FreeCamera() {}
-
 	// Update free camera
 	void Update(float deltaTime) override;
 

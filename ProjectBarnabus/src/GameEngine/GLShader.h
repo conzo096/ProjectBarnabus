@@ -9,7 +9,6 @@ class GLShader
 {
 public:
 
-	GLShader();
 	~GLShader();
 
 	enum GLSLSHADERTYPE

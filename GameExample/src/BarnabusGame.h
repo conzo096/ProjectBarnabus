@@ -1,14 +1,14 @@
 #pragma once
-#include <GameEngine/Game.h>
+#include <GameEngine/IGame.h>
 #include <GameEngine/Entity.h>
 
 #include "AnimationShader.h"
 #include "HeightShader.h"
 #include "GameUi.h"
-class BarnabusGame : public Game
+class BarnabusGame : public IGame
 {
 public:
-
+	~BarnabusGame() {};
 	bool LoadGameContent() override;
 	bool Update(float deltaTime) override;
 	bool Render(float deltaTime) override;
@@ -20,5 +20,4 @@ private:
 	AnimationShader animationShader;
 	HeightShader heightShader;
 	GameUi ui;
-
 };

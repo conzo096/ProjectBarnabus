@@ -92,10 +92,6 @@ Model::Model(const std::string & fileName) : Model()
 	}
 }
 
-Model::~Model()
-{
-}
-
 void Model::SetShader(GLShader& shader)
 {
 	for (int i = 0; i < data.size(); i++)

@@ -14,7 +14,7 @@ bool FileExists(const std::string& fileName)
 	const bool good = infile.good();
 	if (!good)
 	{
-		BarnabusGameEngine::Get().AddMessageLog(StringLog(std::string("File %s does not exist!", fileName.c_str()), StringLog::Priority::Critical));
+		BarnabusGameEngine::Get().AddMessageLog(StringLog("File does not exist: " + fileName, StringLog::Priority::Critical));
 	}
 	
 	return good;
@@ -22,13 +22,9 @@ bool FileExists(const std::string& fileName)
 
 }
 
-GLShader::GLShader() 
-{
-}
-
 GLShader::~GLShader()
 {
-
+	BarnabusGameEngine::Get().AddMessageLog(StringLog("Deleting shader program: TODO ADD NAME", StringLog::Priority::Low));
 }
 
 GLuint GLShader::GetId()
@@ -134,11 +130,11 @@ bool GLShader::Link()
 	if (isLinked == GL_FALSE)
 	{
 		linked = false;
-		GLint maxLength = 0;
-		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength);
-		std::vector<GLchar> infoLog(maxLength);
-		glGetProgramInfoLog(program, maxLength, &maxLength, &infoLog[0]);
-		BarnabusGameEngine::Get().AddMessageLog(StringLog(std::string(infoLog.begin(), infoLog.end()), StringLog::Priority::Critical));
+		int len = 0;
+		char logBuf[1024];
+		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &len);
+		glGetProgramInfoLog(program, sizeof(logBuf), &len, logBuf);
+		BarnabusGameEngine::Get().AddMessageLog(StringLog(std::string(logBuf), StringLog::Priority::Critical));
 		//We don't need the program anymore.
 		glDeleteProgram(program);
 		return false;
