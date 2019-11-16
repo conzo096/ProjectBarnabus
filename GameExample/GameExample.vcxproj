@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="src\AnimationShader.cpp" />
     <ClCompile Include="src\BarnabusGame.cpp" />
+    <ClCompile Include="src\FontShader.cpp" />
     <ClCompile Include="src\GameUi.cpp" />
     <ClCompile Include="src\HeightShader.cpp" />
     <ClCompile Include="src\Main.cpp" />
@@ -22,6 +23,7 @@
   <ItemGroup>
     <ClInclude Include="src\AnimationShader.h" />
     <ClInclude Include="src\BarnabusGame.h" />
+    <ClInclude Include="src\FontShader.h" />
     <ClInclude Include="src\GameUi.h" />
     <ClInclude Include="src\HeightShader.h" />
     <ClInclude Include="src\RedShader.h" />
@@ -37,6 +39,8 @@
   <ItemGroup>
     <None Include="res\Shaders\BasicAnimation.frag" />
     <None Include="res\Shaders\BasicAnimation.vert" />
+    <None Include="res\Shaders\Font.frag" />
+    <None Include="res\Shaders\Font.vert" />
     <None Include="res\Shaders\Height.frag" />
     <None Include="res\Shaders\Height.vert" />
     <None Include="res\Shaders\Red.frag" />

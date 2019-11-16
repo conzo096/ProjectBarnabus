@@ -45,6 +45,9 @@
     <ClCompile Include="src\UiShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\FontShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AnimationShader.h">
@@ -65,6 +68,9 @@
     <ClInclude Include="src\UiShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\FontShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\Shaders\BasicAnimation.vert">
@@ -83,6 +89,12 @@
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="res\Shaders\BasicAnimation.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\Shaders\Font.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\Shaders\Font.vert">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>

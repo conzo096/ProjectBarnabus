@@ -28,6 +28,7 @@
     <ClCompile Include="src\GameEngine\stb_image.cpp" />
     <ClCompile Include="src\GameEngine\StringLog.cpp" />
     <ClCompile Include="src\GameEngine\Terrain.cpp" />
+    <ClCompile Include="src\GameEngine\TextQuad.cpp" />
     <ClCompile Include="src\GameEngine\Texture.cpp" />
     <ClCompile Include="src\GameEngine\UiDisplay.cpp" />
     <ClCompile Include="src\GameEngine\UiQuad.cpp" />
@@ -56,6 +57,7 @@
     <ClInclude Include="src\GameEngine\stb_image.h" />
     <ClInclude Include="src\GameEngine\StringLog.h" />
     <ClInclude Include="src\GameEngine\Terrain.h" />
+    <ClInclude Include="src\GameEngine\TextQuad.h" />
     <ClInclude Include="src\GameEngine\Texture.h" />
     <ClInclude Include="src\GameEngine\Transform.h" />
     <ClInclude Include="src\GameEngine\UiDisplay.h" />

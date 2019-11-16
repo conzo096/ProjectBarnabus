@@ -9,12 +9,11 @@ class UiQuad
 public: 
 	UiQuad();
 	UiQuad(glm::vec2 bottomLeft, glm::vec2 topRight);
-	~UiQuad();
 
 	MeshData& GetMeshData();
 
 	void InitQuad();
-	void Draw();
+	virtual void Draw();
 
 protected:
 

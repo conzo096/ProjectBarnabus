@@ -66,10 +66,6 @@ UiQuad::UiQuad(glm::vec2 bottomLeft, glm::vec2 topRight) : transparency(1.0f)
 	}
 }
 
-UiQuad::~UiQuad()
-{
-}
-
 MeshData& UiQuad::GetMeshData()
 {
 	return mesh;
