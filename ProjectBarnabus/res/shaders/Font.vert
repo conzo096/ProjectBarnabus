@@ -1,6 +1,6 @@
 #version 440
 layout(location = 0) in vec2 vertexPosition_screenspace;
-layout(location = 1) in vec2 texCoordIn;
+layout(location = 3) in vec2 texCoordIn;
 
 layout(location = 0) out vec2 texCoordOut;
 

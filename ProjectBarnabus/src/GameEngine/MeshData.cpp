@@ -20,24 +20,7 @@ void MeshData::InitialiseMesh()
 			&indices[0], GL_STATIC_DRAW);
 	}
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
-
-	// vertex positions
-	glEnableVertexAttribArray(BUFFERS::POSITION);
-	glVertexAttribPointer(BUFFERS::POSITION, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
-
-	glEnableVertexAttribArray(BUFFERS::COLOR);
-	glVertexAttribPointer(BUFFERS::COLOR, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
-	
-	// vertex normals
-	glEnableVertexAttribArray(BUFFERS::NORMAL);
-	glVertexAttribPointer(BUFFERS::NORMAL, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
-	
-	// vertex texture coords
-	glEnableVertexAttribArray(BUFFERS::TEX_COORD);
-	glVertexAttribPointer(BUFFERS::TEX_COORD, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoords));
-
+	UpdateBaseVertexBuffers();
 	
 	if (bonesData.size() > 0)
 	{
@@ -56,6 +39,26 @@ void MeshData::InitialiseMesh()
 	assert(glGetError() == GL_NO_ERROR);
 }
 
+void MeshData::UpdateBaseVertexBuffers()
+{
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+
+	// vertex positions
+	glEnableVertexAttribArray(BUFFERS::POSITION);
+	glVertexAttribPointer(BUFFERS::POSITION, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
+
+	glEnableVertexAttribArray(BUFFERS::COLOR);
+	glVertexAttribPointer(BUFFERS::COLOR, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
+
+	// vertex normals
+	glEnableVertexAttribArray(BUFFERS::NORMAL);
+	glVertexAttribPointer(BUFFERS::NORMAL, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+
+	// vertex texture coords
+	glEnableVertexAttribArray(BUFFERS::TEX_COORD);
+	glVertexAttribPointer(BUFFERS::TEX_COORD, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoords));
+}
 void MeshData::SetType(GLenum meshType)
 {
 	type = meshType;

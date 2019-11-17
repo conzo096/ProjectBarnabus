@@ -25,6 +25,7 @@ class MeshData : public Transform
 public:
 
 	void InitialiseMesh();
+	void UpdateBaseVertexBuffers();
 
 public:
 
