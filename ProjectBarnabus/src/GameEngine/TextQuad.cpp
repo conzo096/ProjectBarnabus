@@ -6,7 +6,7 @@ TextQuad::TextQuad(glm::vec2 bottomLeft, glm::vec2 topRight) : UiQuad(bottomLeft
 
 void TextQuad::Draw()
 {
-	if (textChanged)
+	if (textChanged && text.length() > 0)
 	{
 		auto AddVertex = [&](glm::vec3 position, glm::vec2 texCoord)
 		{

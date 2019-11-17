@@ -26,6 +26,8 @@ public:
 	int ShouldWindowClose();
 	void SetPriority(StringLog::Priority priority);
 	void AddMessageLog(StringLog log);
+
+	int GetFrameRate();
 private:
 	void PrintLogs();
 protected:
@@ -36,7 +38,7 @@ private:
 	bool running = true;
 	std::unique_ptr<IGame> game = nullptr;
 	GLFWwindow* window;
-
+	int framesPassed = 0;
 	StringLog::Priority messagePriority = StringLog::Priority::None;
 	std::vector<StringLog> logs;
 

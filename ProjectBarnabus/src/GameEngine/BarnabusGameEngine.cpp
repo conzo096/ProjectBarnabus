@@ -27,6 +27,11 @@ void BarnabusGameEngine::AddMessageLog(StringLog log)
 	logs.push_back(log);
 }
 
+int BarnabusGameEngine::GetFrameRate()
+{
+	return framesPassed;
+}
+
 void BarnabusGameEngine::PrintLogs()
 {
 	for(int i =0; i < logs.size(); i++)
@@ -93,12 +98,18 @@ bool BarnabusGameEngine::StartGame()
 	while (running)
 	{
 		float deltaTime = (clock() - lastTime) / CLOCKS_PER_SEC;
-		time += deltaTime * 60;
+		time += deltaTime;
+		if (time > 1 )
+		{
+			framesPassed = 0;
+			time = 0;
+		}
 		lastTime = static_cast<float>(clock());
 
 		running = game->Update(deltaTime);
 		PrintLogs();
 		game->Render(deltaTime);
+		framesPassed++;
 		PrintLogs();
 		// process events.
 		glfwPollEvents();

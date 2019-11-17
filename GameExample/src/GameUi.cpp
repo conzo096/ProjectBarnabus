@@ -3,6 +3,7 @@
 #include "FontShader.h"
 #include <GameEngine/TextQuad.h>
 #include <GameEngine/Renderer.h>
+#include <GameEngine/BarnabusGameEngine.h>
 GameUi::GameUi()
 {
 	// Create initial quad.
@@ -47,5 +48,7 @@ GameUi::~GameUi()
 void GameUi::Draw()
 {
 	uiElements.at("debug")->GetMeshData().SetTexture(Renderer::Get().GetFrameBuffer("main").GetDepthTexture());
+	std::string frameRate = "FPS: " + std::to_string(BarnabusGameEngine::Get().GetFrameRate());
+	static_cast<TextQuad*>(uiElements.at("frameRate"))->SetText(frameRate);
 	UiDisplay::Draw();
 }
