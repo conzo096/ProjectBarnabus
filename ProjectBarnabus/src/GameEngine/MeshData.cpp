@@ -41,6 +41,8 @@ void MeshData::InitialiseMesh()
 
 void MeshData::UpdateBaseVertexBuffers()
 {
+	glBindVertexArray(VAO);
+
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
 
@@ -58,6 +60,8 @@ void MeshData::UpdateBaseVertexBuffers()
 	// vertex texture coords
 	glEnableVertexAttribArray(BUFFERS::TEX_COORD);
 	glVertexAttribPointer(BUFFERS::TEX_COORD, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoords));
+	
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 void MeshData::SetType(GLenum meshType)
 {
