@@ -8,7 +8,7 @@ GameUi::GameUi()
 	// Create initial quad.
 	UiQuad* debugInformation = new UiQuad(glm::vec2(0.6,0.6),glm::vec2(1,1));
 	uiElements.insert(std::pair<std::string, UiQuad*>("debug", debugInformation));
-	TextQuad* frameRate = new TextQuad(glm::vec2(-1, 0.6), glm::vec2(-0.6,1));
+	TextQuad* frameRate = new TextQuad(glm::vec2(-1, -1), glm::vec2(1,1));
 	uiElements.insert(std::pair<std::string, UiQuad*>("frameRate", frameRate));
 }
 
@@ -25,7 +25,7 @@ void GameUi::InitGameUi()
 	GLShader* shader = new UiShader;
 	CreateShader(shader, std::string("UI"));
 
-	GLShader* fontShader = new UiShader;
+	GLShader* fontShader = new FontShader;
 	CreateShader(fontShader, std::string("Font"));
 
 	uiElements.at("debug")->GetMeshData().SetShader(shader);

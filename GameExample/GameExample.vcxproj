@@ -39,8 +39,6 @@
   <ItemGroup>
     <None Include="res\Shaders\BasicAnimation.frag" />
     <None Include="res\Shaders\BasicAnimation.vert" />
-    <None Include="res\Shaders\Font.frag" />
-    <None Include="res\Shaders\Font.vert" />
     <None Include="res\Shaders\Height.frag" />
     <None Include="res\Shaders\Height.vert" />
     <None Include="res\Shaders\Red.frag" />

@@ -91,11 +91,5 @@
     <None Include="res\Shaders\BasicAnimation.frag">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="res\Shaders\Font.frag">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="res\Shaders\Font.vert">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
   </ItemGroup>
 </Project>
