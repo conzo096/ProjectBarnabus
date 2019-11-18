@@ -33,7 +33,7 @@ void GameUi::InitGameUi()
 	uiElements.at("frameRate")->GetMeshData().SetShader(fontShader);
 
 	Texture* texture = new Texture;
-	texture->LoadTexture("res\\textures\\Holstein.png");
+	texture->LoadTexture("res\\textures\\GameFont.png");
 	uiElements.at("frameRate")->GetMeshData().SetTexture(texture);
 }
 
