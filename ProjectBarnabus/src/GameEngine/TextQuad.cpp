@@ -51,3 +51,15 @@ void TextQuad::SetText(std::string newText)
 	text = newText;
 	textChanged = true;
 }
+
+void TextQuad::SetPosition(glm::vec2 screenPosition)
+{
+	position = screenPosition;
+	textChanged = true;
+}
+
+void TextQuad::SetSize(int newSize)
+{
+	size = newSize;
+	textChanged = true;
+}

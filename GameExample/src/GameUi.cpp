@@ -9,8 +9,8 @@ GameUi::GameUi()
 	// Create initial quad.
 	UiQuad* debugInformation = new UiQuad(glm::vec2(0.6,0.6),glm::vec2(1,1));
 	uiElements.insert(std::pair<std::string, UiQuad*>("debug", debugInformation));
-	TextQuad* frameRate = new TextQuad(glm::vec2(-1, -1), glm::vec2(1,1));
-	uiElements.insert(std::pair<std::string, UiQuad*>("frameRate", frameRate));
+	TextQuad* example = new TextQuad(glm::vec2(-1, -1), glm::vec2(1,1));
+	uiElements.insert(std::pair<std::string, UiQuad*>("example", example));
 }
 
 void GameUi::InitGameUi()
@@ -30,11 +30,11 @@ void GameUi::InitGameUi()
 	CreateShader(fontShader, std::string("Font"));
 
 	uiElements.at("debug")->GetMeshData().SetShader(shader);
-	uiElements.at("frameRate")->GetMeshData().SetShader(fontShader);
+	uiElements.at("example")->GetMeshData().SetShader(fontShader);
 
 	Texture* texture = new Texture;
 	texture->LoadTexture("res\\textures\\GameFont.png");
-	uiElements.at("frameRate")->GetMeshData().SetTexture(texture);
+	uiElements.at("example")->GetMeshData().SetTexture(texture);
 }
 
 GameUi::~GameUi()
@@ -48,7 +48,7 @@ GameUi::~GameUi()
 void GameUi::Draw()
 {
 	uiElements.at("debug")->GetMeshData().SetTexture(Renderer::Get().GetFrameBuffer("main").GetDepthTexture());
-	std::string frameRate = "FPS: " + std::to_string(BarnabusGameEngine::Get().GetFrameRate());
-	static_cast<TextQuad*>(uiElements.at("frameRate"))->SetText(frameRate);
+	std::string exampleText = "Example";
+	static_cast<TextQuad*>(uiElements.at("example"))->SetText(exampleText);
 	UiDisplay::Draw();
 }
