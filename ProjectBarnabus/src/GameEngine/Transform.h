@@ -6,13 +6,6 @@
 
 class Transform
 {
-private:
-	bool changed;
-	glm::vec3 position;
-	glm::quat rotation;
-	glm::vec3 scale;
-	glm::mat4 transform;
-
 public:
 	Transform() : scale(glm::vec3(1.0)), rotation(glm::quat()), position(glm::vec3()), transform(glm::mat4(1))
 	{ 
@@ -44,7 +37,7 @@ public:
 	void Move(const glm::vec3 &v3) { SetPosition(position + v3); changed = true; }
 
 	const glm::quat GetRotation() const { return rotation; }
-	//const glm::vec3 GetRotation() const { }
+
 	void SetRotation(const glm::quat &q) { rotation = q;  changed = true; }
 	void SetRotation(const glm::vec3 &v3) { rotation = glm::quat(v3); changed = true;  }
 	void Rotate(const glm::quat &q) { SetRotation(rotation * q); changed = true; }
@@ -55,9 +48,16 @@ public:
 	}
 
 	const glm::vec3 GetScale() const { return scale; }
-	void SetScale(const glm::vec3 &v3) { scale = v3;  changed = true; }
+	void SetScale(const glm::vec3& v3) { scale = v3;  changed = true; }
 	void Scale(const glm::vec3 &v3) { scale *= v3; changed = true; }
 
 	const glm::mat4 GetTransform() const { return transform; }
 	void SetTransform(const glm::mat4 m4) { transform = m4; changed = true; }
+
+protected:
+	bool changed;
+	glm::vec3 position;
+	glm::quat rotation;
+	glm::vec3 scale;
+	glm::mat4 transform;
 };

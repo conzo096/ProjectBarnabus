@@ -6,7 +6,7 @@ using namespace std;
 
 //############## COMPONENT ##############
 
-Component::Component(const string &token) : token(token)
+Component::Component(const string &token) : Transform(), token(token)
 {
 	entity = nullptr;
 	active = true;

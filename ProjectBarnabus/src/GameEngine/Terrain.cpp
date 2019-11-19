@@ -3,6 +3,18 @@
 #include "BarnabusGameEngine.h"
 #include <vector>
 
+namespace
+{
+float BarryCentric(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec2 pos)
+{
+	float det = (p2.z - p3.z) * (p1.x - p3.x) + (p3.x - p2.x) * (p1.z - p3.z);
+	float l1 = ((p2.z - p3.z) * (pos.x - p3.x) + (p3.x - p2.x) * (pos.y - p3.z)) / det;
+	float l2 = ((p3.z - p1.z) * (pos.x - p3.x) + (p1.x - p3.x) * (pos.y - p3.z)) / det;
+	float l3 = 1.0f - l1 - l2;
+	return l1 * p1.y + l2 * p2.y + l3 * p3.y;
+}
+}
+
 Terrain::Terrain()
 {
 	token = "Terrain";
@@ -14,10 +26,12 @@ Terrain::Terrain(const std::string filePath, TerrainType terrain) : Terrain()
 
 glm::vec3 Terrain::GetWorldPositionFromGrid(glm::vec3 worldPosition)
 {
+	glm::vec3 convertedPosition = glm::vec4(worldPosition, 1) * glm::inverse(GetTransform());
 	glm::vec3 destination = worldPosition;
+	
 	// Convert world space to local space.
-	float terrainX = worldPosition.x - GetPosition().x;
-	float terrainZ = worldPosition.z - GetPosition().z;
+	float terrainX = convertedPosition.x - GetPosition().x;
+	float terrainZ = convertedPosition.z - GetPosition().z;
 
 	float gridSquare = height / (height - 1);
 	int gridX = (int)floor(terrainX / gridSquare);
@@ -25,12 +39,12 @@ glm::vec3 Terrain::GetWorldPositionFromGrid(glm::vec3 worldPosition)
 	if (gridX >= height - 1 || gridZ >= height - 1 ||
 		gridX < 0 || gridZ < 0)
 	{
-		return destination;
+		return worldPosition;
 	}
 
 	float xCoord = fmodf(terrainX, gridSquare);
 	float zCoord = fmodf(terrainZ, gridSquare);
-	float yAnswer;
+	float yAnswer = 0;
 	if (xCoord <= (1 - zCoord))
 	{
 		yAnswer = BarryCentric(glm::vec3(0, heightPositionsGrid[gridX][gridZ], 0), glm::vec3(1,
@@ -44,53 +58,8 @@ glm::vec3 Terrain::GetWorldPositionFromGrid(glm::vec3 worldPosition)
 				heightPositionsGrid[gridX][gridZ + 1], 1), glm::vec2(xCoord, zCoord));
 	}
 
-	destination.y = yAnswer;
+	destination.y = yAnswer * GetParent()->GetScale().y;
 	return destination;
-}
-
-float Terrain::GetWorldHeightPositionFromGrid(glm::vec3 worldPosition)
-{
-	// Convert world space to local space.
-	float terrainX = worldPosition.x - GetPosition().x;
-	float terrainZ = worldPosition.z - GetPosition().z;
-
-	float gridSquare = height / (height - 1);
-	int gridX = (int)floor(terrainX / gridSquare);
-	int gridZ = (int)floor(terrainZ / gridSquare);
-	if (gridX >= height - 1 || gridZ >= height - 1 ||
-		gridX < 0 || gridZ < 0)
-	{
-		// Position does not exist, return lowest possible value.
-		return std::numeric_limits<float>::lowest();
-	}
-
-	float xCoord = fmodf(terrainX, gridSquare);
-	float zCoord = fmodf(terrainZ, gridSquare);
-	float yAnswer;
-	if (xCoord <= (1 - zCoord))
-	{
-		yAnswer = BarryCentric(glm::vec3(0, heightPositionsGrid[gridX][gridZ], 0), glm::vec3(1,
-			heightPositionsGrid[gridX + 1][gridZ], 0), glm::vec3(0,
-				heightPositionsGrid[gridX][gridZ + 1], 1), glm::vec2(xCoord, zCoord));
-	}
-	else
-	{
-		yAnswer = BarryCentric(glm::vec3(1, heightPositionsGrid[gridX + 1][gridZ], 0), glm::vec3(1,
-			heightPositionsGrid[gridX + 1][gridZ + 1], 1), glm::vec3(0,
-				heightPositionsGrid[gridX][gridZ + 1], 1), glm::vec2(xCoord, zCoord));
-	}
-
-	return yAnswer;
-}
-
-float Terrain::BarryCentric(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec2 pos)
-{
-	float det = (p2.z - p3.z) * (p1.x - p3.x) + (p3.x - p2.x) * (p1.z - p3.z);
-	float l1 = ((p2.z - p3.z) * (pos.x - p3.x) + (p3.x - p2.x) * (pos.y - p3.z)) / det;
-	float l2 = ((p3.z - p1.z) * (pos.x - p3.x) + (p1.x - p3.x) * (pos.y - p3.z)) / det;
-	float l3 = 1.0f - l1 - l2;
-	return l1 * p1.y + l2 * p2.y + l3 * p3.y;
-
 }
 
 void Terrain::LoadTerrainFromHeightMap(const std::string heightMapPath)
