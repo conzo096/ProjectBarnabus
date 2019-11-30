@@ -18,8 +18,8 @@ void GameUi::InitGameUi()
 	auto CreateShader = [](GLShader* shader, std::string shaderName)
 	{
 		shader->CreateProgram();
-		shader->AddShaderFromFile(std::string("..\\ProjectBarnabus\\res\\shaders\\"+ shaderName+".vert").c_str(), GLShader::VERTEX);
-		shader->AddShaderFromFile(std::string("..\\ProjectBarnabus\\res\\shaders\\" + shaderName + ".frag").c_str(), GLShader::FRAGMENT);
+		shader->AddShaderFromFile(std::string("res\\shaders\\"+ shaderName+".vert").c_str(), GLShader::VERTEX);
+		shader->AddShaderFromFile(std::string("res\\shaders\\" + shaderName + ".frag").c_str(), GLShader::FRAGMENT);
 		shader->Link();
 	};
 

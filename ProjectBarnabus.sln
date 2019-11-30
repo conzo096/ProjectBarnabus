@@ -15,6 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameExample", "GameExample\
 		{BDEA051C-068A-49E9-A13B-B6FAF6C867C7} = {BDEA051C-068A-49E9-A13B-B6FAF6C867C7}
 	EndProjectSection
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "GameExampleInstallation", "GameExampleInstallation\GameExampleInstallation.vdproj", "{F03CD988-52A3-4047-863B-B57B91D3FEDF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -33,6 +35,8 @@ Global
 		{FA84004E-1E43-4D79-9B08-6CE9BAD520C0}.Debug|x64.Build.0 = Debug|x64
 		{FA84004E-1E43-4D79-9B08-6CE9BAD520C0}.Release|x64.ActiveCfg = Release|x64
 		{FA84004E-1E43-4D79-9B08-6CE9BAD520C0}.Release|x64.Build.0 = Release|x64
+		{F03CD988-52A3-4047-863B-B57B91D3FEDF}.Debug|x64.ActiveCfg = Debug
+		{F03CD988-52A3-4047-863B-B57B91D3FEDF}.Release|x64.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

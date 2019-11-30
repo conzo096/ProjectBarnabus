@@ -19,8 +19,8 @@ Renderer::Renderer()
 	screenQuad->InitQuad();
 
 	shader.CreateProgram();
-	shader.AddShaderFromFile("..\\ProjectBarnabus\\res\\shaders\\FinalPass.vert", GLShader::VERTEX);
-	shader.AddShaderFromFile("..\\ProjectBarnabus\\res\\shaders\\FinalPass.frag", GLShader::FRAGMENT);
+	shader.AddShaderFromFile("res\\shaders\\FinalPass.vert", GLShader::VERTEX);
+	shader.AddShaderFromFile("res\\shaders\\FinalPass.frag", GLShader::FRAGMENT);
 	shader.Link();
 
 	shader.gameTexture = GetFrameBuffer("main").GetFrameTexture();
