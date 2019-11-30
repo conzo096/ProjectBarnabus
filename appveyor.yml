@@ -14,11 +14,15 @@ after_build:
     set DEVENV="%VS140COMNTOOLS%\..\IDE\devenv.exe"
 
     DEVENV% /build "Release" GameExampleInstallation\GameExampleInstallation.vdproj
+before_test:
+- ps: >-
+    x64\Debug\ProjectBarnabusTest.exe --gtest_output=xml:report.xml
+
+    $wc = New-Object 'System.Net.WebClient'
+
+    $wc.UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path report.xml))
 test:
   assemblies:
     only:
     - x64\Debug\gtest_main.dll
     - x64\Debug\gtest.dll
-artifacts:
-- path: C:\projects\projectbarnabus\x64\Debug\*
-  name: Test
