@@ -9,11 +9,6 @@ before_build:
 - cmd: nuget restore
 build:
   verbosity: minimal
-after_build:
-- ps: >-
-    set DEVENV="%VS140COMNTOOLS%\..\IDE\devenv.exe"
-
-    DEVENV% /build "Release" GameExampleInstallation\GameExampleInstallation.vdproj
 before_test:
 - ps: >-
     x64\Debug\ProjectBarnabusTest.exe --gtest_output=xml:report.xml
