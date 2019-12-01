@@ -1,0 +1,6 @@
+D:\Github\ProjectBarnabus\GameExampleInstallation\bin\Release\GameExample.msi
+D:\Github\ProjectBarnabus\GameExampleInstallation\bin\Release\GameExample.wixpdb
+obj\Release\Product.wixobj
+obj\Release\GameExampleInstallation.wixproj.BindContentsFileListnull.txt
+obj\Release\GameExampleInstallation.wixproj.BindOutputsFileListnull.txt
+obj\Release\GameExampleInstallation.wixproj.BindBuiltOutputsFileListnull.txt
