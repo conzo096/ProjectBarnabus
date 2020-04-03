@@ -15,7 +15,7 @@ public:
 
 private:
 	Entity camera;
-	Entity animation;
+	Entity player;
 	Entity terrain;
 	AnimationShader animationShader;
 	HeightShader heightShader;

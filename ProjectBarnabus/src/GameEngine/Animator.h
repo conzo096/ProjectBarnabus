@@ -22,7 +22,7 @@ public:
 	void SetState(AnimationState newState);
 	AnimationState GetState();
 	std::shared_ptr<Animation> GetCurrentAnimation();
-	void SetCurrentAnimation(std::shared_ptr<Animation>animation);
+	void SetCurrentAnimation(std::shared_ptr<Animation>player);
 	void ClearCurrentAnimation();
 	void Update(float deltaTime);
 	float GetAnimationTime();

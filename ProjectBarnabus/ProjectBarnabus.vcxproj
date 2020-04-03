@@ -24,6 +24,7 @@
     <ClCompile Include="src\GameEngine\HeightMapTexture.cpp" />
     <ClCompile Include="src\GameEngine\MeshData.cpp" />
     <ClCompile Include="src\GameEngine\Model.cpp" />
+    <ClCompile Include="src\GameEngine\Movement.cpp" />
     <ClCompile Include="src\GameEngine\Renderer.cpp" />
     <ClCompile Include="src\GameEngine\stb_image.cpp" />
     <ClCompile Include="src\GameEngine\StringLog.cpp" />
@@ -48,6 +49,7 @@
     <ClInclude Include="src\GameEngine\IGame.h" />
     <ClInclude Include="src\GameEngine\GLShader.h" />
     <ClInclude Include="src\GameEngine\HeightMapTexture.h" />
+    <ClInclude Include="src\GameEngine\Movement.h" />
     <ClInclude Include="src\GameEngine\Node.h" />
     <ClInclude Include="src\GameEngine\NodeAnim.h" />
     <ClInclude Include="src\GameEngine\MeshData.h" />

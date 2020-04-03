@@ -26,9 +26,9 @@ std::shared_ptr<Animation> Animator::GetCurrentAnimation()
 	return currentAnimation;
 }
 
-void Animator::SetCurrentAnimation(std::shared_ptr<Animation> animation)
+void Animator::SetCurrentAnimation(std::shared_ptr<Animation> player)
 {
-	currentAnimation = animation;
+	currentAnimation = player;
 }
 
 void Animator::ClearCurrentAnimation()

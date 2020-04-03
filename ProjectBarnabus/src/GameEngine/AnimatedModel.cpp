@@ -93,15 +93,15 @@ AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
 
 	for (unsigned int i = 0; i < model->mNumAnimations; i++)
 	{
-		auto animation = model->mAnimations[i];
+		auto player = model->mAnimations[i];
 		std::shared_ptr<Animation> newAnimation = std::make_shared<Animation>();
-		newAnimation->SetAnimationLength(animation->mDuration);
-		newAnimation->SetName(animation->mName.C_Str());
-		newAnimation->SetTicksPerSecond(animation->mTicksPerSecond);
+		newAnimation->SetAnimationLength(player->mDuration);
+		newAnimation->SetName(player->mName.C_Str());
+		newAnimation->SetTicksPerSecond(player->mTicksPerSecond);
 
-		for (unsigned int j = 0; j < animation->mNumChannels; j++)
+		for (unsigned int j = 0; j < player->mNumChannels; j++)
 		{
-			auto channel = animation->mChannels[j];
+			auto channel = player->mChannels[j];
 			NodeAnim* node = new NodeAnim;
 			node->name = channel->mNodeName.C_Str();
 			for (unsigned int key = 0; key < channel->mNumPositionKeys; key++)
@@ -139,28 +139,6 @@ AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
 void AnimatedModel::Update(float deltaTime)
 {
 	Model::Update(deltaTime);
-	animator.SetState(PAUSE);
-	// todo move this to a user movement component
-	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_W) == GLFW_PRESS)
-	{
-		GetParent()->Move(glm::vec3(0, 0, 6)*deltaTime);
-		animator.SetState(PLAY);
-	}
-	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_S) == GLFW_PRESS)
-	{
-		GetParent()->Move(glm::vec3(0, 0, -6)*deltaTime);
-		animator.SetState(REWIND);
-	}
-	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_A) == GLFW_PRESS)
-	{
-		GetParent()->Move(glm::vec3(6, 0, 0)*deltaTime);
-		animator.SetState(PLAY);
-	}
-	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_D) == GLFW_PRESS)
-	{
-		GetParent()->Move(glm::vec3(-6, 0, 0)*deltaTime);
-		animator.SetState(PLAY);
-	}
 
 	animator.Update(deltaTime);
 
@@ -197,25 +175,25 @@ void AnimatedModel::Update(float deltaTime)
 
 void AnimatedModel::SetAnimation(std::string animationName)
 {
-	const auto animation = animations.find(animationName);
-	if (animation == animations.end())
+	const auto player = animations.find(animationName);
+	if (player == animations.end())
 	{
-		assert(animation != animations.end());
+		assert(player != animations.end());
 		BarnabusGameEngine::Get().AddMessageLog(
 			StringLog("Animation not found with key: " + animationName, StringLog::Priority::Critical));
 	}
 
-	animator.SetCurrentAnimation(animation->second);
+	animator.SetCurrentAnimation(player->second);
 }
 
 void AnimatedModel::ReadNodeHeirarchy(float animationTime, const Node* node, const glm::mat4 & parentTransform)
 {
 	std::string nodeName(node->name);
 
-	const std::shared_ptr<Animation> animation = animator.GetCurrentAnimation();
+	const std::shared_ptr<Animation> player = animator.GetCurrentAnimation();
 
 	glm::mat4 nodeTransformation = node->transformation;
-	const NodeAnim* nodeAnim = FindNodeAnim(animation, nodeName);
+	const NodeAnim* nodeAnim = FindNodeAnim(player, nodeName);
 
 	if (nodeAnim)
 	{
@@ -247,11 +225,11 @@ void AnimatedModel::ReadNodeHeirarchy(float animationTime, const Node* node, con
 
 }
 
-const NodeAnim* AnimatedModel::FindNodeAnim(const std::shared_ptr<Animation> animation, const std::string nodeName)
+const NodeAnim* AnimatedModel::FindNodeAnim(const std::shared_ptr<Animation> player, const std::string nodeName)
 {
-	for (int i = 0; i < animation->nodes.size(); i++)
+	for (int i = 0; i < player->nodes.size(); i++)
 	{
-		const NodeAnim* nodeAnim = animation->nodes[i];
+		const NodeAnim* nodeAnim = player->nodes[i];
 
 		if (std::string(nodeAnim->name) == nodeName)
 		{

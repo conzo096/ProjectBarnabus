@@ -5,6 +5,7 @@
 #include "GameEngine/AnimatedModel.h"
 #include "GameEngine/Renderer.h"
 #include "GameEngine/Terrain.h"
+#include "GameEngine/Movement.h"
 
 bool BarnabusGame::LoadGameContent()
 {
@@ -18,16 +19,18 @@ bool BarnabusGame::LoadGameContent()
 	heightShader.AddShaderFromFile("res\\Shaders\\Height.frag", GLShader::FRAGMENT);
 	heightShader.Link();
 
-	animation.SetPosition(camera.GetPosition());
+
+	player.AddComponent(std::make_unique<Movement>());
+	player.SetPosition(camera.GetPosition());
 	std::string fileName("res\\Models\\AnimatedModels\\LimitedWeights.dae");
 	auto animatedModelComponent = std::make_unique<AnimatedModel>(fileName);
 	animatedModelComponent->SetShader(animationShader);
 	animatedModelComponent->InitModel();
 	animatedModelComponent->SetAnimation("");
 	auto cameraComponent = std::make_unique<ArcBallCamera>();
-	animation.AddComponent(std::move(animatedModelComponent));
-
-	animation.SetRotation(glm::vec3(180, animation.GetRotation().y, animation.GetRotation().z));
+	
+	player.AddComponent(std::move(animatedModelComponent));
+	player.SetRotation(glm::vec3(180, player.GetRotation().y, player.GetRotation().z));
 
 	camera.AddComponent(std::move(cameraComponent));
 
@@ -48,13 +51,13 @@ bool BarnabusGame::LoadGameContent()
 bool BarnabusGame::Update(float deltaTime)
 {
 	camera.Update(deltaTime);
-	camera.GetComponent<ArcBallCamera>().SetTarget(animation.GetPosition() + glm::vec3(0,5,0));
+	camera.GetComponent<ArcBallCamera>().SetTarget(player.GetPosition() + glm::vec3(0,5,0));
 
-	animation.Update(deltaTime);
+	player.Update(deltaTime);
 	terrain.Update(deltaTime);
 
 	// Resolve character position - will snap to grid position
-	animation.SetPosition(terrain.GetComponent<Terrain>().GetWorldPositionFromGrid(animation.GetPosition()) + glm::vec3(0, 0.5, 0));
+	player.SetPosition(terrain.GetComponent<Terrain>().GetWorldPositionFromGrid(player.GetPosition()) + glm::vec3(0, 0.5, 0));
 
 	// Close the window if it has been asked too.
 	if (BarnabusGameEngine::Get().ShouldWindowClose() || glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -73,7 +76,7 @@ bool BarnabusGame::Render(float deltaTime)
 {
 	Renderer::Get().SetCameraViewProjection(camera.GetComponent<ArcBallCamera>().GetProjection() * camera.GetComponent<ArcBallCamera>().GetView());
 
-	animation.Render();
+	player.Render();
 	terrain.Render();
 	ui.Draw();
 
