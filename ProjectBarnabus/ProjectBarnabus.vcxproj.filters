@@ -65,6 +65,15 @@
     <ClCompile Include="src\GameEngine\Movement.cpp">
       <Filter>Source Files\GameEngine\Components</Filter>
     </ClCompile>
+    <ClCompile Include="src\GameEngine\DirectionalLight.cpp">
+      <Filter>Source Files\GameEngine\Lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Environment.cpp">
+      <Filter>Source Files\GameEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Light.cpp">
+      <Filter>Source Files\GameEngine\Lighting</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -123,6 +132,12 @@
     </Filter>
     <Filter Include="Source Files\GameEngine\Utils">
       <UniqueIdentifier>{4a3e2160-adc3-4ccc-ad94-966ec9323431}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameEngine\Lighting">
+      <UniqueIdentifier>{cf4ae2e1-ffc8-456d-8fb9-48253a6f95bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameEngine\Lighting">
+      <UniqueIdentifier>{c513c64d-26bb-445c-90fd-294c2e953a0d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -212,6 +227,15 @@
     </ClInclude>
     <ClInclude Include="src\GameEngine\Movement.h">
       <Filter>Header Files\GameEngine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\DirectionalLight.h">
+      <Filter>Header Files\GameEngine\Lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Environment.h">
+      <Filter>Header Files\GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Light.h">
+      <Filter>Header Files\GameEngine\Lighting</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,0 +1,24 @@
+#include "Environment.h"
+
+Environment::Environment()
+{
+}
+
+
+Environment::~Environment()
+{
+}
+
+bool Environment::AddLight(std::string name, std::unique_ptr<Light> light)
+{
+	auto ret = lights.insert(std::pair<std::string, std::unique_ptr<Light> >(name, std::move(light)));
+	return ret.second;
+}
+
+Light* Environment::GetLight(std::string lightName)
+{
+	auto it = lights.find(lightName);
+	assert(it != lights.end());
+
+	return it->second.get();
+}
