@@ -1,6 +1,6 @@
 #pragma once
 #include <GameEngine/IGame.h>
-#include <GameEngine/Entity.h>
+#include <GameEngine/Environment.h>
 
 #include "AnimationShader.h"
 #include "HeightShader.h"
@@ -15,8 +15,8 @@ public:
 
 private:
 	Entity camera;
-	std::unique_ptr<Entity> player;
-	std::unique_ptr<Entity> terrain;
+
+	Environment mainScene;
 	AnimationShader animationShader;
 	HeightShader heightShader;
 	GameUi ui;

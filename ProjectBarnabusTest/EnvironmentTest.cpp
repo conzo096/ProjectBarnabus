@@ -66,3 +66,5 @@ TEST(EnvironmentTest, TestGetLight)
 
 	EXPECT_TRUE(result);
 }
+
+T

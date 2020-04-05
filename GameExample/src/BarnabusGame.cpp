@@ -19,8 +19,9 @@ bool BarnabusGame::LoadGameContent()
 	heightShader.AddShaderFromFile("res\\Shaders\\Height.frag", GLShader::FRAGMENT);
 	heightShader.Link();
 
-	player = EntityFactory::CreatePlayer(camera.GetPosition(), animationShader);
-	terrain = EntityFactory::CreateTerrain(heightShader);
+
+	mainScene.AddEntity("player", EntityFactory::CreatePlayer(camera.GetPosition(), animationShader));
+	mainScene.AddEntity("terrain", EntityFactory::CreateTerrain(heightShader));
 
 	auto cameraComponent = std::make_unique<ArcBallCamera>();
 	camera.AddComponent(std::move(cameraComponent));
@@ -33,13 +34,12 @@ bool BarnabusGame::LoadGameContent()
 bool BarnabusGame::Update(float deltaTime)
 {
 	camera.Update(deltaTime);
-	camera.GetComponent<ArcBallCamera>().SetTarget(player->GetPosition() + glm::vec3(0,5,0));
+	camera.GetComponent<ArcBallCamera>().SetTarget(mainScene.GetEntity("player")->GetPosition() + glm::vec3(0,5,0));
 
-	player->Update(deltaTime);
-	terrain->Update(deltaTime);
+	mainScene.Update(deltaTime);
 
-	// Resolve character position - will snap to grid position
-	player->SetPosition(terrain->GetComponent<Terrain>().GetWorldPositionFromGrid(player->GetPosition()) + glm::vec3(0, 0.5, 0));
+	// Resolve character position - will snap to grid position - handle in movement component
+	mainScene.GetEntity("player")->SetPosition(mainScene.GetEntity("terrain")->GetComponent<Terrain>().GetWorldPositionFromGrid(mainScene.GetEntity("player")->GetPosition()) + glm::vec3(0, 0.5, 0));
 
 	// Close the window if it has been asked too.
 	if (BarnabusGameEngine::Get().ShouldWindowClose() || glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -58,8 +58,7 @@ bool BarnabusGame::Render(float deltaTime)
 {
 	Renderer::Get().SetCameraViewProjection(camera.GetComponent<ArcBallCamera>().GetProjection() * camera.GetComponent<ArcBallCamera>().GetView());
 
-	player->Render();
-	terrain->Render();
+	mainScene.Render(deltaTime);
 	ui.Draw();
 
 	Renderer::Get().Render();

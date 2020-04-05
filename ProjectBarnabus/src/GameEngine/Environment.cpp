@@ -36,3 +36,19 @@ Light* Environment::GetLight(std::string lightName)
 
 	return it->second.get();
 }
+
+void Environment::Update(float deltaTime)
+{
+	for (auto it = entities.begin(); it != entities.end(); ++it)
+	{
+		it->second->Update(deltaTime);
+	}
+}
+
+void Environment::Render(float deltaTime)
+{
+	for (auto it = entities.begin(); it != entities.end(); ++it)
+	{
+		it->second->Render();
+	}
+}
