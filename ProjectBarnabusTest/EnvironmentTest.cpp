@@ -1,6 +1,39 @@
 #include "pch.h"
 #include <GameEngine/Environment.h>
 
+TEST(EnvironmentTest, TestAddEntity)
+{
+	const std::string testEntity = "TestEntity";
+
+	Environment environment;
+	auto result = environment.AddEntity(testEntity, std::make_unique<Entity>());
+
+	EXPECT_TRUE(result);
+}
+
+TEST(EnvironmentTest, TestAddingExistingEntity)
+{
+	const std::string testEntity = "TestEntity";
+
+	Environment environment;
+	auto result = environment.AddEntity(testEntity, std::make_unique<Entity>());
+
+	result = environment.AddEntity(testEntity, std::make_unique<Entity>());
+	EXPECT_FALSE(result);
+}
+
+TEST(EnvironmentTest, TestGetEntity)
+{
+	const std::string testEntity = "TestEntity";
+
+	Environment environment;
+	environment.AddEntity(testEntity, std::make_unique<Entity>());
+
+	auto result = environment.GetEntity(testEntity);
+
+	EXPECT_TRUE(result);
+}
+
 TEST(EnvironmentTest, TestAddLight)
 {
 	const std::string testLight = "TestLight";
@@ -17,7 +50,6 @@ TEST(EnvironmentTest, TestAddingExistingLight)
 
 	Environment environment;
 	auto result = environment.AddLight(testLight, std::make_unique<Light>());
-	EXPECT_TRUE(result);
 
 	result = environment.AddLight(testLight, std::make_unique<Light>());
 	EXPECT_FALSE(result);
