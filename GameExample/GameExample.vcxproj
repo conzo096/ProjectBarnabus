@@ -23,6 +23,7 @@
   <ItemGroup>
     <ClInclude Include="src\AnimationShader.h" />
     <ClInclude Include="src\BarnabusGame.h" />
+    <ClInclude Include="src\EntityFactory.h" />
     <ClInclude Include="src\FontShader.h" />
     <ClInclude Include="src\GameUi.h" />
     <ClInclude Include="src\HeightShader.h" />

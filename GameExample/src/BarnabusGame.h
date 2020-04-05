@@ -15,8 +15,8 @@ public:
 
 private:
 	Entity camera;
-	Entity player;
-	Entity terrain;
+	std::unique_ptr<Entity> player;
+	std::unique_ptr<Entity> terrain;
 	AnimationShader animationShader;
 	HeightShader heightShader;
 	GameUi ui;
