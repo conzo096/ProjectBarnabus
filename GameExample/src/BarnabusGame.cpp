@@ -6,21 +6,14 @@
 #include "GameEngine/Renderer.h"
 #include "GameEngine/Terrain.h"
 #include "EntityFactory.h"
-
+#include "ShaderFactory.h"
 bool BarnabusGame::LoadGameContent()
 {
-	animationShader.CreateProgram();
-	animationShader.AddShaderFromFile("res\\Shaders\\BasicAnimation.vert",GLShader::VERTEX);
-	animationShader.AddShaderFromFile("res\\Shaders\\BasicAnimation.frag", GLShader::FRAGMENT);
-	animationShader.Link();
+	ShaderFactory::CreateShader<AnimationShader>("animation", "res\\Shaders\\BasicAnimation");
+	ShaderFactory::CreateShader<HeightShader>("height", "res\\Shaders\\Height");
 
-	heightShader.CreateProgram();
-	heightShader.AddShaderFromFile("res\\Shaders\\Height.vert", GLShader::VERTEX);
-	heightShader.AddShaderFromFile("res\\Shaders\\Height.frag", GLShader::FRAGMENT);
-	heightShader.Link();
-
-	mainScene.AddEntity("terrain", EntityFactory::CreateTerrain(heightShader));
-	mainScene.AddEntity("player", EntityFactory::CreatePlayer(camera.GetPosition(), animationShader, &mainScene.GetEntity("terrain")->GetComponent<Terrain>() ));
+	mainScene.AddEntity("terrain", EntityFactory::CreateTerrain(*BarnabusGameEngine::Get().GetShader("height")));
+	mainScene.AddEntity("player", EntityFactory::CreatePlayer(camera.GetPosition(), *BarnabusGameEngine::Get().GetShader("animation"), &mainScene.GetEntity("terrain")->GetComponent<Terrain>()));
 
 	auto cameraComponent = std::make_unique<ArcBallCamera>();
 	camera.AddComponent(std::move(cameraComponent));

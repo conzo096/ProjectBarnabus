@@ -15,9 +15,7 @@ public:
 
 private:
 	Entity camera;
-
 	Environment mainScene;
-	AnimationShader animationShader;
-	HeightShader heightShader;
+
 	GameUi ui;
 };

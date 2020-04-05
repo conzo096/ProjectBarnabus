@@ -27,6 +27,20 @@ void BarnabusGameEngine::AddMessageLog(StringLog log)
 	logs.push_back(log);
 }
 
+bool BarnabusGameEngine::AddShader(std::string name, std::unique_ptr<GLShader> shader)
+{
+	auto result = shaders.insert(std::pair < std::string, std::unique_ptr<GLShader>>(name, std::move(shader)));
+	return result.second;
+}
+
+GLShader* BarnabusGameEngine::GetShader(std::string name)
+{
+	auto it = shaders.find(name);
+	assert(it != shaders.end());
+
+	return it->second.get();
+}
+
 void BarnabusGameEngine::PrintLogs()
 {
 	for(int i =0; i < logs.size(); i++)

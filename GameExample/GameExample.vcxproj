@@ -28,6 +28,7 @@
     <ClInclude Include="src\GameUi.h" />
     <ClInclude Include="src\HeightShader.h" />
     <ClInclude Include="src\RedShader.h" />
+    <ClInclude Include="src\ShaderFactory.h" />
     <ClInclude Include="src\UiShader.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
