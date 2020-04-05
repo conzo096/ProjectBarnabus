@@ -10,11 +10,11 @@
 
 namespace EntityFactory{
 
-	static std::unique_ptr<Entity> CreatePlayer(glm::vec3 position, GLShader& shader)
+	static std::unique_ptr<Entity> CreatePlayer(glm::vec3 position, GLShader& shader, Terrain* terrain)
 	{
 		auto player = std::make_unique<Entity>();
 
-		player->AddComponent(std::make_unique<Movement>());
+		player->AddComponent(std::make_unique<Movement>(terrain));
 		std::string fileName("res\\Models\\AnimatedModels\\LimitedWeights.dae");
 		auto animatedModelComponent = std::make_unique<AnimatedModel>(fileName);
 		animatedModelComponent->SetShader(shader);
