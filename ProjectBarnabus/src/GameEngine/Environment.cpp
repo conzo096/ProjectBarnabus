@@ -1,5 +1,5 @@
 #include "Environment.h"
-
+#include "Renderer.h"
 Environment::Environment(std::string environmentName) : name(environmentName)
 {
 }
@@ -31,6 +31,7 @@ Entity * Environment::GetEntity(std::string entityName)
 
 bool Environment::AddLight(std::string name, std::unique_ptr<Light> light)
 {
+	light->SetName(name);
 	auto ret = lights.insert(std::pair<std::string, std::unique_ptr<Light> >(name, std::move(light)));
 	return ret.second;
 }
@@ -53,6 +54,11 @@ void Environment::Update(float deltaTime)
 
 void Environment::Render(float deltaTime)
 {
+	for (auto it = lights.begin(); it != lights.end(); ++it)
+	{
+		Renderer::Get().AddLight(name, it->second.get());
+	}
+
 	for (auto it = entities.begin(); it != entities.end(); ++it)
 	{
 		it->second->Render();

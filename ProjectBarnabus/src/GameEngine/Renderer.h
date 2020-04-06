@@ -19,7 +19,7 @@ public:
 	void SetCameraViewProjection(glm::mat4 camera);
 
 	void AddMesh(std::string environmentName, MeshData md);
-
+	void AddLight(std::string environmentName, Light* light);
 	glm::mat4 GetCameraVP();
 
 	void AddUiElement(MeshData md);
@@ -31,6 +31,7 @@ public:
 private:
 	glm::mat4 cameraVP;
 	std::map<std::string,std::vector<MeshData>> meshesToRender;
+	std::map<std::string, std::vector<Light*>> environmentLights;
 	std::vector<MeshData> uiElementsToRender;
 	std::map<std::string, FrameBuffer*> framebuffers;
 	glm::vec4 backgroundColour;
