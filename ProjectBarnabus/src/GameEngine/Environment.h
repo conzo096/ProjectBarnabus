@@ -10,6 +10,7 @@ public:
 	Environment(std::string environmentName);
 	~Environment();
 
+	const std::string GetName();
 	bool AddEntity(std::string name, std::unique_ptr<Entity> entity);
 	Entity* GetEntity(std::string entityName);
 	bool AddLight(std::string name, std::unique_ptr<Light> light);

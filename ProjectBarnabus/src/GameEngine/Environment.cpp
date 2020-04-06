@@ -9,8 +9,14 @@ Environment::~Environment()
 {
 }
 
+const std::string Environment::GetName()
+{
+	return name;
+}
+
 bool Environment::AddEntity(std::string name, std::unique_ptr<Entity> entity)
 {
+	entity->SetName(name);
 	auto ret = entities.insert(std::pair<std::string, std::unique_ptr<Entity> >(name, std::move(entity)));
 	return ret.second;
 }
