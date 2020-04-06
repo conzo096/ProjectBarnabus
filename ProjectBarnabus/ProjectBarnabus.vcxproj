@@ -51,6 +51,7 @@
     <ClInclude Include="src\GameEngine\FinalPassShader.h" />
     <ClInclude Include="src\GameEngine\Framebuffer.h" />
     <ClInclude Include="src\GameEngine\FreeCamera.h" />
+    <ClInclude Include="src\GameEngine\IDayCycle.h" />
     <ClInclude Include="src\GameEngine\IGame.h" />
     <ClInclude Include="src\GameEngine\GLShader.h" />
     <ClInclude Include="src\GameEngine\HeightMapTexture.h" />

@@ -1,12 +1,13 @@
 #pragma once
 #include "Light.h"
 #include "Entity.h"
+#include "IDayCycle.h"
 #include <map>
 #include <memory>
 class Environment
 {
 public:
-	Environment();
+	Environment(std::string environmentName);
 	~Environment();
 
 	bool AddEntity(std::string name, std::unique_ptr<Entity> entity);
@@ -18,7 +19,9 @@ public:
 	void Render(float deltaTime);
 
 private:
+	std::string name;
 	std::map<std::string, std::unique_ptr<Entity>> entities;
 	std::map<std::string, std::unique_ptr<Light>> lights;
+	std::unique_ptr<IDayCycle> dayCycle;
 };
 

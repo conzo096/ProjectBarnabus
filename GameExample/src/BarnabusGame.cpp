@@ -7,6 +7,10 @@
 #include "GameEngine/Terrain.h"
 #include "EntityFactory.h"
 #include "ShaderFactory.h"
+
+BarnabusGame::BarnabusGame() : mainScene("main")
+{
+}
 bool BarnabusGame::LoadGameContent()
 {
 	ShaderFactory::CreateShader<AnimationShader>("animation", "res\\Shaders\\BasicAnimation");

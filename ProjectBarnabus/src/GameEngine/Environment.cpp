@@ -1,6 +1,6 @@
 #include "Environment.h"
 
-Environment::Environment()
+Environment::Environment(std::string environmentName) : name(environmentName)
 {
 }
 

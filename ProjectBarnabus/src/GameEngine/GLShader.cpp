@@ -202,6 +202,11 @@ void GLShader::UpdateUniforms(MeshData & meshData)
 	Use();
 }
 
+void GLShader::UpdateUniforms(MeshData & meshData, const LightInfo& lights)
+{
+	Use();
+}
+
 void GLShader::DrawMesh(MeshData& meshData) const
 {
 	glBindVertexArray(meshData.GetVao());

@@ -237,5 +237,8 @@
     <ClInclude Include="src\GameEngine\Light.h">
       <Filter>Header Files\GameEngine\Lighting</Filter>
     </ClInclude>
+    <ClInclude Include="src\GameEngine\IDayCycle.h">
+      <Filter>Header Files\GameEngine</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

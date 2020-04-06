@@ -8,6 +8,7 @@
 class BarnabusGame : public IGame
 {
 public:
+	BarnabusGame();
 	~BarnabusGame() {};
 	bool LoadGameContent() override;
 	bool Update(float deltaTime) override;
@@ -16,6 +17,5 @@ public:
 private:
 	Entity camera;
 	Environment mainScene;
-
 	GameUi ui;
 };

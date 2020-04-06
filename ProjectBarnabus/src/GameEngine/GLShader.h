@@ -2,9 +2,13 @@
 #include <string>
 #include <GL/glew.h>
 #include <GL/GL.h>
-
+#include "Light.h"
+#include <map>
 class MeshData;
 
+namespace {
+	using LightInfo = std::map<std::string, std::unique_ptr<Light>>;
+}
 class GLShader
 {
 public:
@@ -30,6 +34,7 @@ public:
 	GLuint GetUniformLocation(std::string& name);
 
 	virtual void UpdateUniforms(MeshData& meshData);
+	virtual void UpdateUniforms(MeshData& meshData, const LightInfo& lights);
 	virtual void DrawMesh(MeshData& meshData) const;
 
 private:
