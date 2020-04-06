@@ -2,6 +2,9 @@
 #include "Renderer.h"
 Environment::Environment(std::string environmentName) : name(environmentName)
 {
+	// Adding a test light.
+
+	AddLight("test", std::make_unique<Light>(glm::vec4(1, 0, 0, 1)));
 }
 
 
@@ -14,10 +17,10 @@ const std::string Environment::GetName()
 	return name;
 }
 
-bool Environment::AddEntity(std::string name, std::unique_ptr<Entity> entity)
+bool Environment::AddEntity(std::string entityName, std::unique_ptr<Entity> entity)
 {
-	entity->SetName(name);
-	auto ret = entities.insert(std::pair<std::string, std::unique_ptr<Entity> >(name, std::move(entity)));
+	entity->SetEnvironmentName(name);
+	auto ret = entities.insert(std::pair<std::string, std::unique_ptr<Entity> >(entityName, std::move(entity)));
 	return ret.second;
 }
 

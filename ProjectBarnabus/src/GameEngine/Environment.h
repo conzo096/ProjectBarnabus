@@ -13,7 +13,7 @@ public:
 	const std::string GetName();
 	bool AddEntity(std::string name, std::unique_ptr<Entity> entity);
 	Entity* GetEntity(std::string entityName);
-	bool AddLight(std::string name, std::unique_ptr<Light> light);
+	bool AddLight(std::string entityName, std::unique_ptr<Light> light);
 	Light* GetLight(std::string lightName);
 
 	void Update(float deltaTime);

@@ -46,6 +46,18 @@ void Renderer::Render()
 		}
 	};
 
+	auto renderMeshesWithLights = [](auto& renderList, auto& lights)
+	{
+		for (int i = 0; i < renderList.size(); i++)
+		{
+			auto& mesh = renderList[i];
+			mesh.GetShader()->UpdateUniforms(mesh, lights);
+			// Bind and draw model.
+			mesh.GetShader()->DrawMesh(mesh);
+			glBindVertexArray(0);
+		}
+	};
+
 	// Render main game.
 	GetFrameBuffer("main").BindFrameBuffer();
 	glClearColor(backgroundColour.x,backgroundColour.y,backgroundColour.z,backgroundColour.w);
@@ -53,7 +65,15 @@ void Renderer::Render()
 	glEnable(GL_DEPTH_TEST);
 	for (auto& meshes : meshesToRender)
 	{
-		renderMeshes(meshes.second);
+		auto lights = environmentLights.find(meshes.first);
+		if (lights == environmentLights.end())
+		{
+			renderMeshes(meshes.second);
+		}
+		else
+		{
+			renderMeshesWithLights(meshes.second, lights->second);
+		}
 	}
 	meshesToRender.clear();
 
@@ -73,6 +93,8 @@ void Renderer::Render()
 	shader.DrawMesh(screenQuad->GetMeshData());
 
 	glfwSwapBuffers(BarnabusGameEngine::Get().GetWindow());
+
+	environmentLights.clear();
 
 }
 

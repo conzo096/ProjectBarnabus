@@ -13,3 +13,8 @@ void HeightShader::UpdateUniforms(MeshData& meshData)
 	index = glGetUniformLocation(meshData.GetShader()->GetId(), "MVP");
 	glUniformMatrix4fv(index, 1, GL_FALSE, glm::value_ptr(mvp));
 }
+
+void HeightShader::UpdateUniforms(MeshData & meshData, const LightInfo & lights)
+{
+	UpdateUniforms(meshData);
+}

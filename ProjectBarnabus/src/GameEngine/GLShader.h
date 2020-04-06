@@ -3,11 +3,11 @@
 #include <GL/glew.h>
 #include <GL/GL.h>
 #include "Light.h"
-#include <map>
+#include <vector>
 class MeshData;
 
 namespace {
-	using LightInfo = std::map<std::string, std::unique_ptr<Light>>;
+	using LightInfo = std::vector<Light*>;
 }
 class GLShader
 {

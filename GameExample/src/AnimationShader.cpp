@@ -65,3 +65,8 @@ void AnimationShader::UpdateUniforms(MeshData& meshData)
 #endif // DEBUG_VERTICES
 
 }
+
+void AnimationShader::UpdateUniforms(MeshData & meshData, const LightInfo & lights)
+{
+	UpdateUniforms(meshData);
+}
