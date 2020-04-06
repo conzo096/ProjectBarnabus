@@ -4,7 +4,7 @@ Environment::Environment(std::string environmentName) : name(environmentName)
 {
 	// Adding a test light.
 
-	AddLight("test", std::make_unique<Light>(glm::vec4(1, 0, 0, 1)));
+	AddLight("test", std::make_unique<Light>(glm::vec4(0.1, 0.9, 0, 1)));
 }
 
 

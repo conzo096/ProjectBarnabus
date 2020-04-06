@@ -17,4 +17,8 @@ void HeightShader::UpdateUniforms(MeshData& meshData)
 void HeightShader::UpdateUniforms(MeshData & meshData, const LightInfo & lights)
 {
 	UpdateUniforms(meshData);
+
+	GLint index;
+	index = glGetUniformLocation(meshData.GetShader()->GetId(), "lightColour");
+	glUniform4fv(index, 1, glm::value_ptr(lights[0]->GetColour()));
 }
