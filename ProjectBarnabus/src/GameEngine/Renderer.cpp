@@ -44,7 +44,6 @@ void Renderer::Render()
 			mesh.GetShader()->DrawMesh(mesh);
 			glBindVertexArray(0);
 		}
-		renderList.clear();
 	};
 
 	// Render main game.
@@ -52,15 +51,21 @@ void Renderer::Render()
 	glClearColor(backgroundColour.x,backgroundColour.y,backgroundColour.z,backgroundColour.w);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
-	renderMeshes(meshesToRender);
-	
+	for (auto& meshes : meshesToRender)
+	{
+		renderMeshes(meshes.second);
+	}
+	meshesToRender.clear();
+
+
 	// render to screen
 	GetFrameBuffer("ui").BindFrameBuffer();
 	glClearColor(backgroundColour.x, backgroundColour.y, backgroundColour.z,0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glDisable(GL_DEPTH_TEST);
 	renderMeshes(uiElementsToRender);
-	
+	uiElementsToRender.clear();
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glDisable(GL_DEPTH_TEST);
@@ -76,14 +81,21 @@ void Renderer::SetCameraViewProjection(glm::mat4 camera)
 	cameraVP = camera;
 }
 
-void Renderer::AddMesh(MeshData md)
+void Renderer::AddMesh(std::string environmentName, MeshData md)
 {
-	meshesToRender.push_back(md);
-}
+	auto environmentMeshes = meshesToRender.find(environmentName);
 
-const std::vector<MeshData>& Renderer::GetMeshesToRender()
-{
-	return meshesToRender;
+	// enviroment does not exist. Add a new vector to list
+	if (environmentMeshes == meshesToRender.end())
+	{
+		std::vector<MeshData> newList;
+		newList.push_back(md);
+		meshesToRender.insert(std::pair<std::string, std::vector<MeshData>>(environmentName, newList));
+	}
+	else
+	{
+		environmentMeshes->second.push_back(md);
+	}
 }
 
 glm::mat4 Renderer::GetCameraVP()

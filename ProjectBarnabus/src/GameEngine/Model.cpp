@@ -120,6 +120,6 @@ void Model::Render()
 {
 	for (int i = 0; i < data.size(); i++)
 	{
-		Renderer::Get().AddMesh(data[i]);
+		Renderer::Get().AddMesh(GetParent()->GetEnvironmentName(), data[i]);
 	}
 }
