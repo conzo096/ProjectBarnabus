@@ -15,6 +15,7 @@ struct Material
 };
 
 layout (location = 1) in vec4 colour;
+layout (location = 2) in vec3 normal;
 
 layout (location = 0) out vec4 finalColour;
 
@@ -23,7 +24,9 @@ uniform DirectionalLight worldLight;
 
 void main()
 {    
-	vec4 lightingColour = material.emissive + (material.diffuse * worldLight.colour);
+	float intensity = worldLight.direction * normal;
+
+	vec4 lightingColour = material.emissive + (material.diffuse * worldLight.colour) * intensity;
 	
 	finalColour =  colour + lightingColour;
 }
