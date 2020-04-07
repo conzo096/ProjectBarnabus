@@ -23,7 +23,7 @@ uniform DirectionalLight worldLight;
 
 void main()
 {    
-	vec4 lightingColour = material.emissive + worldLight.colour;
+	vec4 lightingColour = material.emissive + (material.diffuse * worldLight.colour);
 	
 	finalColour =  colour + lightingColour;
 }
