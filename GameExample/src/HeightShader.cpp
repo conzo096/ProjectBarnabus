@@ -28,6 +28,8 @@ void HeightShader::UpdateUniforms(MeshData& meshData)
 	GLint index;
 	index = glGetUniformLocation(meshData.GetShader()->GetId(), "MVP");
 	glUniformMatrix4fv(index, 1, GL_FALSE, glm::value_ptr(mvp));
+	index = glGetUniformLocation(meshData.GetShader()->GetId(), "M");
+	glUniformMatrix4fv(index, 1, GL_FALSE, glm::value_ptr(meshData.GetTransform()));
 }
 
 void HeightShader::UpdateUniforms(MeshData & meshData, const LightInfo& lights)
@@ -39,7 +41,7 @@ void HeightShader::UpdateUniforms(MeshData & meshData, const LightInfo& lights)
 	index = glGetUniformLocation(meshData.GetShader()->GetId(), "worldLight.colour");
 	glUniform4fv(index, 1, glm::value_ptr(worldLight->GetColour()));
 	index = glGetUniformLocation(meshData.GetShader()->GetId(), "worldLight.direction");
-	glUniform3fv(index, 1, glm::value_ptr(worldLight->GetDirection()));
+	glUniform3fv(index, 1, glm::value_ptr(worldLight->GetPosition()));
 
 	BindMaterial(meshData.GetShader()->GetId(), meshData.GetMaterial());
 }

@@ -3,7 +3,7 @@
 struct DirectionalLight
 {
 	vec4 colour;
-	vec3 direction;
+	vec3 position;
 };
 
 struct Material
@@ -14,6 +14,7 @@ struct Material
 	float shininess;
 };
 
+layout (location = 0) in vec3 position;
 layout (location = 1) in vec4 colour;
 layout (location = 2) in vec3 normal;
 
@@ -24,9 +25,9 @@ uniform DirectionalLight worldLight;
 
 void main()
 {    
-	float intensity = worldLight.direction * normal;
+	float intensity = dot(normal,normalize(worldLight.position - position));
 
-	vec4 lightingColour = material.emissive + (material.diffuse * worldLight.colour) * intensity;
+	vec4 lightingColour = material.emissive + (worldLight.colour * intensity);
 	
 	finalColour =  colour + lightingColour;
 }

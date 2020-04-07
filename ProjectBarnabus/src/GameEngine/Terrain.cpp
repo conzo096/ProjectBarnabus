@@ -88,6 +88,17 @@ void Terrain::LoadTerrainFromHeightMap(const std::string heightMapPath)
 			heightPositionsGrid[x][z] = (glm::vec4(vertices.at(index).position,1) * GetTransform()).y;
 		}
 	}
+
+	// calculate normal for terrain
+	for (int i = 0; i < vertices.size()-2; i+=3)
+	{
+		glm::vec3 normal = glm::normalize((vertices[i + 1].position - vertices[i].position) * (vertices[i + 2].position - vertices[i].position));
+		for (int j = 0; j < 3; j++)
+		{
+			vertices[i + j].normal = normal;
+		}
+	}
+
 	mesh.InsertVertices(vertices);
 
 	int vertexCounter = 0;

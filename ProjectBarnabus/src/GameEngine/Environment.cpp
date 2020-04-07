@@ -5,7 +5,7 @@ Environment::Environment(std::string environmentName) : name(environmentName)
 {
 	// Adding a test light.
 
-	AddLight("test", std::make_unique<DirectionalLight>(glm::vec4(0.5081, 0.5713, 0.6446, 1), glm::vec3(glm::vec3(0.6667, -0.3333, 0.6667))));
+	AddLight("test", std::make_unique<DirectionalLight>(glm::vec4(0.5081, 0.5713, 0.6446, 1), glm::vec3(100000,1000000,100000)));
 }
 
 

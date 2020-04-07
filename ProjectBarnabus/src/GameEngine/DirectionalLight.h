@@ -5,12 +5,12 @@ class DirectionalLight :
 {
 public:
 	DirectionalLight();
-	DirectionalLight(glm::vec4 lightColour, glm::vec3 lightDirection);
+	DirectionalLight(glm::vec4 lightColour, glm::vec3 lightposition);
 	~DirectionalLight();
 
-	glm::vec3 GetDirection();
-	void SetDirection(glm::vec3 dir);
+	glm::vec3 GetPosition();
+	void SetPosition(glm::vec3 dir);
 protected:
-	glm::vec3 direction;
+	glm::vec3 position;
 };
 
