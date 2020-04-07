@@ -11,6 +11,7 @@ public:
 	Model(const std::string& fileName);
 
 	void SetShader(GLShader& shader);
+	void SetMaterial(Material mat);
 	void InitModel();
 
 	void Update(float deltaTime) override;

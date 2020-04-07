@@ -56,6 +56,7 @@
     <ClInclude Include="src\GameEngine\GLShader.h" />
     <ClInclude Include="src\GameEngine\HeightMapTexture.h" />
     <ClInclude Include="src\GameEngine\Light.h" />
+    <ClInclude Include="src\GameEngine\Material.h" />
     <ClInclude Include="src\GameEngine\Movement.h" />
     <ClInclude Include="src\GameEngine\Node.h" />
     <ClInclude Include="src\GameEngine\NodeAnim.h" />

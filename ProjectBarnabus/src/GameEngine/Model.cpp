@@ -100,6 +100,14 @@ void Model::SetShader(GLShader& shader)
 	}
 }
 
+void Model::SetMaterial(Material mat)
+{
+	for (int i = 0; i < data.size(); i++)
+	{
+		data[i].SetMaterial(mat);
+	}
+}
+
 void Model::InitModel()
 {
 	for (int i = 0; i < data.size(); i++)

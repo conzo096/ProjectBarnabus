@@ -36,6 +36,7 @@ namespace EntityFactory{
 		terrainComponent->SetPosition(glm::vec3(-120, 0, -120));
 		terrain->SetScale(glm::vec3(4, 2, 4));
 		terrainComponent->SetShader(shader);
+
 		terrainComponent->InitModel();
 		terrain->AddComponent(std::move(terrainComponent));
 

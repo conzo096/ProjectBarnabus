@@ -128,6 +128,17 @@ GLShader* MeshData::GetShader() const
 	return shader;
 }
 
+void MeshData::SetMaterial(Material mat)
+{
+	material = mat;
+}
+
+Material MeshData::GetMaterial() const
+{
+	return material;
+}
+
+
 void MeshData::SetFrameBuffer(FrameBuffer * framebuffer)
 {
 	buffer = framebuffer;

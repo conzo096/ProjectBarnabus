@@ -2,6 +2,7 @@
 #include "Transform.h"
 #include "Bone.h"
 #include "Texture.h"
+#include "Material.h"
 #include <glm/glm.hpp>
 #include <GL/glew.h>
 #include <vector>
@@ -46,6 +47,8 @@ public:
 	void InsertVertices(std::vector<Vertex> verts);
 	void SetShader(GLShader* meshShader);
 	GLShader* GetShader() const;
+	void SetMaterial(Material mat);
+	Material GetMaterial() const;
 	void SetFrameBuffer(FrameBuffer* framebuffer);
 	FrameBuffer* GetFrameBuffer() const;
 
@@ -69,5 +72,6 @@ private:
 	FrameBuffer* buffer;
 	// Shader for rendering the mesh.
 	GLShader* shader;
-
+	// Material for lighting
+	Material material;
 };
