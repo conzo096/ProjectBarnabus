@@ -1,6 +1,6 @@
 #include "HeightShader.h"
 #include "GameEngine/Renderer.h"
-
+#include "GameEngine/DirectionalLight.h"
 #include <glm\gtc\type_ptr.hpp>
 
 namespace
@@ -30,13 +30,16 @@ void HeightShader::UpdateUniforms(MeshData& meshData)
 	glUniformMatrix4fv(index, 1, GL_FALSE, glm::value_ptr(mvp));
 }
 
-void HeightShader::UpdateUniforms(MeshData & meshData, const LightInfo & lights)
+void HeightShader::UpdateUniforms(MeshData & meshData, const LightInfo& lights)
 {
 	UpdateUniforms(meshData);
 
+	auto worldLight = static_cast<DirectionalLight*>(lights[0]);
 	GLint index;
-	index = glGetUniformLocation(meshData.GetShader()->GetId(), "lightColour");
-	glUniform4fv(index, 1, glm::value_ptr(lights[0]->GetColour()));
+	index = glGetUniformLocation(meshData.GetShader()->GetId(), "worldLight.colour");
+	glUniform4fv(index, 1, glm::value_ptr(worldLight->GetColour()));
+	index = glGetUniformLocation(meshData.GetShader()->GetId(), "worldLight.direction");
+	glUniform3fv(index, 1, glm::value_ptr(worldLight->GetDirection()));
 
 	BindMaterial(meshData.GetShader()->GetId(), meshData.GetMaterial());
 }

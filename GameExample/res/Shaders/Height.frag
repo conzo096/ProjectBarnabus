@@ -1,5 +1,11 @@
 #version 440
 
+struct DirectionalLight
+{
+	vec4 colour;
+	vec3 direction;
+};
+
 struct Material
 {
 	vec4 emissive;
@@ -13,11 +19,11 @@ layout (location = 1) in vec4 colour;
 layout (location = 0) out vec4 finalColour;
 
 uniform Material material;
-uniform vec4 lightColour;
+uniform DirectionalLight worldLight;
 
 void main()
 {    
-	vec4 lightingColour = material.emissive + lightColour;
+	vec4 lightingColour = material.emissive + worldLight.colour;
 	
 	finalColour =  colour + lightingColour;
 }
