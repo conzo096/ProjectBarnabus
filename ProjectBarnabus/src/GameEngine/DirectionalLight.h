@@ -5,6 +5,7 @@ class DirectionalLight :
 {
 public:
 	DirectionalLight();
+	DirectionalLight(glm::vec4 lightColour);
 	DirectionalLight(glm::vec4 lightColour, glm::vec3 lightposition);
 	~DirectionalLight();
 

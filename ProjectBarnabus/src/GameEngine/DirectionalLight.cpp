@@ -6,6 +6,10 @@ DirectionalLight::DirectionalLight()
 {
 }
 
+DirectionalLight::DirectionalLight(glm::vec4 lightColour) : DirectionalLight(lightColour, glm::vec3(0))
+{
+}
+
 DirectionalLight::DirectionalLight(glm::vec4 lightColour, glm::vec3 lightPosition) : Light(lightColour), position(lightPosition)
 {
 }
