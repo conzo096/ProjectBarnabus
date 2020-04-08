@@ -3,16 +3,15 @@
 #include <Math.h>
 #include <limits>
 
-enum TerrainType
-{
-	Image,
-	Model
-};
-
 class Terrain : public Model
 {
 public:
-
+	enum TerrainType
+	{
+		Image,
+		Model
+	};
+public:
 	Terrain();
 	Terrain(const std::string filePath, TerrainType terrain);
 

@@ -27,11 +27,26 @@ namespace EntityFactory{
 		return player;
 	}
 
+	static std::unique_ptr<Entity> CreateSphere(glm::vec3 position, GLShader& shader)
+	{
+		auto sphere = std::make_unique<Entity>();
+
+		std::string fileName("res\\Models\\Sphere.fbx");
+		auto modelComponent = std::make_unique<Model>(fileName);
+		modelComponent->SetShader(shader);
+		modelComponent->InitModel();
+		sphere->AddComponent(std::move(modelComponent));
+		
+		sphere->SetPosition(position);
+
+		return sphere;
+	}
+
 	static std::unique_ptr<Entity> CreateTerrain(GLShader& shader)
 	{
 		auto terrain = std::make_unique<Entity>();
 		auto fileName = "res\\Textures\\HeightMap.png";
-		auto terrainComponent = std::make_unique<Terrain>(fileName, TerrainType::Image);
+		auto terrainComponent = std::make_unique<Terrain>(fileName, Terrain::TerrainType::Image);
 		terrainComponent->LoadTerrainFromHeightMap(fileName);
 		terrainComponent->SetPosition(glm::vec3(-120, 0, -120));
 		terrain->SetScale(glm::vec3(4, 2, 4));

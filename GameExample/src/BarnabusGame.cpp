@@ -18,7 +18,7 @@ bool BarnabusGame::LoadGameContent()
 
 	mainScene.AddEntity("terrain", EntityFactory::CreateTerrain(*BarnabusGameEngine::Get().GetShader("height")));
 	mainScene.AddEntity("player", EntityFactory::CreatePlayer(camera.GetPosition(), *BarnabusGameEngine::Get().GetShader("animation"), &mainScene.GetEntity("terrain")->GetComponent<Terrain>()));
-
+	mainScene.AddEntity("sun", EntityFactory::CreateSphere(glm::vec3(100,300,100),*BarnabusGameEngine::Get().GetShader("height")));
 	auto cameraComponent = std::make_unique<ArcBallCamera>();
 	camera.AddComponent(std::move(cameraComponent));
 
