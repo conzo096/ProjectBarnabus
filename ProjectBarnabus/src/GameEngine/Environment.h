@@ -16,13 +16,12 @@ public:
 	bool AddLight(std::string entityName, std::unique_ptr<Light> light);
 	Light* GetLight(std::string lightName);
 
-	void Update(float deltaTime);
-	void Render(float deltaTime);
+	virtual void Update(float deltaTime);
+	virtual void Render(float deltaTime);
 
-private:
+protected:
 	std::string name;
 	std::map<std::string, std::unique_ptr<Entity>> entities;
 	std::map<std::string, std::unique_ptr<Light>> lights;
-	std::unique_ptr<IDayCycle> dayCycle;
 };
 

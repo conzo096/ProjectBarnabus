@@ -1,10 +1,8 @@
 #pragma once
 #include <GameEngine/IGame.h>
-#include <GameEngine/Environment.h>
-
-#include "AnimationShader.h"
-#include "HeightShader.h"
+#include "MainEnvironment.h"
 #include "GameUi.h"
+
 class BarnabusGame : public IGame
 {
 public:
@@ -16,6 +14,6 @@ public:
 
 private:
 	Entity camera;
-	Environment mainScene;
+	MainEnvironment mainScene;
 	GameUi ui;
 };

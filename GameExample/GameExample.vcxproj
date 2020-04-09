@@ -17,6 +17,7 @@
     <ClCompile Include="src\GameUi.cpp" />
     <ClCompile Include="src\HeightShader.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\MainEnvironment.cpp" />
     <ClCompile Include="src\RedShader.cpp" />
     <ClCompile Include="src\UiShader.cpp" />
   </ItemGroup>
@@ -27,6 +28,7 @@
     <ClInclude Include="src\FontShader.h" />
     <ClInclude Include="src\GameUi.h" />
     <ClInclude Include="src\HeightShader.h" />
+    <ClInclude Include="src\MainEnvironment.h" />
     <ClInclude Include="src\RedShader.h" />
     <ClInclude Include="src\ShaderFactory.h" />
     <ClInclude Include="src\UiShader.h" />

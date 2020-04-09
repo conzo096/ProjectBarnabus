@@ -1,13 +1,8 @@
 #include "Environment.h"
 #include "Renderer.h"
-#include "DirectionalLight.h"
 Environment::Environment(std::string environmentName) : name(environmentName)
 {
-	// Adding a test light.
-
-	AddLight("test", std::make_unique<DirectionalLight>(glm::vec4(0.5081, 0.5713, 0.6446, 1)));
 }
-
 
 Environment::~Environment()
 {
@@ -50,11 +45,6 @@ Light* Environment::GetLight(std::string lightName)
 
 void Environment::Update(float deltaTime)
 {
-
-	// update test light position to match sun - TODO Move test light and logic into a game specific environment class.
-	auto worldLight = static_cast<DirectionalLight*>(GetLight("test"));
-	worldLight->SetPosition(GetEntity("sun")->GetPosition());
-
 	for (auto it = entities.begin(); it != entities.end(); ++it)
 	{
 		it->second->Update(deltaTime);
