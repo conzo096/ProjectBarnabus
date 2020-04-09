@@ -7,6 +7,7 @@ public:
 
 public:
 	void Update(float deltaTime) override;
+	void Render(float deltaTime) override;
 public:
 	void LoadGameContent();
 

@@ -4,6 +4,7 @@ struct DirectionalLight
 {
 	vec4 colour;
 	vec3 position;
+	float intensity;
 };
 
 struct Material
@@ -25,10 +26,10 @@ uniform DirectionalLight worldLight;
 
 void main()
 {    
-	float intensity = dot(normal,normalize(worldLight.position - position));
+	float intensity = (dot(normal,normalize(worldLight.position - position))) * worldLight.intensity;
 
-	vec4 lightingColour = material.emissive + (worldLight.colour * intensity);
+	vec4 lightingColour = (worldLight.colour * intensity);
 	
-	finalColour =  colour + lightingColour;
+	finalColour =  glm::vec4(0.1,0,0,1) + lightingColour;
 }
 

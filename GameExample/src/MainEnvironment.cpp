@@ -37,6 +37,22 @@ void MainEnvironment::Update(float deltaTime)
 	Environment::Update(deltaTime);
 }
 
+void MainEnvironment::Render(float deltaTime)
+{
+	auto sun = GetEntity("sun");
+
+	if (sun->GetPosition().y < -10)
+	{
+		sun->SetActive(false);
+	}
+	else
+	{
+		sun->SetActive(true);
+	}
+
+	Environment::Render(deltaTime);
+}
+
 void MainEnvironment::LoadGameContent()
 {
 	AddLight("test", std::make_unique<DirectionalLight>(glm::vec4(0.5081, 0.5713, 0.6446, 1)));

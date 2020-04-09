@@ -37,11 +37,25 @@ void HeightShader::UpdateUniforms(MeshData & meshData, const LightInfo& lights)
 	UpdateUniforms(meshData);
 
 	auto worldLight = static_cast<DirectionalLight*>(lights[0]);
+
+	float intensity = 0;
+	if (worldLight->GetPosition().y >= 0)
+	{
+		// Get direction
+		glm::vec3 direction = glm::normalize((worldLight->GetPosition() - meshData.GetPosition()));
+		// intensity is based on how close it is to being directly above
+		intensity = direction.y;
+	}
+
+
 	GLint index;
 	index = glGetUniformLocation(meshData.GetShader()->GetId(), "worldLight.colour");
 	glUniform4fv(index, 1, glm::value_ptr(worldLight->GetColour()));
 	index = glGetUniformLocation(meshData.GetShader()->GetId(), "worldLight.position");
 	glUniform3fv(index, 1, glm::value_ptr(worldLight->GetPosition()));
+
+	index = glGetUniformLocation(meshData.GetShader()->GetId(), "worldLight.intensity");
+	glUniform1f(index, intensity);
 
 	BindMaterial(meshData.GetShader()->GetId(), meshData.GetMaterial());
 }
