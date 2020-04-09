@@ -18,12 +18,12 @@ void MainEnvironment::Update(float deltaTime)
 		currentTime -= duration;
 	}
 
-	float angle = (currentTime / 100) * 360;
+	float angle = (currentTime / duration) * 360;
 	float radians = (angle * M_PI) / 180;
 
 	auto sun = GetEntity("sun");
 	auto terrain = GetEntity("terrain");
-	float radius = 600;
+	const float radius = 600;
 
 	glm::vec3 newSunPosition;
 	newSunPosition.x = (terrain->GetPosition().x + radius) * cos(radians);
