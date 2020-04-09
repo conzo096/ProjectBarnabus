@@ -22,11 +22,14 @@ void MainEnvironment::Update(float deltaTime)
 	float radians = (angle * M_PI) / 180;
 
 	auto sun = GetEntity("sun");
+	auto terrain = GetEntity("terrain");
+	float radius = 600;
+
 	glm::vec3 newSunPosition;
-	newSunPosition.z = sun->GetPosition().z;
-	newSunPosition.x = 100 * cos(radians);
-	newSunPosition.y = 100 * sin(radians);
-	
+	newSunPosition.x = (terrain->GetPosition().x + radius) * cos(radians);
+	newSunPosition.y = (terrain->GetPosition().y + radius) * sin(radians);
+	newSunPosition.z = (terrain->GetPosition().z + radius) * cos(radians);
+
 	sun->SetPosition(newSunPosition);
 
 	auto worldLight = static_cast<DirectionalLight*>(GetLight("test"));
@@ -44,4 +47,5 @@ void MainEnvironment::LoadGameContent()
 	AddEntity("terrain", EntityFactory::CreateTerrain(*BarnabusGameEngine::Get().GetShader("height")));
 	AddEntity("player", EntityFactory::CreatePlayer(glm::vec3(0), *BarnabusGameEngine::Get().GetShader("animation"), &GetEntity("terrain")->GetComponent<Terrain>()));
 	AddEntity("sun", EntityFactory::CreateSphere(glm::vec3(100, 300, 100), *BarnabusGameEngine::Get().GetShader("height")));
+	GetEntity("sun")->SetScale(glm::vec3(10, 10, 10));
 }
