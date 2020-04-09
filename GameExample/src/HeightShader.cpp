@@ -47,15 +47,13 @@ void HeightShader::UpdateUniforms(MeshData & meshData, const LightInfo& lights)
 		intensity = direction.y;
 	}
 
-
+	glm::vec4 worldLightColour = worldLight->GetColour() * intensity;
+	worldLightColour.a = 1;
 	GLint index;
 	index = glGetUniformLocation(meshData.GetShader()->GetId(), "worldLight.colour");
-	glUniform4fv(index, 1, glm::value_ptr(worldLight->GetColour()));
+	glUniform4fv(index, 1, glm::value_ptr(worldLightColour));
 	index = glGetUniformLocation(meshData.GetShader()->GetId(), "worldLight.position");
 	glUniform3fv(index, 1, glm::value_ptr(worldLight->GetPosition()));
-
-	index = glGetUniformLocation(meshData.GetShader()->GetId(), "worldLight.intensity");
-	glUniform1f(index, intensity);
 
 	BindMaterial(meshData.GetShader()->GetId(), meshData.GetMaterial());
 }

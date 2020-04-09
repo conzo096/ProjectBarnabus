@@ -4,7 +4,6 @@ struct DirectionalLight
 {
 	vec4 colour;
 	vec3 position;
-	float intensity;
 };
 
 struct Material
@@ -26,7 +25,7 @@ uniform DirectionalLight worldLight;
 
 void main()
 {    
-	float intensity = (dot(normal,normalize(worldLight.position - position))) * worldLight.intensity;
+	float intensity = (dot(normal,normalize(worldLight.position - position)));
 
 	vec4 lightingColour = (worldLight.colour * intensity);
 	
