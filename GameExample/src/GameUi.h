@@ -5,8 +5,13 @@ class GameUi : public UiDisplay
 {
 public:
 	GameUi();
-	void InitGameUi();
 	~GameUi();
 
+	void InitGameUi();
+	void SetExampleText(std::string text);
+
 	void Draw() override;
+
+private:
+	std::string exampleText;
 };

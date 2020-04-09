@@ -37,6 +37,11 @@ void GameUi::InitGameUi()
 	uiElements.at("example")->GetMeshData().SetTexture(texture);
 }
 
+void GameUi::SetExampleText(std::string text)
+{
+	exampleText = text;
+}
+
 GameUi::~GameUi()
 {
 	for (auto& pair : uiElements)
@@ -48,7 +53,6 @@ GameUi::~GameUi()
 void GameUi::Draw()
 {
 	uiElements.at("debug")->GetMeshData().SetTexture(Renderer::Get().GetFrameBuffer("main").GetDepthTexture());
-	std::string exampleText = "Example";
 	static_cast<TextQuad*>(uiElements.at("example"))->SetText(exampleText);
 	UiDisplay::Draw();
 }

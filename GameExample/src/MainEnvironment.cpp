@@ -4,12 +4,31 @@
 #include "ShaderFactory.h"
 #include "AnimationShader.h"
 #include "HeightShader.h"
+#define _USE_MATH_DEFINES
+#include <math.h>
 MainEnvironment::MainEnvironment(std::string environmentName) : Environment(environmentName)
 {
 }
 
 void MainEnvironment::Update(float deltaTime)
 {
+	currentTime += deltaTime;
+	if (currentTime > duration)
+	{
+		currentTime -= duration;
+	}
+
+	float angle = (currentTime / 100) * 360;
+	float radians = (angle * M_PI) / 180;
+
+	auto sun = GetEntity("sun");
+	glm::vec3 newSunPosition;
+	newSunPosition.z = sun->GetPosition().z;
+	newSunPosition.x = 100 * cos(radians);
+	newSunPosition.y = 100 * sin(radians);
+	
+	sun->SetPosition(newSunPosition);
+
 	auto worldLight = static_cast<DirectionalLight*>(GetLight("test"));
 	worldLight->SetPosition(GetEntity("sun")->GetPosition());
 	Environment::Update(deltaTime);

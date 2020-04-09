@@ -5,7 +5,7 @@
 #include "GameEngine/AnimatedModel.h"
 #include "GameEngine/Renderer.h"
 #include "GameEngine/Terrain.h"
-
+#include "glm/gtx/string_cast.hpp"
 BarnabusGame::BarnabusGame() : mainScene("main")
 {
 }
@@ -26,6 +26,7 @@ bool BarnabusGame::Update(float deltaTime)
 	camera.GetComponent<ArcBallCamera>().SetTarget(mainScene.GetEntity("player")->GetPosition() + glm::vec3(0,5,0));
 
 	mainScene.Update(deltaTime);
+	ui.SetExampleText(glm::to_string(mainScene.GetEntity("sun")->GetPosition()));
 
 	// Close the window if it has been asked too.
 	if (BarnabusGameEngine::Get().ShouldWindowClose() || glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)

@@ -9,4 +9,8 @@ public:
 	void Update(float deltaTime) override;
 public:
 	void LoadGameContent();
+
+private:
+	float duration = 100;
+	float currentTime = 0;
 };
