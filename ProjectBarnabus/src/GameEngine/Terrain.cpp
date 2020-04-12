@@ -22,6 +22,7 @@ Terrain::Terrain()
 
 Terrain::Terrain(const std::string filePath, TerrainType terrain) : Terrain()
 {
+	LoadTerrainFromHeightMap(filePath);
 }
 
 glm::vec3 Terrain::GetWorldPositionFromGrid(glm::vec3 worldPosition)
@@ -64,8 +65,6 @@ glm::vec3 Terrain::GetWorldPositionFromGrid(glm::vec3 worldPosition)
 
 void Terrain::LoadTerrainFromHeightMap(const std::string heightMapPath)
 {
-	MeshData mesh;
-
 	HeightMapTexture heightMap(heightMapPath);
 	width = heightMap.GetWidth();
 	height = heightMap.GetHeight();
@@ -99,6 +98,7 @@ void Terrain::LoadTerrainFromHeightMap(const std::string heightMapPath)
 		}
 	}
 
+	MeshData mesh;
 	mesh.InsertVertices(vertices);
 
 	int vertexCounter = 0;

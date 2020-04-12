@@ -7,7 +7,7 @@
 class Transform
 {
 public:
-	Transform() : scale(glm::vec3(1.0)), rotation(glm::quat()), position(glm::vec3()), transform(glm::mat4(1))
+	Transform() : scale(glm::vec3(1.0)), rotation(glm::quat()), position(glm::vec3(0)), transform(glm::mat4(1))
 	{ 
 		changed = true;
 	}

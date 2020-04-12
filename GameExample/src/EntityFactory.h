@@ -46,12 +46,9 @@ namespace EntityFactory{
 	{
 		auto terrain = std::make_unique<Entity>();
 		auto fileName = "res\\Textures\\HeightMap.png";
-		auto terrainComponent = std::make_unique<Terrain>(fileName, Terrain::TerrainType::Image);
-		terrainComponent->LoadTerrainFromHeightMap(fileName);
-		terrainComponent->SetPosition(glm::vec3(-120, 0, -120));
-		terrain->SetScale(glm::vec3(4, 2, 4));
-		terrainComponent->SetShader(shader);
 
+		auto terrainComponent = std::make_unique<Terrain>(fileName, Terrain::TerrainType::Image);
+		terrainComponent->SetShader(shader);
 		terrainComponent->InitModel();
 		terrain->AddComponent(std::move(terrainComponent));
 
