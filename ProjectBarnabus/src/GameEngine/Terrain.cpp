@@ -65,26 +65,61 @@ glm::vec3 Terrain::GetWorldPositionFromGrid(glm::vec3 worldPosition)
 
 void Terrain::LoadTerrainFromHeightMap(const std::string heightMapPath)
 {
+	auto getHeight = [](auto x, auto z, HeightMapTexture& heightMap)
+	{
+		const unsigned int maxColour = 255 * 255 * 255;
+		int r = heightMap.GetData()[x * 4 + 0 + z * 4 *  heightMap.GetWidth()];
+		int g = heightMap.GetData()[x * 4 + 1 + z * 4 * heightMap.GetWidth()];
+		int b = heightMap.GetData()[x * 4 + 2 + z * 4 * heightMap.GetWidth()];
+		int a = heightMap.GetData()[x * 4 + 3 + z * 4 * heightMap.GetWidth()];
+		unsigned int argb = r*g*b*a;
+		
+		return ((float)argb / (float)maxColour);
+	};
+
 	HeightMapTexture heightMap(heightMapPath);
 	width = heightMap.GetWidth();
 	height = heightMap.GetHeight();
-	std::vector<Vertex> vertices(heightMap.GetWidth()*heightMap.GetHeight());
-	int counter = 0;
+	std::vector<Vertex> vertices;
 
 	heightPositionsGrid = new float*[heightMap.GetWidth()];
 
-	for (int x = 0; x < heightMap.GetWidth(); x++)
-	{		
-		heightPositionsGrid[x] = new float[heightMap.GetWidth()];
-		for (int z = 0; z < heightMap.GetHeight(); z++)
-		{
-			int index = z * heightMap.GetHeight() + x;
-			vertices.at(index).position = glm::vec3(float(x), (float)heightMap.GetData()[index], float(z));
-			vertices.at(index).texCoords = glm::vec2(x/heightMap.GetWidth(),z/heightMap.GetHeight());
+	for (int i = 0; i < heightMap.GetWidth(); i++)
+	{
+		heightPositionsGrid[i] = new float[heightMap.GetHeight()];
+	}
 
-			float heightPosition = vertices.at(index).position.y / 255;
-			vertices.at(index).color = glm::vec4(heightPosition, heightPosition, heightPosition,1);
-			heightPositionsGrid[x][z] = (glm::vec4(vertices.at(index).position,1) * GetTransform()).y;
+	MeshData mesh;
+	for (int z = 0; z < height; z++)
+	{
+		for (int x = 0; x < width; x++)
+		{
+			float heightPosition = getHeight(x,z,heightMap);
+
+			Vertex vertex;
+			vertex.position = glm::vec3(float(x), heightPosition, float(z));
+			vertex.texCoords = glm::vec2(x / heightMap.GetWidth(), z / heightMap.GetHeight());
+			vertex.color = glm::vec4(heightPosition, heightPosition, heightPosition, 1);
+
+			vertices.push_back(vertex);
+
+			// Create indices
+			if (x < width - 1 && z < height - 1) {
+				int leftTop = z * width + x;
+				int leftBottom = (z + 1) * width + x;
+				int rightBottom = (z + 1) * width + x + 1;
+				int rightTop = z * width + x + 1;
+
+				mesh.InsertIndex(rightTop);
+				mesh.InsertIndex(leftBottom);
+				mesh.InsertIndex(leftTop);
+
+				mesh.InsertIndex(rightBottom);
+				mesh.InsertIndex(leftBottom);
+				mesh.InsertIndex(rightTop);
+			}
+
+			heightPositionsGrid[x][z] = (glm::vec4(vertex.position, 1) * GetTransform()).y;
 		}
 	}
 
@@ -98,7 +133,6 @@ void Terrain::LoadTerrainFromHeightMap(const std::string heightMapPath)
 		}
 	}
 
-	MeshData mesh;
 	mesh.InsertVertices(vertices);
 
 	int vertexCounter = 0;
