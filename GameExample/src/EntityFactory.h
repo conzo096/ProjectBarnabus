@@ -15,13 +15,12 @@ namespace EntityFactory{
 		auto player = std::make_unique<Entity>();
 
 		player->AddComponent(std::make_unique<Movement>(terrain));
-		std::string fileName("res\\Models\\AnimatedModels\\LimitedWeights.dae");
+		std::string fileName("res\\Models\\AnimatedModels\\Player.fbx");
 		auto animatedModelComponent = std::make_unique<AnimatedModel>(fileName);
 		animatedModelComponent->SetShader(shader);
 		animatedModelComponent->InitModel();
-		animatedModelComponent->SetAnimation("");
+		animatedModelComponent->SetAnimation("walk");
 		player->AddComponent(std::move(animatedModelComponent));
-		player->SetRotation(glm::vec3(180, player->GetRotation().y, player->GetRotation().z));
 		player->SetPosition(position);
 
 		return player;
