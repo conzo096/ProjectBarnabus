@@ -15,10 +15,10 @@
     <ClCompile Include="src\BarnabusGame.cpp" />
     <ClCompile Include="src\FontShader.cpp" />
     <ClCompile Include="src\GameUi.cpp" />
-    <ClCompile Include="src\HeightShader.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\MainEnvironment.cpp" />
     <ClCompile Include="src\RedShader.cpp" />
+    <ClCompile Include="src\TerrainShader.cpp" />
     <ClCompile Include="src\UiShader.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -27,10 +27,10 @@
     <ClInclude Include="src\EntityFactory.h" />
     <ClInclude Include="src\FontShader.h" />
     <ClInclude Include="src\GameUi.h" />
-    <ClInclude Include="src\HeightShader.h" />
     <ClInclude Include="src\MainEnvironment.h" />
     <ClInclude Include="src\RedShader.h" />
     <ClInclude Include="src\ShaderFactory.h" />
+    <ClInclude Include="src\TerrainShader.h" />
     <ClInclude Include="src\UiShader.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -43,10 +43,10 @@
   <ItemGroup>
     <None Include="res\Shaders\BasicAnimation.frag" />
     <None Include="res\Shaders\BasicAnimation.vert" />
-    <None Include="res\Shaders\Height.frag" />
-    <None Include="res\Shaders\Height.vert" />
     <None Include="res\Shaders\Red.frag" />
     <None Include="res\Shaders\Red.vert" />
+    <None Include="res\Shaders\Terrain.frag" />
+    <None Include="res\Shaders\Terrain.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">

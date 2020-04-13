@@ -1,4 +1,4 @@
-#include "HeightShader.h"
+#include "TerrainShader.h"
 #include "GameEngine/Renderer.h"
 #include "GameEngine/DirectionalLight.h"
 #include <glm\gtc\type_ptr.hpp>
@@ -19,7 +19,7 @@ namespace
 	}
 }
 
-void HeightShader::UpdateUniforms(MeshData& meshData)
+void TerrainShader::UpdateUniforms(MeshData& meshData)
 {
 	Use();
 	// Bind Uniforms.
@@ -32,7 +32,7 @@ void HeightShader::UpdateUniforms(MeshData& meshData)
 	glUniformMatrix4fv(index, 1, GL_FALSE, glm::value_ptr(meshData.GetTransform()));
 }
 
-void HeightShader::UpdateUniforms(MeshData & meshData, const LightInfo& lights)
+void TerrainShader::UpdateUniforms(MeshData & meshData, const LightInfo& lights)
 {
 	UpdateUniforms(meshData);
 

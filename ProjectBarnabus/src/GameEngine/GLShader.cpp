@@ -204,7 +204,7 @@ void GLShader::UpdateUniforms(MeshData & meshData)
 
 void GLShader::UpdateUniforms(MeshData & meshData, const LightInfo& lights)
 {
-	Use();
+	UpdateUniforms(meshData);
 }
 
 void GLShader::DrawMesh(MeshData& meshData) const

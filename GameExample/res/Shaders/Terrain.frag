@@ -29,6 +29,6 @@ void main()
 
 	vec4 lightingColour = (worldLight.colour * intensity);
 	
-	finalColour =  glm::vec4(0.1,0,0,1) + lightingColour;
+	finalColour =  colour + lightingColour;
 }
 

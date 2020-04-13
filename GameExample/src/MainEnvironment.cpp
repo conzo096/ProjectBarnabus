@@ -3,7 +3,8 @@
 #include "EntityFactory.h"
 #include "ShaderFactory.h"
 #include "AnimationShader.h"
-#include "HeightShader.h"
+#include "TerrainShader.h"
+#include "RedShader.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
 MainEnvironment::MainEnvironment(std::string environmentName) : Environment(environmentName)
@@ -58,10 +59,11 @@ void MainEnvironment::LoadGameContent()
 	AddLight("test", std::make_unique<DirectionalLight>(glm::vec4(0.5081, 0.5713, 0.6446, 1)));
 
 	ShaderFactory::CreateShader<AnimationShader>("animation", "res\\Shaders\\BasicAnimation");
-	ShaderFactory::CreateShader<HeightShader>("height", "res\\Shaders\\Height");
+	ShaderFactory::CreateShader<TerrainShader>("terrain", "res\\Shaders\\Terrain");
+	ShaderFactory::CreateShader<RedShader>("red", "res\\Shaders\\Red");
 
-	AddEntity("terrain", EntityFactory::CreateTerrain(*BarnabusGameEngine::Get().GetShader("height")));
+	AddEntity("terrain", EntityFactory::CreateTerrain(*BarnabusGameEngine::Get().GetShader("terrain")));
 	AddEntity("player", EntityFactory::CreatePlayer(glm::vec3(0), *BarnabusGameEngine::Get().GetShader("animation"), &GetEntity("terrain")->GetComponent<Terrain>()));
-	AddEntity("sun", EntityFactory::CreateSphere(glm::vec3(100, 300, 100), *BarnabusGameEngine::Get().GetShader("height")));
+	AddEntity("sun", EntityFactory::CreateSphere(glm::vec3(100, 300, 100), *BarnabusGameEngine::Get().GetShader("red")));
 	GetEntity("sun")->SetScale(glm::vec3(10, 10, 10));
 }

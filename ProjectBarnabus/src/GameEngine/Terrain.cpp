@@ -99,7 +99,7 @@ void Terrain::LoadTerrainFromHeightMap(const std::string heightMapPath)
 			Vertex vertex;
 			vertex.position = glm::vec3(float(x), heightPosition, float(z));
 			vertex.texCoords = glm::vec2(x / heightMap.GetWidth(), z / heightMap.GetHeight());
-			vertex.color = glm::vec4(heightPosition, heightPosition, heightPosition, 1);
+			vertex.color = glm::vec4(0.34, 0.23, 0.04, 1);
 
 			vertices.push_back(vertex);
 
