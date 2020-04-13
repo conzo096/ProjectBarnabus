@@ -21,26 +21,24 @@ void Movement::SetTerrain(Terrain* const entityTerrain)
 
 void Movement::Update(float deltaTime)
 {
-	// todo move this to a user movement component
 	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_W) == GLFW_PRESS)
 	{
 		GetParent()->Move(glm::vec3(0, 0, 6)*deltaTime);
-		GetParent()->SetPosition(terrain->GetWorldPositionFromGrid(GetParent()->GetPosition()) + glm::vec3(0, 0.5, 0));
+		GetParent()->SetPosition(terrain->GetWorldPositionFromGrid(GetParent()->GetPosition()));
 	}
 	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_S) == GLFW_PRESS)
 	{
 		GetParent()->Move(glm::vec3(0, 0, -6)*deltaTime);
-		GetParent()->SetPosition(terrain->GetWorldPositionFromGrid(GetParent()->GetPosition()) + glm::vec3(0, 0.5, 0));
+		GetParent()->SetPosition(terrain->GetWorldPositionFromGrid(GetParent()->GetPosition()));
 	}
 	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_A) == GLFW_PRESS)
 	{
 		GetParent()->Move(glm::vec3(6, 0, 0)*deltaTime);
-		GetParent()->SetPosition(terrain->GetWorldPositionFromGrid(GetParent()->GetPosition()) + glm::vec3(0, 0.5, 0));
+		GetParent()->SetPosition(terrain->GetWorldPositionFromGrid(GetParent()->GetPosition()));
 	}
 	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_D) == GLFW_PRESS)
 	{
 		GetParent()->Move(glm::vec3(-6, 0, 0)*deltaTime);
-		GetParent()->SetPosition(terrain->GetWorldPositionFromGrid(GetParent()->GetPosition()) + glm::vec3(0, 0.5, 0));
+		GetParent()->SetPosition(terrain->GetWorldPositionFromGrid(GetParent()->GetPosition()));
 	}
-
 }
