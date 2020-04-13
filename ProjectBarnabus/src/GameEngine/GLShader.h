@@ -25,7 +25,7 @@ public:
 	bool AddShaderFromFile(const char* fileName, GLSLSHADERTYPE type);
 	bool Link();
 	bool IsLinked();
-	void CreateProgram();
+	void CreateProgram(const std::string shaderName);
 	void Use();
 	void SetUniform(const char* name, const float val);
 	void SetUniform(const char* name, const int val);
@@ -38,6 +38,7 @@ public:
 	virtual void DrawMesh(MeshData& meshData) const;
 
 private:
+	std::string name;
 	GLint program;
 	bool linked;
 	std::string logString;

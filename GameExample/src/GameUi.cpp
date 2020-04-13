@@ -17,7 +17,7 @@ void GameUi::InitGameUi()
 {
 	auto CreateShader = [](GLShader* shader, std::string shaderName)
 	{
-		shader->CreateProgram();
+		shader->CreateProgram("ui");
 		shader->AddShaderFromFile(std::string("res\\shaders\\"+ shaderName+".vert").c_str(), GLShader::VERTEX);
 		shader->AddShaderFromFile(std::string("res\\shaders\\" + shaderName + ".frag").c_str(), GLShader::FRAGMENT);
 		shader->Link();

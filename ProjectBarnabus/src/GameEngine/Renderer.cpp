@@ -18,7 +18,7 @@ Renderer::Renderer()
 	screenQuad = new UiQuad(glm::vec2(-1,-1), glm::vec2(1, 1));
 	screenQuad->InitQuad();
 
-	shader.CreateProgram();
+	shader.CreateProgram("FinalRender");
 	shader.AddShaderFromFile("res\\shaders\\FinalPass.vert", GLShader::VERTEX);
 	shader.AddShaderFromFile("res\\shaders\\FinalPass.frag", GLShader::FRAGMENT);
 	shader.Link();

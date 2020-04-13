@@ -10,7 +10,7 @@ namespace ShaderFactory
 		const auto fragFileLocation = fileLocation + ".frag";
 		auto shader = std::make_unique<shaderT>();
 
-		shader->CreateProgram();
+		shader->CreateProgram(shaderName);
 		shader->AddShaderFromFile(vertFileLocation.c_str(), GLShader::VERTEX);
 		shader->AddShaderFromFile(fragFileLocation.c_str(), GLShader::FRAGMENT);
 		shader->Link();

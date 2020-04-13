@@ -5,6 +5,9 @@
 #include <fstream>
 #include <vector>
 #include <iostream>
+#include <sstream>
+#include <algorithm>
+#include <iterator>
 
 namespace {
 
@@ -142,7 +145,7 @@ bool GLShader::Link()
 
 	linked = true;
 
-	BarnabusGameEngine::Get().AddMessageLog(StringLog("Created shader: TODO GET NAME ", StringLog::Priority::Low));
+	BarnabusGameEngine::Get().AddMessageLog(StringLog("Created shader: " + name, StringLog::Priority::Low));
 
 	return true;
 }
@@ -157,8 +160,9 @@ bool GLShader::IsLinked()
 	return true;
 }
 
-void GLShader::CreateProgram()
+void GLShader::CreateProgram(const std::string shaderName)
 {
+	name = shaderName;
 	program = glCreateProgram();
 }
 
