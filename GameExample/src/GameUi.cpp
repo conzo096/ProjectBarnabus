@@ -1,6 +1,7 @@
 #include "GameUi.h"
 #include "UiShader.h"
 #include "FontShader.h"
+#include "ShaderFactory.h"
 #include <GameEngine/TextQuad.h>
 #include <GameEngine/Renderer.h>
 #include <GameEngine/BarnabusGameEngine.h>
@@ -23,14 +24,11 @@ void GameUi::InitGameUi()
 		shader->Link();
 	};
 
-	GLShader* shader = new UiShader;
-	CreateShader(shader, std::string("UI"));
+	ShaderFactory::CreateShader<UiShader>("ui", "res\\shaders\\UI");
+	ShaderFactory::CreateShader<FontShader>("font", "res\\shaders\\Font");
 
-	GLShader* fontShader = new FontShader;
-	CreateShader(fontShader, std::string("Font"));
-
-	uiElements.at("debug")->GetMeshData().SetShader(shader);
-	uiElements.at("example")->GetMeshData().SetShader(fontShader);
+	uiElements.at("debug")->GetMeshData().SetShader(BarnabusGameEngine::Get().GetShader("ui"));
+	uiElements.at("example")->GetMeshData().SetShader(BarnabusGameEngine::Get().GetShader("font"));
 
 	Texture* texture = new Texture;
 	texture->LoadTexture("res\\textures\\GameFont.png");
