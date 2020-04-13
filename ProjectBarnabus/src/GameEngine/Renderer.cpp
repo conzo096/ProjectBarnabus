@@ -6,11 +6,11 @@
 Renderer::Renderer()
 {
 	backgroundColour = glm::vec4(0.1f, 0.0f, 0.4f, 1.0f);
-	auto main = new FrameBuffer;
+	auto main = new FrameBuffer("main");
 	main->LoadFrameBuffer(1920,1080);
 	auto pair = std::pair<std::string, FrameBuffer*>(std::string("main"), main);
 	AddFramebuffer(pair);
-	auto ui = new FrameBuffer;
+	auto ui = new FrameBuffer("ui");
 	ui->LoadFrameBuffer(1920, 1080);
 	pair = std::pair<std::string, FrameBuffer*>(std::string("ui"), ui);
 	AddFramebuffer(pair);

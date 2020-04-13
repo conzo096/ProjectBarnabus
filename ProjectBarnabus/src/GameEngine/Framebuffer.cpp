@@ -2,7 +2,7 @@
 #include "Texture.h"
 #include "BarnabusGameEngine.h"
 
-FrameBuffer::FrameBuffer()
+FrameBuffer::FrameBuffer(const std::string & frameBufferName) : name(frameBufferName)
 {
 }
 
@@ -73,7 +73,7 @@ void FrameBuffer::LoadFrameBuffer(int w, int h)
 	// Unbind frame buffer
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	BarnabusGameEngine::Get().AddMessageLog(StringLog("Created Framebuffer.", StringLog::Priority::Low));
+	BarnabusGameEngine::Get().AddMessageLog(StringLog("Created Framebuffer: " + name, StringLog::Priority::Low));
 
 }
 

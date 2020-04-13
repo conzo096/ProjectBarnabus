@@ -3,14 +3,14 @@
 #include <GL\GL.h>
 #include <GLFW\glfw3.h>
 #include <glm\gtc\type_ptr.hpp>
+#include <string>
 
 class Texture;
 
 class FrameBuffer
 {
 public:
-
-	FrameBuffer();
+	FrameBuffer(const std::string& frameBufferName);
 	~FrameBuffer();
 
 	GLuint GetFrameBuffer();
@@ -21,6 +21,7 @@ public:
 	void BindFrameBuffer();
 
 private:
+	std::string name;
 	GLuint bufferId;
 	Texture* frameTexture;
 	Texture* depthTexture;
