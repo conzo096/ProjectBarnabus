@@ -76,7 +76,7 @@ void Entity::Update(const float delta)
 	for (auto &c : components)
 	{
 		c.second->UpdateTransforms();
-		c.second->SetTransform(GetTransform() * c.second->GetTransform());
+		c.second->SetTransform(c.second->GetTransform()*GetTransform());
 		c.second->Update(delta);
 	}
 }
