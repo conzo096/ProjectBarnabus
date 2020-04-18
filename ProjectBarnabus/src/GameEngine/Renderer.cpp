@@ -36,7 +36,7 @@ void Renderer::Render()
 {
 	auto renderMeshes = [](auto& renderList)
 	{
-		for (int i = 0; i < renderList.size(); i++)
+ 		for (int i = 0; i < renderList.size(); i++)
 		{
 			auto& mesh = renderList[i];
 			mesh.GetShader()->UpdateUniforms(mesh);

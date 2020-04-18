@@ -9,41 +9,25 @@
 #include <glm/gtc/quaternion.hpp> 
 #include <GL/glew.h>
 
-Model::Model() : Component("Model")
-{
-}
 
-Model::Model(const std::string & fileName) : Model()
+namespace
 {
-	// Create model importer
-	Assimp::Importer loadModel;
-	// Read in the model data 
-	const aiScene *model = loadModel.ReadFile(fileName, aiProcess_Triangulate
-		| aiProcess_FlipUVs
-		| aiProcess_JoinIdenticalVertices
-	);
-	// Check that data has been read in correctly
-	if (!model)
+	inline glm::mat4 aiMatrix4x4ToGlm(const aiMatrix4x4 &aiMat)
 	{
-		BarnabusGameEngine::Get().AddMessageLog(StringLog("Data incorrectly read in at " + fileName, StringLog::Priority::Critical));
-		BarnabusGameEngine::Get().AddMessageLog(StringLog(loadModel.GetErrorString(), StringLog::Priority::Critical));
-		throw std::runtime_error("Error reading in model file");
+		return {
+		aiMat.a1, aiMat.b1, aiMat.c1, aiMat.d1,
+		aiMat.a2, aiMat.b2, aiMat.c2, aiMat.d2,
+		aiMat.a3, aiMat.b3, aiMat.c3, aiMat.d3,
+		aiMat.a4, aiMat.b4, aiMat.c4, aiMat.d4
+		};
 	}
-	// Vectors to store model data.
 
-	unsigned int vertex_begin = 0;
-	// Loop throw each sub-mesh.
-	for (unsigned int i = 0; i < model->mNumMeshes; i++)
+
+	void LoadMesh(MeshData& mesh, aiMesh* modelMesh, unsigned int& vertexBegin)
 	{
-		MeshData mesh;
 		mesh.SetType(GL_TRIANGLES);
-
-		mesh.ResizeBoneData(model->mMeshes[i]->mNumVertices);
-
-		// Get the sub-mesh.
-		aiMesh *modelMesh = model->mMeshes[i];
+		mesh.ResizeBoneData(modelMesh->mNumVertices);
 		// get the vertex positions.
-
 		for (unsigned int j = 0; j < modelMesh->mNumVertices; j++)
 		{
 			Vertex vert;
@@ -53,7 +37,7 @@ Model::Model(const std::string & fileName) : Model()
 
 			aiVector3D norm = modelMesh->mNormals[j];
 			vert.normal = glm::vec3(norm.x, norm.y, norm.z);
-			
+
 			if (modelMesh->HasVertexColors(0))
 			{
 				aiColor4D colour = modelMesh->mColors[0][j];
@@ -63,7 +47,7 @@ Model::Model(const std::string & fileName) : Model()
 			{
 				vert.color = glm::vec4(0.7, 0.7, 0.7, 1.0);
 			}
-			
+
 			auto texCoord = modelMesh->mTextureCoords[0][j];
 			vert.texCoords = glm::vec2(texCoord.x, texCoord.y);
 
@@ -78,11 +62,63 @@ Model::Model(const std::string & fileName) : Model()
 				aiFace modelFace = modelMesh->mFaces[j];
 				for (GLuint l = 0; l < 3; l++)
 				{
-					mesh.InsertIndex(vertex_begin + modelFace.mIndices[l]);
+					mesh.InsertIndex(vertexBegin + modelFace.mIndices[l]);
 				}
 			}
 		}
-		vertex_begin += modelMesh->mNumVertices;
+		vertexBegin += modelMesh->mNumVertices;
+	
+	}
+
+	void ParseNodes(MeshNode*& meshRootNode, aiNode* rootNode, MeshNode* parent, const aiScene* scene)
+	{
+		meshRootNode = new MeshNode;
+		meshRootNode->transformation = aiMatrix4x4ToGlm(rootNode->mTransformation);
+		meshRootNode->name = rootNode->mName.C_Str();
+		meshRootNode->parent = parent;
+		meshRootNode->children.resize(rootNode->mNumChildren);
+		
+		for (unsigned int i = 0; i < rootNode->mNumMeshes; i++)
+		{
+			auto index = rootNode->mMeshes[i];
+			aiMesh* mesh = scene->mMeshes[index];
+		}
+
+		for (unsigned int i = 0; i < rootNode->mNumChildren; i++)
+		{
+			ParseNodes(meshRootNode->children[i], rootNode->mChildren[i], meshRootNode, scene);
+		}
+	}
+
+} // namespace
+
+Model::Model() : Component("Model")
+{
+}
+
+Model::Model(const std::string& fileName) : Model()
+{
+	// Create model importer
+	Assimp::Importer loadModel;
+	// Read in the model data 
+	const aiScene* model = loadModel.ReadFile(fileName, aiProcess_Triangulate
+		| aiProcess_FlipUVs
+		| aiProcess_JoinIdenticalVertices
+	);
+	// Check that data has been read in correctly
+	if (!model)
+	{
+		BarnabusGameEngine::Get().AddMessageLog(StringLog("Data incorrectly read in at " + fileName, StringLog::Priority::Critical));
+		BarnabusGameEngine::Get().AddMessageLog(StringLog(loadModel.GetErrorString(), StringLog::Priority::Critical));
+		throw std::runtime_error("Error reading in model file");
+	}
+	// Vectors to store model data.
+	unsigned int vertexBegin = 0;
+	// Loop throw each sub-mesh.
+	for (unsigned int i = 0; i < model->mNumMeshes; i++)
+	{
+		MeshData mesh;
+		LoadMesh(mesh, model->mMeshes[i], vertexBegin);
 
 		// todo If the mesh has a texture associated with the mesh, use it here.
 		Texture* texture = new Texture;
@@ -90,6 +126,8 @@ Model::Model(const std::string & fileName) : Model()
 		mesh.SetTexture(texture);
 		data.push_back(mesh);
 	}
+
+	ParseNodes(rootMeshNode, model->mRootNode, NULL, model);
 }
 
 void Model::SetShader(GLShader& shader)

@@ -53,4 +53,19 @@ namespace EntityFactory{
 		terrain->SetPosition(glm::vec3(-50, 0, -50));
 		return terrain;
 	}
+
+	static std::unique_ptr<Entity> CreateBuilding(glm::vec3 position, GLShader& shader)
+	{
+		auto building = std::make_unique<Entity>();
+
+		std::string fileName("res\\Models\\Building.fbx");
+		auto modelComponent = std::make_unique<Model>(fileName);
+		modelComponent->SetShader(shader);
+		modelComponent->InitModel();
+		building->AddComponent(std::move(modelComponent));
+
+		building->SetPosition(position);
+
+		return building;
+	}
 }

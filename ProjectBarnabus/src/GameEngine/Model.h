@@ -4,6 +4,15 @@
 
 #include "GLShader.h"
 
+class MeshNode
+{
+public:
+	std::string name;
+	std::vector<MeshNode*> children;
+	glm::mat4 transformation;
+	MeshNode* parent;
+};
+
 class Model : public Component
 {
 public:
@@ -18,4 +27,7 @@ public:
 	void Render() override;
 
 	std::vector<MeshData> data;
+
+private:
+	MeshNode* rootMeshNode;
 };
