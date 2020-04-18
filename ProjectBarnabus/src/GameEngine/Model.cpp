@@ -22,7 +22,6 @@ namespace
 		};
 	}
 
-
 	void LoadMesh(MeshData& mesh, aiMesh* modelMesh, unsigned int& vertexBegin)
 	{
 		mesh.SetType(GL_TRIANGLES);
@@ -184,59 +183,30 @@ Model::Model(const std::string& fileName) : Model()
 		BarnabusGameEngine::Get().AddMessageLog(StringLog(loadModel.GetErrorString(), StringLog::Priority::Critical));
 		throw std::runtime_error("Error reading in model file");
 	}
-	// Vectors to store model data.
-	unsigned int vertexBegin = 0;
-	// Loop throw each sub-mesh.
-	for (unsigned int i = 0; i < model->mNumMeshes; i++)
-	{
-		MeshData mesh;
-		LoadMesh(mesh, model->mMeshes[i], vertexBegin);
-		data.push_back(mesh);
-	}
 
 	ParseNodes(rootMeshNode, model->mRootNode, NULL, model);
 }
 
 void Model::SetShader(GLShader& shader)
 {
-	for (int i = 0; i < data.size(); i++)
-	{
-		data[i].SetShader(&shader);
-	}
-
 	if(rootMeshNode)
 		SetNodeShader(rootMeshNode, shader);
 }
 
 void Model::SetMaterial(Material mat)
 {
-	for (int i = 0; i < data.size(); i++)
-	{
-		data[i].SetMaterial(mat);
-	}
-
 	if (rootMeshNode)
 		SetNodeMaterial(rootMeshNode, mat);
 }
 
 void Model::InitModel()
 {
-	for (int i = 0; i < data.size(); i++)
-	{
-		data[i].InitialiseMesh();
-	}
-
 	if (rootMeshNode)
 		InitModelNodes(rootMeshNode);
 }
 
 void Model::Update(float deltaTime)
 {
-	for (int i = 0; i < data.size(); i++)
-	{
-		data[i].SetTransform(GetTransform());
-	}
-
 	if (rootMeshNode)
 		UpdateNodes(rootMeshNode, deltaTime, GetTransform());
 }

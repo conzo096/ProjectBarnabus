@@ -48,6 +48,37 @@ namespace
 			LoadNodeTree(myRootNode->children[i], rootNode->mChildren[i], myRootNode);
 		}
 	}
+
+	void LoadBoneData(MeshNode*& meshRootNode, aiNode* rootNode, const aiScene* scene, std::vector<Bone>& bones, std::map<std::string, int>& boneMapping)
+	{
+		for (unsigned int i = 0; i < rootNode->mNumMeshes; i++)
+		{
+			auto mesh = scene->mMeshes[rootNode->mMeshes[i]];
+			for (unsigned int j = 0; j < mesh->mNumBones; j++)
+			{
+				auto aiBone = mesh->mBones[j];
+				Bone bone;
+				bone.name = aiBone->mName.C_Str();
+				bone.offSet = aiMatrix4x4ToGlm(aiBone->mOffsetMatrix);
+				bone.inverseOffSet = glm::inverse(aiMatrix4x4ToGlm(aiBone->mOffsetMatrix));
+
+				bones.push_back(bone);
+				boneMapping[bone.name] = j;
+
+				for (unsigned int k = 0; k < aiBone->mNumWeights; k++)
+				{
+					unsigned int vertexId = aiBone->mWeights[k].mVertexId;
+					float weight = aiBone->mWeights[k].mWeight;
+					meshRootNode->data[i].InsertBoneDataAt(vertexId, j, weight);
+				}
+			}
+		}
+
+		for (int i = 0; i < meshRootNode->children.size(); i++)
+		{
+			LoadBoneData(meshRootNode->children[i], rootNode->mChildren[i], scene, bones, boneMapping);
+		}
+	}
 }
 
 AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
@@ -68,28 +99,7 @@ AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
 
 	globalInverseTransform = glm::inverse(aiMatrix4x4ToGlm(model->mRootNode->mTransformation));
 
-	for (unsigned int i = 0; i < model->mNumMeshes; i++)
-	{
-		auto mesh = model->mMeshes[i];
-		for (unsigned int j = 0; j < mesh->mNumBones; j++)
-		{
-			auto aiBone = mesh->mBones[j];
- 			Bone bone;
-			bone.name = aiBone->mName.C_Str();
-			bone.offSet = aiMatrix4x4ToGlm(aiBone->mOffsetMatrix);
-			bone.inverseOffSet = glm::inverse(aiMatrix4x4ToGlm(aiBone->mOffsetMatrix));
-
-			bones.push_back(bone);
-			boneMapping[bone.name] = j;
-
-			for (unsigned int k = 0; k < aiBone->mNumWeights; k++)
-			{
-				unsigned int vertexId = aiBone->mWeights[k].mVertexId;
-				float weight = aiBone->mWeights[k].mWeight;
-				data[i].InsertBoneDataAt(vertexId,j, weight);
-			}
-		}	
-	}
+	LoadBoneData(rootMeshNode, model->mRootNode, model, bones, boneMapping);
 
 	for (unsigned int i = 0; i < model->mNumAnimations; i++)
 	{

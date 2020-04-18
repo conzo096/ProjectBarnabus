@@ -27,8 +27,6 @@ public:
 	void Update(float deltaTime) override;
 	void Render() override;
 
-	std::vector<MeshData> data;
-
 protected:
 	MeshNode* rootMeshNode;
 };
