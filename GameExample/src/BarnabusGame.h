@@ -13,7 +13,6 @@ public:
 	bool Render(float deltaTime) override;
 
 private:
-	Entity camera;
 	MainEnvironment mainScene;
 	GameUi ui;
 };

@@ -5,7 +5,7 @@ Movement::Movement() : Component("Movement")
 {
 }
 
-Movement::Movement(Terrain* const entityTerrain) : Component("Movement"), terrain(entityTerrain)
+Movement::Movement(Terrain* const entityTerrain, Camera* const entityCamera) : Component("Movement"), terrain(entityTerrain), camera(entityCamera)
 {
 
 }

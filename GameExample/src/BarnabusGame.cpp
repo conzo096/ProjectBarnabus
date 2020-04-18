@@ -12,8 +12,6 @@ BarnabusGame::BarnabusGame() : mainScene("main")
 bool BarnabusGame::LoadGameContent()
 {
 	mainScene.LoadGameContent();
-	auto cameraComponent = std::make_unique<ArcBallCamera>();
-	camera.AddComponent(std::move(cameraComponent));
 
 	ui.InitGameUi();
 	ui.InitaliseAllQuads();
@@ -22,9 +20,6 @@ bool BarnabusGame::LoadGameContent()
 
 bool BarnabusGame::Update(float deltaTime)
 {
-	camera.Update(deltaTime);
-	camera.GetComponent<ArcBallCamera>().SetTarget(mainScene.GetEntity("player")->GetPosition() + glm::vec3(0,5,0));
-
 	mainScene.Update(deltaTime);
 	ui.SetExampleText(glm::to_string(mainScene.GetEntity("player")->GetPosition()));
 
@@ -43,8 +38,6 @@ bool BarnabusGame::Update(float deltaTime)
 
 bool BarnabusGame::Render(float deltaTime)
 {
-	Renderer::Get().SetCameraViewProjection(camera.GetComponent<ArcBallCamera>().GetProjection() * camera.GetComponent<ArcBallCamera>().GetView());
-
 	mainScene.Render(deltaTime);
 	ui.Draw();
 

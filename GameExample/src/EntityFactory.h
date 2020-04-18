@@ -6,15 +6,16 @@
 #include "GameEngine/Renderer.h"
 #include "GameEngine/Terrain.h"
 #include "GameEngine/Movement.h"
+#include "GameEngine/ArcBallCamera.h"
 #include <memory>
 
 namespace EntityFactory{
 
-	static std::unique_ptr<Entity> CreatePlayer(glm::vec3 position, GLShader& shader, Terrain* terrain)
+	static std::unique_ptr<Entity> CreatePlayer(glm::vec3 position, GLShader& shader, Terrain* terrain, Camera* camera)
 	{
 		auto player = std::make_unique<Entity>();
 
-		player->AddComponent(std::make_unique<Movement>(terrain));
+		player->AddComponent(std::make_unique<Movement>(terrain, camera));
 		std::string fileName("res\\Models\\AnimatedModels\\Player.fbx");
 		auto animatedModelComponent = std::make_unique<AnimatedModel>(fileName);
 		animatedModelComponent->SetShader(shader);
@@ -67,5 +68,15 @@ namespace EntityFactory{
 		building->SetPosition(position);
 
 		return building;
+	}
+
+	static std::unique_ptr<Entity> CreateCamera()
+	{
+		auto camera = std::make_unique<Entity>();
+
+		auto cameraComponent = std::make_unique<ArcBallCamera>();
+		camera->AddComponent(std::move(cameraComponent));
+
+		return camera;
 	}
 }
