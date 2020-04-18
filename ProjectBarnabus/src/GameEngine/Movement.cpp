@@ -22,7 +22,7 @@ void Movement::SetTerrain(Terrain* const entityTerrain)
 void Movement::Update(float deltaTime)
 {
 	glm::vec3 dir = glm::normalize(camera->GetTarget() - camera->GetPosition());
-	auto speed = deltaTime * 90
+	auto speed = deltaTime * 90;
 	// w is foward * amount
 	// s is -forward * amount
 	// a is left of forward so foward * ?
