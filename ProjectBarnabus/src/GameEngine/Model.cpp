@@ -189,30 +189,30 @@ Model::Model(const std::string& fileName) : Model()
 
 void Model::SetShader(GLShader& shader)
 {
-	if(rootMeshNode)
-		SetNodeShader(rootMeshNode, shader);
+	assert(rootMeshNode);
+	SetNodeShader(rootMeshNode, shader);
 }
 
 void Model::SetMaterial(Material mat)
 {
-	if (rootMeshNode)
-		SetNodeMaterial(rootMeshNode, mat);
+	assert(rootMeshNode);
+	SetNodeMaterial(rootMeshNode, mat);
 }
 
 void Model::InitModel()
 {
-	if (rootMeshNode)
-		InitModelNodes(rootMeshNode);
+	assert(rootMeshNode);
+	InitModelNodes(rootMeshNode);
 }
 
 void Model::Update(float deltaTime)
 {
-	if (rootMeshNode)
-		UpdateNodes(rootMeshNode, deltaTime, GetTransform());
+	assert(rootMeshNode);
+	UpdateNodes(rootMeshNode, deltaTime, GetTransform());
 }
 
 void Model::Render()
 {
-	if (rootMeshNode)
-		RenderNodes(rootMeshNode, GetParent()->GetEnvironmentName());
+	assert(rootMeshNode);
+	RenderNodes(rootMeshNode, GetParent()->GetEnvironmentName());
 }
