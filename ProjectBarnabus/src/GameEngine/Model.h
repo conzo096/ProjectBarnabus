@@ -4,13 +4,12 @@
 
 #include "GLShader.h"
 
-class MeshNode
+struct MeshNode
 {
-public:
 	std::string name;
 	std::vector<MeshNode*> children;
 	std::vector<MeshData> data;
-	glm::mat4 transformation;
+	glm::mat4 transformation = glm::mat4(1.0);
 	MeshNode* parent;
 };
 

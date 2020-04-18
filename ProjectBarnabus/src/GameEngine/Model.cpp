@@ -140,12 +140,12 @@ namespace
 	{
 		for (auto& mesh : meshRootNode->data)
 		{
-			mesh.SetTransform(parentTransform);
+			mesh.SetTransform(parentTransform * meshRootNode->transformation);
 		}
 
 		for (auto& child : meshRootNode->children)
 		{
-			UpdateNodes(child, deltaTime, parentTransform);
+			UpdateNodes(child, deltaTime, parentTransform * meshRootNode->transformation);
 		}
 	}
 
