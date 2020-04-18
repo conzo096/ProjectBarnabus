@@ -66,6 +66,11 @@ namespace
 				}
 			}
 		}
+
+		// todo If the mesh has a texture associated with the mesh, use it here.
+		Texture* texture = new Texture;
+		texture->LoadTexture("res\\Textures\\test.png");
+		mesh.SetTexture(texture);
 		vertexBegin += modelMesh->mNumVertices;
 	
 	}
@@ -77,11 +82,14 @@ namespace
 		meshRootNode->name = rootNode->mName.C_Str();
 		meshRootNode->parent = parent;
 		meshRootNode->children.resize(rootNode->mNumChildren);
-		
+		meshRootNode->data.resize(rootNode->mNumMeshes);
+
+		unsigned int vertexBegin = 0;
 		for (unsigned int i = 0; i < rootNode->mNumMeshes; i++)
 		{
 			auto index = rootNode->mMeshes[i];
 			aiMesh* mesh = scene->mMeshes[index];
+			LoadMesh(meshRootNode->data[i], mesh, vertexBegin);
 		}
 
 		for (unsigned int i = 0; i < rootNode->mNumChildren; i++)
@@ -90,6 +98,70 @@ namespace
 		}
 	}
 
+	void SetNodeShader(MeshNode*& meshRootNode, GLShader& shader)
+	{
+		for (auto& mesh : meshRootNode->data) 
+		{
+			mesh.SetShader(&shader);
+		}
+
+		for (auto& child : meshRootNode->children)
+		{
+			SetNodeShader(child, shader);
+		}
+	}
+
+	void SetNodeMaterial(MeshNode*& meshRootNode, Material material)
+	{
+		for (auto& mesh : meshRootNode->data)
+		{
+			mesh.SetMaterial(material);
+		}
+
+		for (auto& child : meshRootNode->children)
+		{
+			SetNodeMaterial(child, material);
+		}
+	}
+
+	void InitModelNodes(MeshNode*& meshRootNode)
+	{
+		for (auto& mesh : meshRootNode->data)
+		{
+			mesh.InitialiseMesh();
+		}
+
+		for (auto& child : meshRootNode->children)
+		{
+			InitModelNodes(child);
+		}
+	}
+
+	void UpdateNodes(MeshNode*& meshRootNode, float deltaTime, glm::mat4 parentTransform)
+	{
+		for (auto& mesh : meshRootNode->data)
+		{
+			mesh.SetTransform(parentTransform * mesh.GetTransform());
+		}
+
+		for (auto& child : meshRootNode->children)
+		{
+			UpdateNodes(child, deltaTime, meshRootNode->transformation);
+		}
+	}
+
+	void RenderNodes(MeshNode*& meshRootNode, std::string environmentName)
+	{
+		for (auto& mesh : meshRootNode->data)
+		{
+			Renderer::Get().AddMesh(environmentName, mesh);
+		}
+
+		for (auto& child : meshRootNode->children)
+		{
+			RenderNodes(child, environmentName);
+		}
+	}
 } // namespace
 
 Model::Model() : Component("Model")
@@ -119,11 +191,6 @@ Model::Model(const std::string& fileName) : Model()
 	{
 		MeshData mesh;
 		LoadMesh(mesh, model->mMeshes[i], vertexBegin);
-
-		// todo If the mesh has a texture associated with the mesh, use it here.
-		Texture* texture = new Texture;
-		texture->LoadTexture("res\\Textures\\test.png");
-		mesh.SetTexture(texture);
 		data.push_back(mesh);
 	}
 
@@ -136,6 +203,9 @@ void Model::SetShader(GLShader& shader)
 	{
 		data[i].SetShader(&shader);
 	}
+
+	if(rootMeshNode)
+		SetNodeShader(rootMeshNode, shader);
 }
 
 void Model::SetMaterial(Material mat)
@@ -144,6 +214,9 @@ void Model::SetMaterial(Material mat)
 	{
 		data[i].SetMaterial(mat);
 	}
+
+	if (rootMeshNode)
+		SetNodeMaterial(rootMeshNode, mat);
 }
 
 void Model::InitModel()
@@ -152,6 +225,9 @@ void Model::InitModel()
 	{
 		data[i].InitialiseMesh();
 	}
+
+	if (rootMeshNode)
+		InitModelNodes(rootMeshNode);
 }
 
 void Model::Update(float deltaTime)
@@ -160,6 +236,9 @@ void Model::Update(float deltaTime)
 	{
 		data[i].SetTransform(GetTransform());
 	}
+
+	if (rootMeshNode)
+		UpdateNodes(rootMeshNode, deltaTime, GetTransform());
 }
 
 void Model::Render()
@@ -168,4 +247,6 @@ void Model::Render()
 	{
 		Renderer::Get().AddMesh(GetParent()->GetEnvironmentName(), data[i]);
 	}
+	if (rootMeshNode)
+		RenderNodes(rootMeshNode, GetParent()->GetEnvironmentName());
 }

@@ -9,6 +9,7 @@ class MeshNode
 public:
 	std::string name;
 	std::vector<MeshNode*> children;
+	std::vector<MeshData> data;
 	glm::mat4 transformation;
 	MeshNode* parent;
 };
