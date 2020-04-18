@@ -24,12 +24,6 @@ void Movement::Update(float deltaTime)
 	glm::vec3 dir = glm::normalize(camera->GetTarget() - camera->GetPosition());
 	auto speed = deltaTime * 6;
 
-	// w is foward * amount
-	// s is -forward * amount
-	// a is left of forward so foward * ?
-	// d is right of forward so opposite of above
-
-
 	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_W) == GLFW_PRESS)
 	{
 		GetParent()->Move(dir*speed);
