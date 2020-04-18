@@ -152,7 +152,10 @@ void Terrain::LoadTerrainFromHeightMap(const std::string heightMapPath)
 	}
 
 	mesh.SetType(GL_TRIANGLES);
-	data.push_back(mesh);
+
+	rootMeshNode = new MeshNode;
+	rootMeshNode->name = "Terrain";
+	rootMeshNode->data.push_back(mesh);
 
 	InitModel();
 	BarnabusGameEngine::Get().AddMessageLog(StringLog("Terrain created from: " + heightMapPath, StringLog::Priority::Low));

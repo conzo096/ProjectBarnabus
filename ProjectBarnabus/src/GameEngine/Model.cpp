@@ -141,12 +141,12 @@ namespace
 	{
 		for (auto& mesh : meshRootNode->data)
 		{
-			mesh.SetTransform(parentTransform * mesh.GetTransform());
+			mesh.SetTransform(parentTransform);
 		}
 
 		for (auto& child : meshRootNode->children)
 		{
-			UpdateNodes(child, deltaTime, meshRootNode->transformation);
+			UpdateNodes(child, deltaTime, parentTransform);
 		}
 	}
 
@@ -243,10 +243,6 @@ void Model::Update(float deltaTime)
 
 void Model::Render()
 {
-	for (int i = 0; i < data.size(); i++)
-	{
-		Renderer::Get().AddMesh(GetParent()->GetEnvironmentName(), data[i]);
-	}
 	if (rootMeshNode)
 		RenderNodes(rootMeshNode, GetParent()->GetEnvironmentName());
 }

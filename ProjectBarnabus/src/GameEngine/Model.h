@@ -29,6 +29,6 @@ public:
 
 	std::vector<MeshData> data;
 
-private:
+protected:
 	MeshNode* rootMeshNode;
 };

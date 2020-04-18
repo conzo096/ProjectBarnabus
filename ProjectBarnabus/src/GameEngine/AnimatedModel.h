@@ -29,6 +29,9 @@ private:
 	int FindPosition(float animationTime, const NodeAnim* nodeAnim);
 
 private:
+	void UpdateNodeMeshes(MeshNode*& rootMeshNode, float deltaTime);
+
+private:
 	std::vector<Bone> bones;
 	std::map<std::string, int> boneMapping;
 
