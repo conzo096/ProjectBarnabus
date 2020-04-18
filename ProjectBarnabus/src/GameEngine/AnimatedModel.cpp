@@ -168,6 +168,11 @@ void AnimatedModel::SetAnimation(std::string animationName)
 	animator.SetCurrentAnimation(player->second);
 }
 
+Animator& AnimatedModel::GetAnimator()
+{
+	return animator;
+}
+
 void AnimatedModel::ReadNodeHeirarchy(float animationTime, const Node* node, const glm::mat4 & parentTransform)
 {
 	std::string nodeName(node->name);

@@ -15,6 +15,7 @@ public:
 	void Update(float deltaTime) override;
 
 	void SetAnimation(std::string animationName);
+	Animator& GetAnimator();
 private:
 
 	void ReadNodeHeirarchy(float animationTime, const Node* pNode, const glm::mat4& parentTransform);
