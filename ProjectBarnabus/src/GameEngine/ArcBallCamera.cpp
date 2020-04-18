@@ -39,6 +39,8 @@ void ArcBallCamera::Update(float deltaTime)
 	// Calculate the view matrix
 	view = glm::lookAt(GetPosition(), target, up);
 
+	forward = glm::normalize(target);
+
 	glfwGetCursorPos(BarnabusGameEngine::Get().GetWindow(), &cursorX, &cursorY);
 }
 
