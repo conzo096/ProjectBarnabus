@@ -65,13 +65,16 @@ namespace EntityFactory{
 		auto modelComponent = std::make_unique<Model>(fileName);
 		modelComponent->SetShader(shader);
 		modelComponent->InitModel();
-		building->AddComponent(std::move(modelComponent));
+		
+		glm::mat4 transform(1.0);
+		auto mesh = modelComponent->GetMesh(transform);
 
-		auto boundingBoxComponent = std::make_unique<BoundingVolumes::BoundingBox>(glm::vec3(0),glm::vec3(12));
+		auto boundingBoxComponent = std::make_unique<BoundingVolumes::BoundingBox>(mesh.vertices,transform);
 		boundingBoxComponent->SetShader(*BarnabusGameEngine::Get().GetShader("red"));
 		boundingBoxComponent->InitMesh();
+				
+		building->AddComponent(std::move(modelComponent));
 		building->AddComponent(std::move(boundingBoxComponent));
-		
 		
 		building->SetPosition(position);
 

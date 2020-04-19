@@ -1,6 +1,7 @@
 #pragma once
 #include "Entity.h"
 #include "MeshData.h"
+#include "Model.h"
 #include <limits>
 namespace BoundingVolumes
 {
@@ -8,7 +9,7 @@ class BoundingBox : public Component
 {
 public:
 	BoundingBox(glm::vec3 minCoords, glm::vec3 maxCoords);
-	BoundingBox(std::vector<Vertex>& vertices);
+	BoundingBox(const std::vector<Vertex>& vertices, glm::mat4 trans);
 public:
 	void SetShader(GLShader& shader);
 	void InitMesh();

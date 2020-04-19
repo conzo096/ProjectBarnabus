@@ -12,7 +12,7 @@ public:
 	void SetShader(GLShader& shader);
 	void SetMaterial(Material mat);
 	void InitModel();
-	const MeshData& GetMesh();
+	const MeshData& GetMesh(glm::mat4& transform);
 
 public:
 	void Update(float deltaTime) override;
