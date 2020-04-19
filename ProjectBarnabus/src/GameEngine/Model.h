@@ -1,17 +1,7 @@
 #pragma once
 #include "Entity.h"
-#include "MeshData.h"
-
+#include "Node.h"
 #include "GLShader.h"
-
-struct MeshNode
-{
-	std::string name;
-	std::vector<MeshNode*> children;
-	std::vector<MeshData> data;
-	glm::mat4 transformation = glm::mat4(1.0);
-	MeshNode* parent;
-};
 
 class Model : public Component
 {
@@ -27,5 +17,5 @@ public:
 	void Render() override;
 
 protected:
-	MeshNode* rootMeshNode;
+	Node* rootNode;
 };

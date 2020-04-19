@@ -1,15 +1,15 @@
 #pragma once
+#include "MeshData.h"
 #include <iostream>
 #include <vector>
 #include <glm/glm.hpp>
 
-class Node
+struct Node
 {
-public:
-
 	std::string name;
 	std::vector<Node*> children;
-	glm::mat4 transformation;
+	std::vector<MeshData> data;
+	glm::mat4 transformation = glm::mat4(1.0);
 	Node* parent;
 
 };

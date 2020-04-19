@@ -74,9 +74,9 @@ namespace
 	
 	}
 
-	void ParseNodes(MeshNode*& meshRootNode, aiNode* rootNode, MeshNode* parent, const aiScene* scene)
+	void ParseNodes(Node*& meshRootNode, aiNode* rootNode, Node* parent, const aiScene* scene)
 	{
-		meshRootNode = new MeshNode;
+		meshRootNode = new Node;
 		meshRootNode->transformation = aiMatrix4x4ToGlm(rootNode->mTransformation);
 		meshRootNode->name = rootNode->mName.C_Str();
 		meshRootNode->parent = parent;
@@ -97,7 +97,7 @@ namespace
 		}
 	}
 
-	void SetNodeShader(MeshNode*& meshRootNode, GLShader& shader)
+	void SetNodeShader(Node*& meshRootNode, GLShader& shader)
 	{
 		for (auto& mesh : meshRootNode->data) 
 		{
@@ -110,7 +110,7 @@ namespace
 		}
 	}
 
-	void SetNodeMaterial(MeshNode*& meshRootNode, Material material)
+	void SetNodeMaterial(Node*& meshRootNode, Material material)
 	{
 		for (auto& mesh : meshRootNode->data)
 		{
@@ -123,7 +123,7 @@ namespace
 		}
 	}
 
-	void InitModelNodes(MeshNode*& meshRootNode)
+	void InitModelNodes(Node*& meshRootNode)
 	{
 		for (auto& mesh : meshRootNode->data)
 		{
@@ -136,7 +136,7 @@ namespace
 		}
 	}
 
-	void UpdateNodes(MeshNode*& meshRootNode, float deltaTime, glm::mat4 parentTransform)
+	void UpdateNodes(Node*& meshRootNode, float deltaTime, glm::mat4 parentTransform)
 	{
 		for (auto& mesh : meshRootNode->data)
 		{
@@ -149,7 +149,7 @@ namespace
 		}
 	}
 
-	void RenderNodes(MeshNode*& meshRootNode, std::string environmentName)
+	void RenderNodes(Node*& meshRootNode, std::string environmentName)
 	{
 		for (auto& mesh : meshRootNode->data)
 		{
@@ -184,35 +184,35 @@ Model::Model(const std::string& fileName) : Model()
 		throw std::runtime_error("Error reading in model file");
 	}
 
-	ParseNodes(rootMeshNode, model->mRootNode, NULL, model);
+	ParseNodes(rootNode, model->mRootNode, NULL, model);
 }
 
 void Model::SetShader(GLShader& shader)
 {
-	assert(rootMeshNode);
-	SetNodeShader(rootMeshNode, shader);
+	assert(rootNode);
+	SetNodeShader(rootNode, shader);
 }
 
 void Model::SetMaterial(Material mat)
 {
-	assert(rootMeshNode);
-	SetNodeMaterial(rootMeshNode, mat);
+	assert(rootNode);
+	SetNodeMaterial(rootNode, mat);
 }
 
 void Model::InitModel()
 {
-	assert(rootMeshNode);
-	InitModelNodes(rootMeshNode);
+	assert(rootNode);
+	InitModelNodes(rootNode);
 }
 
 void Model::Update(float deltaTime)
 {
-	assert(rootMeshNode);
-	UpdateNodes(rootMeshNode, deltaTime, GetTransform());
+	assert(rootNode);
+	UpdateNodes(rootNode, deltaTime, GetTransform());
 }
 
 void Model::Render()
 {
-	assert(rootMeshNode);
-	RenderNodes(rootMeshNode, GetParent()->GetEnvironmentName());
+	assert(rootNode);
+	RenderNodes(rootNode, GetParent()->GetEnvironmentName());
 }

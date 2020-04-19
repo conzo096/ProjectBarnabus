@@ -35,21 +35,7 @@ namespace
 		return glm::quat(from.w, from.x, from.y, from.z);
 	}
 
-	void LoadNodeTree(Node*& myRootNode, aiNode* rootNode, Node* parent)
-	{
-		myRootNode = new Node;
-		myRootNode->transformation = aiMatrix4x4ToGlm(rootNode->mTransformation);
-		myRootNode->name = rootNode->mName.C_Str();
-		myRootNode->parent = parent;
-		myRootNode->children.resize(rootNode->mNumChildren);
-
-		for (unsigned int i = 0; i < rootNode->mNumChildren; i++)
-		{
-			LoadNodeTree(myRootNode->children[i], rootNode->mChildren[i], myRootNode);
-		}
-	}
-
-	void LoadBoneData(MeshNode*& meshRootNode, aiNode* rootNode, const aiScene* scene, std::vector<Bone>& bones, std::map<std::string, int>& boneMapping)
+	void LoadBoneData(Node*& meshRootNode, aiNode* rootNode, const aiScene* scene, std::vector<Bone>& bones, std::map<std::string, int>& boneMapping)
 	{
 		for (unsigned int i = 0; i < rootNode->mNumMeshes; i++)
 		{
@@ -99,7 +85,7 @@ AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
 
 	globalInverseTransform = glm::inverse(aiMatrix4x4ToGlm(model->mRootNode->mTransformation));
 
-	LoadBoneData(rootMeshNode, model->mRootNode, model, bones, boneMapping);
+	LoadBoneData(rootNode, model->mRootNode, model, bones, boneMapping);
 
 	for (unsigned int i = 0; i < model->mNumAnimations; i++)
 	{
@@ -142,8 +128,6 @@ AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
 		}
 		animations.insert(std::pair<std::string, std::shared_ptr<Animation>>(newAnimation->GetName(),newAnimation));
 	}
-
-	LoadNodeTree(rootNode, model->mRootNode, NULL);
 }
 
 void AnimatedModel::Update(float deltaTime)
@@ -152,7 +136,7 @@ void AnimatedModel::Update(float deltaTime)
 
 	animator.Update(deltaTime);
 
-	UpdateNodeMeshes(rootMeshNode, deltaTime);
+	UpdateNodeMeshes(rootNode, deltaTime);
 }
 
 void AnimatedModel::SetAnimation(std::string animationName)
@@ -325,9 +309,9 @@ int AnimatedModel::FindPosition(float animationTime, const NodeAnim* nodeAnim)
 	return 0;
 }
 
-void AnimatedModel::UpdateNodeMeshes(MeshNode*& rootMeshNode, float deltaTime)
+void AnimatedModel::UpdateNodeMeshes(Node*& node, float deltaTime)
 {
-	for (auto& mesh : rootMeshNode->data)
+	for (auto& mesh : node->data)
 	{
 		mesh.transforms.clear();
 		mesh.transforms.resize(bones.size());
@@ -346,16 +330,14 @@ void AnimatedModel::UpdateNodeMeshes(MeshNode*& rootMeshNode, float deltaTime)
 			}
 		}
 	}
-	
-	// This behaviour is broken when using the one mesh structure 
-	// as ReadNodeHeriacrchy wil start with cube into of RootNode
+
 	float ticksPerSecond = animator.GetCurrentAnimation()->GetTicksPerSecond() != 0 ? animator.GetCurrentAnimation()->GetTicksPerSecond() : 20.0f;
 	float timeInTicks = animator.GetAnimationTime() * ticksPerSecond;
 	float animationTime = fmod(timeInTicks, animator.GetCurrentAnimation()->GetAnimationLength());
 
-	ReadNodeHeirarchy(animationTime, rootNode, glm::mat4(1));
+	ReadNodeHeirarchy(animationTime, node, glm::mat4(1));
 
-	for (auto& child : rootMeshNode->children)
+	for (auto& child : node->children)
 	{
 		UpdateNodeMeshes(child, deltaTime);
 	}

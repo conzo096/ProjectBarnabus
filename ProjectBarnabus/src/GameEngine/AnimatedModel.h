@@ -9,13 +9,12 @@
 class AnimatedModel : public Model
 {
 public:
-
 	AnimatedModel(const std::string& fileName);
-
-	void Update(float deltaTime) override;
 
 	void SetAnimation(std::string animationName);
 	Animator& GetAnimator();
+public:
+	void Update(float deltaTime) override;
 private:
 
 	void ReadNodeHeirarchy(float animationTime, const Node* pNode, const glm::mat4& parentTransform);
@@ -30,7 +29,7 @@ private:
 	int FindPosition(float animationTime, const NodeAnim* nodeAnim);
 
 private:
-	void UpdateNodeMeshes(MeshNode*& rootMeshNode, float deltaTime);
+	void UpdateNodeMeshes(Node*& rootNode, float deltaTime);
 private:
 	std::vector<Bone> bones;
 	std::map<std::string, int> boneMapping;
@@ -39,5 +38,4 @@ private:
 	std::map<std::string, std::shared_ptr<Animation>> animations;
 
 	Animator animator;
-	Node* rootNode;
 };
