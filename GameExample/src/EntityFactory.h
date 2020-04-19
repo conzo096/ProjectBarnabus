@@ -7,6 +7,7 @@
 #include "GameEngine/Terrain.h"
 #include "GameEngine/Movement.h"
 #include "GameEngine/ArcBallCamera.h"
+#include "GameEngine/BoundingBox.h"
 #include <memory>
 
 namespace EntityFactory{
@@ -22,6 +23,7 @@ namespace EntityFactory{
 		animatedModelComponent->InitModel();
 		animatedModelComponent->SetAnimation("walk");
 		player->AddComponent(std::move(animatedModelComponent));
+		
 		player->SetPosition(position);
 
 		return player;
@@ -65,6 +67,12 @@ namespace EntityFactory{
 		modelComponent->InitModel();
 		building->AddComponent(std::move(modelComponent));
 
+		auto boundingBoxComponent = std::make_unique<BoundingVolumes::BoundingBox>(glm::vec3(0),glm::vec3(12));
+		boundingBoxComponent->SetShader(*BarnabusGameEngine::Get().GetShader("red"));
+		boundingBoxComponent->InitMesh();
+		building->AddComponent(std::move(boundingBoxComponent));
+		
+		
 		building->SetPosition(position);
 
 		return building;
