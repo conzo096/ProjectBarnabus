@@ -8,11 +8,11 @@ BoundingBox::BoundingBox(glm::vec3 minCoords, glm::vec3 maxCoords) : Component("
 {
 }
 
-BoundingBox::BoundingBox(const std::vector<Vertex>& vertices, glm::mat4 trans) : Component("BoundingBox")
+BoundingBox::BoundingBox(const std::vector<Vertex>& vertices, glm::mat4 trans) : Component("BoundingBox"), offset(trans)
 {
 	for (const Vertex& vertex : vertices)
 	{
-		const glm::vec3& pos = trans * glm::vec4(vertex.position,1);
+		const glm::vec3& pos = vertex.position;
 		minCoordinates.x = std::min(minCoordinates.x, pos.x);
 		minCoordinates.y = std::min(minCoordinates.y, pos.y);
 		minCoordinates.z = std::min(minCoordinates.z, pos.z);
@@ -74,7 +74,7 @@ void BoundingBox::SetShader(GLShader & shader)
 
 void BoundingBox::Update(float deltaTime)
 {
-	data.SetTransform(GetTransform());
+	data.SetTransform(GetTransform() * offset);
 }
 
 void BoundingBox::Render()

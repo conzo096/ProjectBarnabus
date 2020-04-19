@@ -21,6 +21,7 @@ private:
 	glm::vec3 minCoordinates = glm::vec3(std::numeric_limits<float>::max());
 	glm::vec3 maxCoordinates = glm::vec3(std::numeric_limits<float>::min());
 
+	glm::mat4 offset;
 	MeshData data;
 };
 }

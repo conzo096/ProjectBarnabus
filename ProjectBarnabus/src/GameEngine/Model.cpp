@@ -167,8 +167,8 @@ namespace
 		const MeshData* mesh = NULL;
 		if (node->data.size() > 0)
 		{
+			transform = node->transformation;
 			return &node->data[0];
-			transform = transform * node->transformation;
 		}
 		for (int i = 0; i < node->children.size(); i++)
 		{
@@ -225,7 +225,6 @@ void Model::InitModel()
 
 const MeshData & Model::GetMesh(glm::mat4& transform)
 {
-	transform = GetTransform();
 	auto result = GetMeshData(rootNode, transform);
 	assert(result);
 	return *result;
