@@ -330,15 +330,7 @@ void AnimatedModel::UpdateNodeMeshes(MeshNode*& rootMeshNode, float deltaTime)
 	for (auto& mesh : rootMeshNode->data)
 	{
 		mesh.transforms.clear();
-
-		float ticksPerSecond = animator.GetCurrentAnimation()->GetTicksPerSecond() != 0 ? animator.GetCurrentAnimation()->GetTicksPerSecond() : 20.0f;
-		float timeInTicks = animator.GetAnimationTime() * ticksPerSecond;
-		float animationTime = fmod(timeInTicks, animator.GetCurrentAnimation()->GetAnimationLength());
-
-		ReadNodeHeirarchy(animationTime, rootNode, glm::mat4(1));
-
 		mesh.transforms.resize(bones.size());
-
 		if (!animator.GetCurrentAnimation())
 		{
 			for (unsigned int j = 0; j < bones.size(); j++)
@@ -354,6 +346,14 @@ void AnimatedModel::UpdateNodeMeshes(MeshNode*& rootMeshNode, float deltaTime)
 			}
 		}
 	}
+	
+	// This behaviour is broken when using the one mesh structure 
+	// as ReadNodeHeriacrchy wil start with cube into of RootNode
+	float ticksPerSecond = animator.GetCurrentAnimation()->GetTicksPerSecond() != 0 ? animator.GetCurrentAnimation()->GetTicksPerSecond() : 20.0f;
+	float timeInTicks = animator.GetAnimationTime() * ticksPerSecond;
+	float animationTime = fmod(timeInTicks, animator.GetCurrentAnimation()->GetAnimationLength());
+
+	ReadNodeHeirarchy(animationTime, rootNode, glm::mat4(1));
 
 	for (auto& child : rootMeshNode->children)
 	{
