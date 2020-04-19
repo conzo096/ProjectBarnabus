@@ -1,10 +1,28 @@
 #include "BoundingBox.h"
 #include "Renderer.h"
+#include <algorithm>
+
 namespace BoundingVolumes
 {
 BoundingBox::BoundingBox(glm::vec3 minCoords, glm::vec3 maxCoords) : Component("BoundingBox"), minCoordinates(minCoords), maxCoordinates(maxCoords)
 {
 }
+
+BoundingBox::BoundingBox(std::vector<Vertex>& vertices) : Component("BoundingBox")
+{
+	for (const Vertex& vertex : vertices)
+	{
+		const glm::vec3& pos = vertex.position;
+		minCoordinates.x = std::min(minCoordinates.x, pos.x);
+		minCoordinates.y = std::min(minCoordinates.y, pos.y);
+		minCoordinates.z = std::max(minCoordinates.z, pos.z);
+
+		maxCoordinates.x = std::max(maxCoordinates.x, pos.x);
+		maxCoordinates.y = std::max(maxCoordinates.y, pos.y);
+		maxCoordinates.z = std::min(maxCoordinates.z, pos.z);
+	}
+}
+
 void BoundingBox::InitMesh()
 {
 	std::vector<unsigned int> indices
@@ -52,6 +70,11 @@ void BoundingBox::InitMesh()
 void BoundingBox::SetShader(GLShader & shader)
 {
 	data.SetShader(&shader);
+}
+
+void BoundingBox::Update(float deltaTime)
+{
+	data.SetTransform(GetTransform());
 }
 
 void BoundingBox::Render()

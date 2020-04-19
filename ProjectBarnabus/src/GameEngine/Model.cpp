@@ -1,7 +1,7 @@
 #include "Model.h"
 #include "Renderer.h"
 #include "BarnabusGameEngine.h"
-
+#include "BoundingBox.h"
 #include <assimp/Importer.hpp>
 #include <assimp/PostProcess.h>
 #include <assimp/Scene.h>
@@ -71,7 +71,7 @@ namespace
 		texture->LoadTexture("res\\Textures\\test.png");
 		mesh.SetTexture(texture);
 		vertexBegin += modelMesh->mNumVertices;
-	
+
 	}
 
 	void ParseNodes(Node*& meshRootNode, aiNode* rootNode, Node* parent, const aiScene* scene)
@@ -99,7 +99,7 @@ namespace
 
 	void SetNodeShader(Node*& meshRootNode, GLShader& shader)
 	{
-		for (auto& mesh : meshRootNode->data) 
+		for (auto& mesh : meshRootNode->data)
 		{
 			mesh.SetShader(&shader);
 		}
@@ -161,6 +161,21 @@ namespace
 			RenderNodes(child, environmentName);
 		}
 	}
+
+	const MeshData* GetMeshData(const Node* node)
+	{
+		const MeshData* mesh = NULL;
+		if (node->data.size() > 0)
+			return &node->data[0];
+		for (int i = 0; i < node->children.size(); i++)
+		{
+			mesh = GetMeshData(node->children[i]);
+			if (mesh)
+				return mesh;
+		}
+		return mesh;
+	}
+
 } // namespace
 
 Model::Model() : Component("Model")
@@ -205,10 +220,28 @@ void Model::InitModel()
 	InitModelNodes(rootNode);
 }
 
+const MeshData & Model::GetMesh()
+{
+	auto result = GetMeshData(rootNode);
+	assert(result);
+	return *result;
+}
+
 void Model::Update(float deltaTime)
 {
 	assert(rootNode);
 	UpdateNodes(rootNode, deltaTime, GetTransform());
+	
+	// Update bb if there is one attached to parent - also use try-catch?
+	auto boundingVolume = GetParent()->GetCompatibleComponent<BoundingVolumes::BoundingBox>();
+	if (GetParent()->GetCompatibleComponent<BoundingVolumes::BoundingBox>())
+	{
+		// todo Find mesh that this bb is for
+		// todo Find set transform based on the mesh it is for
+		auto boundingVolume = GetParent()->GetCompatibleComponent<BoundingVolumes::BoundingBox>();
+		boundingVolume->SetTransform(GetTransform());
+	}
+
 }
 
 void Model::Render()
