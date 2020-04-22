@@ -161,23 +161,6 @@ namespace
 		}
 	}
 
-	const MeshData* GetMeshData(const Node* node, glm::mat4& transform)
-	{
-		const MeshData* mesh = NULL;
-		if (node->data.size() > 0)
-		{
-			transform = node->transformation;
-			return &node->data[0];
-		}
-		for (int i = 0; i < node->children.size(); i++)
-		{
-			mesh = GetMeshData(node->children[i], transform);
-			if (mesh)
-				return mesh;
-		}
-		return mesh;
-	}
-
 } // namespace
 
 Model::Model() : Component("Model")
@@ -222,11 +205,9 @@ void Model::InitModel()
 	InitModelNodes(rootNode);
 }
 
-const MeshData & Model::GetMesh(glm::mat4& transform)
+const Node * Model::GetRootNode()
 {
-	auto result = GetMeshData(rootNode, transform);
-	assert(result);
-	return *result;
+	return rootNode;
 }
 
 void Model::Update(float deltaTime)

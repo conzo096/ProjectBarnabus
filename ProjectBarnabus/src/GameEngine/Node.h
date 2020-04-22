@@ -11,5 +11,4 @@ struct Node
 	std::vector<MeshData> data;
 	glm::mat4 transformation = glm::mat4(1.0);
 	Node* parent;
-
 };
