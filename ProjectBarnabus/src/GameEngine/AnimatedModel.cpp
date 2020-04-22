@@ -104,6 +104,7 @@ namespace
 
 		return 0;
 	}
+
 }
 
 AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
@@ -225,7 +226,7 @@ void AnimatedModel::ReadNodeHeirarchy(float animationTime, const Node* node, con
 	if (boneMapping.find(nodeName) != boneMapping.end())
 	{
 		unsigned int boneIndex = boneMapping[nodeName];
-		bones[boneIndex].finalTransformation = globalTransformation * bones[boneIndex].offSet; // The positioning is off?
+		bones[boneIndex].finalTransformation = globalInverseTransform * globalTransformation * bones[boneIndex].offSet; // The positioning is off?
 	}
 
 	for (unsigned int i = 0; i < node->children.size(); i++)
