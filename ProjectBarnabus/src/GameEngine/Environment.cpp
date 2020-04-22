@@ -1,5 +1,43 @@
 #include "Environment.h"
 #include "Renderer.h"
+#include "BoundingVolumes.h"
+
+namespace
+{
+void CompareBoundingBoxes(const BoundingVolumes::BoundingBox& lhs, const BoundingVolumes::BoundingBox& rhs)
+{
+	
+}
+
+void CompareBoundingVolumes(BoundingVolumes::BoundingVolumes* const lhs, BoundingVolumes::BoundingVolumes* const rhs)
+{
+	// Compare all of lhs against all of rhs
+	const auto& lhsBoxes = lhs->GetBoundingBoxes();
+	const auto& rhsBoxes = rhs->GetBoundingBoxes();
+
+	for (int i = 0; i < lhsBoxes.size(); i++)
+	{
+		for (int j = 0; j < rhsBoxes.size(); j++)
+		{
+
+		}
+	}
+
+}
+
+void ResolveCollisions(const std::vector<BoundingVolumes::BoundingVolumes*>& boundingVolumes)
+{
+	for (int i = 0; i < boundingVolumes.size(); i++)
+	{
+		for (int j = i+1; j < boundingVolumes.size(); j++)
+		{
+			CompareBoundingVolumes(boundingVolumes[i], boundingVolumes[j]);
+		}
+	}
+}
+
+}
+
 Environment::Environment(std::string environmentName) : name(environmentName)
 {
 }
@@ -49,6 +87,19 @@ void Environment::Update(float deltaTime)
 	{
 		it->second->Update(deltaTime);
 	}
+
+	std::vector<BoundingVolumes::BoundingVolumes*> boundingVolumes;
+	// Add all physics objects to list
+	for (auto it = entities.begin(); it != entities.end(); ++it)
+	{
+		if (it->second->GetCompatibleComponent<BoundingVolumes::BoundingVolumes>())
+		{
+			boundingVolumes.push_back(it->second->GetCompatibleComponent<BoundingVolumes::BoundingVolumes>());
+		}
+	}
+
+	ResolveCollisions(boundingVolumes);
+
 }
 
 void Environment::Render(float deltaTime)

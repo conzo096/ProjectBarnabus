@@ -10,6 +10,7 @@ class BoundingVolumes : public Component
 public:
 	BoundingVolumes();
 public:
+	const std::vector<BoundingBox>& GetBoundingBoxes();
 	void SetShader(GLShader& shader);
 	void InitMeshes();
 

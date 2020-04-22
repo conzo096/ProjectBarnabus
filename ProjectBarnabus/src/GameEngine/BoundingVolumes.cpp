@@ -26,6 +26,11 @@ BoundingVolumes::BoundingVolumes::BoundingVolumes() : Component("BoundingVolumes
 {
 }
 	
+const std::vector<BoundingBox>& BoundingVolumes::GetBoundingBoxes()
+{
+	return boundingBoxes;
+}
+
 void BoundingVolumes::SetShader(GLShader & shader)
 {
 	for (auto& bb : boundingBoxes)
