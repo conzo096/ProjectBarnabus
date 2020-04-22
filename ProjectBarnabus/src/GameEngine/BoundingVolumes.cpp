@@ -19,19 +19,6 @@ void AddBoundingBoxes(const Node* node, std::vector<BoundingBox>& boundingBoxes)
 		AddBoundingBoxes(node->children[i], boundingBoxes);
 	}
 }
-
-void UpdateBoundingBoxes(const Node* node, std::vector<BoundingBox>& boundingBoxes, int& index)
-{
-	for (int i = 0; i < node->data.size(); i++)
-	{
-		index++;
-	}
-
-	for (unsigned int i = 0; i < node->children.size(); i++)
-	{
-		UpdateBoundingBoxes(node->children[i], boundingBoxes, index);
-	}
-}
 }
 
 
@@ -72,15 +59,9 @@ void BoundingVolumes::AddBoundingVolumes(const std::vector<Vertex>& vertices, gl
 
 void BoundingVolumes::Update(float deltaTime)
 {
-	auto model = GetParent()->GetCompatibleComponent<Model>();
-	auto rootNode = model->GetRootNode();
-
-	//int index = 0;
-	//UpdateBoundingBoxes(rootNode, boundingBoxes, index);
-
 	for (auto& bb : boundingBoxes)
 	{
-		bb.SetTransform(model->GetTransform());
+		bb.SetTransform(GetTransform());
 		bb.Update(deltaTime);
 	}
 }
