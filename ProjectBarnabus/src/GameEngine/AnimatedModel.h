@@ -24,10 +24,6 @@ private:
 	glm::quat CalculateInterpolatedRotation(float animationTime, const NodeAnim* nodeAnim);
 	glm::vec3 CalculateInterpolatedPosition(float animationTime, const NodeAnim* nodeAnim);
 
-	int FindScaling(float animationTime, const NodeAnim* nodeAnim);
-	int FindRotation(float animationTime, const NodeAnim* nodeAnim);
-	int FindPosition(float animationTime, const NodeAnim* nodeAnim);
-
 private:
 	void UpdateNodeMeshes(Node*& rootNode, float deltaTime);
 private:

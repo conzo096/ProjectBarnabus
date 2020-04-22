@@ -65,6 +65,45 @@ namespace
 			LoadBoneData(meshRootNode->children[i], rootNode->mChildren[i], scene, bones, boneMapping);
 		}
 	}
+
+	int FindScaling(float animationTime, const NodeAnim * nodeAnim)
+	{
+		for (unsigned int i = 0; i < nodeAnim->scalingKeys.size() - 1; i++)
+		{
+			if (animationTime < nodeAnim->scalingKeys[i + 1].timeStamp)
+			{
+				return i;
+			}
+		}
+
+		return 0;
+	}
+
+	int FindRotation(float animationTime, const NodeAnim* nodeAnim)
+	{
+		for (unsigned int i = 0; i < nodeAnim->rotationKeys.size() - 1; i++)
+		{
+			if (animationTime < nodeAnim->rotationKeys[i + 1].timeStamp)
+			{
+				return i;
+			}
+		}
+
+		return 0;
+	}
+
+	int FindPosition(float animationTime, const NodeAnim* nodeAnim)
+	{
+		for (unsigned int i = 0; i < nodeAnim->positionKeys.size() - 1; i++)
+		{
+			if (animationTime < nodeAnim->positionKeys[i + 1].timeStamp)
+			{
+				return i;
+			}
+		}
+
+		return 0;
+	}
 }
 
 AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
@@ -268,45 +307,6 @@ glm::vec3 AnimatedModel::CalculateInterpolatedPosition(float animationTime, cons
 	const glm::vec3 end = nodeAnim->positionKeys[nextPositionIndex].position;
 	glm::vec3 delta = end - start;
 	return start + factor * delta;
-}
-
-int AnimatedModel::FindScaling(float animationTime, const NodeAnim * nodeAnim)
-{
-	for (unsigned int i = 0; i < nodeAnim->scalingKeys.size() - 1; i++)
-	{
-		if (animationTime < nodeAnim->scalingKeys[i + 1].timeStamp)
-		{
-			return i;
-		}
-	}
-
-	return 0;
-}
-
-int AnimatedModel::FindRotation(float animationTime, const NodeAnim* nodeAnim)
-{
-	for (unsigned int i = 0; i < nodeAnim->rotationKeys.size() - 1; i++)
-	{
-		if (animationTime < nodeAnim->rotationKeys[i + 1].timeStamp)
-		{
-			return i;
-		}
-	}
-
-	return 0;
-}
-
-int AnimatedModel::FindPosition(float animationTime, const NodeAnim* nodeAnim)
-{
-	for (unsigned int i = 0; i < nodeAnim->positionKeys.size() - 1; i++)
-	{
-		if (animationTime < nodeAnim->positionKeys[i + 1].timeStamp)
-		{
-			return i;
-		}
-	}
-
-	return 0;
 }
 
 void AnimatedModel::UpdateNodeMeshes(Node*& node, float deltaTime)
