@@ -157,7 +157,7 @@ Animator& AnimatedModel::GetAnimator()
 	return animator;
 }
 
-void AnimatedModel::ReadNodeHeirarchy(float animationTime, const Node* node, const glm::mat4 & parentTransform)
+void AnimatedModel::ReadNodeHeirarchy(float animationTime, const Node* node, const glm::mat4& parentTransform)
 {
 	std::string nodeName(node->name);
 
@@ -185,8 +185,8 @@ void AnimatedModel::ReadNodeHeirarchy(float animationTime, const Node* node, con
 
 	if (boneMapping.find(nodeName) != boneMapping.end())
 	{
-		unsigned int BoneIndex = boneMapping[nodeName];
-		bones[BoneIndex].finalTransformation = globalInverseTransform * globalTransformation * bones[BoneIndex].offSet;
+		unsigned int boneIndex = boneMapping[nodeName];
+		bones[boneIndex].finalTransformation = globalTransformation * bones[boneIndex].offSet; // The positioning is off?
 	}
 
 	for (unsigned int i = 0; i < node->children.size(); i++)
@@ -311,10 +311,17 @@ int AnimatedModel::FindPosition(float animationTime, const NodeAnim* nodeAnim)
 
 void AnimatedModel::UpdateNodeMeshes(Node*& node, float deltaTime)
 {
+	float ticksPerSecond = animator.GetCurrentAnimation()->GetTicksPerSecond() != 0 ? animator.GetCurrentAnimation()->GetTicksPerSecond() : 20.0f;
+	float timeInTicks = animator.GetAnimationTime() * ticksPerSecond;
+	float animationTime = fmod(timeInTicks, animator.GetCurrentAnimation()->GetAnimationLength());
+
 	for (auto& mesh : node->data)
 	{
 		mesh.transforms.clear();
 		mesh.transforms.resize(bones.size());
+
+		ReadNodeHeirarchy(animationTime, rootNode, glm::mat4(1));
+
 		if (!animator.GetCurrentAnimation())
 		{
 			for (unsigned int j = 0; j < bones.size(); j++)
@@ -330,12 +337,6 @@ void AnimatedModel::UpdateNodeMeshes(Node*& node, float deltaTime)
 			}
 		}
 	}
-
-	float ticksPerSecond = animator.GetCurrentAnimation()->GetTicksPerSecond() != 0 ? animator.GetCurrentAnimation()->GetTicksPerSecond() : 20.0f;
-	float timeInTicks = animator.GetAnimationTime() * ticksPerSecond;
-	float animationTime = fmod(timeInTicks, animator.GetCurrentAnimation()->GetAnimationLength());
-
-	ReadNodeHeirarchy(animationTime, node, glm::mat4(1));
 
 	for (auto& child : node->children)
 	{

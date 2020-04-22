@@ -22,8 +22,15 @@ namespace EntityFactory{
 		animatedModelComponent->SetShader(shader);
 		animatedModelComponent->InitModel();
 		animatedModelComponent->SetAnimation("walk");
+
+		auto boundingVolumesComponent = std::make_unique<BoundingVolumes::BoundingVolumes>();
+		boundingVolumesComponent->AddBoundingVolumes(animatedModelComponent->GetRootNode());
+		boundingVolumesComponent->SetShader(*BarnabusGameEngine::Get().GetShader("red"));
+		boundingVolumesComponent->InitMeshes();
+
 		player->AddComponent(std::move(animatedModelComponent));
-		
+		player->AddComponent(std::move(boundingVolumesComponent));
+
 		player->SetPosition(position);
 
 		return player;
@@ -68,7 +75,6 @@ namespace EntityFactory{
 		
 		auto boundingVolumesComponent = std::make_unique<BoundingVolumes::BoundingVolumes>();
 		boundingVolumesComponent->AddBoundingVolumes(modelComponent->GetRootNode());
-
 		boundingVolumesComponent->SetShader(*BarnabusGameEngine::Get().GetShader("red"));
 		boundingVolumesComponent->InitMeshes();
 				
