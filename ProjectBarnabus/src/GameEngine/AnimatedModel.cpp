@@ -105,6 +105,19 @@ namespace
 		return 0;
 	}
 
+	void UpdateNodes(Node*& meshRootNode, float deltaTime, glm::mat4 parentTransform)
+	{
+		for (auto& mesh : meshRootNode->data)
+		{
+			mesh.SetTransform(parentTransform);
+		}
+
+		for (auto& child : meshRootNode->children)
+		{
+			UpdateNodes(child, deltaTime, parentTransform * meshRootNode->transformation);
+		}
+	}
+
 }
 
 AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
@@ -172,7 +185,7 @@ AnimatedModel::AnimatedModel(const std::string& fileName) : Model(fileName)
 
 void AnimatedModel::Update(float deltaTime)
 {
-	Model::Update(deltaTime);
+	UpdateNodes(rootNode, deltaTime, GetTransform());
 
 	animator.Update(deltaTime);
 
