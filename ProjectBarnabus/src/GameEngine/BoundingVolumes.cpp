@@ -66,7 +66,6 @@ void BoundingVolumes::Update(float deltaTime)
 {
 	for (auto& bb : boundingBoxes)
 	{
-		bb.SetTransform(GetTransform());
 		bb.Update(GetTransform(), deltaTime);
 	}
 }

@@ -21,7 +21,7 @@ void CompareBoundingBoxes(BoundingVolumes::BoundingBox& lhs, BoundingVolumes::Bo
 		lhsPos.z < rhsPos.z + rhsLength && lhsPos.z + lhsLength > rhsPos.z)
 	{
 		// todo handle collisions
-		rhs.SetScale(glm::vec3(50));
+		rhs.Collision();
 	}
 }
 
