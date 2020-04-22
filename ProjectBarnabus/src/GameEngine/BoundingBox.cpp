@@ -4,11 +4,11 @@
 
 namespace BoundingVolumes
 {
-BoundingBox::BoundingBox(glm::vec3 minCoords, glm::vec3 maxCoords) : Component("BoundingBox"), minCoordinates(minCoords), maxCoordinates(maxCoords)
+BoundingBox::BoundingBox(glm::vec3 minCoords, glm::vec3 maxCoords): minCoordinates(minCoords), maxCoordinates(maxCoords)
 {
 }
 
-BoundingBox::BoundingBox(const std::vector<Vertex>& vertices, glm::mat4 trans) : Component("BoundingBox"), offset(trans)
+BoundingBox::BoundingBox(const std::vector<Vertex>& vertices, glm::mat4 trans) : offset(trans)
 {
 	for (const Vertex& vertex : vertices)
 	{
@@ -82,8 +82,8 @@ void BoundingBox::Update(float deltaTime)
 	data.SetTransform(GetTransform() * offset);
 }
 
-void BoundingBox::Render()
+void BoundingBox::Render(std::string environmentName)
 {
-	Renderer::Get().AddMesh(GetParent()->GetEnvironmentName(), data);
+	Renderer::Get().AddMesh(environmentName, data);
 }
 }

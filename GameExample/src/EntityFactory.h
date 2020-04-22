@@ -7,7 +7,7 @@
 #include "GameEngine/Terrain.h"
 #include "GameEngine/Movement.h"
 #include "GameEngine/ArcBallCamera.h"
-#include "GameEngine/BoundingBox.h"
+#include "GameEngine/BoundingVolumes.h"
 #include <memory>
 
 namespace EntityFactory{
@@ -69,12 +69,15 @@ namespace EntityFactory{
 		glm::mat4 transform(1.0);
 		auto mesh = modelComponent->GetMesh(transform);
 
-		auto boundingBoxComponent = std::make_unique<BoundingVolumes::BoundingBox>(mesh.vertices,transform);
-		boundingBoxComponent->SetShader(*BarnabusGameEngine::Get().GetShader("red"));
-		boundingBoxComponent->InitMesh();
+		auto boundingVolumesComponent = std::make_unique<BoundingVolumes::BoundingVolumes>();
+		boundingVolumesComponent->AddBoundingVolumes(mesh.vertices, transform);
+
+
+		boundingVolumesComponent->SetShader(*BarnabusGameEngine::Get().GetShader("red"));
+		boundingVolumesComponent->InitMeshes();
 				
 		building->AddComponent(std::move(modelComponent));
-		building->AddComponent(std::move(boundingBoxComponent));
+		building->AddComponent(std::move(boundingVolumesComponent));
 		
 		building->SetPosition(position);
 

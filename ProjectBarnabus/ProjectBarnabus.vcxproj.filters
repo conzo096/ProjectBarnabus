@@ -74,7 +74,12 @@
     <ClCompile Include="src\GameEngine\Light.cpp">
       <Filter>Source Files\GameEngine\Lighting</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameEngine\BoundingBox.cpp" />
+    <ClCompile Include="src\GameEngine\BoundingBox.cpp">
+      <Filter>Source Files\GameEngine\Components\BoundingVolumes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\BoundingVolumes.cpp">
+      <Filter>Source Files\GameEngine\Components\BoundingVolumes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -142,6 +147,9 @@
     </Filter>
     <Filter Include="Header Files\GameEngine\Components\BoundingVolumes">
       <UniqueIdentifier>{5528790b-ec10-451b-ab00-ddceea197cbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameEngine\Components\BoundingVolumes">
+      <UniqueIdentifier>{f674d638-980d-4a95-88cb-3501d2f0367c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -248,6 +256,9 @@
       <Filter>Header Files\GameEngine\Shader</Filter>
     </ClInclude>
     <ClInclude Include="src\GameEngine\BoundingBox.h">
+      <Filter>Header Files\GameEngine\Components\BoundingVolumes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\BoundingVolumes.h">
       <Filter>Header Files\GameEngine\Components\BoundingVolumes</Filter>
     </ClInclude>
   </ItemGroup>

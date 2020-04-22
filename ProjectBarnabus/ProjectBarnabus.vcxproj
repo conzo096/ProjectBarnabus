@@ -17,6 +17,7 @@
     <ClCompile Include="src\GameEngine\ArcBallCamera.cpp" />
     <ClCompile Include="src\GameEngine\BarnabusGameEngine.cpp" />
     <ClCompile Include="src\GameEngine\BoundingBox.cpp" />
+    <ClCompile Include="src\GameEngine\BoundingVolumes.cpp" />
     <ClCompile Include="src\GameEngine\DirectionalLight.cpp" />
     <ClCompile Include="src\GameEngine\Entity.cpp" />
     <ClCompile Include="src\GameEngine\Environment.cpp" />
@@ -46,6 +47,7 @@
     <ClInclude Include="src\GameEngine\BarnabusGameEngine.h" />
     <ClInclude Include="src\GameEngine\Bone.h" />
     <ClInclude Include="src\GameEngine\BoundingBox.h" />
+    <ClInclude Include="src\GameEngine\BoundingVolumes.h" />
     <ClInclude Include="src\GameEngine\Camera.h" />
     <ClInclude Include="src\GameEngine\DirectionalLight.h" />
     <ClInclude Include="src\GameEngine\Entity.h" />

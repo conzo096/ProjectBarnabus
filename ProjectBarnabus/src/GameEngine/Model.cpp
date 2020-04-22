@@ -1,7 +1,6 @@
 #include "Model.h"
 #include "Renderer.h"
 #include "BarnabusGameEngine.h"
-#include "BoundingBox.h"
 #include <assimp/Importer.hpp>
 #include <assimp/PostProcess.h>
 #include <assimp/Scene.h>
@@ -234,17 +233,6 @@ void Model::Update(float deltaTime)
 {
 	assert(rootNode);
 	UpdateNodes(rootNode, deltaTime, GetTransform());
-	
-	// Update bb if there is one attached to parent - also use try-catch?
-	auto boundingVolume = GetParent()->GetCompatibleComponent<BoundingVolumes::BoundingBox>();
-	if (GetParent()->GetCompatibleComponent<BoundingVolumes::BoundingBox>())
-	{
-		// todo Find mesh that this bb is for
-		// todo Find set transform based on the mesh it is for
-		auto boundingVolume = GetParent()->GetCompatibleComponent<BoundingVolumes::BoundingBox>();
-		boundingVolume->SetTransform(GetTransform());
-	}
-
 }
 
 void Model::Render()

@@ -5,7 +5,7 @@
 #include <limits>
 namespace BoundingVolumes
 {
-class BoundingBox : public Component
+class BoundingBox : public Transform
 {
 public:
 	BoundingBox(glm::vec3 minCoords, glm::vec3 maxCoords);
@@ -15,8 +15,8 @@ public:
 	void InitMesh();
 
 public:
-	void Update(float deltaTime) override;
-	void Render() override;
+	void Update(float deltaTime);
+	void Render(std::string environmentName);
 private: 
 	glm::vec3 minCoordinates = glm::vec3(std::numeric_limits<float>::max());
 	glm::vec3 maxCoordinates = glm::vec3(std::numeric_limits<float>::min());
