@@ -14,6 +14,13 @@ public:
 	void SetShader(GLShader& shader);
 	void InitMesh();
 
+	const glm::vec3 GetMaxCoordinates();
+	const glm::vec3 GetMinCoordinates();
+
+	const float GetWidth();
+	const float GetHeight();
+	const float GetLength();
+
 public:
 	void Update(float deltaTime);
 	void Render(std::string environmentName);

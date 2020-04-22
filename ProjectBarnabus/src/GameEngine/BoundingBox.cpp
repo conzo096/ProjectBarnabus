@@ -72,6 +72,43 @@ void BoundingBox::InitMesh()
 	data.InitialiseMesh();
 }
 
+const glm::vec3 BoundingBox::GetMaxCoordinates()
+{
+	return data.GetTransform() * glm::vec4(maxCoordinates,1);
+}
+
+const glm::vec3 BoundingBox::GetMinCoordinates()
+{
+	return data.GetTransform() * glm::vec4(minCoordinates, 1);;
+}
+
+const float BoundingBox::GetWidth()
+{
+	auto max = GetMaxCoordinates();
+	auto min = GetMinCoordinates();
+	auto diff = max - min;
+
+	return std::abs(diff.x);
+}
+
+const float BoundingBox::GetHeight()
+{
+	auto max = GetMaxCoordinates();
+	auto min = GetMinCoordinates();
+	auto diff = max - min;
+
+	return std::abs(diff.y);
+}
+
+const float BoundingBox::GetLength()
+{
+	auto max = GetMaxCoordinates();
+	auto min = GetMinCoordinates();
+	auto diff = max - min;
+
+	return std::abs(diff.z);
+}
+
 void BoundingBox::SetShader(GLShader & shader)
 {
 	data.SetShader(&shader);

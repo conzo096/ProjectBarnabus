@@ -4,22 +4,38 @@
 
 namespace
 {
-void CompareBoundingBoxes(const BoundingVolumes::BoundingBox& lhs, const BoundingVolumes::BoundingBox& rhs)
+void CompareBoundingBoxes(BoundingVolumes::BoundingBox& const lhs, BoundingVolumes::BoundingBox& const rhs)
 {
-	
+	auto lhsPos = lhs.GetMinCoordinates();
+	const auto lhsWidth = lhs.GetWidth();
+	const auto lhsHeight = lhs.GetHeight();
+	const auto lhsLength = lhs.GetLength();
+
+	auto rhsPos = rhs.GetMinCoordinates();
+	auto rhsWidth = rhs.GetWidth();
+	const auto rhsHeight = rhs.GetHeight();
+	const auto rhsLength = rhs.GetLength();
+
+	if (lhsPos.x < rhsPos.x + rhsWidth && lhsPos.x + lhsWidth > rhsPos.x &&
+		lhsPos.y < rhsPos.y + rhsHeight && lhsPos.y + lhsHeight > rhsPos.y &&
+		lhsPos.z < rhsPos.z + rhsLength && lhsPos.z + lhsLength > rhsPos.z)
+	{
+		// todo handle collisions
+	}
 }
 
 void CompareBoundingVolumes(BoundingVolumes::BoundingVolumes* const lhs, BoundingVolumes::BoundingVolumes* const rhs)
 {
-	// Compare all of lhs against all of rhs
 	const auto& lhsBoxes = lhs->GetBoundingBoxes();
 	const auto& rhsBoxes = rhs->GetBoundingBoxes();
 
 	for (int i = 0; i < lhsBoxes.size(); i++)
 	{
+		auto lhsBox = lhsBoxes[i];
 		for (int j = 0; j < rhsBoxes.size(); j++)
 		{
-
+			auto rhsBox = rhsBoxes[j];
+			CompareBoundingBoxes(lhsBox, rhsBox);
 		}
 	}
 
