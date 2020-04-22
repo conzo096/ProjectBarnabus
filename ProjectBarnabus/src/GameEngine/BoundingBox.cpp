@@ -24,38 +24,43 @@ BoundingBox::BoundingBox(const std::vector<Vertex>& vertices, glm::mat4 trans) :
 }
 
 void BoundingBox::InitMesh()
-{
+{	
+	glm::vec3 botLeftFront =  minCoordinates;
+	glm::vec3 botRightFront = glm::vec3(maxCoordinates.x, minCoordinates.y, minCoordinates.z);
+	glm::vec3 topLeftFront = glm::vec3(minCoordinates.x, maxCoordinates.y, minCoordinates.z);
+	glm::vec3 topRightFront = glm::vec3(maxCoordinates.x, maxCoordinates.y, minCoordinates.z);
+	glm::vec3 botLeftBack =   glm::vec3(minCoordinates.x, minCoordinates.y, maxCoordinates.z);
+	glm::vec3 botRightBack =  glm::vec3(maxCoordinates.x, minCoordinates.y, maxCoordinates.z);
+	glm::vec3 topLeftBack = glm::vec3(minCoordinates.x, maxCoordinates.y, maxCoordinates.z);
+	glm::vec3 topRightBack = maxCoordinates;
+
+
 	std::vector<unsigned int> indices
 	{
-		//0, 1, 2, 3, 8, // Front wall
-		//4, 5, 6, 7, 8, // Back wall
-		//4, 0, 6, 3, 8, // Left wall
-		//1, 5, 3, 7, 8, // Right wall
-		//2, 3, 6, 7, 8, // Top wall
-		//0, 1, 4, 5  // Bottom wall
-		7,6,3,2,0,
-		6,4,7,5,
-		3,1,0,5,4
+		0,1,3,2,
+		6,4,0,2,
+		3,7,6,7,
+		5,1,5,4		
 	};
 
 	std::vector<Vertex> vertices;
 	Vertex vert; 
 	vert.color = glm::vec4(0, 0, 1, 1);
-	vert.position = minCoordinates;
+	vert.position = botLeftFront;
 	vertices.push_back(vert);
-	vert.position = glm::vec3(maxCoordinates.x, minCoordinates.y, minCoordinates.z);
+	vert.position = botRightFront;
 	vertices.push_back(vert);
-	vert.position = glm::vec3(minCoordinates.x, maxCoordinates.y, minCoordinates.z);
+	vert.position = topLeftFront;
 	vertices.push_back(vert);
-	vert.position = glm::vec3(maxCoordinates.x, maxCoordinates.y, minCoordinates.z);
+	vert.position = topRightFront;
 	vertices.push_back(vert);
-	vert.position = glm::vec3(minCoordinates.x, minCoordinates.y, maxCoordinates.z);
+	vert.position = botLeftBack;
 	vertices.push_back(vert);
-	vert.position = glm::vec3(maxCoordinates.x, minCoordinates.y, maxCoordinates.z);
+	vert.position = botRightBack;
 	vertices.push_back(vert);
-	vert.position = glm::vec3(minCoordinates.x, maxCoordinates.y, maxCoordinates.z);
+	vert.position = topLeftBack;
 	vertices.push_back(vert);
-	vert.position = maxCoordinates;
+	vert.position = topRightBack;
 	vertices.push_back(vert);
 
 	data.InsertVertices(vertices);
