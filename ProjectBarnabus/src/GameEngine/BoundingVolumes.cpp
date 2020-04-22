@@ -26,7 +26,7 @@ BoundingVolumes::BoundingVolumes::BoundingVolumes() : Component("BoundingVolumes
 {
 }
 	
-const std::vector<BoundingBox>& BoundingVolumes::GetBoundingBoxes()
+std::vector<BoundingBox>& BoundingVolumes::GetBoundingBoxes()
 {
 	return boundingBoxes;
 }
@@ -67,7 +67,7 @@ void BoundingVolumes::Update(float deltaTime)
 	for (auto& bb : boundingBoxes)
 	{
 		bb.SetTransform(GetTransform());
-		bb.Update(deltaTime);
+		bb.Update(GetTransform(), deltaTime);
 	}
 }
 

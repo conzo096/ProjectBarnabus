@@ -4,7 +4,7 @@
 
 namespace
 {
-void CompareBoundingBoxes(BoundingVolumes::BoundingBox& const lhs, BoundingVolumes::BoundingBox& const rhs)
+void CompareBoundingBoxes(BoundingVolumes::BoundingBox& lhs, BoundingVolumes::BoundingBox& rhs)
 {
 	auto lhsPos = lhs.GetMinCoordinates();
 	const auto lhsWidth = lhs.GetWidth();
@@ -21,24 +21,23 @@ void CompareBoundingBoxes(BoundingVolumes::BoundingBox& const lhs, BoundingVolum
 		lhsPos.z < rhsPos.z + rhsLength && lhsPos.z + lhsLength > rhsPos.z)
 	{
 		// todo handle collisions
+		rhs.SetScale(glm::vec3(50));
 	}
 }
 
 void CompareBoundingVolumes(BoundingVolumes::BoundingVolumes* const lhs, BoundingVolumes::BoundingVolumes* const rhs)
 {
-	const auto& lhsBoxes = lhs->GetBoundingBoxes();
-	const auto& rhsBoxes = rhs->GetBoundingBoxes();
+	auto& lhsBoxes = lhs->GetBoundingBoxes();
+	auto& rhsBoxes = rhs->GetBoundingBoxes();
 
 	for (int i = 0; i < lhsBoxes.size(); i++)
 	{
-		auto lhsBox = lhsBoxes[i];
+		BoundingVolumes::BoundingBox& lhsBox = lhsBoxes[i];
 		for (int j = 0; j < rhsBoxes.size(); j++)
 		{
-			auto rhsBox = rhsBoxes[j];
-			CompareBoundingBoxes(lhsBox, rhsBox);
+			CompareBoundingBoxes(lhsBoxes[i], rhsBoxes[j]);
 		}
 	}
-
 }
 
 void ResolveCollisions(const std::vector<BoundingVolumes::BoundingVolumes*>& boundingVolumes)

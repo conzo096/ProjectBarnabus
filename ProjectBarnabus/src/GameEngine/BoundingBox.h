@@ -16,13 +16,14 @@ public:
 
 	const glm::vec3 GetMaxCoordinates();
 	const glm::vec3 GetMinCoordinates();
+	const glm::mat4 GetOffset();
 
 	const float GetWidth();
 	const float GetHeight();
 	const float GetLength();
 
 public:
-	void Update(float deltaTime);
+	void Update(glm::mat4 volumeTransform, float deltaTime);
 	void Render(std::string environmentName);
 private: 
 	glm::vec3 minCoordinates = glm::vec3(std::numeric_limits<float>::max());

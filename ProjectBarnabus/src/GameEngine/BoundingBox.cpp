@@ -82,6 +82,11 @@ const glm::vec3 BoundingBox::GetMinCoordinates()
 	return data.GetTransform() * glm::vec4(minCoordinates, 1);;
 }
 
+const glm::mat4 BoundingBox::GetOffset()
+{
+	return offset;
+}
+
 const float BoundingBox::GetWidth()
 {
 	auto max = GetMaxCoordinates();
@@ -114,9 +119,10 @@ void BoundingBox::SetShader(GLShader & shader)
 	data.SetShader(&shader);
 }
 
-void BoundingBox::Update(float deltaTime)
+void BoundingBox::Update(glm::mat4 volumeTransform, float deltaTime)
 {
-	data.SetTransform(GetTransform() * offset);
+	SetTransform(volumeTransform *  offset);
+	data.SetTransform(GetTransform());
 }
 
 void BoundingBox::Render(std::string environmentName)
