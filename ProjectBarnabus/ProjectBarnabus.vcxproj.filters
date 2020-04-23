@@ -83,7 +83,9 @@
     <ClCompile Include="src\GameEngine\PhysicsContainer.h">
       <Filter>Header Files\GameEngine\Components\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameEngine\PhysicsContainer.cpp" />
+    <ClCompile Include="src\GameEngine\PhysicsContainer.cpp">
+      <Filter>Source Files\GameEngine\Components\Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -157,6 +159,9 @@
     </Filter>
     <Filter Include="Header Files\GameEngine\Components\Physics">
       <UniqueIdentifier>{234f6aac-64a6-4109-a801-96304df4aa60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameEngine\Components\Physics">
+      <UniqueIdentifier>{fc99fa1f-32aa-4ecf-aef9-a44f7d07a361}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

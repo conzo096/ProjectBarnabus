@@ -4,7 +4,8 @@
 
 namespace
 {
-void CompareBoundingBoxes(BoundingVolumes::BoundingBox& lhs, BoundingVolumes::BoundingBox& rhs)
+
+bool BoundingBoxColliding(BoundingVolumes::BoundingBox& lhs, BoundingVolumes::BoundingBox& rhs)
 {
 	auto lhsPos = lhs.GetMinCoordinates();
 	const auto lhsWidth = lhs.GetWidth();
@@ -20,9 +21,10 @@ void CompareBoundingBoxes(BoundingVolumes::BoundingBox& lhs, BoundingVolumes::Bo
 		lhsPos.y < rhsPos.y + rhsHeight && lhsPos.y + lhsHeight > rhsPos.y &&
 		lhsPos.z < rhsPos.z + rhsLength && lhsPos.z + lhsLength > rhsPos.z)
 	{
-		// todo handle collisions
-		rhs.Collision();
+		return true;
 	}
+
+	return false;
 }
 
 void CompareBoundingVolumes(BoundingVolumes::BoundingVolumes* const lhs, BoundingVolumes::BoundingVolumes* const rhs)
@@ -35,18 +37,23 @@ void CompareBoundingVolumes(BoundingVolumes::BoundingVolumes* const lhs, Boundin
 		BoundingVolumes::BoundingBox& lhsBox = lhsBoxes[i];
 		for (int j = 0; j < rhsBoxes.size(); j++)
 		{
-			CompareBoundingBoxes(lhsBoxes[i], rhsBoxes[j]);
+			if (BoundingBoxColliding(lhsBoxes[i], rhsBoxes[j]))
+			{
+				rhsBoxes[j].Collision();
+			}
 		}
 	}
 }
 
-void ResolveCollisions(const std::vector<BoundingVolumes::BoundingVolumes*>& boundingVolumes)
+void ResolveCollisions(const std::vector<Physics::PhysicsContainer*>& boundingVolumes)
 {
 	for (int i = 0; i < boundingVolumes.size(); i++)
 	{
+		auto firstBoundingBox = boundingVolumes[i]->GetBoundingVolume();
 		for (int j = i+1; j < boundingVolumes.size(); j++)
 		{
-			CompareBoundingVolumes(boundingVolumes[i], boundingVolumes[j]);
+			auto secondBoundingBox = boundingVolumes[j]->GetBoundingVolume();
+			CompareBoundingVolumes(firstBoundingBox, secondBoundingBox);
 		}
 	}
 }
@@ -103,17 +110,17 @@ void Environment::Update(float deltaTime)
 		it->second->Update(deltaTime);
 	}
 
-	std::vector<BoundingVolumes::BoundingVolumes*> boundingVolumes;
+	std::vector<Physics::PhysicsContainer*> allPhysicsObjects;
 	// Add all physics objects to list
 	for (auto it = entities.begin(); it != entities.end(); ++it)
 	{
 		if (it->second->GetCompatibleComponent<Physics::PhysicsContainer>())
 		{
-			boundingVolumes.push_back(it->second->GetCompatibleComponent<Physics::PhysicsContainer>()->GetBoundingVolume());
+			allPhysicsObjects.push_back(it->second->GetCompatibleComponent<Physics::PhysicsContainer>());
 		}
 	}
 
-	ResolveCollisions(boundingVolumes);
+	ResolveCollisions(allPhysicsObjects);
 
 }
 
