@@ -1,6 +1,6 @@
 #include "Environment.h"
 #include "Renderer.h"
-#include "BoundingVolumes.h"
+#include "PhysicsContainer.h"
 
 namespace
 {
@@ -107,9 +107,9 @@ void Environment::Update(float deltaTime)
 	// Add all physics objects to list
 	for (auto it = entities.begin(); it != entities.end(); ++it)
 	{
-		if (it->second->GetCompatibleComponent<BoundingVolumes::BoundingVolumes>())
+		if (it->second->GetCompatibleComponent<Physics::PhysicsContainer>())
 		{
-			boundingVolumes.push_back(it->second->GetCompatibleComponent<BoundingVolumes::BoundingVolumes>());
+			boundingVolumes.push_back(it->second->GetCompatibleComponent<Physics::PhysicsContainer>()->GetBoundingVolume());
 		}
 	}
 

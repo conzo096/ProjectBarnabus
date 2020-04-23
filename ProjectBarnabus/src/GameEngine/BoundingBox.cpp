@@ -125,7 +125,7 @@ void BoundingBox::SetShader(GLShader & shader)
 	data.SetShader(&shader);
 }
 
-void BoundingBox::Update(glm::mat4 volumeTransform, float deltaTime)
+void BoundingBox::Update(glm::mat4 volumeTransform)
 {
 	SetTransform(volumeTransform  * offset);
 	data.SetTransform(GetTransform());

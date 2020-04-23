@@ -24,7 +24,7 @@ public:
 
 	const void Collision();
 public:
-	void Update(glm::mat4 volumeTransform, float deltaTime);
+	void Update(glm::mat4 volumeTransform);
 	void Render(std::string environmentName);
 private: 
 	glm::vec3 minCoordinates = glm::vec3(std::numeric_limits<float>::max());

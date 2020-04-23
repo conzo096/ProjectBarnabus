@@ -1,5 +1,4 @@
 #include "BoundingVolumes.h"
-#include "Model.h"
 
 namespace BoundingVolumes
 {
@@ -21,8 +20,7 @@ void AddBoundingBoxes(const Node* node, std::vector<BoundingBox>& boundingBoxes)
 }
 }
 
-
-BoundingVolumes::BoundingVolumes::BoundingVolumes() : Component("BoundingVolumes")
+BoundingVolumes::BoundingVolumes::BoundingVolumes()
 {
 }
 	
@@ -62,19 +60,20 @@ void BoundingVolumes::AddBoundingVolumes(const std::vector<Vertex>& vertices, gl
 	boundingBoxes.push_back(BoundingBox(vertices, trans));
 }
 
-void BoundingVolumes::Update(float deltaTime)
+void BoundingVolumes::Update(glm::mat4 transform)
 {
 	for (auto& bb : boundingBoxes)
 	{
-		bb.Update(GetTransform(), deltaTime);
+		bb.Update(transform);
 	}
 }
 
-void BoundingVolumes::Render()
+void BoundingVolumes::Render(std::string environmentName)
 {
 	for (auto& bb : boundingBoxes)
 	{
-		bb.Render(GetParent()->GetEnvironmentName());
+		bb.Render(environmentName);
 	}
 }
+
 }

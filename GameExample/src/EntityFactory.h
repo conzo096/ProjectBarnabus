@@ -7,7 +7,7 @@
 #include "GameEngine/Terrain.h"
 #include "GameEngine/Movement.h"
 #include "GameEngine/ArcBallCamera.h"
-#include "GameEngine/BoundingVolumes.h"
+#include "GameEngine/PhysicsContainer.h"
 #include <memory>
 
 namespace EntityFactory{
@@ -23,13 +23,13 @@ namespace EntityFactory{
 		animatedModelComponent->InitModel();
 		animatedModelComponent->SetAnimation("walk");
 
-		auto boundingVolumesComponent = std::make_unique<BoundingVolumes::BoundingVolumes>();
-		boundingVolumesComponent->AddBoundingVolumes(animatedModelComponent->GetRootNode());
-		boundingVolumesComponent->SetShader(*BarnabusGameEngine::Get().GetShader("red"));
-		boundingVolumesComponent->InitMeshes();
+		auto physicsComponent = std::make_unique<Physics::PhysicsContainer>();
+		physicsComponent->AddBoundingVolumes(animatedModelComponent->GetRootNode());
+		physicsComponent->SetShader(*BarnabusGameEngine::Get().GetShader("red"));
+		physicsComponent->InitMeshes();
 
 		player->AddComponent(std::move(animatedModelComponent));
-		player->AddComponent(std::move(boundingVolumesComponent));
+		player->AddComponent(std::move(physicsComponent));
 
 		player->SetPosition(position);
 
@@ -73,13 +73,13 @@ namespace EntityFactory{
 		modelComponent->SetShader(shader);
 		modelComponent->InitModel();
 		
-		auto boundingVolumesComponent = std::make_unique<BoundingVolumes::BoundingVolumes>();
-		boundingVolumesComponent->AddBoundingVolumes(modelComponent->GetRootNode());
-		boundingVolumesComponent->SetShader(*BarnabusGameEngine::Get().GetShader("red"));
-		boundingVolumesComponent->InitMeshes();
+		auto physicsComponent = std::make_unique<Physics::PhysicsContainer>();
+		physicsComponent->AddBoundingVolumes(modelComponent->GetRootNode());
+		physicsComponent->SetShader(*BarnabusGameEngine::Get().GetShader("red"));
+		physicsComponent->InitMeshes();
 				
 		building->AddComponent(std::move(modelComponent));
-		building->AddComponent(std::move(boundingVolumesComponent));
+		building->AddComponent(std::move(physicsComponent));
 		
 		building->SetPosition(position);
 
