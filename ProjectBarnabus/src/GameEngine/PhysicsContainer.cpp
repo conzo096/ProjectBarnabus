@@ -40,7 +40,7 @@ void PhysicsContainer::AddBoundingVolumes(const std::vector<Vertex>& vertices, g
 	boundingVolumes.AddBoundingVolumes(vertices, trans);
 }
 
-void PhysicsContainer::HandleCollision(const PhysicsContainer* other)
+void PhysicsContainer::HandleCollision(const PhysicsContainer* other, const BoundingVolumes::BoundingBox& otherBB)
 {
 	if (isMovable)
 	{

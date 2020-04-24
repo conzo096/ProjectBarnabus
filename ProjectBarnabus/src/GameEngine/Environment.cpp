@@ -39,7 +39,7 @@ void CompareBoundingVolumes(BoundingVolumes::BoundingVolumes* const lhsBoundingV
 		{
 			if (BoundingBoxColliding(lhsBoxes[i], rhsBoxes[j]))
 			{
-				rhsPhysics->HandleCollision(lhsPhysics);
+				rhsPhysics->HandleCollision(lhsPhysics, lhsBoxes[i]);
 			}
 		}
 	}
