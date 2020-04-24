@@ -61,7 +61,6 @@
     <ClCompile Include="src\GameEngine\HeightMapTexture.cpp">
       <Filter>Source Files\GameEngine\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameEngine\TextQuad.cpp" />
     <ClCompile Include="src\GameEngine\Movement.cpp">
       <Filter>Source Files\GameEngine\Components</Filter>
     </ClCompile>
@@ -85,6 +84,12 @@
     </ClCompile>
     <ClCompile Include="src\GameEngine\PhysicsContainer.cpp">
       <Filter>Source Files\GameEngine\Components\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Transform.cpp">
+      <Filter>Source Files\GameEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\TextQuad.cpp">
+      <Filter>Source Files\GameEngine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

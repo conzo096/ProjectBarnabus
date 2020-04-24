@@ -8,8 +8,9 @@
 #include <assimp/PostProcess.h>
 #include <assimp/Scene.h>
 #include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp> 
-#include <glm/gtx/quaternion.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/transform.hpp>
+
 #include <GLFW/glfw3.h>
 #include <memory>
 

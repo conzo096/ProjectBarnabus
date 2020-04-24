@@ -6,7 +6,6 @@
 #include <vector>
 #include "Transform.h"
 
-
 class Entity;
 
 class Component : public Transform
