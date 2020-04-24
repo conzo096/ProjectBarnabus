@@ -2,7 +2,7 @@
 
 namespace Physics
 {
-Physics::PhysicsContainer::PhysicsContainer() : Component("PhysicsContainer")
+Physics::PhysicsContainer::PhysicsContainer(bool movable) : Component("PhysicsContainer"), isMovable(movable)
 {
 }
 
@@ -38,6 +38,17 @@ void PhysicsContainer::AddBoundingVolumes(const glm::vec3 minCoords, const glm::
 void PhysicsContainer::AddBoundingVolumes(const std::vector<Vertex>& vertices, glm::mat4 trans)
 {
 	boundingVolumes.AddBoundingVolumes(vertices, trans);
+}
+
+void PhysicsContainer::HandleCollision(const PhysicsContainer* other)
+{
+	if (isMovable)
+	{
+		glm::vec3 previousPos = GetParent()->GetPreviousPosition();
+		glm::vec3 currentPos = GetParent()->GetPosition();
+		glm::vec3 diff = currentPos != previousPos ? glm::normalize(currentPos - previousPos) : glm::vec3(0, 0, 0);
+		GetParent()->Move(-diff * 10.0f);
+	}
 }
 
 void PhysicsContainer::Update(float deltaTime)

@@ -8,7 +8,7 @@ namespace Physics
 	class PhysicsContainer : public Component
 	{
 	public:
-		PhysicsContainer();
+		PhysicsContainer(bool movable);
 		~PhysicsContainer();
 	public:
 		BoundingVolumes::BoundingVolumes* GetBoundingVolume();
@@ -19,12 +19,16 @@ namespace Physics
 
 		void AddBoundingVolumes(const glm::vec3 minCoords, const glm::vec3 maxCoords);
 		void AddBoundingVolumes(const std::vector<Vertex>& vertices, glm::mat4 trans);
+
+	public:
+		void HandleCollision(const PhysicsContainer* other);
 	public:
 		void Update(float deltaTime) override;
 		void Render() override;
 
 	private:
 		BoundingVolumes::BoundingVolumes boundingVolumes;
+		bool isMovable;
 	};
 
 }

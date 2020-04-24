@@ -114,12 +114,6 @@ const float BoundingBox::GetLength()
 	return std::abs(diff.z);
 }
 
-const void BoundingBox::Collision()
-{
-	SetTransform(glm::mat4(1) * offset);
-	data.SetTransform(GetTransform());
-}
-
 void BoundingBox::SetShader(GLShader & shader)
 {
 	data.SetShader(&shader);

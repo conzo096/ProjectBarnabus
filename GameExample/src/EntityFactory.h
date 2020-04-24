@@ -23,7 +23,7 @@ namespace EntityFactory{
 		animatedModelComponent->InitModel();
 		animatedModelComponent->SetAnimation("walk");
 
-		auto physicsComponent = std::make_unique<Physics::PhysicsContainer>();
+		auto physicsComponent = std::make_unique<Physics::PhysicsContainer>(true);
 		physicsComponent->AddBoundingVolumes(animatedModelComponent->GetRootNode());
 		physicsComponent->SetShader(*BarnabusGameEngine::Get().GetShader("red"));
 		physicsComponent->InitMeshes();
@@ -73,7 +73,7 @@ namespace EntityFactory{
 		modelComponent->SetShader(shader);
 		modelComponent->InitModel();
 		
-		auto physicsComponent = std::make_unique<Physics::PhysicsContainer>();
+		auto physicsComponent = std::make_unique<Physics::PhysicsContainer>(false);
 		physicsComponent->AddBoundingVolumes(modelComponent->GetRootNode());
 		physicsComponent->SetShader(*BarnabusGameEngine::Get().GetShader("red"));
 		physicsComponent->InitMeshes();

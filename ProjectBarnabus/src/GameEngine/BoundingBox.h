@@ -22,7 +22,6 @@ public:
 	const float GetHeight();
 	const float GetLength();
 
-	const void Collision();
 public:
 	void Update(glm::mat4 volumeTransform);
 	void Render(std::string environmentName);

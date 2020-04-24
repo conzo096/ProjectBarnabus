@@ -27,10 +27,10 @@ bool BoundingBoxColliding(BoundingVolumes::BoundingBox& lhs, BoundingVolumes::Bo
 	return false;
 }
 
-void CompareBoundingVolumes(BoundingVolumes::BoundingVolumes* const lhs, BoundingVolumes::BoundingVolumes* const rhs)
+void CompareBoundingVolumes(BoundingVolumes::BoundingVolumes* const lhsBoundingVolume, Physics::PhysicsContainer* lhsPhysics, BoundingVolumes::BoundingVolumes* const rhsBoundingVolume, Physics::PhysicsContainer* rhsPhysics)
 {
-	auto& lhsBoxes = lhs->GetBoundingBoxes();
-	auto& rhsBoxes = rhs->GetBoundingBoxes();
+	auto& lhsBoxes = lhsBoundingVolume->GetBoundingBoxes();
+	auto& rhsBoxes = rhsBoundingVolume->GetBoundingBoxes();
 
 	for (int i = 0; i < lhsBoxes.size(); i++)
 	{
@@ -39,7 +39,7 @@ void CompareBoundingVolumes(BoundingVolumes::BoundingVolumes* const lhs, Boundin
 		{
 			if (BoundingBoxColliding(lhsBoxes[i], rhsBoxes[j]))
 			{
-				rhsBoxes[j].Collision();
+				rhsPhysics->HandleCollision(lhsPhysics);
 			}
 		}
 	}
@@ -53,7 +53,7 @@ void ResolveCollisions(const std::vector<Physics::PhysicsContainer*>& boundingVo
 		for (int j = i+1; j < boundingVolumes.size(); j++)
 		{
 			auto secondBoundingBox = boundingVolumes[j]->GetBoundingVolume();
-			CompareBoundingVolumes(firstBoundingBox, secondBoundingBox);
+			CompareBoundingVolumes(firstBoundingBox, boundingVolumes[i], secondBoundingBox, boundingVolumes[j]);
 		}
 	}
 }
