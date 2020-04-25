@@ -40,14 +40,20 @@ void PhysicsContainer::AddBoundingVolumes(const std::vector<Vertex>& vertices, g
 	boundingVolumes.AddBoundingVolumes(vertices, trans);
 }
 
-void PhysicsContainer::HandleCollision(const PhysicsContainer* other, const BoundingVolumes::BoundingBox& otherBB)
+void PhysicsContainer::HandleCollision(const PhysicsContainer* other, BoundingVolumes::BoundingBox& const otherBB, BoundingVolumes::BoundingBox& const thisBB)
 {
 	if (isMovable)
 	{
 		glm::vec3 previousPos = GetParent()->GetPreviousPosition();
 		glm::vec3 currentPos = GetParent()->GetPosition();
 		glm::vec3 diff = currentPos != previousPos ? glm::normalize(currentPos - previousPos) : glm::vec3(0, 0, 0);
-		GetParent()->Move(-diff * 10.0f);
+
+		//Calculate how much of an intersection there is between two boxes
+		auto min = thisBB.GetMinCoordinates();
+		auto otherMin = otherBB.GetMinCoordinates();
+		auto distance = glm::distance(min, otherMin);
+		
+		GetParent()->SetPosition(GetParent()->GetPreviousPosition());
 	}
 }
 

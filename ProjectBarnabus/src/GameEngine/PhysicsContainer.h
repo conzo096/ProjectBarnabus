@@ -21,7 +21,7 @@ namespace Physics
 		void AddBoundingVolumes(const std::vector<Vertex>& vertices, glm::mat4 trans);
 
 	public:
-		void HandleCollision(const PhysicsContainer* other, const BoundingVolumes::BoundingBox& otherBB);
+		void HandleCollision(const PhysicsContainer* other, BoundingVolumes::BoundingBox& const  otherBB, BoundingVolumes::BoundingBox& const thisBB);
 	public:
 		void Update(float deltaTime) override;
 		void Render() override;
