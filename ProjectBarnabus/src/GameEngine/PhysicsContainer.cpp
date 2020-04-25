@@ -47,13 +47,8 @@ void PhysicsContainer::HandleCollision(const PhysicsContainer* other, BoundingVo
 		glm::vec3 previousPos = GetParent()->GetPreviousPosition();
 		glm::vec3 currentPos = GetParent()->GetPosition();
 		glm::vec3 diff = currentPos != previousPos ? glm::normalize(currentPos - previousPos) : glm::vec3(0, 0, 0);
-
-		//Calculate how much of an intersection there is between two boxes
-		auto min = thisBB.GetMinCoordinates();
-		auto otherMin = otherBB.GetMinCoordinates();
-		auto distance = glm::distance(min, otherMin);
 		
-		GetParent()->SetPosition(GetParent()->GetPreviousPosition());
+		GetParent()->SetPosition(previousPos - diff);
 	}
 }
 
