@@ -27,7 +27,7 @@ void Movement::Update(float deltaTime)
 	dir.y = 0;
 	glm::vec3 left = glm::normalize(glm::cross(up, dir));
 	left.y = 0;
-	auto speed = deltaTime * 30;
+	auto speed = deltaTime * 10;
 	// w is foward * amount
 	// s is -forward * amount
 	// a is left of forward so foward * ?
@@ -36,32 +36,29 @@ void Movement::Update(float deltaTime)
 	auto& animator = GetParent()->GetComponent<AnimatedModel>().GetAnimator();
 	animator.SetState(AnimationState::PAUSE);
 
+	glm::vec3 movement(0);
 	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_W) == GLFW_PRESS)
 	{
-		GetParent()->Move(dir*speed);
-		GetParent()->SetPosition(terrain->GetWorldPositionFromGrid(GetParent()->GetPosition()));
-		animator.SetState(AnimationState::PLAY);
-
+		movement += dir*speed;
 	}
 	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_S) == GLFW_PRESS)
 	{
-		GetParent()->Move(-dir*speed);
-		GetParent()->SetPosition(terrain->GetWorldPositionFromGrid(GetParent()->GetPosition()));
-		animator.SetState(AnimationState::PLAY);
-
+		movement += -dir * speed;
 	}
 	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_A) == GLFW_PRESS)
 	{
-		GetParent()->Move(left*speed);
-		GetParent()->SetPosition(terrain->GetWorldPositionFromGrid(GetParent()->GetPosition()));
-		animator.SetState(AnimationState::PLAY);
-
+		movement += left * speed;
 	}
 	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_D) == GLFW_PRESS)
 	{
-		GetParent()->Move(-left*speed);
-		GetParent()->SetPosition(terrain->GetWorldPositionFromGrid(GetParent()->GetPosition()));
-		animator.SetState(AnimationState::PLAY);
+		movement += -left*speed;
+	}
 
+	GetParent()->Move(movement);
+	GetParent()->SetPosition(terrain->GetWorldPositionFromGrid(GetParent()->GetPosition()));
+
+	if (movement != glm::vec3(0))
+	{
+		animator.SetState(AnimationState::PLAY);
 	}
 }

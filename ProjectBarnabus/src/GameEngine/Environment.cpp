@@ -106,12 +106,8 @@ Light* Environment::GetLight(std::string lightName)
 
 void Environment::Update(float deltaTime)
 {
-	for (auto it = entities.begin(); it != entities.end(); ++it)
-	{
-		it->second->Update(deltaTime);
-	}
-
 	std::vector<Physics::PhysicsContainer*> allPhysicsObjects;
+	
 	// Add all physics objects to list
 	for (auto it = entities.begin(); it != entities.end(); ++it)
 	{
@@ -119,6 +115,11 @@ void Environment::Update(float deltaTime)
 		{
 			allPhysicsObjects.push_back(it->second->GetCompatibleComponent<Physics::PhysicsContainer>());
 		}
+	}
+
+	for (auto it = entities.begin(); it != entities.end(); ++it)
+	{
+		it->second->Update(deltaTime);
 	}
 
 	ResolveCollisions(allPhysicsObjects);

@@ -46,9 +46,9 @@ void PhysicsContainer::HandleCollision(const PhysicsContainer* other, BoundingVo
 	{
 		glm::vec3 previousPos = GetParent()->GetPreviousPosition();
 		glm::vec3 currentPos = GetParent()->GetPosition();
-		glm::vec3 diff = currentPos != previousPos ? glm::normalize(currentPos - previousPos) : glm::vec3(0, 0, 0);
+		glm::vec3 direction = currentPos != previousPos ? glm::normalize(currentPos - previousPos) : glm::vec3(0, 0, 0);
 		
-		GetParent()->SetPosition(previousPos - diff);
+		GetParent()->SetPosition(previousPos - direction);
 	}
 }
 
