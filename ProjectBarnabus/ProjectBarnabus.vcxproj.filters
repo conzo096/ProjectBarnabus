@@ -79,9 +79,6 @@
     <ClCompile Include="src\GameEngine\BoundingVolumes.cpp">
       <Filter>Source Files\GameEngine\Components\BoundingVolumes</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameEngine\PhysicsContainer.h">
-      <Filter>Header Files\GameEngine\Components\Physics</Filter>
-    </ClCompile>
     <ClCompile Include="src\GameEngine\PhysicsContainer.cpp">
       <Filter>Source Files\GameEngine\Components\Physics</Filter>
     </ClCompile>
@@ -277,6 +274,9 @@
     </ClInclude>
     <ClInclude Include="src\GameEngine\BoundingVolumes.h">
       <Filter>Header Files\GameEngine\Components\BoundingVolumes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\PhysicsContainer.h">
+      <Filter>Header Files\GameEngine\Components\Physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

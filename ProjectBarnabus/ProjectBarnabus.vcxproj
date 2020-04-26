@@ -31,7 +31,6 @@
     <ClCompile Include="src\GameEngine\Model.cpp" />
     <ClCompile Include="src\GameEngine\Movement.cpp" />
     <ClCompile Include="src\GameEngine\PhysicsContainer.cpp" />
-    <ClCompile Include="src\GameEngine\PhysicsContainer.h" />
     <ClCompile Include="src\GameEngine\Renderer.cpp" />
     <ClCompile Include="src\GameEngine\stb_image.cpp" />
     <ClCompile Include="src\GameEngine\StringLog.cpp" />
@@ -69,6 +68,7 @@
     <ClInclude Include="src\GameEngine\NodeAnim.h" />
     <ClInclude Include="src\GameEngine\MeshData.h" />
     <ClInclude Include="src\GameEngine\Model.h" />
+    <ClInclude Include="src\GameEngine\PhysicsContainer.h" />
     <ClInclude Include="src\GameEngine\Renderer.h" />
     <ClInclude Include="src\GameEngine\Singleton.h" />
     <ClInclude Include="src\GameEngine\stb_image.h" />
