@@ -54,11 +54,10 @@ void Movement::Update(float deltaTime)
 		movement += -left*speed;
 	}
 
-	GetParent()->Move(movement);
-	GetParent()->SetPosition(terrain->GetWorldPositionFromGrid(GetParent()->GetPosition()));
-
 	if (movement != glm::vec3(0))
 	{
+		GetParent()->Move(movement);
+		GetParent()->SetPosition(terrain->GetWorldPositionFromGrid(GetParent()->GetPosition()));
 		animator.SetState(AnimationState::PLAY);
 	}
 }
