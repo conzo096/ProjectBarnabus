@@ -27,12 +27,12 @@ Terrain::Terrain(const std::string filePath, TerrainType terrain) : Terrain()
 
 glm::vec3 Terrain::GetWorldPositionFromGrid(glm::vec3 worldPosition)
 {
-	glm::vec3 convertedPosition = glm::vec4(worldPosition, 1) * glm::inverse(GetTransform());
+	glm::vec3 convertedPosition = glm::vec4(worldPosition, 1) * glm::inverse(GetParent()->GetTransform());
 	glm::vec3 destination = worldPosition;
 	
 	// Convert world space to local space.
-	float terrainX = convertedPosition.x - GetPosition().x;
-	float terrainZ = convertedPosition.z - GetPosition().z;
+	float terrainX = convertedPosition.x - GetParent()->GetPosition().x;
+	float terrainZ = convertedPosition.z - GetParent()->GetPosition().z;
 
 	float gridSquare = height / (height - 1);
 	int gridX = (int)floor(terrainX / gridSquare);
