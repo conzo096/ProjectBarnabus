@@ -29,6 +29,7 @@ namespace Physics
 	private:
 		BoundingVolumes::BoundingVolumes boundingVolumes;
 		bool isMovable;
+		glm::vec3 force;
 	};
 
 }

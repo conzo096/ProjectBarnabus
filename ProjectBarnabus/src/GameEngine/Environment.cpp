@@ -56,6 +56,7 @@ void ResolveCollisions(const std::vector<Physics::PhysicsContainer*>& boundingVo
 			auto secondBoundingBox = boundingVolumes[j]->GetBoundingVolume();
 			CompareBoundingVolumes(firstBoundingBox, boundingVolumes[i], secondBoundingBox, boundingVolumes[j]);
 		}
+		boundingVolumes[i]->Update(0);
 	}
 }
 

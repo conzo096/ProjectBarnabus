@@ -12,6 +12,6 @@ public:
 	void LoadGameContent();
 
 private:
-	float duration = 1000;
+	float duration = 100;
 	float currentTime = 0;
 };

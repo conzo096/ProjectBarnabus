@@ -46,14 +46,21 @@ void PhysicsContainer::HandleCollision(const PhysicsContainer* other, BoundingVo
 	{
 		glm::vec3 previousPos = GetParent()->GetPreviousPosition();
 		glm::vec3 currentPos = GetParent()->GetPosition();
-		glm::vec3 direction = currentPos != previousPos ? glm::normalize(currentPos - previousPos) : glm::vec3(0, 0, 0);
+		glm::vec3 direction = currentPos != previousPos ? glm::normalize(previousPos - currentPos) : glm::vec3(0, 0, 0);
 		
-		GetParent()->SetPosition(previousPos - direction);
+		force += direction;
 	}
 }
 
 void PhysicsContainer::Update(float deltaTime)
 {
+	if (force != glm::vec3(0))
+	{
+		GetParent()->SetPosition(GetParent()->GetPreviousPosition() + force);
+		GetParent()->UpdateTransforms();
+		force = glm::vec3(0);
+	}
+	
 	boundingVolumes.Update(GetTransform());
 }
 
