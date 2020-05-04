@@ -218,12 +218,11 @@ Animator& AnimatedModel::GetAnimator()
 
 void AnimatedModel::ReadNodeHeirarchy(float animationTime, const Node* node, const glm::mat4& parentTransform)
 {
-	std::string nodeName(node->name);
 
 	const std::shared_ptr<Animation> player = animator.GetCurrentAnimation();
 
 	glm::mat4 nodeTransformation = node->transformation;
-	const NodeAnim* nodeAnim = FindNodeAnim(player, nodeName);
+	const NodeAnim* nodeAnim = FindNodeAnim(player, node->name);
 
 	if (nodeAnim)
 	{
@@ -242,9 +241,9 @@ void AnimatedModel::ReadNodeHeirarchy(float animationTime, const Node* node, con
 
 	glm::mat4 globalTransformation = parentTransform * nodeTransformation;
 
-	if (boneMapping.find(nodeName) != boneMapping.end())
+	if (boneMapping.find(node->name) != boneMapping.end())
 	{
-		unsigned int boneIndex = boneMapping[nodeName];
+		unsigned int boneIndex = boneMapping[node->name];
 		bones[boneIndex].finalTransformation = globalInverseTransform * globalTransformation * bones[boneIndex].offSet; // The positioning is off?
 	}
 
