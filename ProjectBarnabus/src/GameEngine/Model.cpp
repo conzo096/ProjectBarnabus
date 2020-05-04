@@ -66,9 +66,15 @@ namespace
 		}
 
 		// todo If the mesh has a texture associated with the mesh, use it here.
-		Texture* texture = new Texture;
-		texture->LoadTexture("res\\Textures\\test.png");
-		mesh.SetTexture(texture);
+
+		if (!BarnabusGameEngine::Get().HasTexture("test"))
+		{
+			auto texture = std::make_unique<Texture>();
+			texture->LoadTexture("res\\Textures\\test.png");
+			BarnabusGameEngine::Get().AddTexture("test", std::move(texture));
+		}
+
+		mesh.SetTexture(BarnabusGameEngine::Get().GetTexture("test"));
 		vertexBegin += modelMesh->mNumVertices;
 
 	}

@@ -16,6 +16,7 @@
 #include "StringLog.h"
 
 #include "GLShader.h"
+#include "Texture.h"
 #include <map>
 class BarnabusGameEngine : public Singleton<BarnabusGameEngine>
 {
@@ -33,6 +34,10 @@ public:
 	bool AddShader(std::string name, std::unique_ptr<GLShader> shader);
 	GLShader* GetShader(std::string name);
 
+	bool AddTexture(std::string name, std::unique_ptr<Texture> texture);
+	bool HasTexture(std::string name);
+	Texture* GetTexture(std::string name);
+
 private:
 	void PrintLogs();
 protected:
@@ -42,6 +47,8 @@ protected:
 // This should be moved to a seperate resource manager
 private:
 	std::map<std::string, std::unique_ptr<GLShader>> shaders;
+	std::map<std::string, std::unique_ptr<Texture>> textures;
+
 private:
 	bool running = true;
 	std::unique_ptr<IGame> game = nullptr;
