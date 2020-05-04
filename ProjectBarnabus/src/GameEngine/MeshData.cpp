@@ -98,12 +98,12 @@ void MeshData::InsertBoneData(VertexBoneData boneData)
 	bonesData.push_back(boneData);
 }
 
-std::vector<unsigned int> MeshData::GetIndices()
+std::vector<unsigned int>& MeshData::GetIndices()
 {
 	return indices;
 }
 
-std::vector<VertexBoneData> MeshData::GetBoneData()
+std::vector<VertexBoneData>& MeshData::GetBoneData()
 {
 	return bonesData;
 }

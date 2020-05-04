@@ -40,8 +40,8 @@ public:
 	void InsertIndex(unsigned int index);
 	void InsertBoneData(VertexBoneData boneData);
 
-	std::vector<unsigned int> GetIndices();
-	std::vector<VertexBoneData> GetBoneData();
+	std::vector<unsigned int>& GetIndices();
+	std::vector<VertexBoneData>& GetBoneData();
 
 	void InsertVertex(Vertex vertex);
 	void InsertVertices(std::vector<Vertex> verts);
