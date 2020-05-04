@@ -103,7 +103,7 @@ void Renderer::SetCameraViewProjection(glm::mat4 camera)
 	cameraVP = camera;
 }
 
-void Renderer::AddMesh(std::string environmentName, MeshData md)
+void Renderer::AddMesh(std::string environmentName, MeshData& md)
 {
 	auto environmentMeshes = meshesToRender.find(environmentName);
 
@@ -142,7 +142,7 @@ glm::mat4 Renderer::GetCameraVP()
 	return cameraVP;
 }
 
-void Renderer::AddUiElement(MeshData md)
+void Renderer::AddUiElement(MeshData& md)
 {
 	uiElementsToRender.push_back(md);
 }
