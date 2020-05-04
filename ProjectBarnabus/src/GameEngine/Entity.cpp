@@ -33,10 +33,8 @@ Entity* Component::GetParent() const { return entity; }
 
 //############## ENTITY ##############
 
-Entity::Entity() 
+Entity::Entity(const std::string & entityName)  : name(entityName), active(true)
 {
-	active = true;
-	components.clear();
 }
 
 Entity::~Entity()

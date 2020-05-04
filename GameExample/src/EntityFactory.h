@@ -14,7 +14,7 @@ namespace EntityFactory{
 
 	static std::unique_ptr<Entity> CreatePlayer(glm::vec3 position, GLShader& shader, Terrain* terrain, Camera* camera)
 	{
-		auto player = std::make_unique<Entity>();
+		auto player = std::make_unique<Entity>("player");
 
 		player->AddComponent(std::make_unique<Movement>(terrain, camera));
 		std::string fileName("res\\Models\\AnimatedModels\\Player.fbx");
@@ -38,7 +38,7 @@ namespace EntityFactory{
 
 	static std::unique_ptr<Entity> CreateSphere(glm::vec3 position, GLShader& shader)
 	{
-		auto sphere = std::make_unique<Entity>();
+		auto sphere = std::make_unique<Entity>("sun");
 
 		std::string fileName("res\\Models\\Sphere.fbx");
 		auto modelComponent = std::make_unique<Model>(fileName);
@@ -53,7 +53,7 @@ namespace EntityFactory{
 
 	static std::unique_ptr<Entity> CreateTerrain(GLShader& shader)
 	{
-		auto terrain = std::make_unique<Entity>();
+		auto terrain = std::make_unique<Entity>("terrain");
 		auto fileName = "res\\Textures\\HeightMap.png";
 		auto terrainComponent = std::make_unique<Terrain>(fileName, Terrain::TerrainType::Image);
 		terrainComponent->SetShader(shader);
@@ -66,7 +66,7 @@ namespace EntityFactory{
 
 	static std::unique_ptr<Entity> CreateBuilding(glm::vec3 position, GLShader& shader)
 	{
-		auto building = std::make_unique<Entity>();
+		auto building = std::make_unique<Entity>("building");
 
 		std::string fileName("res\\Models\\Building.fbx");
 		auto modelComponent = std::make_unique<Model>(fileName);
@@ -88,7 +88,7 @@ namespace EntityFactory{
 
 	static std::unique_ptr<Entity> CreateCamera()
 	{
-		auto camera = std::make_unique<Entity>();
+		auto camera = std::make_unique<Entity>("camera");
 
 		auto cameraComponent = std::make_unique<ArcBallCamera>();
 		camera->AddComponent(std::move(cameraComponent));

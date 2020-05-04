@@ -38,7 +38,8 @@ protected:
 	map components;
 	bool active;
 public:
-	Entity();
+	Entity(const std::string& entityName);
+	Entity() = delete;
 	~Entity();
 
 	const std::string GetName() const;
