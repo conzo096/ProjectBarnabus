@@ -65,6 +65,11 @@ namespace
 		{
 			LoadBoneData(meshRootNode->children[i], rootNode->mChildren[i], scene, bones, boneMapping);
 		}
+
+		for (auto& mesh : meshRootNode->data)
+		{
+			mesh.transforms.resize(bones.size());
+		}
 	}
 
 	int FindScaling(float animationTime, const NodeAnim * nodeAnim)
@@ -332,9 +337,6 @@ void AnimatedModel::UpdateNodeMeshes(Node*& node, float deltaTime)
 
 	for (auto& mesh : node->data)
 	{
-		mesh.transforms.clear();
-		mesh.transforms.resize(bones.size());
-
 		ReadNodeHeirarchy(animationTime, rootNode, glm::mat4(1));
 
 		if (!animator.GetCurrentAnimation())
