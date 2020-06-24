@@ -6,7 +6,7 @@ TEST(EnvironmentTest, TestAddEntity)
 	const std::string testEntity = "TestEntity";
 
 	Environment environment("test");
-	auto result = environment.AddEntity(testEntity, std::make_unique<Entity>());
+	auto result = environment.AddEntity(testEntity, std::make_unique<Entity>("Test"));
 
 	EXPECT_TRUE(result);
 }
@@ -16,9 +16,9 @@ TEST(EnvironmentTest, TestAddingExistingEntity)
 	const std::string testEntity = "TestEntity";
 
 	Environment environment("test");
-	auto result = environment.AddEntity(testEntity, std::make_unique<Entity>());
+	auto result = environment.AddEntity(testEntity, std::make_unique<Entity>("Test"));
 
-	result = environment.AddEntity(testEntity, std::make_unique<Entity>());
+	result = environment.AddEntity(testEntity, std::make_unique<Entity>("Test"));
 	EXPECT_FALSE(result);
 }
 
@@ -27,7 +27,7 @@ TEST(EnvironmentTest, TestGetEntity)
 	const std::string testEntity = "TestEntity";
 
 	Environment environment("test");
-	environment.AddEntity(testEntity, std::make_unique<Entity>());
+	environment.AddEntity(testEntity, std::make_unique<Entity>("Test"));
 
 	auto result = environment.GetEntity(testEntity);
 
