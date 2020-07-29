@@ -30,5 +30,6 @@ void main()
 	vec4 lightingColour = (worldLight.colour * intensity);
 	
 	finalColour =  colour + lightingColour;
+	finalColour.a = 1;
 }
 
