@@ -9,7 +9,7 @@ class BoundingBox : public Transform
 {
 public:
 	BoundingBox(glm::vec3 minCoords, glm::vec3 maxCoords);
-	BoundingBox(const std::vector<Vertex>& vertices, glm::mat4 trans);
+	BoundingBox(std::vector<Vertex>& vertices, glm::mat4 trans);
 public:
 	void SetShader(GLShader& shader);
 	void InitMesh();

@@ -13,10 +13,10 @@ void TextQuad::Draw()
 			Vertex vertex;
 			vertex.position = position;
 			vertex.texCoords = texCoord;
-			mesh.vertices.push_back(vertex);
+			mesh.GetVertices().push_back(vertex);
 		};
 
-		mesh.vertices.clear();
+		mesh.GetVertices().clear();
 		for (unsigned int i = 0; i < text.length(); i++)
 		{
 			glm::vec3 UpLeftVertex = glm::vec3(position.x + i * size, position.y + size, 0);

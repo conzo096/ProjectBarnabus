@@ -211,7 +211,7 @@ void Model::InitModel()
 	InitModelNodes(rootNode);
 }
 
-const Node * Model::GetRootNode()
+Node* Model::GetRootNode()
 {
 	return rootNode;
 }

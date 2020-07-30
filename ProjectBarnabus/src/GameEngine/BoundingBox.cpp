@@ -8,7 +8,7 @@ BoundingBox::BoundingBox(glm::vec3 minCoords, glm::vec3 maxCoords): minCoordinat
 {
 }
 
-BoundingBox::BoundingBox(const std::vector<Vertex>& vertices, glm::mat4 trans) : offset(trans)
+BoundingBox::BoundingBox(std::vector<Vertex>& vertices, glm::mat4 trans) : offset(trans)
 {
 	for (const Vertex& vertex : vertices)
 	{

@@ -6,14 +6,8 @@
 class Terrain : public Model
 {
 public:
-	enum TerrainType
-	{
-		Image,
-		Model
-	};
-public:
 	Terrain();
-	Terrain(const std::string filePath, TerrainType terrain);
+	Terrain(const std::string filePath);
 	glm::vec3 GetWorldPositionFromGrid(glm::vec3 worldPosition);
 
 private:

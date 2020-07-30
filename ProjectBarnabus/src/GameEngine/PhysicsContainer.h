@@ -15,10 +15,10 @@ namespace Physics
 		void SetShader(GLShader& shader);
 		void InitMeshes();
 
-		void AddBoundingVolumes(const Node* rootNode);
+		void AddBoundingVolumes(Node* rootNode);
 
 		void AddBoundingVolumes(const glm::vec3 minCoords, const glm::vec3 maxCoords);
-		void AddBoundingVolumes(const std::vector<Vertex>& vertices, glm::mat4 trans);
+		void AddBoundingVolumes(std::vector<Vertex>& vertices, glm::mat4 trans);
 
 	public:
 		void HandleCollision(const PhysicsContainer* other, BoundingVolumes::BoundingBox& const  otherBB, BoundingVolumes::BoundingBox& const thisBB);
