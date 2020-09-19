@@ -6,7 +6,7 @@ max_jobs: 3
 image: Visual Studio 2017
 configuration: Debug
 before_build:
-- ps: Start-FileDownload 'https://vulkan.lunarg.com/s...
+- ps: Start-FileDownload 'https://sdk.lunarg.com/sdk/download/1.2.148.1/windows/VulkanSDK-1.2.148.1-Installer.exe?u='
 - cmd: VulkanSDK-1.2.135.0-Installer.exe /S
 - cmd: set VULKAN_SDK=C:\VulkanSDK\1.2.148.1
 - cmd: nuget restore
