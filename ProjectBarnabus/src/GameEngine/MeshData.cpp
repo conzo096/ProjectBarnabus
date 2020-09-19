@@ -7,17 +7,17 @@
 
 void MeshData::InitialiseMesh()
 {
-	glGenVertexArrays(1, &commonMeshData.VAO);
-	glGenBuffers(1, &commonMeshData.VBO);
-	glGenBuffers(1, &commonMeshData.EBO);
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
 
-	glBindVertexArray(commonMeshData.VAO);
+	glBindVertexArray(VAO);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, commonMeshData.EBO);
-	if (commonMeshData.indices.size() > 0)
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	if (indices.size() > 0)
 	{
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, commonMeshData.indices.size() * sizeof(unsigned int),
-			&commonMeshData.indices[0], GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int),
+			&indices[0], GL_STATIC_DRAW);
 	}
 
 	UpdateBaseVertexBuffers();
@@ -25,7 +25,7 @@ void MeshData::InitialiseMesh()
 	if (bonesData.size() > 0)
 	{
 		// vertex bone information
-		glGenBuffers(1, &commonMeshData.BONES);
+		glGenBuffers(1, &BONES);
 		glBindBuffer(GL_ARRAY_BUFFER, BONES);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(VertexBoneData) * bonesData.size(), &bonesData[0], GL_STATIC_DRAW);
 
@@ -41,10 +41,10 @@ void MeshData::InitialiseMesh()
 
 void MeshData::UpdateBaseVertexBuffers()
 {
-	glBindVertexArray(commonMeshData.VAO);
+	glBindVertexArray(VAO);
 
-	glBindBuffer(GL_ARRAY_BUFFER, commonMeshData.VBO);
-	glBufferData(GL_ARRAY_BUFFER, commonMeshData.vertices.size() * sizeof(Vertex), &commonMeshData.vertices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
 
 	// vertex positions
 	glEnableVertexAttribArray(BUFFERS::POSITION);
@@ -65,32 +65,32 @@ void MeshData::UpdateBaseVertexBuffers()
 }
 void MeshData::SetType(GLenum meshType)
 {
-	commonMeshData.type = meshType;
+	type = meshType;
 }
 
 GLenum MeshData::GetType()
 {
-	return commonMeshData.type;
+	return type;
 }
 
 unsigned int MeshData::GetVao()
 {
-	return commonMeshData.VAO;
+	return VAO;
 }
 
 unsigned int MeshData::GetVbo()
 {
-	return commonMeshData.VBO;
+	return VBO;
 }
 
 unsigned int MeshData::GetEbo()
 {
-	return commonMeshData.EBO;
+	return EBO;
 }
 
 void MeshData::InsertIndex(unsigned int index)
 {
-	commonMeshData.indices.push_back(index);
+	indices.push_back(index);
 }
 
 void MeshData::InsertBoneData(VertexBoneData boneData)
@@ -100,7 +100,7 @@ void MeshData::InsertBoneData(VertexBoneData boneData)
 
 std::vector<unsigned int>& MeshData::GetIndices()
 {
-	return commonMeshData.indices;
+	return indices;
 }
 
 std::vector<VertexBoneData>& MeshData::GetBoneData()
@@ -110,12 +110,12 @@ std::vector<VertexBoneData>& MeshData::GetBoneData()
 
 void MeshData::InsertVertex(Vertex vertex)
 {
-	commonMeshData.vertices.push_back(vertex);
+	vertices.push_back(vertex);
 }
 
 void MeshData::InsertVertices(std::vector<Vertex> verts)
 {
-	commonMeshData.vertices = verts;
+	vertices = verts;
 }
 
 void MeshData::SetShader(GLShader* meshShader)
@@ -167,9 +167,4 @@ void MeshData::SetTexture(Texture* tex)
 Texture* MeshData::GetTexture()
 {
 	return texture;
-}
-
-std::vector<Vertex>& MeshData::GetVertices()
-{
-	return commonMeshData.vertices;
 }

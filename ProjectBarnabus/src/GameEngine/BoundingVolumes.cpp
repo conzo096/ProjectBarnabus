@@ -6,11 +6,11 @@ namespace BoundingVolumes
 namespace
 {
 
-void AddBoundingBoxes(Node* node, std::vector<BoundingBox>& boundingBoxes)
+void AddBoundingBoxes(const Node* node, std::vector<BoundingBox>& boundingBoxes)
 {
 	for (unsigned int i = 0; i < node->data.size(); i++)
 	{
-		boundingBoxes.push_back(BoundingBox(node->data[i].GetVertices(), node->transformation));
+		boundingBoxes.push_back(BoundingBox(node->data[i].vertices, node->transformation));
 	}
 
 	for (unsigned int i = 0; i < node->children.size(); i++)
@@ -45,7 +45,7 @@ void BoundingVolumes::InitMeshes()
 	}
 }
 
-void BoundingVolumes::AddBoundingVolumes(Node * rootNode)
+void BoundingVolumes::AddBoundingVolumes(const Node * rootNode)
 {
 	AddBoundingBoxes(rootNode, boundingBoxes);
 }
@@ -55,7 +55,7 @@ void BoundingVolumes::AddBoundingVolumes(glm::vec3 minCoords, glm::vec3 maxCoord
 	boundingBoxes.push_back(BoundingBox(minCoords, maxCoords));
 }
 
-void BoundingVolumes::AddBoundingVolumes(std::vector<Vertex>& vertices, glm::mat4 trans)
+void BoundingVolumes::AddBoundingVolumes(const std::vector<Vertex>& vertices, glm::mat4 trans)
 {
 	boundingBoxes.push_back(BoundingBox(vertices, trans));
 }

@@ -20,13 +20,6 @@ struct Vertex
 	glm::vec4 color;
 };
 
-struct CommonMeshData
-{
-	GLenum type;
-	std::vector<Vertex> vertices;
-	unsigned int VAO, VBO, EBO, BONES;
-	std::vector<unsigned int> indices;
-};
 
 class MeshData : public Transform
 {
@@ -65,15 +58,16 @@ public:
 	void SetTexture(Texture* tex);
 	Texture* GetTexture();
 
-	std::vector<Vertex>& GetVertices();
 	// Move these to private.
 	std::vector<glm::mat4> transforms;
+	std::vector<Vertex> vertices;
 	std::vector<VertexBoneData> bonesData;
 private:
 
 	// Skin
-
-	CommonMeshData commonMeshData;
+	GLenum type;
+	unsigned int VAO, VBO, EBO, BONES;
+	std::vector<unsigned int> indices;
 	Texture* texture;
 	FrameBuffer* buffer;
 	// Shader for rendering the mesh.

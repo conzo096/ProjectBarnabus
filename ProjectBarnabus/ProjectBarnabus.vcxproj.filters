@@ -88,9 +88,6 @@
     <ClCompile Include="src\GameEngine\TextQuad.cpp">
       <Filter>Source Files\GameEngine</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameEngine\ResourceManager.cpp">
-      <Filter>Source Files\GameEngine</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -167,12 +164,6 @@
     </Filter>
     <Filter Include="Source Files\GameEngine\Components\Physics">
       <UniqueIdentifier>{fc99fa1f-32aa-4ecf-aef9-a44f7d07a361}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\GameEngine\ResourceManager">
-      <UniqueIdentifier>{23dc252f-3d11-43bb-9c5d-2aa3c8335d80}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\GameEngine\ResourceManager">
-      <UniqueIdentifier>{3fdd3b0b-dbb6-4997-8525-774bb53442e6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -286,9 +277,6 @@
     </ClInclude>
     <ClInclude Include="src\GameEngine\PhysicsContainer.h">
       <Filter>Header Files\GameEngine\Components\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GameEngine\ResourceManager.h">
-      <Filter>Header Files\GameEngine\ResourceManager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

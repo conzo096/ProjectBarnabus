@@ -20,7 +20,7 @@ Terrain::Terrain()
 	token = "Terrain";
 }
 
-Terrain::Terrain(const std::string filePath) : Terrain()
+Terrain::Terrain(const std::string filePath, TerrainType terrain) : Terrain()
 {
 	LoadTerrainFromHeightMap(filePath);
 }

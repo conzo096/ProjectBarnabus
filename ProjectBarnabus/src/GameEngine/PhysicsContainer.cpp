@@ -25,7 +25,7 @@ void PhysicsContainer::InitMeshes()
 	boundingVolumes.InitMeshes();
 }
 
-void PhysicsContainer::AddBoundingVolumes(Node * rootNode)
+void PhysicsContainer::AddBoundingVolumes(const Node * rootNode)
 {
 	boundingVolumes.AddBoundingVolumes(rootNode);
 }
@@ -35,7 +35,7 @@ void PhysicsContainer::AddBoundingVolumes(const glm::vec3 minCoords, const glm::
 	boundingVolumes.AddBoundingVolumes(minCoords, maxCoords);
 }
 
-void PhysicsContainer::AddBoundingVolumes(std::vector<Vertex>& vertices, glm::mat4 trans)
+void PhysicsContainer::AddBoundingVolumes(const std::vector<Vertex>& vertices, glm::mat4 trans)
 {
 	boundingVolumes.AddBoundingVolumes(vertices, trans);
 }
