@@ -3,27 +3,25 @@
 	glfw and opengl calls. 
 
 	This class contains a game membeer object. This object uses the game engine to execute the game.
-
 */
 #pragma once
 
-#include <GL\glew.h>
 #include <glm\glm.hpp>
-#include <GLFW\glfw3.h>
 #include <vector>
 #include "Singleton.h"
 #include "IGame.h"
 #include "StringLog.h"
 
+#include "IRenderer.h"
+
 #include "GLShader.h"
 #include "Texture.h"
 #include <map>
+
 class BarnabusGameEngine : public Singleton<BarnabusGameEngine>
 {
-private:
-	bool InitialiseGameEngine();
 public:
-	bool StartGame();
+	bool StartGame(std::unique_ptr<IRenderer> renderEngine);
 
 	GLFWwindow* GetWindow();
 	void SetGame(std::unique_ptr<IGame> newGame);
@@ -39,6 +37,7 @@ public:
 	Texture* GetTexture(std::string name);
 
 private:
+	bool InitialiseGameEngine();
 	void PrintLogs();
 protected:
 	float time;
@@ -50,9 +49,9 @@ private:
 	std::map<std::string, std::unique_ptr<Texture>> textures;
 
 private:
+	std::unique_ptr<IRenderer> renderer = nullptr;
 	bool running = true;
 	std::unique_ptr<IGame> game = nullptr;
-	GLFWwindow* window;
 	StringLog::Priority messagePriority = StringLog::Priority::None;
 	std::vector<StringLog> logs;
 	int frameRate = 0;

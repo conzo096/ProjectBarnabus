@@ -26,6 +26,7 @@
     <ClCompile Include="src\GameEngine\FreeCamera.cpp" />
     <ClCompile Include="src\GameEngine\GLShader.cpp" />
     <ClCompile Include="src\GameEngine\HeightMapTexture.cpp" />
+    <ClCompile Include="src\GameEngine\OpenGLRenderer.cpp" />
     <ClCompile Include="src\GameEngine\Light.cpp" />
     <ClCompile Include="src\GameEngine\MeshData.cpp" />
     <ClCompile Include="src\GameEngine\Model.cpp" />
@@ -61,6 +62,8 @@
     <ClInclude Include="src\GameEngine\IGame.h" />
     <ClInclude Include="src\GameEngine\GLShader.h" />
     <ClInclude Include="src\GameEngine\HeightMapTexture.h" />
+    <ClInclude Include="src\GameEngine\OpenGLRenderer.h" />
+    <ClInclude Include="src\GameEngine\IRenderer.h" />
     <ClInclude Include="src\GameEngine\Light.h" />
     <ClInclude Include="src\GameEngine\Material.h" />
     <ClInclude Include="src\GameEngine\Movement.h" />

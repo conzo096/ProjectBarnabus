@@ -88,6 +88,9 @@
     <ClCompile Include="src\GameEngine\TextQuad.cpp">
       <Filter>Source Files\GameEngine</Filter>
     </ClCompile>
+    <ClCompile Include="src\GameEngine\OpenGLRenderer.cpp">
+      <Filter>Source Files\GameEngine\Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -277,6 +280,12 @@
     </ClInclude>
     <ClInclude Include="src\GameEngine\PhysicsContainer.h">
       <Filter>Header Files\GameEngine\Components\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\IRenderer.h">
+      <Filter>Source Files\GameEngine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\OpenGLRenderer.h">
+      <Filter>Header Files\GameEngine\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

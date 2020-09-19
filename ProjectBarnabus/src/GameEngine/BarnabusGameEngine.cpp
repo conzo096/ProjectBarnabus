@@ -4,7 +4,7 @@
 
 GLFWwindow* BarnabusGameEngine::GetWindow()
 {
-	return window;
+	return renderer ? renderer->GetWindow() : nullptr;
 }
 
 void BarnabusGameEngine::SetGame(std::unique_ptr<IGame> newGame)
@@ -14,7 +14,7 @@ void BarnabusGameEngine::SetGame(std::unique_ptr<IGame> newGame)
 
 int BarnabusGameEngine::ShouldWindowClose()
 {
-	return glfwWindowShouldClose(window);
+	return glfwWindowShouldClose(renderer ? renderer->GetWindow() : nullptr);
 }
 
 void BarnabusGameEngine::SetPriority(StringLog::Priority priority)
@@ -76,49 +76,21 @@ void BarnabusGameEngine::PrintLogs()
 bool BarnabusGameEngine::InitialiseGameEngine()
 {
 	AddMessageLog(StringLog("Initialising Game Engine", StringLog::Priority::Low));
-	if (!glfwInit())
+
+	if (!renderer)
 	{
-		AddMessageLog(StringLog("ERROR: glfw failed init! exiting.", StringLog::Priority::Critical));
+		AddMessageLog(StringLog("Renderer not assigned", StringLog::Priority::Critical));
 		return false;
 	}
 
-	window = glfwCreateWindow(1920, 1080, "Testing", NULL, NULL);
-
-	// Window is now initalised, now make it the current context.
-	glfwMakeContextCurrent(window);
-
-	if (!window)
-	{
-		assert(window != NULL);
-		AddMessageLog(StringLog("Error: Window could not be initialised!", StringLog::Priority::Critical));
-		return false;
-	}
-
-	// Set up glew.
-	glewExperimental = GL_TRUE;
-	if (glewInit() != GLEW_OK)
-	{
-		AddMessageLog(StringLog("ERROR: glew failed init!exiting.", StringLog::Priority::Critical));
-		return false;
-	}
-	// glExperimental throws junk errors, Ignore.
-	glGetError();
-
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
-	// V-Sync, does not run without it
-	glfwSwapInterval(1);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	AddMessageLog(StringLog("Game engine initialiation successful", StringLog::Priority::Low));
-	return true;
+	auto engineRenderResult = renderer->InitialiseGameEngine();
+	return engineRenderResult;
 }
 
-bool BarnabusGameEngine::StartGame()
+bool BarnabusGameEngine::StartGame(std::unique_ptr<IRenderer> renderEngine)
 {
+	renderer = std::move(renderEngine);
+
 	InitialiseGameEngine();
 	PrintLogs();
 	game->LoadGameContent();
