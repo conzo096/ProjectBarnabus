@@ -126,8 +126,9 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\VulkanSDK\1.2.148.1\Include;$(ProjectDir)include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>lib/win64/Debug</AdditionalLibraryDirectories>
@@ -135,8 +136,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>$(ProjectDir)lib\win64\debug</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimpd.lib;glfw3dlld.lib;glew32d.lib;opengl32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\VulkanSDK\1.2.148.1\Lib;$(ProjectDir)lib\win64\debug</AdditionalLibraryDirectories>
+      <AdditionalDependencies>vulkan-1.lib;assimpd.lib;glfw3dlld.lib;glew32d.lib;opengl32.lib</AdditionalDependencies>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
@@ -150,13 +151,13 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir)include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\VulkanSDK\1.2.148.1\Include;$(ProjectDir)include</AdditionalIncludeDirectories>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Lib>
-      <AdditionalDependencies>assimp.lib;glfw3dll.lib;glew32.lib;opengl32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)lib\win64\release</AdditionalLibraryDirectories>
+      <AdditionalDependencies>vulkan-1.lib;assimp.lib;glfw3dll.lib;glew32.lib;opengl32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\VulkanSDK\1.2.148.1\Lib;$(ProjectDir)lib\win64\release</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
       <Command>xcopy /Q /Y $(ProjectDir)bin\win64\Release $(SolutionDir)$(Platform)\$(Configuration)</Command>

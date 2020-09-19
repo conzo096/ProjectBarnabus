@@ -1,5 +1,4 @@
-//#define VULKAN_RENDERER
-
+#define VULKAN_RENDERER
 #include <iostream>
 #ifdef VULKAN_RENDERER
 	#include "GameEngine/VulkanRenderer.h"
@@ -17,6 +16,7 @@ int main()
 	std::unique_ptr<IGame> myGame = std::make_unique<BarnabusGame>();
 
 	BarnabusGameEngine::Get().SetGame(std::move(myGame));
+	BarnabusGameEngine::Get().SetPriority(StringLog::Priority::Low);
 
 #ifdef VULKAN_RENDERER
 	BarnabusGameEngine::Get().StartGame(std::make_unique<VulkanRenderer>());

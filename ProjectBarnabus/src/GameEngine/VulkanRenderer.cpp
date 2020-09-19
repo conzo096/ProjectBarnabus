@@ -1,3 +1,4 @@
+#define GLFW_INCLUDE_VULKAN
 #include "VulkanRenderer.h"
 #include "BarnabusGameEngine.h"
 
@@ -16,7 +17,14 @@ bool VulkanRenderer::InitialiseGameEngine()
 		BarnabusGameEngine::Get().AddMessageLog(StringLog("ERROR: glfw failed init! exiting.", StringLog::Priority::Critical));
 		return false;
 	}
+
 	window = glfwCreateWindow(1920, 1080, "Testing - Vulkan Renderer", NULL, NULL);
+
+	uint32_t extensionCount = 0;
+	vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
+
+	std::string extensionLog(std::to_string(extensionCount) + " extensions supported for Vulkan");
+	BarnabusGameEngine::Get().AddMessageLog(StringLog(extensionLog, StringLog::Priority::Critical));
 
 	// Window is now initalised, now make it the current context.
 	glfwMakeContextCurrent(window);
@@ -30,8 +38,10 @@ bool VulkanRenderer::InitialiseGameEngine()
 
 	// Set up glew.
 	glewExperimental = GL_TRUE;
-	if (glewInit() != GLEW_OK)
+	GLenum err = glewInit();
+	if (err != GLEW_OK)
 	{
+		fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
 		BarnabusGameEngine::Get().AddMessageLog(StringLog("ERROR: glew failed init!exiting.", StringLog::Priority::Critical));
 		return false;
 	}

@@ -16,6 +16,7 @@ bool OpenGLRenderer::InitialiseGameEngine()
 		BarnabusGameEngine::Get().AddMessageLog(StringLog("ERROR: glfw failed init! exiting.", StringLog::Priority::Critical));
 		return false;
 	}
+
 	window = glfwCreateWindow(1920, 1080, "Testing", NULL, NULL);
 
 	// Window is now initalised, now make it the current context.
