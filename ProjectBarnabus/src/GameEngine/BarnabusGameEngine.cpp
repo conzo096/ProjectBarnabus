@@ -14,7 +14,7 @@ void BarnabusGameEngine::SetGame(std::unique_ptr<IGame> newGame)
 
 int BarnabusGameEngine::ShouldWindowClose()
 {
-	return glfwWindowShouldClose(renderer ? renderer->GetWindow() : nullptr);
+	return renderer ? renderer->ShouldWindowClose() : true;
 }
 
 void BarnabusGameEngine::SetPriority(StringLog::Priority priority)

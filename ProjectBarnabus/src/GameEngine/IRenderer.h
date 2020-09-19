@@ -10,5 +10,6 @@ public:
 	}
 
 	virtual bool InitialiseGameEngine() = 0;
+	virtual bool ShouldWindowClose() = 0;
 	virtual GLFWwindow* GetWindow() = 0;
 };

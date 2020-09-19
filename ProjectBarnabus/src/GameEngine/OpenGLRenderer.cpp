@@ -48,6 +48,11 @@ bool OpenGLRenderer::InitialiseGameEngine()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
+bool OpenGLRenderer::ShouldWindowClose()
+{
+	return glfwWindowShouldClose(window);
+}
+
 GLFWwindow * OpenGLRenderer::GetWindow()
 {
 	return window;

@@ -9,6 +9,7 @@ public:
 
 public:
 	bool InitialiseGameEngine() override;
+	bool ShouldWindowClose() override;
 	GLFWwindow* GetWindow() override;
 
 private:
