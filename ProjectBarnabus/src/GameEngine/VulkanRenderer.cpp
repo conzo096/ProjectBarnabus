@@ -38,10 +38,8 @@ bool VulkanRenderer::InitialiseGameEngine()
 
 	// Set up glew.
 	glewExperimental = GL_TRUE;
-	GLenum err = glewInit();
-	if (err != GLEW_OK)
+	if (glewInit() != GLEW_OK)
 	{
-		fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
 		BarnabusGameEngine::Get().AddMessageLog(StringLog("ERROR: glew failed init!exiting.", StringLog::Priority::Critical));
 		return false;
 	}
