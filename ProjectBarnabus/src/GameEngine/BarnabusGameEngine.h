@@ -52,7 +52,7 @@ private:
 	std::unique_ptr<IRenderer> renderer = nullptr;
 	bool running = true;
 	std::unique_ptr<IGame> game = nullptr;
-	StringLog::Priority messagePriority = StringLog::Priority::None;
+	StringLog::Priority messagePriority = StringLog::Priority::NoLogs;
 	std::vector<StringLog> logs;
 	int frameRate = 0;
 };

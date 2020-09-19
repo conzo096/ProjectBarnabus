@@ -83,37 +83,53 @@ bool BarnabusGameEngine::InitialiseGameEngine()
 		return false;
 	}
 
-	auto engineRenderResult = renderer->InitialiseGameEngine();
-	return engineRenderResult;
+	return renderer->InitialiseGameEngine();
 }
 
 bool BarnabusGameEngine::StartGame(std::unique_ptr<IRenderer> renderEngine)
 {
 	renderer = std::move(renderEngine);
 
-	InitialiseGameEngine();
-	PrintLogs();
-	game->LoadGameContent();
-	PrintLogs();
-	
-	while (running)
-	{
-		float deltaTime = (clock() - lastTime) / CLOCKS_PER_SEC;
-		time += deltaTime;
-		lastTime = static_cast<float>(clock());
+	auto engineRenderResult = InitialiseGameEngine();
 
-		running = game->Update(deltaTime);
+	if (engineRenderResult)
+	{
 		PrintLogs();
-		game->Render(deltaTime);
-		PrintLogs();
-		// process events.
-		glfwPollEvents();
-		
+		if (game)
+		{
+			game->LoadGameContent();
+			PrintLogs();
+
+			while (running)
+			{
+				float deltaTime = (clock() - lastTime) / CLOCKS_PER_SEC;
+				time += deltaTime;
+				lastTime = static_cast<float>(clock());
+
+				running = game->Update(deltaTime);
+				PrintLogs();
+				game->Render(deltaTime);
+				PrintLogs();
+				// process events.
+				glfwPollEvents();
+			}
+		}
+		else
+		{
+			AddMessageLog(StringLog("No game set up. Exiting", StringLog::Priority::Critical));
+		}
 	}
+	else
+	{
+		AddMessageLog(StringLog("Failure in render engine. Exiting", StringLog::Priority::Critical));
+	}
+
 	AddMessageLog(StringLog("Game now exiting", StringLog::Priority::Low));
 	PrintLogs();
 	glfwTerminate();
 	game.reset();
 	PrintLogs();
-	return true;
+
+	// Still need to handle game conditions
+	return engineRenderResult;
 }
