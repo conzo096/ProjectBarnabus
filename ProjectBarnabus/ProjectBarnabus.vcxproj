@@ -41,6 +41,7 @@
     <ClCompile Include="src\GameEngine\Transform.cpp" />
     <ClCompile Include="src\GameEngine\UiDisplay.cpp" />
     <ClCompile Include="src\GameEngine\UiQuad.cpp" />
+    <ClCompile Include="src\GameEngine\VulkanRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\GameEngine\AnimatedModel.h" />
@@ -62,6 +63,7 @@
     <ClInclude Include="src\GameEngine\IGame.h" />
     <ClInclude Include="src\GameEngine\GLShader.h" />
     <ClInclude Include="src\GameEngine\HeightMapTexture.h" />
+    <ClInclude Include="src\GameEngine\VulkanRenderer.h" />
     <ClInclude Include="src\GameEngine\OpenGLRenderer.h" />
     <ClInclude Include="src\GameEngine\IRenderer.h" />
     <ClInclude Include="src\GameEngine\Light.h" />
