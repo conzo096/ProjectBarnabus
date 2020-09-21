@@ -63,6 +63,7 @@
     <ClInclude Include="src\GameEngine\IGame.h" />
     <ClInclude Include="src\GameEngine\GLShader.h" />
     <ClInclude Include="src\GameEngine\HeightMapTexture.h" />
+    <ClInclude Include="src\GameEngine\IShader.h" />
     <ClInclude Include="src\GameEngine\VulkanRenderer.h" />
     <ClInclude Include="src\GameEngine\OpenGLRenderer.h" />
     <ClInclude Include="src\GameEngine\IRenderer.h" />

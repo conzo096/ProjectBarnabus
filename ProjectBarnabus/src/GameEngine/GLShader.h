@@ -1,41 +1,34 @@
 #pragma once
-#include <string>
 #include <GL/glew.h>
 #include <GL/GL.h>
-#include "Light.h"
-#include <vector>
-class MeshData;
+#include "IShader.h"
 
 namespace {
 	using LightInfo = std::vector<Light*>;
 }
-class GLShader
+
+class GLShader : public IShader
 {
 public:
 
 	~GLShader();
 
-	enum GLSLSHADERTYPE
-	{
-		VERTEX, FRAGMENT, GEOMETRY
-	};
+	unsigned int GetId() override;
 
-	GLuint GetId();
+	bool AddShaderFromFile(const char* fileName, IShader::GLSLSHADERTYPE type) override;
+	bool Link() override;
+	bool IsLinked() override;
+	void CreateProgram(const std::string shaderName) override;
+	void Use() override;
+	void SetUniform(const char* name, const float val) override;
+	void SetUniform(const char* name, const int val) override;
 
-	bool AddShaderFromFile(const char* fileName, GLSLSHADERTYPE type);
-	bool Link();
-	bool IsLinked();
-	void CreateProgram(const std::string shaderName);
-	void Use();
-	void SetUniform(const char* name, const float val);
-	void SetUniform(const char* name, const int val);
+	unsigned int GetUniformLocation(const char* name) override;
+	unsigned int GetUniformLocation(std::string& name) override;
 
-	GLuint GetUniformLocation(const char* name);
-	GLuint GetUniformLocation(std::string& name);
-
-	virtual void UpdateUniforms(MeshData& meshData);
-	virtual void UpdateUniforms(MeshData& meshData, const LightInfo& lights);
-	virtual void DrawMesh(MeshData& meshData) const;
+	virtual void UpdateUniforms(MeshData& meshData) override;
+	virtual void UpdateUniforms(MeshData& meshData, const LightInfo& lights) override;
+	virtual void DrawMesh(MeshData& meshData) const override;
 
 private:
 	std::string name;

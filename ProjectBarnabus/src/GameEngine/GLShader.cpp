@@ -27,7 +27,7 @@ bool FileExists(const std::string& fileName)
 
 GLShader::~GLShader()
 {
-	BarnabusGameEngine::Get().AddMessageLog(StringLog("Deleting shader program: TODO ADD NAME", StringLog::Priority::Low));
+	BarnabusGameEngine::Get().AddMessageLog(StringLog("Deleting shader program: " + name, StringLog::Priority::Low));
 }
 
 GLuint GLShader::GetId()
