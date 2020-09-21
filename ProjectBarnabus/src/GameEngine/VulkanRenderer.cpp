@@ -26,6 +26,12 @@ bool VulkanRenderer::InitialiseGameEngine()
 	std::string extensionLog(std::to_string(extensionCount) + " extensions supported for Vulkan");
 	BarnabusGameEngine::Get().AddMessageLog(StringLog(extensionLog, StringLog::Priority::Critical));
 
+	if (!InitVulkanInstance())
+	{
+		return false;
+	}
+	
+
 	// Window is now initalised, now make it the current context.
 	glfwMakeContextCurrent(window);
 
@@ -66,4 +72,38 @@ bool VulkanRenderer::ShouldWindowClose()
 GLFWwindow * VulkanRenderer::GetWindow()
 {
 	return window;
+}
+
+bool VulkanRenderer::InitVulkanInstance()
+{
+	VkApplicationInfo appInfo{};
+	appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+	appInfo.pApplicationName = "Hello Triangle";
+	appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
+	appInfo.pEngineName = "No Engine";
+	appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
+	appInfo.apiVersion = VK_API_VERSION_1_0;
+
+	VkInstanceCreateInfo createInfo{};
+	createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+	createInfo.pApplicationInfo = &appInfo;
+
+	uint32_t glfwExtensionCount = 0;
+	const char** glfwExtensions;
+
+	glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+
+	createInfo.enabledExtensionCount = glfwExtensionCount;
+	createInfo.ppEnabledExtensionNames = glfwExtensions;
+
+	createInfo.enabledLayerCount = 0;
+
+	VkResult result = vkCreateInstance(&createInfo, nullptr, &instance);
+
+	if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS) {
+		BarnabusGameEngine::Get().AddMessageLog(StringLog("Error: failed to create vulkan instance!", StringLog::Priority::Critical));
+	}
+
+	BarnabusGameEngine::Get().AddMessageLog(StringLog("Vulkan instance creation completed!", StringLog::Priority::Critical));
+	return true;
 }

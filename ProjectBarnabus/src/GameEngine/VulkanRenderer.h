@@ -1,5 +1,7 @@
+#define GLFW_INCLUDE_VULKAN
 #pragma once
 #include "IRenderer.h"
+#include "GLFW/glfw3.h"
 
 class VulkanRenderer : public IRenderer
 {
@@ -13,5 +15,8 @@ public:
 	GLFWwindow* GetWindow() override;
 
 private:
+	bool InitVulkanInstance();
+private:
 	GLFWwindow* window;
+	VkInstance instance;
 };
