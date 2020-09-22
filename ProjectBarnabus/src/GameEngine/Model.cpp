@@ -102,11 +102,11 @@ namespace
 		}
 	}
 
-	void SetNodeShader(Node*& meshRootNode, GLShader& shader)
+	void SetNodeShader(Node*& meshRootNode, IShader* shader)
 	{
 		for (auto& mesh : meshRootNode->data)
 		{
-			mesh.SetShader(&shader);
+			mesh.SetShader(shader);
 		}
 
 		for (auto& child : meshRootNode->children)
@@ -193,7 +193,7 @@ Model::Model(const std::string& fileName) : Model()
 	ParseNodes(rootNode, model->mRootNode, NULL, model);
 }
 
-void Model::SetShader(GLShader& shader)
+void Model::SetShader(IShader* shader)
 {
 	assert(rootNode);
 	SetNodeShader(rootNode, shader);

@@ -118,12 +118,12 @@ void MeshData::InsertVertices(std::vector<Vertex> verts)
 	vertices = verts;
 }
 
-void MeshData::SetShader(GLShader* meshShader)
+void MeshData::SetShader(IShader* meshShader)
 {
 	shader = meshShader;
 }
 
-GLShader* MeshData::GetShader() const
+IShader* MeshData::GetShader() const
 {
 	return shader;
 }

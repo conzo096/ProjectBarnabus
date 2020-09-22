@@ -10,7 +10,7 @@ public:
 	BoundingVolumes();
 public:
 	std::vector<BoundingBox>& GetBoundingBoxes();
-	void SetShader(GLShader& shader);
+	void SetShader(IShader* shader);
 	void InitMeshes();
 
 	void AddBoundingVolumes(const Node* rootNode);

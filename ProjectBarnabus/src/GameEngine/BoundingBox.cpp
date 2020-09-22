@@ -114,9 +114,9 @@ const float BoundingBox::GetLength()
 	return std::abs(diff.z);
 }
 
-void BoundingBox::SetShader(GLShader & shader)
+void BoundingBox::SetShader(IShader* shader)
 {
-	data.SetShader(&shader);
+	data.SetShader(shader);
 }
 
 void BoundingBox::Update(glm::mat4 volumeTransform)

@@ -9,7 +9,7 @@ public:
 	Model();
 	Model(const std::string& fileName);
 
-	void SetShader(GLShader& shader);
+	void SetShader(IShader* shader);
 	void SetMaterial(Material mat);
 	void InitModel();
 	const Node* GetRootNode();

@@ -14,7 +14,7 @@
 
 #include "IRenderer.h"
 
-#include "GLShader.h"
+#include "IShader.h"
 #include "Texture.h"
 #include <map>
 
@@ -29,8 +29,8 @@ public:
 	void SetPriority(StringLog::Priority priority);
 	void AddMessageLog(StringLog log);
 
-	bool AddShader(std::string name, std::unique_ptr<GLShader> shader);
-	GLShader* GetShader(std::string name);
+	bool AddShader(std::string name, std::unique_ptr<IShader> shader);
+	IShader* GetShader(std::string name);
 
 	bool AddTexture(std::string name, std::unique_ptr<Texture> texture);
 	bool HasTexture(std::string name);
@@ -47,7 +47,7 @@ protected:
 
 // This should be moved to a seperate resource manager
 private:
-	std::map<std::string, std::unique_ptr<GLShader>> shaders;
+	std::map<std::string, std::unique_ptr<IShader>> shaders;
 	std::map<std::string, std::unique_ptr<Texture>> textures;
 
 private:

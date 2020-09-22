@@ -10,9 +10,9 @@
 #include "GameEngine/PhysicsContainer.h"
 #include <memory>
 
-namespace EntityFactory{
-
-	static std::unique_ptr<Entity> CreatePlayer(glm::vec3 position, GLShader& shader, Terrain* terrain, Camera* camera)
+namespace EntityFactory
+{
+	static std::unique_ptr<Entity> CreatePlayer(glm::vec3 position, IShader* shader, Terrain* terrain, Camera* camera)
 	{
 		auto player = std::make_unique<Entity>("player");
 
@@ -25,7 +25,7 @@ namespace EntityFactory{
 
 		auto physicsComponent = std::make_unique<Physics::PhysicsContainer>(true);
 		physicsComponent->AddBoundingVolumes(animatedModelComponent->GetRootNode());
-		physicsComponent->SetShader(*BarnabusGameEngine::Get().GetShader("red"));
+		physicsComponent->SetShader(BarnabusGameEngine::Get().GetShader("red"));
 		physicsComponent->InitMeshes();
 
 		player->AddComponent(std::move(animatedModelComponent));
@@ -36,7 +36,7 @@ namespace EntityFactory{
 		return player;
 	}
 
-	static std::unique_ptr<Entity> CreateSphere(glm::vec3 position, GLShader& shader)
+	static std::unique_ptr<Entity> CreateSphere(glm::vec3 position, IShader* shader)
 	{
 		auto sphere = std::make_unique<Entity>("sun");
 
@@ -51,7 +51,7 @@ namespace EntityFactory{
 		return sphere;
 	}
 
-	static std::unique_ptr<Entity> CreateTerrain(GLShader& shader)
+	static std::unique_ptr<Entity> CreateTerrain(IShader* shader)
 	{
 		auto terrain = std::make_unique<Entity>("terrain");
 		auto fileName = "res\\Textures\\HeightMap.png";
@@ -64,7 +64,7 @@ namespace EntityFactory{
 		return terrain;
 	}
 
-	static std::unique_ptr<Entity> CreateBuilding(glm::vec3 position, GLShader& shader)
+	static std::unique_ptr<Entity> CreateBuilding(glm::vec3 position, IShader* shader)
 	{
 		auto building = std::make_unique<Entity>("building");
 
@@ -75,7 +75,7 @@ namespace EntityFactory{
 		
 		auto physicsComponent = std::make_unique<Physics::PhysicsContainer>(false);
 		physicsComponent->AddBoundingVolumes(modelComponent->GetRootNode());
-		physicsComponent->SetShader(*BarnabusGameEngine::Get().GetShader("red"));
+		physicsComponent->SetShader(BarnabusGameEngine::Get().GetShader("red"));
 		physicsComponent->InitMeshes();
 				
 		building->AddComponent(std::move(modelComponent));

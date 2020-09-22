@@ -70,11 +70,11 @@ void MainEnvironment::LoadGameContent()
 	ShaderFactory::CreateShader<RedShader>("red", "res\\Shaders\\Red");
 
 	AddEntity("camera", EntityFactory::CreateCamera());
-	AddEntity("terrain", EntityFactory::CreateTerrain(*BarnabusGameEngine::Get().GetShader("terrain")));
-	AddEntity("player", EntityFactory::CreatePlayer(glm::vec3(0), *BarnabusGameEngine::Get().GetShader("animation"), &GetEntity("terrain")->GetComponent<Terrain>(),GetEntity("camera")->GetCompatibleComponent<ArcBallCamera>()));
-	AddEntity("building", EntityFactory::CreateBuilding(glm::vec3(0), *BarnabusGameEngine::Get().GetShader("red")));
+	AddEntity("terrain", EntityFactory::CreateTerrain(BarnabusGameEngine::Get().GetShader("terrain")));
+	AddEntity("player", EntityFactory::CreatePlayer(glm::vec3(0), BarnabusGameEngine::Get().GetShader("animation"), &GetEntity("terrain")->GetComponent<Terrain>(),GetEntity("camera")->GetCompatibleComponent<ArcBallCamera>()));
+	AddEntity("building", EntityFactory::CreateBuilding(glm::vec3(0), BarnabusGameEngine::Get().GetShader("red")));
 	GetEntity("building")->SetScale(glm::vec3(2, 2, 2));
 
-	AddEntity("sun", EntityFactory::CreateSphere(glm::vec3(100, 300, 100), *BarnabusGameEngine::Get().GetShader("red")));
+	AddEntity("sun", EntityFactory::CreateSphere(glm::vec3(100, 300, 100), BarnabusGameEngine::Get().GetShader("red")));
 	GetEntity("sun")->SetScale(glm::vec3(10, 10, 10));
 }

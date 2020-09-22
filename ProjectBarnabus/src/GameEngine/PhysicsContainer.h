@@ -12,7 +12,7 @@ namespace Physics
 		~PhysicsContainer();
 	public:
 		BoundingVolumes::BoundingVolumes* GetBoundingVolume();
-		void SetShader(GLShader& shader);
+		void SetShader(IShader* shader);
 		void InitMeshes();
 
 		void AddBoundingVolumes(const Node* rootNode);

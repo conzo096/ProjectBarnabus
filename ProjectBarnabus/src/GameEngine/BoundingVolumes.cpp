@@ -29,7 +29,7 @@ std::vector<BoundingBox>& BoundingVolumes::GetBoundingBoxes()
 	return boundingBoxes;
 }
 
-void BoundingVolumes::SetShader(GLShader & shader)
+void BoundingVolumes::SetShader(IShader* shader)
 {
 	for (auto& bb : boundingBoxes)
 	{

@@ -7,7 +7,7 @@
 #include <GL/glew.h>
 #include <vector>
 
-class GLShader;
+class IShader;
 class FrameBuffer;
 
 enum BUFFERS { POSITION, COLOR, NORMAL, TEX_COORD, BONES, BONE_ID, BONE_WEIGHT  };
@@ -45,8 +45,8 @@ public:
 
 	void InsertVertex(Vertex vertex);
 	void InsertVertices(std::vector<Vertex> verts);
-	void SetShader(GLShader* meshShader);
-	GLShader* GetShader() const;
+	void SetShader(IShader* meshShader);
+	IShader* GetShader() const;
 	void SetMaterial(Material mat);
 	Material GetMaterial() const;
 	void SetFrameBuffer(FrameBuffer* framebuffer);
@@ -71,7 +71,7 @@ private:
 	Texture* texture;
 	FrameBuffer* buffer;
 	// Shader for rendering the mesh.
-	GLShader* shader;
+	IShader* shader;
 	// Material for lighting
 	Material material;
 };

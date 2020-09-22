@@ -15,7 +15,7 @@ BoundingVolumes::BoundingVolumes* PhysicsContainer::GetBoundingVolume()
 	return &boundingVolumes;
 }
 
-void PhysicsContainer::SetShader(GLShader& shader)
+void PhysicsContainer::SetShader(IShader* shader)
 {
 	boundingVolumes.SetShader(shader);
 }
