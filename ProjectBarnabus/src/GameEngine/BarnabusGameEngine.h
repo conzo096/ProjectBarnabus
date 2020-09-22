@@ -36,6 +36,8 @@ public:
 	bool HasTexture(std::string name);
 	Texture* GetTexture(std::string name);
 
+	IRenderer::GraphicsRenderer GetRenderType();
+
 private:
 	bool InitialiseGameEngine();
 	void PrintLogs();

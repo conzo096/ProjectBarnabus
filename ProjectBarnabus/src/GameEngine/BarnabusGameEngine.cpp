@@ -60,6 +60,11 @@ Texture * BarnabusGameEngine::GetTexture(std::string name)
 	return it->second.get();
 }
 
+IRenderer::GraphicsRenderer BarnabusGameEngine::GetRenderType()
+{
+	return renderer->GetRenderType();
+}
+
 void BarnabusGameEngine::PrintLogs()
 {
 	for(int i =0; i < logs.size(); i++)

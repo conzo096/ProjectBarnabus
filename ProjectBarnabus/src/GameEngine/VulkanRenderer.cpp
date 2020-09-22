@@ -359,3 +359,8 @@ bool VulkanRenderer::IsDeviceSuitable(VkPhysicalDevice device)
 
 	return indices.isComplete();
 }
+
+IRenderer::GraphicsRenderer VulkanRenderer::GetRenderType()
+{
+	return IRenderer::Vulkan;
+}

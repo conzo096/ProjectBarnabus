@@ -12,6 +12,8 @@ public:
 	bool ShouldWindowClose() override;
 	GLFWwindow* GetWindow() override;
 
+	GraphicsRenderer GetRenderType() override;
+
 private:
 	GLFWwindow* window;
 };

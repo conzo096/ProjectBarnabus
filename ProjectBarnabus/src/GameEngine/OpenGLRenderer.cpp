@@ -58,3 +58,8 @@ GLFWwindow * OpenGLRenderer::GetWindow()
 {
 	return window;
 }
+
+IRenderer::GraphicsRenderer OpenGLRenderer::GetRenderType()
+{
+	return IRenderer::OpenGL;
+}

@@ -27,6 +27,8 @@ public:
 	bool ShouldWindowClose() override;
 	GLFWwindow* GetWindow() override;
 
+	GraphicsRenderer GetRenderType() override;
+
 private:
 	bool InitVulkanInstance();
 	void SetupDebugMessenger();
