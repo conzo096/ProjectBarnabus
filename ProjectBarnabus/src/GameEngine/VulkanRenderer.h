@@ -29,6 +29,11 @@ public:
 
 	GraphicsRenderer GetRenderType() override;
 
+
+public:
+	// For meshes
+	void InitialiseMesh(MeshData& data) override;
+	void UpdateBaseVertexBuffers(MeshData& data) override;
 private:
 	bool InitVulkanInstance();
 	void SetupDebugMessenger();

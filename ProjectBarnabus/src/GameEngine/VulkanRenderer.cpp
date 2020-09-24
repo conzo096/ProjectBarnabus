@@ -364,3 +364,13 @@ IRenderer::GraphicsRenderer VulkanRenderer::GetRenderType()
 {
 	return IRenderer::Vulkan;
 }
+
+
+void VulkanRenderer::InitialiseMesh(MeshData& data)
+{
+
+}
+
+void VulkanRenderer::UpdateBaseVertexBuffers(MeshData& data)
+{
+}

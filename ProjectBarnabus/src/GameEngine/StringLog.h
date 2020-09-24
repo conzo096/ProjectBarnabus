@@ -6,6 +6,7 @@ class StringLog
 public:
 	enum Priority
 	{
+		AllLogs,
 		Low,
 		Medium,
 		Highest,

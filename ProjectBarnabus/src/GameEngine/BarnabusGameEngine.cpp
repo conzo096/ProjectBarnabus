@@ -65,6 +65,16 @@ IRenderer::GraphicsRenderer BarnabusGameEngine::GetRenderType()
 	return renderer->GetRenderType();
 }
 
+void BarnabusGameEngine::InitialiseMesh(MeshData & data)
+{
+	renderer->InitialiseMesh(data);
+}
+
+void BarnabusGameEngine::UpdateBaseVertexBuffers(MeshData & data)
+{
+	renderer->UpdateBaseVertexBuffers(data);
+}
+
 void BarnabusGameEngine::PrintLogs()
 {
 	for(int i =0; i < logs.size(); i++)

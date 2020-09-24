@@ -14,6 +14,9 @@ public:
 
 	GraphicsRenderer GetRenderType() override;
 
+	// For meshes
+	void InitialiseMesh(MeshData& data) override;
+	void UpdateBaseVertexBuffers(MeshData& data) override;
 private:
 	GLFWwindow* window;
 };

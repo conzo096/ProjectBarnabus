@@ -38,6 +38,11 @@ public:
 
 	IRenderer::GraphicsRenderer GetRenderType();
 
+public:
+	// For meshes
+	void InitialiseMesh(MeshData& data);
+	void UpdateBaseVertexBuffers(MeshData& data);
+
 private:
 	bool InitialiseGameEngine();
 	void PrintLogs();
@@ -54,7 +59,7 @@ private:
 	std::unique_ptr<IRenderer> renderer = nullptr;
 	bool running = true;
 	std::unique_ptr<IGame> game = nullptr;
-	StringLog::Priority messagePriority = StringLog::Priority::NoLogs;
+	StringLog::Priority messagePriority = StringLog::Priority::AllLogs;
 	std::vector<StringLog> logs;
 	int frameRate = 0;
 };

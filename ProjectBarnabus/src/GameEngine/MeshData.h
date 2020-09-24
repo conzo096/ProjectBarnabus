@@ -10,8 +10,6 @@
 class IShader;
 class FrameBuffer;
 
-enum BUFFERS { POSITION, COLOR, NORMAL, TEX_COORD, BONES, BONE_ID, BONE_WEIGHT  };
-
 struct Vertex
 {
 	glm::vec3 position;
@@ -24,18 +22,21 @@ struct Vertex
 class MeshData : public Transform
 {
 public:
-
+	MeshData();
+public:
 	void InitialiseMesh();
 	void UpdateBaseVertexBuffers();
 
 public:
 
+	unsigned int& GetVao();
+	unsigned int& GetVbo();
+	unsigned int& GetEbo();
+	unsigned int& GetBones();
+
 	void SetType(GLenum meshType);
 	GLenum GetType();
 
-	unsigned int GetVao();
-	unsigned int GetVbo();
-	unsigned int GetEbo();
 
 	void InsertIndex(unsigned int index);
 	void InsertBoneData(VertexBoneData boneData);

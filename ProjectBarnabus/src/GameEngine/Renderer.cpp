@@ -77,7 +77,6 @@ void Renderer::Render()
 	}
 	meshesToRender.clear();
 
-
 	// render to screen
 	GetFrameBuffer("ui").BindFrameBuffer();
 	glClearColor(backgroundColour.x, backgroundColour.y, backgroundColour.z,0);
