@@ -1,18 +1,17 @@
 #pragma once
-#include <GL/glew.h>
-#include <GL/GL.h>
+#include "IShader.h"
 #include "IShader.h"
 
-namespace
+namespace 
 {
 	using LightInfo = std::vector<Light*>;
 }
 
-class GLShader : public IShader
+class VulkanShader : public IShader
 {
 public:
 
-	~GLShader();
+	~VulkanShader();
 
 	unsigned int GetId() override;
 
@@ -33,7 +32,4 @@ public:
 
 private:
 	std::string name;
-	GLint program;
-	bool linked;
-	std::string logString;
 };

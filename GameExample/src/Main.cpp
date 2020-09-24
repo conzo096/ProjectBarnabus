@@ -1,4 +1,4 @@
-//#define VULKAN_RENDERER
+#define VULKAN_RENDERER
 #include <iostream>
 #ifdef VULKAN_RENDERER
 	#include "GameEngine/VulkanRenderer.h"

@@ -94,6 +94,9 @@
     <ClCompile Include="src\GameEngine\VulkanRenderer.cpp">
       <Filter>Source Files\GameEngine\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\GameEngine\VulkanShader.cpp">
+      <Filter>Source Files\GameEngine\Renderer\Shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -294,6 +297,9 @@
       <Filter>Header Files\GameEngine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\GameEngine\IShader.h">
+      <Filter>Header Files\GameEngine\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\VulkanShader.h">
       <Filter>Header Files\GameEngine\Shader</Filter>
     </ClInclude>
   </ItemGroup>
