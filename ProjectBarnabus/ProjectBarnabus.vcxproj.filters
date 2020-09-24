@@ -287,9 +287,6 @@
     <ClInclude Include="src\GameEngine\PhysicsContainer.h">
       <Filter>Header Files\GameEngine\Components\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="src\GameEngine\IRenderer.h">
-      <Filter>Source Files\GameEngine\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="src\GameEngine\OpenGLRenderer.h">
       <Filter>Header Files\GameEngine\Renderer</Filter>
     </ClInclude>
@@ -301,6 +298,9 @@
     </ClInclude>
     <ClInclude Include="src\GameEngine\VulkanShader.h">
       <Filter>Header Files\GameEngine\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\IRenderer.h">
+      <Filter>Header Files\GameEngine\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
