@@ -70,8 +70,13 @@ namespace
 
 		if (!BarnabusGameEngine::Get().HasTexture("test"))
 		{
-			auto texture = std::make_unique<OpenGLTexture>();
-			texture->LoadTexture("res\\Textures\\test.png");
+			std::unique_ptr<ITexture> texture = nullptr;
+			if (BarnabusGameEngine::Get().GetRenderType() == IRenderer::OpenGL)
+			{
+				texture = std::make_unique<OpenGLTexture>();
+				texture->LoadTexture("res\\Textures\\test.png");
+			}	
+
 			BarnabusGameEngine::Get().AddTexture("test", std::move(texture));
 		}
 

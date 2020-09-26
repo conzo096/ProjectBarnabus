@@ -37,5 +37,5 @@ private:
 	glm::vec4 backgroundColour;
 
 	UiQuad* screenQuad;
-	FinalPassShader shader;
+	IShader* finalShader;
 };

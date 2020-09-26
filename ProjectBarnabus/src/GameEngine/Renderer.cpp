@@ -7,25 +7,30 @@
 Renderer::Renderer()
 {
 	backgroundColour = glm::vec4(0.1f, 0.0f, 0.4f, 1.0f);
-	auto main = new OpenGLFrameBuffer("main");
-	main->LoadFrameBuffer(1920,1080);
-	auto pair = std::pair<std::string, OpenGLFrameBuffer*>(std::string("main"), main);
-	AddFramebuffer(pair);
-	auto ui = new OpenGLFrameBuffer("ui");
-	ui->LoadFrameBuffer(1920, 1080);
-	pair = std::pair<std::string, OpenGLFrameBuffer*>(std::string("ui"), ui);
-	AddFramebuffer(pair);
+	if (BarnabusGameEngine::Get().GetRenderType() == IRenderer::OpenGL)
+	{
+		auto main = new OpenGLFrameBuffer("main");
+		main->LoadFrameBuffer(1920, 1080);
+		auto pair = std::pair<std::string, OpenGLFrameBuffer*>(std::string("main"), main);
+		AddFramebuffer(pair);
+		auto ui = new OpenGLFrameBuffer("ui");
+		ui->LoadFrameBuffer(1920, 1080);
+		pair = std::pair<std::string, OpenGLFrameBuffer*>(std::string("ui"), ui);
+		AddFramebuffer(pair);
 
+		finalShader = new FinalPassShader;
+		finalShader->CreateProgram("FinalRender");
+		finalShader->AddShaderFromFile("res\\shaders\\FinalPass.vert", GLShader::VERTEX);
+		finalShader->AddShaderFromFile("res\\shaders\\FinalPass.frag", GLShader::FRAGMENT);
+		finalShader->Link();
+
+	 
+		static_cast<FinalPassShader*>(finalShader)->gameTexture = GetFrameBuffer("main").GetFrameTexture();
+		static_cast<FinalPassShader*>(finalShader)->uiTexture = GetFrameBuffer("ui").GetFrameTexture();
+	}
 	screenQuad = new UiQuad(glm::vec2(-1,-1), glm::vec2(1, 1));
 	screenQuad->InitQuad();
 
-	shader.CreateProgram("FinalRender");
-	shader.AddShaderFromFile("res\\shaders\\FinalPass.vert", GLShader::VERTEX);
-	shader.AddShaderFromFile("res\\shaders\\FinalPass.frag", GLShader::FRAGMENT);
-	shader.Link();
-
-	shader.gameTexture = GetFrameBuffer("main").GetFrameTexture();
-	shader.uiTexture = GetFrameBuffer("ui").GetFrameTexture();
 }
 
 Renderer::~Renderer()
@@ -88,8 +93,8 @@ void Renderer::Render()
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	shader.UpdateUniforms(screenQuad->GetMeshData());
-	shader.DrawMesh(screenQuad->GetMeshData());
+	finalShader->UpdateUniforms(screenQuad->GetMeshData());
+	finalShader->DrawMesh(screenQuad->GetMeshData());
 
 	glfwSwapBuffers(BarnabusGameEngine::Get().GetWindow());
 

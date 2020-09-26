@@ -31,8 +31,13 @@ void GameUi::InitGameUi()
 	uiElements.at("debug")->GetMeshData().SetShader(BarnabusGameEngine::Get().GetShader("ui"));
 	uiElements.at("example")->GetMeshData().SetShader(BarnabusGameEngine::Get().GetShader("font"));
 
-	ITexture* texture = new OpenGLTexture;
-	texture->LoadTexture("res\\textures\\GameFont.png");
+	ITexture* texture = nullptr;
+	if (BarnabusGameEngine::Get().GetRenderType() == IRenderer::OpenGL)
+	{
+		texture = new OpenGLTexture;
+		texture->LoadTexture("res\\textures\\GameFont.png");
+	}
+		
 	uiElements.at("example")->GetMeshData().SetTexture(texture);
 }
 
