@@ -1,13 +1,12 @@
 #pragma once
 #include "GLShader.h"
-
-class Texture;
+#include "ITexture.h"
 
 class FinalPassShader : public GLShader
 {
 public:
 	void UpdateUniforms(MeshData& meshData) override;
 
-	Texture* gameTexture;
-	Texture* uiTexture;
+	ITexture* gameTexture;
+	ITexture* uiTexture;
 };

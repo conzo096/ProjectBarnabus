@@ -15,7 +15,7 @@
 #include "IRenderer.h"
 
 #include "IShader.h"
-#include "Texture.h"
+#include "ITexture.h"
 #include <map>
 
 class BarnabusGameEngine : public Singleton<BarnabusGameEngine>
@@ -32,9 +32,9 @@ public:
 	bool AddShader(std::string name, std::unique_ptr<IShader> shader);
 	IShader* GetShader(std::string name);
 
-	bool AddTexture(std::string name, std::unique_ptr<Texture> texture);
+	bool AddTexture(std::string name, std::unique_ptr<ITexture> texture);
 	bool HasTexture(std::string name);
-	Texture* GetTexture(std::string name);
+	ITexture* GetTexture(std::string name);
 
 	IRenderer::GraphicsRenderer GetRenderType();
 
@@ -53,7 +53,7 @@ protected:
 // This should be moved to a seperate resource manager
 private:
 	std::map<std::string, std::unique_ptr<IShader>> shaders;
-	std::map<std::string, std::unique_ptr<Texture>> textures;
+	std::map<std::string, std::unique_ptr<ITexture>> textures;
 
 private:
 	std::unique_ptr<IRenderer> renderer = nullptr;

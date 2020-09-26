@@ -1,5 +1,5 @@
 #include "Terrain.h"
-#include "HeightMapTexture.h"
+#include "OpenGLHeightMapTexture.h"
 #include "BarnabusGameEngine.h"
 #include <vector>
 

@@ -1,12 +1,8 @@
 #pragma once
-# include "IFramebuffer.h"
-#include <GL\glew.h>
-#include <GL\GL.h>
-#include <GLFW\glfw3.h>
-#include <glm\gtc\type_ptr.hpp>
+#include "IFramebuffer.h"
 #include <string>
 
-class Texture;
+class OpenGLTexture;
 
 class OpenGLFrameBuffer : public IFrameBuffer
 {
@@ -15,8 +11,8 @@ public:
 	~OpenGLFrameBuffer();
 
 	unsigned int GetFrameBuffer() override;
-	Texture* GetFrameTexture() override;
-	Texture* GetDepthTexture() override;
+	ITexture* GetFrameTexture() override;
+	ITexture* GetDepthTexture() override;
 
 	void LoadFrameBuffer(int w, int h);
 	void BindFrameBuffer();
@@ -24,8 +20,8 @@ public:
 private:
 	std::string name;
 	unsigned int bufferId;
-	Texture* frameTexture;
-	Texture* depthTexture;
+	OpenGLTexture* frameTexture;
+	OpenGLTexture* depthTexture;
 	unsigned int width;
 	unsigned int height;
 

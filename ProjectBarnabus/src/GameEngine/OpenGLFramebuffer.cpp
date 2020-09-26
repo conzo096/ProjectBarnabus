@@ -1,6 +1,8 @@
 #include "OpenGLFrameBuffer.h"
-#include "Texture.h"
+#include "OpenGLTexture.h"
 #include "BarnabusGameEngine.h"
+
+#include <glm\gtc\type_ptr.hpp>
 
 OpenGLFrameBuffer::OpenGLFrameBuffer(const std::string & frameBufferName) : name(frameBufferName)
 {
@@ -16,12 +18,12 @@ GLuint OpenGLFrameBuffer::GetFrameBuffer()
 	return bufferId;
 }
 
-Texture* OpenGLFrameBuffer::GetFrameTexture()
+ITexture* OpenGLFrameBuffer::GetFrameTexture()
 {
 	return frameTexture;
 }
 
-Texture* OpenGLFrameBuffer::GetDepthTexture()
+ITexture* OpenGLFrameBuffer::GetDepthTexture()
 {
 	return depthTexture;
 }
@@ -33,8 +35,8 @@ void OpenGLFrameBuffer::LoadFrameBuffer(int w, int h)
 	width = w;
 	height = h;
 	// Create textures with OpenGL
-	frameTexture = new Texture(width, height);
-	depthTexture = new Texture(width, height);
+	frameTexture = new OpenGLTexture(width, height);
+	depthTexture = new OpenGLTexture(width, height);
 
 	// Bind image with OpenGL
 	glActiveTexture(GL_TEXTURE0);

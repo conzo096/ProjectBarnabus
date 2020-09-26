@@ -1,6 +1,8 @@
 #include "MeshData.h"
-#include "GLShader.h"
-#include "OpenGLFramebuffer.h"
+
+#include "IShader.h"
+#include "IFramebuffer.h"
+#include "ITexture.h"
 #include "BarnabusGameEngine.h"
 
 MeshData::MeshData() : VAO(0), VBO(0), EBO(0), BONES(0)
@@ -117,12 +119,12 @@ void MeshData::InsertBoneDataAt(unsigned int location, int vertexLocation, float
 	bonesData[location].AddBoneData(vertexLocation, vertexWeight);
 }
 
-void MeshData::SetTexture(Texture* tex)
+void MeshData::SetTexture(ITexture* tex)
 {
 	texture = tex;
 }
 
-Texture* MeshData::GetTexture()
+ITexture* MeshData::GetTexture()
 {
 	return texture;
 }

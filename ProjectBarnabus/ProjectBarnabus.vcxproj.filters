@@ -25,9 +25,6 @@
     <ClCompile Include="src\GameEngine\Entity.cpp">
       <Filter>Source Files\GameEngine\Components</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameEngine\Texture.cpp">
-      <Filter>Source Files\GameEngine\Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="src\GameEngine\Animation.cpp">
       <Filter>Source Files\GameEngine\Renderer</Filter>
     </ClCompile>
@@ -54,9 +51,6 @@
     </ClCompile>
     <ClCompile Include="src\GameEngine\StringLog.cpp">
       <Filter>Source Files\GameEngine\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GameEngine\HeightMapTexture.cpp">
-      <Filter>Source Files\GameEngine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\GameEngine\Movement.cpp">
       <Filter>Source Files\GameEngine\Components</Filter>
@@ -95,6 +89,12 @@
       <Filter>Source Files\GameEngine\Renderer\Shader</Filter>
     </ClCompile>
     <ClCompile Include="src\GameEngine\OpenGLFramebuffer.cpp">
+      <Filter>Source Files\GameEngine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\OpenGLTexture.cpp">
+      <Filter>Source Files\GameEngine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\OpenGLHeightMapTexture.cpp">
       <Filter>Source Files\GameEngine\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
@@ -245,14 +245,8 @@
     <ClInclude Include="src\GameEngine\StringLog.h">
       <Filter>Header Files\GameEngine\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="src\GameEngine\HeightMapTexture.h">
-      <Filter>Header Files\GameEngine\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="src\GameEngine\IGame.h">
       <Filter>Header Files\GameEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GameEngine\Texture.h">
-      <Filter>Header Files\GameEngine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\GameEngine\TextQuad.h">
       <Filter>Header Files\GameEngine\User Interface</Filter>
@@ -303,6 +297,15 @@
       <Filter>Header Files\GameEngine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\GameEngine\OpenGLFramebuffer.h">
+      <Filter>Header Files\GameEngine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\ITexture.h">
+      <Filter>Header Files\GameEngine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\OpenGLTexture.h">
+      <Filter>Header Files\GameEngine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\OpenGLHeightMapTexture.h">
       <Filter>Header Files\GameEngine\Renderer</Filter>
     </ClInclude>
   </ItemGroup>

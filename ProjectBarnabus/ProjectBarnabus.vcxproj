@@ -25,7 +25,7 @@
     <ClCompile Include="src\GameEngine\OpenGLFramebuffer.cpp" />
     <ClCompile Include="src\GameEngine\FreeCamera.cpp" />
     <ClCompile Include="src\GameEngine\GLShader.cpp" />
-    <ClCompile Include="src\GameEngine\HeightMapTexture.cpp" />
+    <ClCompile Include="src\GameEngine\OpenGLHeightMapTexture.cpp" />
     <ClCompile Include="src\GameEngine\OpenGLRenderer.cpp" />
     <ClCompile Include="src\GameEngine\Light.cpp" />
     <ClCompile Include="src\GameEngine\MeshData.cpp" />
@@ -37,7 +37,7 @@
     <ClCompile Include="src\GameEngine\StringLog.cpp" />
     <ClCompile Include="src\GameEngine\Terrain.cpp" />
     <ClCompile Include="src\GameEngine\TextQuad.cpp" />
-    <ClCompile Include="src\GameEngine\Texture.cpp" />
+    <ClCompile Include="src\GameEngine\OpenGLTexture.cpp" />
     <ClCompile Include="src\GameEngine\Transform.cpp" />
     <ClCompile Include="src\GameEngine\UiDisplay.cpp" />
     <ClCompile Include="src\GameEngine\UiQuad.cpp" />
@@ -58,13 +58,14 @@
     <ClInclude Include="src\GameEngine\Entity.h" />
     <ClInclude Include="src\GameEngine\Environment.h" />
     <ClInclude Include="src\GameEngine\FinalPassShader.h" />
+    <ClInclude Include="src\GameEngine\ITexture.h" />
     <ClInclude Include="src\GameEngine\OpenGLFramebuffer.h" />
     <ClInclude Include="src\GameEngine\FreeCamera.h" />
     <ClInclude Include="src\GameEngine\IDayCycle.h" />
     <ClInclude Include="src\GameEngine\IFramebuffer.h" />
     <ClInclude Include="src\GameEngine\IGame.h" />
     <ClInclude Include="src\GameEngine\GLShader.h" />
-    <ClInclude Include="src\GameEngine\HeightMapTexture.h" />
+    <ClInclude Include="src\GameEngine\OpenGLHeightMapTexture.h" />
     <ClInclude Include="src\GameEngine\IShader.h" />
     <ClInclude Include="src\GameEngine\VulkanRenderer.h" />
     <ClInclude Include="src\GameEngine\OpenGLRenderer.h" />
@@ -83,7 +84,7 @@
     <ClInclude Include="src\GameEngine\StringLog.h" />
     <ClInclude Include="src\GameEngine\Terrain.h" />
     <ClInclude Include="src\GameEngine\TextQuad.h" />
-    <ClInclude Include="src\GameEngine\Texture.h" />
+    <ClInclude Include="src\GameEngine\OpenGLTexture.h" />
     <ClInclude Include="src\GameEngine\Transform.h" />
     <ClInclude Include="src\GameEngine\UiDisplay.h" />
     <ClInclude Include="src\GameEngine\UiQuad.h" />

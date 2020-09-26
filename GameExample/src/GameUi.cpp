@@ -5,6 +5,7 @@
 #include <GameEngine/TextQuad.h>
 #include <GameEngine/Renderer.h>
 #include <GameEngine/BarnabusGameEngine.h>
+#include <GameEngine/OpenGLTexture.h>
 GameUi::GameUi()
 {
 	// Create initial quad.
@@ -30,7 +31,7 @@ void GameUi::InitGameUi()
 	uiElements.at("debug")->GetMeshData().SetShader(BarnabusGameEngine::Get().GetShader("ui"));
 	uiElements.at("example")->GetMeshData().SetShader(BarnabusGameEngine::Get().GetShader("font"));
 
-	Texture* texture = new Texture;
+	ITexture* texture = new OpenGLTexture;
 	texture->LoadTexture("res\\textures\\GameFont.png");
 	uiElements.at("example")->GetMeshData().SetTexture(texture);
 }

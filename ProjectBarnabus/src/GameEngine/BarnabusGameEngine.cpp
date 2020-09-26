@@ -41,9 +41,9 @@ IShader* BarnabusGameEngine::GetShader(std::string name)
 	return it->second.get();
 }
 
-bool BarnabusGameEngine::AddTexture(std::string name, std::unique_ptr<Texture> texture)
+bool BarnabusGameEngine::AddTexture(std::string name, std::unique_ptr<ITexture> texture)
 {
-	auto result = textures.insert(std::pair < std::string, std::unique_ptr<Texture>>(name, std::move(texture)));
+	auto result = textures.insert(std::pair < std::string, std::unique_ptr<ITexture>>(name, std::move(texture)));
 	return result.second;
 }
 
@@ -52,7 +52,7 @@ bool BarnabusGameEngine::HasTexture(std::string name)
 	return textures.find(name) != textures.end();
 }
 
-Texture * BarnabusGameEngine::GetTexture(std::string name)
+ITexture * BarnabusGameEngine::GetTexture(std::string name)
 {
 	auto it = textures.find(name);
 	assert(it != textures.end());

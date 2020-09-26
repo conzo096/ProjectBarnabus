@@ -1,26 +1,24 @@
-#include "Texture.h"
+#include "OpenGLTexture.h"
 #include "BarnabusGameEngine.h"
- 
+#include "stb_image.h"
 #include <GL/glew.h>
 #include <iostream>
 
-Texture::Texture()
+OpenGLTexture::OpenGLTexture()
 {
 }
 
-Texture::Texture(GLuint w, GLuint h)
+OpenGLTexture::OpenGLTexture(unsigned int w, unsigned int h)
 {
 	width = w;
 	height = h;
 	glGenTextures(1, &textureId);
-	textureType = GL_TEXTURE_2D;
 }
 
-bool Texture::LoadTexture(std::string file)
+bool OpenGLTexture::LoadTexture(const std::string& file)
 {
 	filePath = file;
-	textureType = GL_TEXTURE_2D;
-
+	
 	glGenTextures(1, &textureId);
 	glBindTexture(GL_TEXTURE_2D, textureId);
 	
@@ -52,27 +50,13 @@ bool Texture::LoadTexture(std::string file)
 	}
 	else
 	{
-		BarnabusGameEngine::Get().AddMessageLog(StringLog("Failed to load Texture at: " + file, StringLog::Priority::Critical));
+		BarnabusGameEngine::Get().AddMessageLog(StringLog("Failed to load OpenGLTexture at: " + file, StringLog::Priority::Critical));
 		return false;
 	}
+
 	stbi_image_free(data);
 
 	BarnabusGameEngine::Get().AddMessageLog(StringLog("Created texture: " + filePath, StringLog::Priority::Low));
 
 	return true;
-}
-
-unsigned int Texture::GetTextureId()
-{
-	return textureId;
-}
-
-int Texture::GetWidth()
-{
-	return width;
-}
-
-int Texture::GetHeight()
-{
-	return height;
 }

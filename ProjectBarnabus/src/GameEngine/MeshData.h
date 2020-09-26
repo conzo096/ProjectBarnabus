@@ -1,7 +1,6 @@
 #pragma once
 #include "Transform.h"
 #include "Bone.h"
-#include "Texture.h"
 #include "Material.h"
 #include <glm/glm.hpp>
 #include <GL/glew.h>
@@ -9,6 +8,7 @@
 
 class IShader;
 class IFrameBuffer;
+class ITexture;
 
 struct Vertex
 {
@@ -56,8 +56,8 @@ public:
 	void ResizeBoneData(unsigned int size);
 	void InsertBoneDataAt(unsigned int location, int vertexLocation, float vertexWeight);
 
-	void SetTexture(Texture* tex);
-	Texture* GetTexture();
+	void SetTexture(ITexture* tex);
+	ITexture* GetTexture();
 
 	// Move these to private.
 	std::vector<glm::mat4> transforms;
@@ -69,7 +69,7 @@ private:
 	GLenum type;
 	unsigned int VAO, VBO, EBO, BONES;
 	std::vector<unsigned int> indices;
-	Texture* texture;
+	ITexture* texture;
 	IFrameBuffer* buffer;
 	// Shader for rendering the mesh.
 	IShader* shader;

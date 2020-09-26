@@ -1,4 +1,4 @@
-#include "HeightMapTexture.h"
+#include "OpenGLHeightMapTexture.h"
 #include "GL\glew.h"
 #include "stb_image.h"
 #include "BarnabusGameEngine.h"

@@ -1,5 +1,6 @@
 #include "Model.h"
 #include "Renderer.h"
+#include "OpenGLTexture.h"
 #include "BarnabusGameEngine.h"
 #include <assimp/Importer.hpp>
 #include <assimp/PostProcess.h>
@@ -69,7 +70,7 @@ namespace
 
 		if (!BarnabusGameEngine::Get().HasTexture("test"))
 		{
-			auto texture = std::make_unique<Texture>();
+			auto texture = std::make_unique<OpenGLTexture>();
 			texture->LoadTexture("res\\Textures\\test.png");
 			BarnabusGameEngine::Get().AddTexture("test", std::move(texture));
 		}
