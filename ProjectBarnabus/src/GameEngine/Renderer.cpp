@@ -1,6 +1,7 @@
 #include "Renderer.h"
 #include "BarnabusGameEngine.h"
 #include "GLShader.h"
+#include "OpenGLFramebuffer.h"
 #include "UiQuad.h"
 
 Renderer::Renderer()
@@ -145,12 +146,12 @@ void Renderer::AddUiElement(MeshData& md)
 	uiElementsToRender.push_back(md);
 }
 
-void Renderer::AddFramebuffer(std::pair<std::string, OpenGLFrameBuffer*> pair)
+void Renderer::AddFramebuffer(std::pair<std::string, IFrameBuffer*> pair)
 {
 	framebuffers.insert(pair);
 }
 
-OpenGLFrameBuffer& Renderer::GetFrameBuffer(const std::string& buffer)
+IFrameBuffer& Renderer::GetFrameBuffer(const std::string& buffer)
 {
 	return *framebuffers.at(buffer);
 }

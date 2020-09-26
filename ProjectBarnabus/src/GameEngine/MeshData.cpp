@@ -97,12 +97,12 @@ Material MeshData::GetMaterial() const
 }
 
 
-void MeshData::SetFrameBuffer(OpenGLFrameBuffer * framebuffer)
+void MeshData::SetFrameBuffer(IFrameBuffer * framebuffer)
 {
 	buffer = framebuffer;
 }
 
-OpenGLFrameBuffer * MeshData::GetFrameBuffer() const
+IFrameBuffer * MeshData::GetFrameBuffer() const
 {
 	return buffer;
 }

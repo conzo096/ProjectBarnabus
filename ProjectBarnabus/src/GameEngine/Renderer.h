@@ -1,7 +1,7 @@
 #pragma once
 #include "Singleton.h"
 #include "MeshData.h"
-#include "OpenGLFrameBuffer.h"
+#include "IFramebuffer.h"
 #include "FinalPassShader.h"
 
 #include <vector>
@@ -23,8 +23,8 @@ public:
 	glm::mat4 GetCameraVP();
 
 	void AddUiElement(MeshData& md);
-	void AddFramebuffer(std::pair<std::string, OpenGLFrameBuffer*> pair);
-	OpenGLFrameBuffer& GetFrameBuffer(const std::string& buffer);
+	void AddFramebuffer(std::pair<std::string, IFrameBuffer*> pair);
+	IFrameBuffer& GetFrameBuffer(const std::string& buffer);
 	glm::vec4 GetBackgroundColour();
 	void SetBackgroundColour(glm::vec4 colour);
 
@@ -33,7 +33,7 @@ private:
 	std::map<std::string,std::vector<MeshData>> meshesToRender;
 	std::map<std::string, std::vector<Light*>> environmentLights;
 	std::vector<MeshData> uiElementsToRender;
-	std::map<std::string, OpenGLFrameBuffer*> framebuffers;
+	std::map<std::string, IFrameBuffer*> framebuffers;
 	glm::vec4 backgroundColour;
 
 	UiQuad* screenQuad;
