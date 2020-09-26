@@ -5,6 +5,7 @@
 #include "AnimationShader.h"
 #include "TerrainShader.h"
 #include "RedShader.h"
+
 #define _USE_MATH_DEFINES
 #include <math.h>
 MainEnvironment::MainEnvironment(std::string environmentName) : Environment(environmentName)
@@ -56,7 +57,7 @@ void MainEnvironment::Render(float deltaTime)
 		sun->SetActive(true);
 	}
 
-	Renderer::Get().SetCameraViewProjection(GetEntity("camera")->GetComponent<ArcBallCamera>().GetProjection() * GetEntity("camera")->GetComponent<ArcBallCamera>().GetView());
+	BarnabusGameEngine::Get().GetRenderer()->SetCameraViewProjection(GetEntity("camera")->GetComponent<ArcBallCamera>().GetProjection() * GetEntity("camera")->GetComponent<ArcBallCamera>().GetView());
 
 	Environment::Render(deltaTime);
 }

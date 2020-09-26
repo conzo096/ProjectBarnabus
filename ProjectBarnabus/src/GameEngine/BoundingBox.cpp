@@ -1,5 +1,5 @@
 #include "BoundingBox.h"
-#include "Renderer.h"
+#include "BarnabusGameEngine.h"
 #include <algorithm>
 
 namespace BoundingVolumes
@@ -127,6 +127,7 @@ void BoundingBox::Update(glm::mat4 volumeTransform)
 
 void BoundingBox::Render(std::string environmentName)
 {
-	Renderer::Get().AddMesh(environmentName, data);
+	BarnabusGameEngine::Get().GetRenderer()->AddMesh(environmentName, data);
 }
+
 }

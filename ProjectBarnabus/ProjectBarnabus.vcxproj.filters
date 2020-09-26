@@ -19,9 +19,6 @@
     <ClCompile Include="src\GameEngine\BarnabusGameEngine.cpp">
       <Filter>Source Files\GameEngine</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameEngine\Renderer.cpp">
-      <Filter>Source Files\GameEngine\Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="src\GameEngine\Entity.cpp">
       <Filter>Source Files\GameEngine\Components</Filter>
     </ClCompile>
@@ -202,9 +199,6 @@
       <Filter>Header Files\GameEngine\Components\Model</Filter>
     </ClInclude>
     <ClInclude Include="src\GameEngine\MeshData.h">
-      <Filter>Header Files\GameEngine\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GameEngine\Renderer.h">
       <Filter>Header Files\GameEngine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\GameEngine\Entity.h">

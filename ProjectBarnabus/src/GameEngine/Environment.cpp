@@ -1,5 +1,5 @@
 #include "Environment.h"
-#include "Renderer.h"
+#include "BarnabusGameEngine.h"
 #include "PhysicsContainer.h"
 
 namespace
@@ -131,7 +131,7 @@ void Environment::Render(float deltaTime)
 {
 	for (auto it = lights.begin(); it != lights.end(); ++it)
 	{
-		Renderer::Get().AddLight(name, it->second.get());
+		BarnabusGameEngine::Get().GetRenderer()->AddLight(name, it->second.get());
 	}
 
 	for (auto it = entities.begin(); it != entities.end(); ++it)

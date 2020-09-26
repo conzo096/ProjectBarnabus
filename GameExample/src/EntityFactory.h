@@ -3,7 +3,6 @@
 #include "GameEngine/BarnabusGameEngine.h"
 #include "GameEngine/ArcBallCamera.h"
 #include "GameEngine/AnimatedModel.h"
-#include "GameEngine/Renderer.h"
 #include "GameEngine/Terrain.h"
 #include "GameEngine/Movement.h"
 #include "GameEngine/ArcBallCamera.h"

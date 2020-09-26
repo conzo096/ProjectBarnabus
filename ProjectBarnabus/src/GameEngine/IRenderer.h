@@ -1,7 +1,9 @@
 #pragma once
 
 #include "MeshData.h"
-#include <GL\glew.h>
+#include "Light.h"
+#include "IFramebuffer.h"
+
 #include <GLFW\glfw3.h>
 
 class IRenderer
@@ -18,6 +20,7 @@ public:
 	{
 	}
 
+	// For starting up the game engine
 	virtual bool InitialiseGameEngine() = 0;
 	virtual bool ShouldWindowClose() = 0;
 	virtual GLFWwindow* GetWindow() = 0;
@@ -27,4 +30,16 @@ public:
 	// For meshes
 	virtual void InitialiseMesh(MeshData& data) = 0;
 	virtual void UpdateBaseVertexBuffers(MeshData& data) = 0;
+
+	// For rendering the game
+	virtual void Render() = 0;
+	virtual void SetCameraViewProjection(glm::mat4 camera) = 0;
+
+	virtual void AddMesh(std::string environmentName, MeshData& md) = 0;
+	virtual void AddLight(std::string environmentName, Light* light) = 0;
+	virtual glm::mat4 GetCameraVP() = 0;
+
+	virtual void AddUiElement(MeshData& md) = 0;
+	virtual void AddFramebuffer(std::pair<std::string, IFrameBuffer*> pair) = 0;
+	virtual IFrameBuffer* GetFrameBuffer(const std::string& buffer) = 0;
 };

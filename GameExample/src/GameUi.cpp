@@ -3,7 +3,6 @@
 #include "FontShader.h"
 #include "ShaderFactory.h"
 #include <GameEngine/TextQuad.h>
-#include <GameEngine/Renderer.h>
 #include <GameEngine/BarnabusGameEngine.h>
 #include <GameEngine/OpenGLTexture.h>
 GameUi::GameUi()
@@ -56,7 +55,7 @@ GameUi::~GameUi()
 
 void GameUi::Draw()
 {
-	uiElements.at("debug")->GetMeshData().SetTexture(Renderer::Get().GetFrameBuffer("main").GetDepthTexture());
+	uiElements.at("debug")->GetMeshData().SetTexture(BarnabusGameEngine::Get().GetRenderer()->GetFrameBuffer("main")->GetDepthTexture());
 	static_cast<TextQuad*>(uiElements.at("example"))->SetText(exampleText);
 	UiDisplay::Draw();
 }

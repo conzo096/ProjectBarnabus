@@ -1,5 +1,4 @@
 #include "Model.h"
-#include "Renderer.h"
 #include "OpenGLTexture.h"
 #include "BarnabusGameEngine.h"
 #include <assimp/Importer.hpp>
@@ -164,7 +163,7 @@ namespace
 	{
 		for (auto& mesh : meshRootNode->data)
 		{
-			Renderer::Get().AddMesh(environmentName, mesh);
+			BarnabusGameEngine::Get().GetRenderer()->AddMesh(environmentName, mesh);
 		}
 
 		for (auto& child : meshRootNode->children)

@@ -2,7 +2,7 @@
 #include <GL\glew.h>
 #include <GL/GL.h>
 
-#include "Renderer.h"
+#include "BarnabusGameEngine.h"
 
 UiQuad::UiQuad(): width(1),height(1), transparency(1.0f)
 {
@@ -78,5 +78,5 @@ void UiQuad::InitQuad()
 
 void UiQuad::Draw()
 {
-	Renderer::Get().AddUiElement(mesh);
+	BarnabusGameEngine::Get().GetRenderer()->AddUiElement(mesh);
 }

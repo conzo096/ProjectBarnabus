@@ -3,9 +3,9 @@
 #include "GameEngine/BarnabusGameEngine.h"
 #include "GameEngine/ArcBallCamera.h"
 #include "GameEngine/AnimatedModel.h"
-#include "GameEngine/Renderer.h"
 #include "GameEngine/Terrain.h"
 #include "glm/gtx/string_cast.hpp"
+
 BarnabusGame::BarnabusGame() : mainScene("main")
 {
 }
@@ -41,7 +41,7 @@ bool BarnabusGame::Render(float deltaTime)
 	mainScene.Render(deltaTime);
 	ui.Draw();
 
-	Renderer::Get().Render();
+	BarnabusGameEngine::Get().GetRenderer()->Render();
 
 	return true;
 }

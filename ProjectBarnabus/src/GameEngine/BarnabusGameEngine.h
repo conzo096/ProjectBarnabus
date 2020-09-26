@@ -37,6 +37,7 @@ public:
 	ITexture* GetTexture(std::string name);
 
 	IRenderer::GraphicsRenderer GetRenderType();
+	IRenderer* GetRenderer();
 
 public:
 	// For meshes

@@ -1,6 +1,4 @@
 #include "FinalPassShader.h"
-#include "Renderer.h"
-
 #include <glm\gtc\type_ptr.hpp>
 
 void FinalPassShader::UpdateUniforms(MeshData& meshData)

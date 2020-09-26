@@ -1,8 +1,9 @@
 #include "FontShader.h"
-#include <GameEngine/Renderer.h>
-#include <GameEngine/OpenGLTexture.h>
+#include "GameEngine/MeshData.h"
+#include <GameEngine/ITexture.h>
 #include <glm\gtc\type_ptr.hpp>
-void FontShader::UpdateUniforms(MeshData & meshData)
+
+void FontShader::UpdateUniforms(MeshData& meshData)
 {
 	Use();
 

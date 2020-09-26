@@ -1,6 +1,5 @@
 #include "AnimatedModel.h"
 #include "Entity.h"
-#include "Renderer.h"
 #include "NodeAnim.h"
 #include "BarnabusGameEngine.h"
 

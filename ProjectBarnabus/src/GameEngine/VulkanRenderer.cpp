@@ -1,6 +1,7 @@
 #define GLFW_INCLUDE_VULKAN
 #include "VulkanRenderer.h"
 #include "BarnabusGameEngine.h"
+
 #include <set>
 
 namespace
@@ -373,4 +374,38 @@ void VulkanRenderer::InitialiseMesh(MeshData& data)
 
 void VulkanRenderer::UpdateBaseVertexBuffers(MeshData& data)
 {
+}
+
+void VulkanRenderer::Render()
+{
+}
+
+void VulkanRenderer::SetCameraViewProjection(glm::mat4 camera)
+{
+}
+
+void VulkanRenderer::AddMesh(std::string environmentName, MeshData & md)
+{
+}
+
+void VulkanRenderer::AddLight(std::string environmentName, Light * light)
+{
+}
+
+glm::mat4 VulkanRenderer::GetCameraVP()
+{
+	return glm::mat4();
+}
+
+void VulkanRenderer::AddUiElement(MeshData & md)
+{
+}
+
+void VulkanRenderer::AddFramebuffer(std::pair<std::string, IFrameBuffer*> pair)
+{
+}
+
+IFrameBuffer* VulkanRenderer::GetFrameBuffer(const std::string& buffer)
+{
+	return framebuffers.at(buffer);
 }

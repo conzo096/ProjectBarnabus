@@ -1,5 +1,6 @@
 #pragma once
 #include "GameEngine/Environment.h"
+
 class MainEnvironment : public Environment
 {
 public:

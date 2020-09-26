@@ -65,6 +65,11 @@ IRenderer::GraphicsRenderer BarnabusGameEngine::GetRenderType()
 	return renderer->GetRenderType();
 }
 
+IRenderer* BarnabusGameEngine::GetRenderer()
+{
+	return renderer.get();
+}
+
 void BarnabusGameEngine::InitialiseMesh(MeshData & data)
 {
 	renderer->InitialiseMesh(data);

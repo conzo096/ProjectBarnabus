@@ -1,5 +1,5 @@
 #include "RedShader.h"
-#include "GameEngine/Renderer.h"
+#include "GameEngine/BarnabusGameEngine.h"
 
 #include <glm\gtc\type_ptr.hpp>
 
@@ -7,7 +7,7 @@ void RedShader::UpdateUniforms(MeshData& meshData)
 {
 	Use();
 	// Bind Uniforms.
-	const auto mvp = Renderer::Get().GetCameraVP() * glm::mat4(meshData.GetTransform());
+	const auto mvp = BarnabusGameEngine::Get().GetRenderer()->GetCameraVP() * glm::mat4(meshData.GetTransform());
 
 	GLint index;
 	index = glGetUniformLocation(meshData.GetShader()->GetId(), "MVP");
