@@ -90,7 +90,7 @@ void OpenGLRenderer::InitialiseMesh(MeshData& data)
 	{
 		// vertex bone information
 		glGenBuffers(1, &data.GetBones());
-		glBindBuffer(GL_ARRAY_BUFFER, BONES);
+		glBindBuffer(GL_ARRAY_BUFFER, data.GetBones());
 		glBufferData(GL_ARRAY_BUFFER, sizeof(VertexBoneData) * data.GetBoneData().size(), &data.GetBoneData()[0], GL_STATIC_DRAW);
 
 		glEnableVertexAttribArray(BUFFERS::BONE_ID);
