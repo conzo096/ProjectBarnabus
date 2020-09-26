@@ -1,6 +1,5 @@
 #pragma once
 #include "IFramebuffer.h"
-#include <string>
 
 class OpenGLTexture;
 

@@ -2,6 +2,7 @@
 #include "BarnabusGameEngine.h"
 #include "GLShader.h"
 #include "OpenGLFramebuffer.h"
+#include "VulkanFrameBuffer.h"
 #include "UiQuad.h"
 
 Renderer::Renderer()
@@ -24,9 +25,20 @@ Renderer::Renderer()
 		finalShader->AddShaderFromFile("res\\shaders\\FinalPass.frag", GLShader::FRAGMENT);
 		finalShader->Link();
 
-	 
 		static_cast<FinalPassShader*>(finalShader)->gameTexture = GetFrameBuffer("main").GetFrameTexture();
 		static_cast<FinalPassShader*>(finalShader)->uiTexture = GetFrameBuffer("ui").GetFrameTexture();
+	}
+	else
+	{
+		auto main = new VulkanFrameBuffer("main");
+		main->LoadFrameBuffer(1920, 1080);
+		auto pair = std::pair<std::string, VulkanFrameBuffer*>(std::string("main"), main);
+		AddFramebuffer(pair);
+		auto ui = new VulkanFrameBuffer("ui");
+		ui->LoadFrameBuffer(1920, 1080);
+		pair = std::pair<std::string, VulkanFrameBuffer*>(std::string("ui"), ui);
+		AddFramebuffer(pair);
+
 	}
 	screenQuad = new UiQuad(glm::vec2(-1,-1), glm::vec2(1, 1));
 	screenQuad->InitQuad();
