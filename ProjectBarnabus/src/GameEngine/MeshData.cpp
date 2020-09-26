@@ -1,6 +1,6 @@
 #include "MeshData.h"
 #include "GLShader.h"
-#include "Framebuffer.h"
+#include "OpenGLFramebuffer.h"
 #include "BarnabusGameEngine.h"
 
 MeshData::MeshData() : VAO(0), VBO(0), EBO(0), BONES(0)
@@ -97,12 +97,12 @@ Material MeshData::GetMaterial() const
 }
 
 
-void MeshData::SetFrameBuffer(FrameBuffer * framebuffer)
+void MeshData::SetFrameBuffer(OpenGLFrameBuffer * framebuffer)
 {
 	buffer = framebuffer;
 }
 
-FrameBuffer * MeshData::GetFrameBuffer() const
+OpenGLFrameBuffer * MeshData::GetFrameBuffer() const
 {
 	return buffer;
 }

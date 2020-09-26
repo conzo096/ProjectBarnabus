@@ -1,32 +1,32 @@
-#include "FrameBuffer.h"
+#include "OpenGLFrameBuffer.h"
 #include "Texture.h"
 #include "BarnabusGameEngine.h"
 
-FrameBuffer::FrameBuffer(const std::string & frameBufferName) : name(frameBufferName)
+OpenGLFrameBuffer::OpenGLFrameBuffer(const std::string & frameBufferName) : name(frameBufferName)
 {
 }
 
-FrameBuffer::~FrameBuffer()
+OpenGLFrameBuffer::~OpenGLFrameBuffer()
 {
 	glDeleteFramebuffers(1, &bufferId);
 }
 
-GLuint FrameBuffer::GetFrameBuffer()
+GLuint OpenGLFrameBuffer::GetFrameBuffer()
 {
 	return bufferId;
 }
 
-Texture* FrameBuffer::GetFrameTexture()
+Texture* OpenGLFrameBuffer::GetFrameTexture()
 {
 	return frameTexture;
 }
 
-Texture* FrameBuffer::GetDepthTexture()
+Texture* OpenGLFrameBuffer::GetDepthTexture()
 {
 	return depthTexture;
 }
 
-void FrameBuffer::LoadFrameBuffer(int w, int h)
+void OpenGLFrameBuffer::LoadFrameBuffer(int w, int h)
 {
 	// The draw buffer
 	static GLenum drawBuffer = GL_COLOR_ATTACHMENT0;
@@ -77,7 +77,7 @@ void FrameBuffer::LoadFrameBuffer(int w, int h)
 
 }
 
-void FrameBuffer::BindFrameBuffer()
+void OpenGLFrameBuffer::BindFrameBuffer()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, bufferId);
 }

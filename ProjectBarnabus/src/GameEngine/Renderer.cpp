@@ -6,13 +6,13 @@
 Renderer::Renderer()
 {
 	backgroundColour = glm::vec4(0.1f, 0.0f, 0.4f, 1.0f);
-	auto main = new FrameBuffer("main");
+	auto main = new OpenGLFrameBuffer("main");
 	main->LoadFrameBuffer(1920,1080);
-	auto pair = std::pair<std::string, FrameBuffer*>(std::string("main"), main);
+	auto pair = std::pair<std::string, OpenGLFrameBuffer*>(std::string("main"), main);
 	AddFramebuffer(pair);
-	auto ui = new FrameBuffer("ui");
+	auto ui = new OpenGLFrameBuffer("ui");
 	ui->LoadFrameBuffer(1920, 1080);
-	pair = std::pair<std::string, FrameBuffer*>(std::string("ui"), ui);
+	pair = std::pair<std::string, OpenGLFrameBuffer*>(std::string("ui"), ui);
 	AddFramebuffer(pair);
 
 	screenQuad = new UiQuad(glm::vec2(-1,-1), glm::vec2(1, 1));
@@ -145,12 +145,12 @@ void Renderer::AddUiElement(MeshData& md)
 	uiElementsToRender.push_back(md);
 }
 
-void Renderer::AddFramebuffer(std::pair<std::string, FrameBuffer*> pair)
+void Renderer::AddFramebuffer(std::pair<std::string, OpenGLFrameBuffer*> pair)
 {
 	framebuffers.insert(pair);
 }
 
-FrameBuffer& Renderer::GetFrameBuffer(const std::string& buffer)
+OpenGLFrameBuffer& Renderer::GetFrameBuffer(const std::string& buffer)
 {
 	return *framebuffers.at(buffer);
 }

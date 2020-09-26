@@ -22,7 +22,7 @@
     <ClCompile Include="src\GameEngine\Entity.cpp" />
     <ClCompile Include="src\GameEngine\Environment.cpp" />
     <ClCompile Include="src\GameEngine\FinalPassShader.cpp" />
-    <ClCompile Include="src\GameEngine\Framebuffer.cpp" />
+    <ClCompile Include="src\GameEngine\OpenGLFramebuffer.cpp" />
     <ClCompile Include="src\GameEngine\FreeCamera.cpp" />
     <ClCompile Include="src\GameEngine\GLShader.cpp" />
     <ClCompile Include="src\GameEngine\HeightMapTexture.cpp" />
@@ -58,9 +58,10 @@
     <ClInclude Include="src\GameEngine\Entity.h" />
     <ClInclude Include="src\GameEngine\Environment.h" />
     <ClInclude Include="src\GameEngine\FinalPassShader.h" />
-    <ClInclude Include="src\GameEngine\Framebuffer.h" />
+    <ClInclude Include="src\GameEngine\OpenGLFramebuffer.h" />
     <ClInclude Include="src\GameEngine\FreeCamera.h" />
     <ClInclude Include="src\GameEngine\IDayCycle.h" />
+    <ClInclude Include="src\GameEngine\IFramebuffer.h" />
     <ClInclude Include="src\GameEngine\IGame.h" />
     <ClInclude Include="src\GameEngine\GLShader.h" />
     <ClInclude Include="src\GameEngine\HeightMapTexture.h" />

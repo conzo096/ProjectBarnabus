@@ -8,7 +8,7 @@
 #include <vector>
 
 class IShader;
-class FrameBuffer;
+class OpenGLFrameBuffer;
 
 struct Vertex
 {
@@ -50,8 +50,8 @@ public:
 	IShader* GetShader() const;
 	void SetMaterial(Material mat);
 	Material GetMaterial() const;
-	void SetFrameBuffer(FrameBuffer* framebuffer);
-	FrameBuffer* GetFrameBuffer() const;
+	void SetFrameBuffer(OpenGLFrameBuffer* framebuffer);
+	OpenGLFrameBuffer* GetFrameBuffer() const;
 
 	void ResizeBoneData(unsigned int size);
 	void InsertBoneDataAt(unsigned int location, int vertexLocation, float vertexWeight);
@@ -70,7 +70,7 @@ private:
 	unsigned int VAO, VBO, EBO, BONES;
 	std::vector<unsigned int> indices;
 	Texture* texture;
-	FrameBuffer* buffer;
+	OpenGLFrameBuffer* buffer;
 	// Shader for rendering the mesh.
 	IShader* shader;
 	// Material for lighting

@@ -49,9 +49,6 @@
     <ClCompile Include="src\GameEngine\UiQuad.cpp">
       <Filter>Source Files\GameEngine\User Interface</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameEngine\Framebuffer.cpp">
-      <Filter>Source Files\GameEngine\Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="src\GameEngine\FinalPassShader.cpp">
       <Filter>Source Files\GameEngine\Renderer\Shader</Filter>
     </ClCompile>
@@ -96,6 +93,9 @@
     </ClCompile>
     <ClCompile Include="src\GameEngine\VulkanShader.cpp">
       <Filter>Source Files\GameEngine\Renderer\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\OpenGLFramebuffer.cpp">
+      <Filter>Source Files\GameEngine\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -239,9 +239,6 @@
     <ClInclude Include="src\GameEngine\UiQuad.h">
       <Filter>Header Files\GameEngine\User Interface</Filter>
     </ClInclude>
-    <ClInclude Include="src\GameEngine\Framebuffer.h">
-      <Filter>Header Files\GameEngine\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="src\GameEngine\FinalPassShader.h">
       <Filter>Header Files\GameEngine\Shader</Filter>
     </ClInclude>
@@ -300,6 +297,12 @@
       <Filter>Header Files\GameEngine\Shader</Filter>
     </ClInclude>
     <ClInclude Include="src\GameEngine\IRenderer.h">
+      <Filter>Header Files\GameEngine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\IFramebuffer.h">
+      <Filter>Header Files\GameEngine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\OpenGLFramebuffer.h">
       <Filter>Header Files\GameEngine\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
