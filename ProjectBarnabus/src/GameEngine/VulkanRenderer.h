@@ -22,6 +22,13 @@ public:
 		}
 	};
 
+	struct SwapChainSupportDetails
+	{
+		VkSurfaceCapabilitiesKHR capabilities;
+		std::vector<VkSurfaceFormatKHR> formats;
+		std::vector<VkPresentModeKHR> presentModes;
+	};
+
 public:
 	VulkanRenderer();
 	~VulkanRenderer();
@@ -57,19 +64,35 @@ private:
 	void PickPhysicalDevice();
 	void CreateLogicalDevice();
 	void CreateSurface();
+	void CreateSwapChain();
+	void CreateImageViews();
+	void CreateGraphicsPipeline();
 
 private:
 	QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
 	bool IsDeviceSuitable(VkPhysicalDevice device);
+	SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device);
 private:
 	GLFWwindow* window;
+
 	VkInstance instance;
+	
 	VkDebugUtilsMessengerEXT debugMessenger;
+	
 	VkPhysicalDevice physicalDevice;
 	VkDevice device;
+
 	VkQueue graphicsQueue;
 	VkQueue presentQueue;
+	
 	VkSurfaceKHR surface;
+
+	VkSwapchainKHR swapChain;
+	std::vector<VkImage> swapChainImages;
+	VkFormat swapChainImageFormat;
+	VkExtent2D swapChainExtent;
+
+	std::vector<VkImageView> swapChainImageViews;
 
 private:
 	glm::mat4 cameraVP;
