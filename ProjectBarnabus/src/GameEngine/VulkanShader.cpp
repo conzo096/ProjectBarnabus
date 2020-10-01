@@ -415,6 +415,11 @@ void VulkanShader::CreateCommandBuffers()
 	}
 }
 
+VkCommandPool VulkanShader::GetCommandPool()
+{
+	return commandPool;
+}
+
 void VulkanShader::CreateSyncObjects()
 {
 	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());

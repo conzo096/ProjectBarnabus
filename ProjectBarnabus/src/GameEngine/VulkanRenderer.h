@@ -80,7 +80,9 @@ private:
 	void CreateImageViews();
 	void CreateRenderPass();
 	void CreateFramebuffers();
-
+	void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+	void CreateVertexBuffer(VkCommandPool commandPool);
+	void CopyBuffer(VkCommandPool commandPool, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 public:
 	QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
 private:
@@ -110,9 +112,6 @@ private:
 
 	VkRenderPass renderPass;
 	std::vector<VkFramebuffer> swapChainFramebuffers;
-
-	VkCommandPool commandPool;
-	std::vector<VkCommandBuffer> commandBuffers;
 
 	VkBuffer vertexBuffer;
 	VkDeviceMemory vertexBufferMemory;

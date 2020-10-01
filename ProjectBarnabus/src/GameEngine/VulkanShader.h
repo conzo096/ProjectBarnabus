@@ -32,6 +32,8 @@ public:
 
 public:
 	void CreateCommandBuffers();
+	VkCommandPool GetCommandPool();
+
 protected:
 	void CreateCommandPool();
 	void CreateSyncObjects();
