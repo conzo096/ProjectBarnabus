@@ -157,6 +157,5 @@ void Terrain::LoadTerrainFromHeightMap(const std::string heightMapPath)
 	rootNode->name = "Terrain";
 	rootNode->data.push_back(mesh);
 
-	InitModel();
 	BarnabusGameEngine::Get().AddMessageLog(StringLog("Terrain created from: " + heightMapPath, StringLog::Priority::Low));
 }

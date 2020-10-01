@@ -69,6 +69,7 @@ public:
 	std::vector<VkImage>& GetSwapChainImages();
 	VkQueue GetGraphicsQueue();
 	VkQueue GetPresentQueue();
+	VkBuffer GetVertexBuffer();
 private:
 	bool InitVulkanInstance();
 	void SetupDebugMessenger();
@@ -79,6 +80,7 @@ private:
 	void CreateImageViews();
 	void CreateRenderPass();
 	void CreateFramebuffers();
+
 public:
 	QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
 private:
@@ -111,6 +113,9 @@ private:
 
 	VkCommandPool commandPool;
 	std::vector<VkCommandBuffer> commandBuffers;
+
+	VkBuffer vertexBuffer;
+	VkDeviceMemory vertexBufferMemory;
 
 private:
 	glm::mat4 cameraVP;

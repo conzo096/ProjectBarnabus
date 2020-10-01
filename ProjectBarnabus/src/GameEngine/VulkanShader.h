@@ -31,10 +31,9 @@ public:
 	virtual void DrawMesh(MeshData& meshData) override;
 
 public:
-	void Draw(MeshData& meshData);
+	void CreateCommandBuffers();
 protected:
 	void CreateCommandPool();
-	void CreateCommandBuffers();
 	void CreateSyncObjects();
 
 protected:

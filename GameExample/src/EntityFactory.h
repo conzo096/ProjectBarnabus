@@ -56,6 +56,7 @@ namespace EntityFactory
 		auto fileName = "res\\Textures\\HeightMap.png";
 		auto terrainComponent = std::make_unique<Terrain>(fileName, Terrain::TerrainType::Image);
 		terrainComponent->SetShader(shader);
+		terrainComponent->InitModel();
 		terrain->AddComponent(std::move(terrainComponent));
 
 		terrain->SetPosition(glm::vec3(-50, 0, -50));
