@@ -70,6 +70,7 @@ public:
 	VkQueue GetGraphicsQueue();
 	VkQueue GetPresentQueue();
 	VkBuffer GetVertexBuffer();
+	VkBuffer GetIndexBuffer();
 private:
 	bool InitVulkanInstance();
 	void SetupDebugMessenger();
@@ -82,6 +83,7 @@ private:
 	void CreateFramebuffers();
 	void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 	void CreateVertexBuffer(VkCommandPool commandPool);
+	void CreateIndexBuffer(VkCommandPool commandPool);
 	void CopyBuffer(VkCommandPool commandPool, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 public:
 	QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
@@ -115,6 +117,8 @@ private:
 
 	VkBuffer vertexBuffer;
 	VkDeviceMemory vertexBufferMemory;
+	VkBuffer indexBuffer;
+	VkDeviceMemory indexBufferMemory;
 
 private:
 	glm::mat4 cameraVP;

@@ -202,7 +202,12 @@ VulkanRenderer::~VulkanRenderer()
 		vkDestroyImageView(device, imageView, nullptr);
 	}
 
+	vkDestroyBuffer(device, indexBuffer, nullptr);
+	vkFreeMemory(device, indexBufferMemory, nullptr);
+
 	vkDestroyBuffer(device, vertexBuffer, nullptr);
+	vkFreeMemory(device, vertexBufferMemory, nullptr);
+
 	vkDestroySwapchainKHR(device, swapChain, nullptr);
 	vkDestroyRenderPass(device, renderPass, nullptr);
 	vkDestroyDevice(device, nullptr);
@@ -316,6 +321,11 @@ VkQueue VulkanRenderer::GetPresentQueue()
 VkBuffer VulkanRenderer::GetVertexBuffer()
 {
 	return vertexBuffer;
+}
+
+VkBuffer VulkanRenderer::GetIndexBuffer()
+{
+	return indexBuffer;
 }
 
 bool VulkanRenderer::InitVulkanInstance()
@@ -670,10 +680,11 @@ void VulkanRenderer::CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, V
 void VulkanRenderer::CreateVertexBuffer(VkCommandPool commandPool)
 {
 	std::vector<Vertex> vertices;
-	vertices.resize(3);
-	vertices[0].position = glm::vec3(0, -0.5, 0);
-	vertices[1].position = glm::vec3(0.5, 0.5, 0);
-	vertices[2].position = glm::vec3(-0.5, 0.5, 0);
+	vertices.resize(4);
+	vertices[0].position = glm::vec3(-0.5, -0.5, 0);
+	vertices[1].position = glm::vec3(0.5, -0.5, 0);
+	vertices[2].position = glm::vec3(0.5, 0.5, 0);
+	vertices[3].position = glm::vec3(-0.5, 0.5, 0);
 
 	VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 
@@ -689,6 +700,31 @@ void VulkanRenderer::CreateVertexBuffer(VkCommandPool commandPool)
 	CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertexBuffer, vertexBufferMemory);
 
 	CopyBuffer(commandPool, stagingBuffer, vertexBuffer, bufferSize);
+
+	vkDestroyBuffer(device, stagingBuffer, nullptr);
+	vkFreeMemory(device, stagingBufferMemory, nullptr);
+}
+
+void VulkanRenderer::CreateIndexBuffer(VkCommandPool commandPool)
+{
+	const std::vector<uint16_t> indices = {
+	0, 1, 2, 2, 3, 0
+	};
+
+	VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
+
+	VkBuffer stagingBuffer;
+	VkDeviceMemory stagingBufferMemory;
+	CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+
+	void* data;
+	vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
+	memcpy(data, indices.data(), (size_t)bufferSize);
+	vkUnmapMemory(device, stagingBufferMemory);
+
+	CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, indexBuffer, indexBufferMemory);
+
+	CopyBuffer(commandPool, stagingBuffer, indexBuffer, bufferSize);
 
 	vkDestroyBuffer(device, stagingBuffer, nullptr);
 	vkFreeMemory(device, stagingBufferMemory, nullptr);
@@ -818,7 +854,8 @@ void VulkanRenderer::InitialiseMesh(MeshData& data)
 	auto shader = static_cast<VulkanShader*>(data.GetShader());
 
 	CreateVertexBuffer(shader->GetCommandPool());
-
+	CreateIndexBuffer(shader->GetCommandPool());
+	
 	shader->CreateCommandBuffers();
 }
 

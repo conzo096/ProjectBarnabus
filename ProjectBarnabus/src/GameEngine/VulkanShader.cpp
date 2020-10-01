@@ -402,9 +402,13 @@ void VulkanShader::CreateCommandBuffers()
 
 		VkBuffer vertexBuffers[] = { renderer->GetVertexBuffer() };
 		VkDeviceSize offsets[] = { 0 };
+
 		vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
 
-		vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
+		vkCmdBindIndexBuffer(commandBuffers[i], renderer->GetIndexBuffer(), 0, VK_INDEX_TYPE_UINT16);
+		
+		// Replace 6 with indicies size.
+		vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(6), 1, 0, 0, 0);
 
 		vkCmdEndRenderPass(commandBuffers[i]);
 
