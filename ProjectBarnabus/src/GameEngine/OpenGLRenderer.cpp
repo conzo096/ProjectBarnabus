@@ -80,6 +80,8 @@ bool OpenGLRenderer::InitialiseGameEngine()
 
 	static_cast<FinalPassShader*>(finalShader)->gameTexture = GetFrameBuffer("main")->GetFrameTexture();
 	static_cast<FinalPassShader*>(finalShader)->uiTexture = GetFrameBuffer("ui")->GetFrameTexture();
+
+	return true;
 }
 
 bool OpenGLRenderer::ShouldWindowClose()
