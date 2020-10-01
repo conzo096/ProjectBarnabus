@@ -22,6 +22,9 @@
     <Filter Include="Resource Files\Shaders">
       <UniqueIdentifier>{0ef24028-90e2-4182-907b-f3afa78734f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Shaders\Vulkan">
+      <UniqueIdentifier>{4ebfbfa4-94e0-43ec-92f3-a8f6bce407c8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AnimationShader.cpp">
@@ -102,6 +105,12 @@
     </None>
     <None Include="res\Shaders\Terrain.vert">
       <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\Shaders\Vulkan\VkRed.frag">
+      <Filter>Resource Files\Shaders\Vulkan</Filter>
+    </None>
+    <None Include="res\Shaders\Vulkan\VkRed.vert">
+      <Filter>Resource Files\Shaders\Vulkan</Filter>
     </None>
   </ItemGroup>
 </Project>

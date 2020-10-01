@@ -16,16 +16,17 @@ GameUi::GameUi()
 
 void GameUi::InitGameUi()
 {
-	auto CreateShader = [](GLShader* shader, std::string shaderName)
-	{
-		shader->CreateProgram("ui");
-		shader->AddShaderFromFile(std::string("res\\shaders\\"+ shaderName+".vert").c_str(), GLShader::VERTEX);
-		shader->AddShaderFromFile(std::string("res\\shaders\\" + shaderName + ".frag").c_str(), GLShader::FRAGMENT);
-		shader->Link();
-	};
 
-	ShaderFactory::CreateShader<UiShader>("ui", "res\\shaders\\UI");
-	ShaderFactory::CreateShader<FontShader>("font", "res\\shaders\\Font");
+	if (BarnabusGameEngine::Get().GetRenderType() == IRenderer::OpenGL)
+	{
+		ShaderFactory::CreateShader<UiShader>("ui", "res\\shaders\\UI");
+		ShaderFactory::CreateShader<FontShader>("font", "res\\shaders\\Font");
+	}
+	else
+	{
+		ShaderFactory::CreateShader<UiShader>("ui", "res\\Shaders\\Vulkan\\VkRed");
+		ShaderFactory::CreateShader<FontShader>("font", "res\\Shaders\\Vulkan\\VkRed");
+	}
 
 	uiElements.at("debug")->GetMeshData().SetShader(BarnabusGameEngine::Get().GetShader("ui"));
 	uiElements.at("example")->GetMeshData().SetShader(BarnabusGameEngine::Get().GetShader("font"));

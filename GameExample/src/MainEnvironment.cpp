@@ -66,13 +66,22 @@ void MainEnvironment::LoadGameContent()
 {
 	AddLight("test", std::make_unique<DirectionalLight>(glm::vec4(0.5081, 0.5713, 0.6446, 1)));
 
-	ShaderFactory::CreateShader<AnimationShader>("animation", "res\\Shaders\\BasicAnimation");
-	ShaderFactory::CreateShader<TerrainShader>("terrain", "res\\Shaders\\Terrain");
-	ShaderFactory::CreateShader<RedShader>("red", "res\\Shaders\\Red");
+	if (BarnabusGameEngine::Get().GetRenderType() == IRenderer::OpenGL)
+	{
+		ShaderFactory::CreateShader<AnimationShader>("animation", "res\\Shaders\\BasicAnimation");
+		ShaderFactory::CreateShader<TerrainShader>("terrain", "res\\Shaders\\Terrain");
+		ShaderFactory::CreateShader<RedShader>("red", "res\\Shaders\\Red");
+	}
+	else
+	{
+		ShaderFactory::CreateShader<AnimationShader>("animation", "res\\Shaders\\Vulkan\\VkRed");
+		ShaderFactory::CreateShader<TerrainShader>("terrain", "res\\Shaders\\Vulkan\\VkRed");
+		ShaderFactory::CreateShader<RedShader>("red", "res\\Shaders\\Vulkan\\VkRed");
+	}
 
 	AddEntity("camera", EntityFactory::CreateCamera());
-	AddEntity("terrain", EntityFactory::CreateTerrain(BarnabusGameEngine::Get().GetShader("terrain")));
-	AddEntity("player", EntityFactory::CreatePlayer(glm::vec3(0), BarnabusGameEngine::Get().GetShader("animation"), &GetEntity("terrain")->GetComponent<Terrain>(),GetEntity("camera")->GetCompatibleComponent<ArcBallCamera>()));
+	AddEntity("terrain", EntityFactory::CreateTerrain(BarnabusGameEngine::Get().GetShader("red")));
+	AddEntity("player", EntityFactory::CreatePlayer(glm::vec3(0), BarnabusGameEngine::Get().GetShader("red"), &GetEntity("terrain")->GetComponent<Terrain>(),GetEntity("camera")->GetCompatibleComponent<ArcBallCamera>()));
 	AddEntity("building", EntityFactory::CreateBuilding(glm::vec3(0), BarnabusGameEngine::Get().GetShader("red")));
 	GetEntity("building")->SetScale(glm::vec3(2, 2, 2));
 

@@ -58,6 +58,10 @@ public:
 	void AddFramebuffer(std::pair<std::string, IFrameBuffer*> pair) override;
 	IFrameBuffer* GetFrameBuffer(const std::string& buffer) override;
 
+public:
+	// Vulkan specific
+	VkExtent2D GetSwapChainExtent();
+	VkDevice GetDevice();
 private:
 	bool InitVulkanInstance();
 	void SetupDebugMessenger();

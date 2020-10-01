@@ -21,9 +21,14 @@ namespace ShaderFactory
 		}
 		else
 		{
-			const auto vertFileLocation = fileLocation + ".vert";
-			const auto fragFileLocation = fileLocation + ".frag";
+			const auto vertFileLocation = fileLocation + "Vert.spv";
+			const auto fragFileLocation = fileLocation + "Frag.spv";
 			auto shader = std::make_unique<VulkanShader>();
+			
+			shader->CreateProgram(shaderName);
+			shader->AddShaderFromFile(vertFileLocation.c_str(), GLShader::VERTEX);
+			shader->AddShaderFromFile(fragFileLocation.c_str(), GLShader::FRAGMENT);
+			shader->Link();
 
 			BarnabusGameEngine::Get().AddShader(shaderName, std::move(shader));
 		}

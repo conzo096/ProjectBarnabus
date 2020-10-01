@@ -245,6 +245,16 @@ GLFWwindow * VulkanRenderer::GetWindow()
 	return window;
 }
 
+VkExtent2D VulkanRenderer::GetSwapChainExtent()
+{
+	return swapChainExtent;
+}
+
+VkDevice VulkanRenderer::GetDevice()
+{
+	return device;
+}
+
 bool VulkanRenderer::InitVulkanInstance()
 {
 	if (enableValidationLayers && !CheckValidationLayerSupport()) 

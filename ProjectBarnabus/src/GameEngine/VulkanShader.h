@@ -1,6 +1,6 @@
 #pragma once
 #include "IShader.h"
-#include "IShader.h"
+#include <vulkan/vulkan.h>
 
 namespace 
 {
@@ -10,7 +10,7 @@ namespace
 class VulkanShader : public IShader
 {
 public:
-
+	VulkanShader();
 	~VulkanShader();
 
 	unsigned int GetId() override;
@@ -32,4 +32,10 @@ public:
 
 private:
 	std::string name;
+	VkDevice device;
+
+	VkShaderModule vertexShaderModule;
+	VkShaderModule fragmentShaderModule;
+
+	VkPipelineLayout pipelineLayout;
 };
