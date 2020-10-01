@@ -177,13 +177,21 @@ VulkanRenderer::VulkanRenderer() : physicalDevice(VK_NULL_HANDLE)
 
 VulkanRenderer::~VulkanRenderer()
 {
-	vkDestroySwapchainKHR(device, swapChain, nullptr);
-	vkDestroyDevice(device, nullptr);
+	vkDestroyCommandPool(device, commandPool, nullptr);
+
+	for (auto framebuffer : swapChainFramebuffers)
+	{
+		vkDestroyFramebuffer(device, framebuffer, nullptr);
+	}
 
 	for (auto imageView : swapChainImageViews)
 	{
 		vkDestroyImageView(device, imageView, nullptr);
 	}
+
+	vkDestroySwapchainKHR(device, swapChain, nullptr);
+	vkDestroyRenderPass(device, renderPass, nullptr);
+	vkDestroyDevice(device, nullptr);
 
 	if (enableValidationLayers)
 	{
@@ -230,7 +238,8 @@ bool VulkanRenderer::InitialiseGameEngine()
 	CreateLogicalDevice();
 	CreateSwapChain();
 	CreateImageViews();
-	CreateGraphicsPipeline();
+	CreateRenderPass();
+	CreateFramebuffers();
 
 	return true;
 }
@@ -250,9 +259,44 @@ VkExtent2D VulkanRenderer::GetSwapChainExtent()
 	return swapChainExtent;
 }
 
+VkSwapchainKHR VulkanRenderer::GetSwapChain()
+{
+	return swapChain;
+}
+
 VkDevice VulkanRenderer::GetDevice()
 {
 	return device;
+}
+
+VkRenderPass VulkanRenderer::GetRenderPass()
+{
+	return renderPass;
+}
+
+VkPhysicalDevice VulkanRenderer::GetPhysicalDevice()
+{
+	return physicalDevice;
+}
+
+std::vector<VkFramebuffer>& VulkanRenderer::GetSwapChainFramebuffers()
+{
+	return swapChainFramebuffers;
+}
+
+std::vector<VkImage>& VulkanRenderer::GetSwapChainImages()
+{
+	return swapChainImages;
+}
+
+VkQueue VulkanRenderer::GetGraphicsQueue()
+{
+	return graphicsQueue;
+}
+
+VkQueue VulkanRenderer::GetPresentQueue()
+{
+	return presentQueue;
 }
 
 bool VulkanRenderer::InitVulkanInstance()
@@ -396,6 +440,7 @@ void VulkanRenderer::CreateLogicalDevice()
 	}
 
 	vkGetDeviceQueue(device, indices.graphicsFamily.value(), 0, &graphicsQueue);
+	vkGetDeviceQueue(device, indices.presentFamily.value(), 0, &presentQueue);
 }
 
 void VulkanRenderer::CreateSurface()
@@ -497,8 +542,81 @@ void VulkanRenderer::CreateImageViews()
 
 }
 
-void VulkanRenderer::CreateGraphicsPipeline()
+void VulkanRenderer::CreateRenderPass()
 {
+	VkAttachmentDescription colorAttachment{};
+	colorAttachment.format = swapChainImageFormat;
+	colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+
+	colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+	colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+
+	colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+	colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+
+	colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
+	VkAttachmentReference colorAttachmentRef{};
+	colorAttachmentRef.attachment = 0;
+	colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+	VkSubpassDescription subpass{};
+	subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+
+	subpass.colorAttachmentCount = 1;
+	subpass.pColorAttachments = &colorAttachmentRef;
+
+	VkRenderPassCreateInfo renderPassInfo{};
+	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+	renderPassInfo.attachmentCount = 1;
+	renderPassInfo.pAttachments = &colorAttachment;
+	renderPassInfo.subpassCount = 1;
+	renderPassInfo.pSubpasses = &subpass;
+
+	if (vkCreateRenderPass(device, &renderPassInfo, nullptr, &renderPass) != VK_SUCCESS)
+	{
+		throw std::runtime_error("failed to create render pass!");
+	}
+
+	VkSubpassDependency dependency{};
+	dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+	dependency.dstSubpass = 0;
+
+	dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+	dependency.srcAccessMask = 0;
+
+	dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+	dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
+	renderPassInfo.dependencyCount = 1;
+	renderPassInfo.pDependencies = &dependency;
+}
+
+void VulkanRenderer::CreateFramebuffers()
+{
+	swapChainFramebuffers.resize(swapChainImageViews.size());
+
+	for (size_t i = 0; i < swapChainImageViews.size(); i++)
+	{
+		VkImageView attachments[] = {
+			swapChainImageViews[i]
+		};
+
+		VkFramebufferCreateInfo framebufferInfo{};
+		framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+		framebufferInfo.renderPass = renderPass;
+		framebufferInfo.attachmentCount = 1;
+		framebufferInfo.pAttachments = attachments;
+		framebufferInfo.width = swapChainExtent.width;
+		framebufferInfo.height = swapChainExtent.height;
+		framebufferInfo.layers = 1;
+
+		if (vkCreateFramebuffer(device, &framebufferInfo, nullptr, &swapChainFramebuffers[i]) != VK_SUCCESS)
+		{
+			throw std::runtime_error("failed to create framebuffer!");
+		}
+	}
 }
 
 VulkanRenderer::QueueFamilyIndices VulkanRenderer::FindQueueFamilies(VkPhysicalDevice device)
@@ -597,6 +715,54 @@ void VulkanRenderer::UpdateBaseVertexBuffers(MeshData& data)
 
 void VulkanRenderer::Render()
 {
+	auto renderMeshes = [](auto& renderList)
+	{
+		for (int i = 0; i < renderList.size(); i++)
+		{
+			auto& mesh = renderList[i];
+			mesh.GetShader()->UpdateUniforms(mesh);
+			// Bind and draw model.
+			mesh.GetShader()->DrawMesh(mesh);
+		}
+	};
+
+	auto renderMeshesWithLights = [](auto& renderList, auto& lights)
+	{
+		for (int i = 0; i < renderList.size(); i++)
+		{
+			auto& mesh = renderList[i];
+			mesh.GetShader()->DrawMesh(mesh);
+		}
+	};
+
+	// Render main game.
+	// Bind game object buffer
+
+	for (auto& meshes : meshesToRender)
+	{
+		auto lights = environmentLights.find(meshes.first);
+		if (lights == environmentLights.end())
+		{
+			renderMeshes(meshes.second);
+		}
+		else
+		{
+			renderMeshesWithLights(meshes.second, lights->second);
+		}
+	}
+	
+	meshesToRender.clear();
+
+	// Bind UI element framebuffer
+	renderMeshes(uiElementsToRender);
+
+	uiElementsToRender.clear();
+
+	// Bind screen buffer & draw
+
+	glfwSwapBuffers(BarnabusGameEngine::Get().GetWindow());
+
+	environmentLights.clear();
 }
 
 void VulkanRenderer::SetCameraViewProjection(glm::mat4 camera)
@@ -605,10 +771,36 @@ void VulkanRenderer::SetCameraViewProjection(glm::mat4 camera)
 
 void VulkanRenderer::AddMesh(std::string environmentName, MeshData & md)
 {
+	auto environmentMeshes = meshesToRender.find(environmentName);
+
+	// enviroment does not exist. Add a new vector to list
+	if (environmentMeshes == meshesToRender.end())
+	{
+		std::vector<MeshData> newList;
+		newList.push_back(md);
+		meshesToRender.insert(std::pair<std::string, std::vector<MeshData>>(environmentName, newList));
+	}
+	else
+	{
+		environmentMeshes->second.push_back(md);
+	}
 }
 
 void VulkanRenderer::AddLight(std::string environmentName, Light * light)
 {
+	auto lights = environmentLights.find(environmentName);
+
+	// enviroment does not exist. Add a new vector to list
+	if (lights == environmentLights.end())
+	{
+		std::vector<Light*> newList;
+		newList.push_back(light);
+		environmentLights.insert(std::pair<std::string, std::vector<Light*>>(environmentName, newList));
+	}
+	else
+	{
+		lights->second.push_back(light);
+	}
 }
 
 glm::mat4 VulkanRenderer::GetCameraVP()

@@ -29,7 +29,7 @@ public:
 
 	virtual void UpdateUniforms(MeshData& meshData) override;
 	virtual void UpdateUniforms(MeshData& meshData, const LightInfo& lights) override;
-	virtual void DrawMesh(MeshData& meshData) const override;
+	virtual void DrawMesh(MeshData& meshData) override;
 
 private:
 	std::string name;

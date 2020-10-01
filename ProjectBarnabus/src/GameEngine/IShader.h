@@ -34,5 +34,5 @@ public:
 
 	virtual void UpdateUniforms(MeshData& meshData) =0;
 	virtual void UpdateUniforms(MeshData& meshData, const LightInfo& lights) =0;
-	virtual void DrawMesh(MeshData& meshData) const =0;
+	virtual void DrawMesh(MeshData& meshData) =0;
 };

@@ -28,9 +28,16 @@ public:
 
 	virtual void UpdateUniforms(MeshData& meshData) override;
 	virtual void UpdateUniforms(MeshData& meshData, const LightInfo& lights) override;
-	virtual void DrawMesh(MeshData& meshData) const override;
+	virtual void DrawMesh(MeshData& meshData) override;
 
-private:
+public:
+	void Draw(MeshData& meshData);
+protected:
+	void CreateCommandPool();
+	void CreateCommandBuffers();
+	void CreateSyncObjects();
+
+protected:
 	std::string name;
 	VkDevice device;
 
@@ -38,4 +45,14 @@ private:
 	VkShaderModule fragmentShaderModule;
 
 	VkPipelineLayout pipelineLayout;
+	VkPipeline graphicsPipeline;
+
+	VkCommandPool commandPool;
+	std::vector<VkCommandBuffer> commandBuffers;
+
+	std::vector<VkSemaphore> imageAvailableSemaphores;
+	std::vector<VkSemaphore> renderFinishedSemaphores;
+	std::vector<VkFence> inFlightFences;
+	std::vector<VkFence> imagesInFlight;
+	size_t currentFrame = 0;
 };

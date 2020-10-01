@@ -211,7 +211,7 @@ void GLShader::UpdateUniforms(MeshData & meshData, const LightInfo& lights)
 	UpdateUniforms(meshData);
 }
 
-void GLShader::DrawMesh(MeshData& meshData) const
+void GLShader::DrawMesh(MeshData& meshData)
 {
 	glBindVertexArray(meshData.GetVao());
 	if (meshData.GetIndices().size() > 0)

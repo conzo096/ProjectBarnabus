@@ -61,7 +61,14 @@ public:
 public:
 	// Vulkan specific
 	VkExtent2D GetSwapChainExtent();
+	VkSwapchainKHR GetSwapChain();
 	VkDevice GetDevice();
+	VkRenderPass GetRenderPass();
+	VkPhysicalDevice GetPhysicalDevice();
+	std::vector<VkFramebuffer>& GetSwapChainFramebuffers();
+	std::vector<VkImage>& GetSwapChainImages();
+	VkQueue GetGraphicsQueue();
+	VkQueue GetPresentQueue();
 private:
 	bool InitVulkanInstance();
 	void SetupDebugMessenger();
@@ -70,10 +77,11 @@ private:
 	void CreateSurface();
 	void CreateSwapChain();
 	void CreateImageViews();
-	void CreateGraphicsPipeline();
-
-private:
+	void CreateRenderPass();
+	void CreateFramebuffers();
+public:
 	QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
+private:
 	bool IsDeviceSuitable(VkPhysicalDevice device);
 	SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device);
 private:
@@ -97,6 +105,12 @@ private:
 	VkExtent2D swapChainExtent;
 
 	std::vector<VkImageView> swapChainImageViews;
+
+	VkRenderPass renderPass;
+	std::vector<VkFramebuffer> swapChainFramebuffers;
+
+	VkCommandPool commandPool;
+	std::vector<VkCommandBuffer> commandBuffers;
 
 private:
 	glm::mat4 cameraVP;
