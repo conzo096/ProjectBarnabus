@@ -32,11 +32,12 @@ public:
 
 public:
 	void CreateCommandBuffers();
-	VkCommandPool GetCommandPool();
-
+	void CreateVertexBuffer(VkCommandPool commandPool);
+	void CreateIndexBuffer(VkCommandPool commandPool);
+	std::vector<VkCommandBuffer>& GetCommandBuffers();
 protected:
-	void CreateCommandPool();
-	void CreateSyncObjects();
+	void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+	void CopyBuffer(VkCommandPool commandPool, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 
 protected:
 	std::string name;
@@ -48,12 +49,11 @@ protected:
 	VkPipelineLayout pipelineLayout;
 	VkPipeline graphicsPipeline;
 
-	VkCommandPool commandPool;
 	std::vector<VkCommandBuffer> commandBuffers;
 
-	std::vector<VkSemaphore> imageAvailableSemaphores;
-	std::vector<VkSemaphore> renderFinishedSemaphores;
-	std::vector<VkFence> inFlightFences;
-	std::vector<VkFence> imagesInFlight;
-	size_t currentFrame = 0;
+	VkBuffer vertexBuffer;
+	VkDeviceMemory vertexBufferMemory;
+	VkBuffer indexBuffer;
+	VkDeviceMemory indexBufferMemory;
+
 };

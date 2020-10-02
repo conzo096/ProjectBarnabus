@@ -69,8 +69,7 @@ public:
 	std::vector<VkImage>& GetSwapChainImages();
 	VkQueue GetGraphicsQueue();
 	VkQueue GetPresentQueue();
-	VkBuffer GetVertexBuffer();
-	VkBuffer GetIndexBuffer();
+	VkCommandPool GetCommandPool();
 private:
 	bool InitVulkanInstance();
 	void SetupDebugMessenger();
@@ -81,10 +80,9 @@ private:
 	void CreateImageViews();
 	void CreateRenderPass();
 	void CreateFramebuffers();
-	void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
-	void CreateVertexBuffer(VkCommandPool commandPool);
-	void CreateIndexBuffer(VkCommandPool commandPool);
-	void CopyBuffer(VkCommandPool commandPool, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+	void CreateCommandPool();
+	void CreateSyncObjects();
+
 public:
 	QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
 private:
@@ -93,10 +91,9 @@ private:
 private:
 	GLFWwindow* window;
 
-	VkInstance instance;
-	
+	VkInstance instance;	
 	VkDebugUtilsMessengerEXT debugMessenger;
-	
+
 	VkPhysicalDevice physicalDevice;
 	VkDevice device;
 
@@ -115,10 +112,7 @@ private:
 	VkRenderPass renderPass;
 	std::vector<VkFramebuffer> swapChainFramebuffers;
 
-	VkBuffer vertexBuffer;
-	VkDeviceMemory vertexBufferMemory;
-	VkBuffer indexBuffer;
-	VkDeviceMemory indexBufferMemory;
+	VkCommandPool commandPool;
 
 private:
 	glm::mat4 cameraVP;
@@ -127,6 +121,12 @@ private:
 	std::vector<MeshData> uiElementsToRender;
 	std::map<std::string, IFrameBuffer*> framebuffers;
 	glm::vec4 backgroundColour;
+
+	std::vector<VkSemaphore> imageAvailableSemaphores;
+	std::vector<VkSemaphore> renderFinishedSemaphores;
+	std::vector<VkFence> inFlightFences;
+	std::vector<VkFence> imagesInFlight;
+	size_t currentFrame = 0;
 
 	UiQuad* screenQuad;
 	IShader* finalShader;

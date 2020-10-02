@@ -7,6 +7,8 @@
 
 namespace
 {
+	const int MAX_FRAMES_IN_FLIGHT = 2;
+
 #ifdef NDEBUG
 	const bool enableValidationLayers = false;
 #else
@@ -168,23 +170,7 @@ namespace
 			return actualExtent;
 		}
 	}
-
-	uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties, VkPhysicalDevice physicalDevice)
-	{
-		VkPhysicalDeviceMemoryProperties memProperties;
-		vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memProperties);
-
-		for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++) {
-			if ((typeFilter & (1 << i)) && (memProperties.memoryTypes[i].propertyFlags & properties) == properties)
-			{
-				return i;
-			}
-		}
-
-		throw std::runtime_error("failed to find suitable memory type!");
-	}
-
-}
+} //namespace
 
 VulkanRenderer::VulkanRenderer() : physicalDevice(VK_NULL_HANDLE)
 {
@@ -192,6 +178,13 @@ VulkanRenderer::VulkanRenderer() : physicalDevice(VK_NULL_HANDLE)
 
 VulkanRenderer::~VulkanRenderer()
 {
+	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
+	{
+		vkDestroySemaphore(device, renderFinishedSemaphores[i], nullptr);
+		vkDestroySemaphore(device, imageAvailableSemaphores[i], nullptr);
+		vkDestroyFence(device, inFlightFences[i], nullptr);
+	}
+
 	for (auto framebuffer : swapChainFramebuffers)
 	{
 		vkDestroyFramebuffer(device, framebuffer, nullptr);
@@ -202,14 +195,10 @@ VulkanRenderer::~VulkanRenderer()
 		vkDestroyImageView(device, imageView, nullptr);
 	}
 
-	vkDestroyBuffer(device, indexBuffer, nullptr);
-	vkFreeMemory(device, indexBufferMemory, nullptr);
-
-	vkDestroyBuffer(device, vertexBuffer, nullptr);
-	vkFreeMemory(device, vertexBufferMemory, nullptr);
-
 	vkDestroySwapchainKHR(device, swapChain, nullptr);
 	vkDestroyRenderPass(device, renderPass, nullptr);
+	vkDestroyCommandPool(device, commandPool, nullptr);
+
 	vkDestroyDevice(device, nullptr);
 
 	if (enableValidationLayers)
@@ -259,7 +248,8 @@ bool VulkanRenderer::InitialiseGameEngine()
 	CreateImageViews();
 	CreateRenderPass();
 	CreateFramebuffers();
-
+	CreateCommandPool();
+	CreateSyncObjects();
 	return true;
 }
 
@@ -318,14 +308,9 @@ VkQueue VulkanRenderer::GetPresentQueue()
 	return presentQueue;
 }
 
-VkBuffer VulkanRenderer::GetVertexBuffer()
+VkCommandPool VulkanRenderer::GetCommandPool()
 {
-	return vertexBuffer;
-}
-
-VkBuffer VulkanRenderer::GetIndexBuffer()
-{
-	return indexBuffer;
+	return commandPool;
 }
 
 bool VulkanRenderer::InitVulkanInstance()
@@ -648,120 +633,43 @@ void VulkanRenderer::CreateFramebuffers()
 	}
 }
 
-void VulkanRenderer::CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer & buffer, VkDeviceMemory & bufferMemory)
+void VulkanRenderer::CreateCommandPool()
 {
-	VkBufferCreateInfo bufferInfo{};
-	bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-	bufferInfo.size = size;
-	bufferInfo.usage = usage;
-	bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+	VulkanRenderer::QueueFamilyIndices queueFamilyIndices = FindQueueFamilies(physicalDevice);
 
-	if (vkCreateBuffer(device, &bufferInfo, nullptr, &buffer) != VK_SUCCESS)
+	VkCommandPoolCreateInfo poolInfo{};
+	poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+	poolInfo.queueFamilyIndex = queueFamilyIndices.graphicsFamily.value();
+	poolInfo.flags = 0; // Optional
+
+	if (vkCreateCommandPool(device, &poolInfo, nullptr, &commandPool) != VK_SUCCESS)
 	{
-		throw std::runtime_error("failed to create buffer!");
+		throw std::runtime_error("failed to create command pool!");
 	}
+}
 
-	VkMemoryRequirements memRequirements;
-	vkGetBufferMemoryRequirements(device, buffer, &memRequirements);
+void VulkanRenderer::CreateSyncObjects()
+{
+	imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
+	renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
+	inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
+	imagesInFlight.resize(swapChainImages.size(), VK_NULL_HANDLE);
 
-	VkMemoryAllocateInfo allocInfo{};
-	allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-	allocInfo.allocationSize = memRequirements.size;
-	allocInfo.memoryTypeIndex = FindMemoryType(memRequirements.memoryTypeBits, properties, physicalDevice);
+	VkSemaphoreCreateInfo semaphoreInfo{};
+	semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
-	if (vkAllocateMemory(device, &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS)
+	VkFenceCreateInfo fenceInfo{};
+	fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+	fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+
+	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
 	{
-		throw std::runtime_error("failed to allocate buffer memory!");
+		if (vkCreateSemaphore(device, &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]) != VK_SUCCESS ||
+			vkCreateSemaphore(device, &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS ||
+			vkCreateFence(device, &fenceInfo, nullptr, &inFlightFences[i]) != VK_SUCCESS) {
+			throw std::runtime_error("failed to create synchronization objects for a frame!");
+		}
 	}
-
-	vkBindBufferMemory(device, buffer, bufferMemory, 0);
-}
-
-void VulkanRenderer::CreateVertexBuffer(VkCommandPool commandPool)
-{
-	std::vector<Vertex> vertices;
-	vertices.resize(4);
-	vertices[0].position = glm::vec3(-0.5, -0.5, 0);
-	vertices[1].position = glm::vec3(0.5, -0.5, 0);
-	vertices[2].position = glm::vec3(0.5, 0.5, 0);
-	vertices[3].position = glm::vec3(-0.5, 0.5, 0);
-
-	VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
-
-	VkBuffer stagingBuffer;
-	VkDeviceMemory stagingBufferMemory;
-	CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
-
-	void* data;
-	vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
-	memcpy(data, vertices.data(), (size_t)bufferSize);
-	vkUnmapMemory(device, stagingBufferMemory);
-
-	CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertexBuffer, vertexBufferMemory);
-
-	CopyBuffer(commandPool, stagingBuffer, vertexBuffer, bufferSize);
-
-	vkDestroyBuffer(device, stagingBuffer, nullptr);
-	vkFreeMemory(device, stagingBufferMemory, nullptr);
-}
-
-void VulkanRenderer::CreateIndexBuffer(VkCommandPool commandPool)
-{
-	const std::vector<uint16_t> indices = {
-	0, 1, 2, 2, 3, 0
-	};
-
-	VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
-
-	VkBuffer stagingBuffer;
-	VkDeviceMemory stagingBufferMemory;
-	CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
-
-	void* data;
-	vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
-	memcpy(data, indices.data(), (size_t)bufferSize);
-	vkUnmapMemory(device, stagingBufferMemory);
-
-	CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, indexBuffer, indexBufferMemory);
-
-	CopyBuffer(commandPool, stagingBuffer, indexBuffer, bufferSize);
-
-	vkDestroyBuffer(device, stagingBuffer, nullptr);
-	vkFreeMemory(device, stagingBufferMemory, nullptr);
-}
-
-void VulkanRenderer::CopyBuffer(VkCommandPool commandPool, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
-{
-	VkCommandBufferAllocateInfo allocInfo{};
-	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-	allocInfo.commandPool = commandPool;
-	allocInfo.commandBufferCount = 1;
-
-	VkCommandBuffer commandBuffer;
-	vkAllocateCommandBuffers(device, &allocInfo, &commandBuffer);
-
-	VkCommandBufferBeginInfo beginInfo{};
-	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-
-	vkBeginCommandBuffer(commandBuffer, &beginInfo);
-
-	VkBufferCopy copyRegion{};
-	copyRegion.size = size;
-	vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
-
-	vkEndCommandBuffer(commandBuffer);
-
-	VkSubmitInfo submitInfo{};
-	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-	submitInfo.commandBufferCount = 1;
-	submitInfo.pCommandBuffers = &commandBuffer;
-
-	vkQueueSubmit(graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
-	vkQueueWaitIdle(graphicsQueue);
-
-	vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
 }
 
 VulkanRenderer::QueueFamilyIndices VulkanRenderer::FindQueueFamilies(VkPhysicalDevice device)
@@ -853,8 +761,8 @@ void VulkanRenderer::InitialiseMesh(MeshData& data)
 {
 	auto shader = static_cast<VulkanShader*>(data.GetShader());
 
-	CreateVertexBuffer(shader->GetCommandPool());
-	CreateIndexBuffer(shader->GetCommandPool());
+	shader->CreateVertexBuffer(commandPool);
+	shader->CreateIndexBuffer(commandPool);
 	
 	shader->CreateCommandBuffers();
 }
@@ -865,54 +773,67 @@ void VulkanRenderer::UpdateBaseVertexBuffers(MeshData& data)
 
 void VulkanRenderer::Render()
 {
-	auto renderMeshes = [](auto& renderList)
-	{
-		for (int i = 0; i < renderList.size(); i++)
-		{
-			auto& mesh = renderList[i];
-			mesh.GetShader()->UpdateUniforms(mesh);
-			// Bind and draw model.
-			mesh.GetShader()->DrawMesh(mesh);
-		}
-	};
-
-	auto renderMeshesWithLights = [](auto& renderList, auto& lights)
-	{
-		for (int i = 0; i < renderList.size(); i++)
-		{
-			auto& mesh = renderList[i];
-			mesh.GetShader()->DrawMesh(mesh);
-		}
-	};
-
-	// Render main game.
-	// Bind game object buffer
+	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
 
 	for (auto& meshes : meshesToRender)
 	{
-		auto lights = environmentLights.find(meshes.first);
-		if (lights == environmentLights.end())
+		vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
+
+		uint32_t imageIndex;
+		vkAcquireNextImageKHR(device, renderer->GetSwapChain(), UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
+
+		if (imagesInFlight[imageIndex] != VK_NULL_HANDLE)
 		{
-			renderMeshes(meshes.second);
+			vkWaitForFences(device, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
 		}
-		else
+
+		imagesInFlight[imageIndex] = inFlightFences[currentFrame];
+
+		VkSubmitInfo submitInfo{};
+		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+
+		VkSemaphore waitSemaphores[] = { imageAvailableSemaphores[currentFrame] };
+		VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+		submitInfo.waitSemaphoreCount = 1;
+		submitInfo.pWaitSemaphores = waitSemaphores;
+		submitInfo.pWaitDstStageMask = waitStages;
+
+		auto shader = static_cast<VulkanShader*>(meshes.second[0].GetShader());
+		submitInfo.commandBufferCount = 1;
+		submitInfo.pCommandBuffers = &shader->GetCommandBuffers()[imageIndex];
+
+		VkSemaphore signalSemaphores[] = { renderFinishedSemaphores[currentFrame] };
+		submitInfo.signalSemaphoreCount = 1;
+		submitInfo.pSignalSemaphores = signalSemaphores;
+
+		vkResetFences(device, 1, &inFlightFences[currentFrame]);
+
+		if (vkQueueSubmit(renderer->GetGraphicsQueue(), 1, &submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS)
 		{
-			renderMeshesWithLights(meshes.second, lights->second);
+			throw std::runtime_error("failed to submit draw command buffer!");
 		}
+
+		VkPresentInfoKHR presentInfo{};
+		presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+
+		presentInfo.waitSemaphoreCount = 1;
+		presentInfo.pWaitSemaphores = signalSemaphores;
+
+		VkSwapchainKHR swapChains[] = { renderer->GetSwapChain() };
+		presentInfo.swapchainCount = 1;
+		presentInfo.pSwapchains = swapChains;
+
+		presentInfo.pImageIndices = &imageIndex;
+
+		vkQueuePresentKHR(renderer->GetPresentQueue(), &presentInfo);
+
+		currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 	}
 	
 	meshesToRender.clear();
-
-	// Bind UI element framebuffer
-	renderMeshes(uiElementsToRender);
-
 	uiElementsToRender.clear();
-
-	// Bind screen buffer & draw
-
-	glfwSwapBuffers(BarnabusGameEngine::Get().GetWindow());
-
 	environmentLights.clear();
+	glfwSwapBuffers(BarnabusGameEngine::Get().GetWindow());
 }
 
 void VulkanRenderer::SetCameraViewProjection(glm::mat4 camera)
