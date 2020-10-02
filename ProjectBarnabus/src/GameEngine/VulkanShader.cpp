@@ -472,7 +472,8 @@ void VulkanShader::CreateCommandBuffers()
 		vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT16);
 		
 		// Replace 6 with indicies size.
-		vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(6), 1, 0, 0, 0);
+		vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(3), 1, 0, 0, 0);
+		vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(6), 1, 3, 0, 0);
 
 		vkCmdEndRenderPass(commandBuffers[i]);
 
