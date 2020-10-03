@@ -153,13 +153,6 @@ void MeshData::CreateVertexBuffer(VkBuffer & vertexBuffer, VkDeviceMemory & vert
 {
 	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
 
-	std::vector<Vertex> vertices;
-	vertices.resize(4);
-	vertices[0].position = glm::vec3(-0.5, -0.5, 0);
-	vertices[1].position = glm::vec3(0.5, -0.5, 0);
-	vertices[2].position = glm::vec3(0.5, 0.5, 0);
-	vertices[3].position = glm::vec3(-0.5, 0.5, 0);
-
 	VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 
 	VkBuffer stagingBuffer;
@@ -182,10 +175,6 @@ void MeshData::CreateVertexBuffer(VkBuffer & vertexBuffer, VkDeviceMemory & vert
 void MeshData::CreateIndexBuffer(VkBuffer & indexBuffer, VkDeviceMemory & indexBufferMemory, VkCommandPool & commandPool)
 {
 	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
-
-	const std::vector<uint16_t> indices = {
-		0, 1, 2, 2, 3, 0
-	};
 
 	VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
 

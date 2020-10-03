@@ -15,12 +15,12 @@ namespace
 	const bool enableValidationLayers = true;
 #endif
 
-	const std::vector<const char*> validationLayers = 
+	const std::vector<const char*> validationLayers =
 	{
 		"VK_LAYER_KHRONOS_validation"
 	};
 
-	const std::vector<const char*> deviceExtensions = 
+	const std::vector<const char*> deviceExtensions =
 	{
 		VK_KHR_SWAPCHAIN_EXTENSION_NAME
 	};
@@ -35,7 +35,7 @@ namespace
 		return VK_FALSE;
 	}
 
-	VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) 
+	VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger)
 	{
 		auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
 		if (func != nullptr) {
@@ -110,7 +110,7 @@ namespace
 		return true;
 	}
 
-	bool CheckDeviceExtensionSupport(VkPhysicalDevice device) 
+	bool CheckDeviceExtensionSupport(VkPhysicalDevice device)
 	{
 		uint32_t extensionCount;
 		vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
@@ -156,7 +156,7 @@ namespace
 
 	VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities)
 	{
-		if (capabilities.currentExtent.width != UINT32_MAX) 
+		if (capabilities.currentExtent.width != UINT32_MAX)
 		{
 			return capabilities.currentExtent;
 		}
@@ -205,7 +205,7 @@ VulkanRenderer::~VulkanRenderer()
 	{
 		DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
 	}
-	
+
 	vkDestroySurfaceKHR(instance, surface, nullptr);
 	vkDestroyInstance(instance, nullptr);
 }
@@ -240,7 +240,7 @@ bool VulkanRenderer::InitialiseGameEngine()
 	}
 
 	SetupDebugMessenger();
-	
+
 	CreateSurface();
 	PickPhysicalDevice();
 	CreateLogicalDevice();
@@ -315,7 +315,7 @@ VkCommandPool VulkanRenderer::GetCommandPool()
 
 bool VulkanRenderer::InitVulkanInstance()
 {
-	if (enableValidationLayers && !CheckValidationLayerSupport()) 
+	if (enableValidationLayers && !CheckValidationLayerSupport())
 	{
 		BarnabusGameEngine::Get().AddMessageLog(StringLog("Error: validation layers requested, but not available!", StringLog::Priority::Critical));
 		throw std::runtime_error("validation layers requested, but not available!");
@@ -372,7 +372,7 @@ void VulkanRenderer::SetupDebugMessenger()
 	VkDebugUtilsMessengerCreateInfoEXT createInfo;
 	PopulateDebugMessengerCreateInfo(createInfo);
 
-	if (CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS) 
+	if (CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS)
 	{
 		BarnabusGameEngine::Get().AddMessageLog(StringLog("Error: failed to set up vulkan debug messenger!", StringLog::Priority::Critical));
 	}
@@ -383,7 +383,7 @@ void VulkanRenderer::PickPhysicalDevice()
 	uint32_t deviceCount = 0;
 	vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
 
-	if (deviceCount == 0) 
+	if (deviceCount == 0)
 	{
 		BarnabusGameEngine::Get().AddMessageLog(StringLog("Error: failed to find GPUs with Vulkan support!", StringLog::Priority::Critical));
 		throw std::runtime_error("failed to find GPUs with Vulkan support!");
@@ -528,7 +528,7 @@ void VulkanRenderer::CreateSwapChain()
 void VulkanRenderer::CreateImageViews()
 {
 	swapChainImageViews.resize(swapChainImages.size());
-	for (size_t i = 0; i < swapChainImages.size(); i++) 
+	for (size_t i = 0; i < swapChainImages.size(); i++)
 	{
 		VkImageViewCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -547,7 +547,7 @@ void VulkanRenderer::CreateImageViews()
 		createInfo.subresourceRange.levelCount = 1;
 		createInfo.subresourceRange.baseArrayLayer = 0;
 		createInfo.subresourceRange.layerCount = 1;
-		
+
 		if (vkCreateImageView(device, &createInfo, nullptr, &swapChainImageViews[i]) != VK_SUCCESS)
 		{
 			throw std::runtime_error("failed to create image views!");
@@ -683,8 +683,12 @@ void VulkanRenderer::RecordCommandBuffer()
 		}
 	}
 
-	// Got all the buffers - record commands
-	CreateCommandBuffers(buffers);
+	static int t = 0;
+	if (t == 0) {
+		t++;
+		// Got all the buffers - record commands
+		CreateCommandBuffers(buffers);
+	}
 }
 
 VulkanRenderer::QueueFamilyIndices VulkanRenderer::FindQueueFamilies(VkPhysicalDevice device)
@@ -775,7 +779,7 @@ IRenderer::GraphicsRenderer VulkanRenderer::GetRenderType()
 void VulkanRenderer::InitialiseMesh(MeshData& data)
 {
 	data.CreateVertexBuffer(data.vertexBuffer, data.vertexBufferMemory, commandPool);
-	data.CreateIndexBuffer(data.indexBuffer, data.indexBufferMemory, commandPool);	
+	data.CreateIndexBuffer(data.indexBuffer, data.indexBufferMemory, commandPool);
 }
 
 void VulkanRenderer::UpdateBaseVertexBuffers(MeshData& data)
@@ -826,19 +830,18 @@ void VulkanRenderer::CreateCommandBuffers(std::vector<BufferInfo>& buffers)
 		for (int j = 0; j < buffers.size(); j++)
 		{
 			// Only rebind if pipeline is different.
-			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, buffers[j].shader->GetPipeline() );
+			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, buffers[j].shader->GetPipeline());
 
 			// Better to instance the mesh and change uniform locations
 			VkBuffer vertexBuffers[] = { buffers[j].vertexBuffer };
 			VkDeviceSize offsets[] = { 0 };
 
-			vkCmdBindIndexBuffer(commandBuffers[i], buffers[j].indexBuffer, 0, VK_INDEX_TYPE_UINT16);
-
-			// Draw first
+			// Bind buffers
 			vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
+			vkCmdBindIndexBuffer(commandBuffers[i], buffers[j].indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+
 			// Replace 6 with indicies size.		
 			vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(6), 1, 0, 0, 0);
-
 		}
 
 		vkCmdEndRenderPass(commandBuffers[i]);
@@ -857,7 +860,7 @@ void VulkanRenderer::Render()
 	vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
 	uint32_t imageIndex;
-	vkAcquireNextImageKHR(device,swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
+	vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
 
 	if (imagesInFlight[imageIndex] != VK_NULL_HANDLE)
 	{
