@@ -7,6 +7,14 @@
 
 class Light;
 class UiQuad;
+class VulkanShader;
+
+struct BufferInfo
+{
+	VkBuffer vertexBuffer;
+	VkBuffer indexBuffer;
+	VulkanShader* shader;
+};
 
 class VulkanRenderer : public IRenderer
 {
@@ -81,8 +89,11 @@ private:
 	void CreateRenderPass();
 	void CreateFramebuffers();
 	void CreateCommandPool();
+	void CreateCommandBuffers(std::vector<BufferInfo>& buffers);
 	void CreateSyncObjects();
 
+private:
+	void RecordCommandBuffer();
 public:
 	QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
 private:
@@ -113,6 +124,7 @@ private:
 	std::vector<VkFramebuffer> swapChainFramebuffers;
 
 	VkCommandPool commandPool;
+	std::vector<VkCommandBuffer> commandBuffers;
 
 private:
 	glm::mat4 cameraVP;

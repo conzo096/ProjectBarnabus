@@ -30,14 +30,7 @@ public:
 	virtual void UpdateUniforms(MeshData& meshData, const LightInfo& lights) override;
 	virtual void DrawMesh(MeshData& meshData) override;
 
-public:
-	void CreateCommandBuffers(VkBuffer& vertexBuffer, VkBuffer& indexBuffer);
-	void CreateVertexBuffer(VkBuffer& vertexBuffer, VkDeviceMemory& vertexBufferMemory, VkCommandPool& commandPool);
-	void CreateIndexBuffer(VkBuffer& indexBuffer, VkDeviceMemory& indexBufferMemory, VkCommandPool& commandPool);
-	std::vector<VkCommandBuffer>& GetCommandBuffers();
-protected:
-	void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
-	void CopyBuffer(VkCommandPool commandPool, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+	VkPipeline GetPipeline();
 
 protected:
 	std::string name;
@@ -48,7 +41,4 @@ protected:
 
 	VkPipelineLayout pipelineLayout;
 	VkPipeline graphicsPipeline;
-
-	std::vector<VkCommandBuffer> commandBuffers;
-
 };
