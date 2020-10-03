@@ -761,10 +761,10 @@ void VulkanRenderer::InitialiseMesh(MeshData& data)
 {
 	auto shader = static_cast<VulkanShader*>(data.GetShader());
 
-	shader->CreateVertexBuffer(commandPool);
-	shader->CreateIndexBuffer(commandPool);
+	shader->CreateVertexBuffer(data.vertexBuffer, data.vertexBufferMemory, commandPool);
+	shader->CreateIndexBuffer(data.indexBuffer, data.indexBufferMemory, commandPool);
 	
-	shader->CreateCommandBuffers();
+	shader->CreateCommandBuffers(data.vertexBuffer, data.indexBuffer);
 }
 
 void VulkanRenderer::UpdateBaseVertexBuffers(MeshData& data)

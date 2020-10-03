@@ -31,9 +31,9 @@ public:
 	virtual void DrawMesh(MeshData& meshData) override;
 
 public:
-	void CreateCommandBuffers();
-	void CreateVertexBuffer(VkCommandPool commandPool);
-	void CreateIndexBuffer(VkCommandPool commandPool);
+	void CreateCommandBuffers(VkBuffer& vertexBuffer, VkBuffer& indexBuffer);
+	void CreateVertexBuffer(VkBuffer& vertexBuffer, VkDeviceMemory& vertexBufferMemory, VkCommandPool& commandPool);
+	void CreateIndexBuffer(VkBuffer& indexBuffer, VkDeviceMemory& indexBufferMemory, VkCommandPool& commandPool);
 	std::vector<VkCommandBuffer>& GetCommandBuffers();
 protected:
 	void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
@@ -50,10 +50,5 @@ protected:
 	VkPipeline graphicsPipeline;
 
 	std::vector<VkCommandBuffer> commandBuffers;
-
-	VkBuffer vertexBuffer;
-	VkDeviceMemory vertexBufferMemory;
-	VkBuffer indexBuffer;
-	VkDeviceMemory indexBufferMemory;
 
 };

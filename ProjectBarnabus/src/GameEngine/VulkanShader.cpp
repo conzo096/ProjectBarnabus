@@ -103,12 +103,6 @@ VulkanShader::VulkanShader()
 
 VulkanShader::~VulkanShader()
 {
-	vkDestroyBuffer(device, indexBuffer, nullptr);
-	vkFreeMemory(device, indexBufferMemory, nullptr);
-
-	vkDestroyBuffer(device, vertexBuffer, nullptr);
-	vkFreeMemory(device, vertexBufferMemory, nullptr);
-
 	vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
 }
 
@@ -327,7 +321,7 @@ void VulkanShader::CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkM
 	vkBindBufferMemory(device, buffer, bufferMemory, 0);
 }
 
-void VulkanShader::CreateVertexBuffer(VkCommandPool commandPool)
+void VulkanShader::CreateVertexBuffer(VkBuffer& vertexBuffer, VkDeviceMemory& vertexBufferMemory, VkCommandPool& commandPool)
 {
 	std::vector<Vertex> vertices;
 	vertices.resize(4);
@@ -353,9 +347,10 @@ void VulkanShader::CreateVertexBuffer(VkCommandPool commandPool)
 
 	vkDestroyBuffer(device, stagingBuffer, nullptr);
 	vkFreeMemory(device, stagingBufferMemory, nullptr);
+
 }
 
-void VulkanShader::CreateIndexBuffer(VkCommandPool commandPool)
+void VulkanShader::CreateIndexBuffer(VkBuffer& indexBuffer, VkDeviceMemory& indexBufferMemory, VkCommandPool& commandPool)
 {
 	const std::vector<uint16_t> indices = {
 		0, 1, 2, 2, 3, 0
@@ -421,7 +416,7 @@ void VulkanShader::CopyBuffer(VkCommandPool commandPool, VkBuffer srcBuffer, VkB
 	vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
 }
 
-void VulkanShader::CreateCommandBuffers()
+void VulkanShader::CreateCommandBuffers(VkBuffer& vertexBuffer, VkBuffer& indexBuffer)
 {
 	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
 	commandBuffers.resize(renderer->GetSwapChainFramebuffers().size());
@@ -462,18 +457,17 @@ void VulkanShader::CreateCommandBuffers()
 		
 		vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-		vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
 
-		VkBuffer vertexBuffers[] = { vertexBuffer };
-		VkDeviceSize offsets[] = { 0 };
+			VkBuffer vertexBuffers[] = { vertexBuffer };
+			VkDeviceSize offsets[] = { 0 };
 
-		vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
+			vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT16);
 
-		vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT16);
-		
-		// Replace 6 with indicies size.
-		vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(3), 1, 0, 0, 0);
-		vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(6), 1, 3, 0, 0);
+			// Draw first
+			vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
+			// Replace 6 with indicies size.		
+			vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(6), 1, 0, 0, 0);
 
 		vkCmdEndRenderPass(commandBuffers[i]);
 

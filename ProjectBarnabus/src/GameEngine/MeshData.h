@@ -6,6 +6,8 @@
 #include <GL/glew.h>
 #include <vector>
 
+#include <vulkan/vulkan.h>
+
 class IShader;
 class IFrameBuffer;
 class ITexture;
@@ -63,6 +65,13 @@ public:
 	std::vector<glm::mat4> transforms;
 	std::vector<Vertex> vertices;
 	std::vector<VertexBoneData> bonesData;
+
+	// VulkanSpecific - need to handle deletion
+	VkBuffer vertexBuffer;
+	VkDeviceMemory vertexBufferMemory;
+	VkBuffer indexBuffer;
+	VkDeviceMemory indexBufferMemory;
+
 private:
 
 	// Skin
@@ -75,4 +84,5 @@ private:
 	IShader* shader;
 	// Material for lighting
 	Material material;
+
 };
