@@ -32,6 +32,7 @@ public:
 
 	VkPipeline GetPipeline();
 
+	void CreateDescriptorSetLayout();
 protected:
 	std::string name;
 	VkDevice device;
@@ -41,4 +42,6 @@ protected:
 
 	VkPipelineLayout pipelineLayout;
 	VkPipeline graphicsPipeline;
+
+	VkDescriptorSetLayout descriptorSetLayout;
 };

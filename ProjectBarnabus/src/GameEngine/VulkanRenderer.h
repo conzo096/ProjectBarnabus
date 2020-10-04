@@ -90,6 +90,7 @@ private:
 	void CreateFramebuffers();
 	void CreateCommandPool();
 	void CreateCommandBuffers(std::vector<BufferInfo>& buffers);
+	void CreateDescriptorPool();
 	void CreateSyncObjects();
 
 private:
@@ -125,6 +126,8 @@ private:
 
 	VkCommandPool commandPool;
 	std::vector<VkCommandBuffer> commandBuffers;
+
+	VkDescriptorPool descriptorPool;
 
 private:
 	glm::mat4 cameraVP;
