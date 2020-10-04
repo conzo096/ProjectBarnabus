@@ -344,6 +344,11 @@ VkDescriptorSet& VulkanShader::GetDescriptorSet(unsigned int index)
 	return descriptorSets[index];
 }
 
+VkDeviceSize VulkanShader::GetBufferSize()
+{
+	return bufferSize;
+}
+
 void VulkanShader::CreateDescriptorSetLayout()
 {
 	VkDescriptorSetLayoutBinding uboLayoutBinding{};
@@ -406,30 +411,40 @@ void VulkanShader::CreateUniformBuffers()
 {
 	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
 
-	// Create 50 elements
-	VkDeviceSize bufferSize = sizeof(UniformBufferObject) * NUMBER_OF_UNIFORMS;
+	VkPhysicalDeviceProperties props;
+	vkGetPhysicalDeviceProperties(renderer->GetPhysicalDevice(), &props);
+
+	bufferSize = sizeof(UniformBufferObject) * NUMBER_OF_UNIFORMS;
+	if (props.limits.minUniformBufferOffsetAlignment)
+		bufferSize = (bufferSize + props.limits.minUniformBufferOffsetAlignment - 1) &
+		~(props.limits.minUniformBufferOffsetAlignment - 1);
 
 	uniformBuffers.resize(renderer->GetSwapChainImages().size());
 	uniformBuffersMemory.resize(renderer->GetSwapChainImages().size());
 
 	for (size_t i = 0; i < renderer->GetSwapChainImages().size(); i++)
 	{
-		CreateBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
+		CreateBuffer(bufferSize * 50, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
 	}
 }
 
 void VulkanShader::UpdateUniformBuffers(unsigned int index, std::vector<UniformBufferObject>& uniforms)
 {
+	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
 	VkMemoryRequirements memoryRequirement;
 	vkGetBufferMemoryRequirements(device, uniformBuffers[index], &memoryRequirement);
 
 	uint8_t *data;
 	vkMapMemory(device, uniformBuffersMemory[index], 0, sizeof(UniformBufferObject), 0, (void **)&data);
-	
+
 	for (int i = 0; i < uniforms.size(); i++)
 	{
+		if (i == 0)
+		{
+			uniforms[i].color = glm::vec4(1, 1, 0, 1);
+		}
 		memcpy(data, &uniforms[i], sizeof(uniforms[i]));
-		data += sizeof(UniformBufferObject);
+		data += bufferSize;
 	}
 
 	vkUnmapMemory(device, uniformBuffersMemory[index]);

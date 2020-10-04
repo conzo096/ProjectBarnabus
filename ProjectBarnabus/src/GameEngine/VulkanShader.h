@@ -37,6 +37,7 @@ public:
 	VkPipeline GetPipeline();
 	VkPipelineLayout GetPipelineLayout();
 	VkDescriptorSet& GetDescriptorSet(unsigned int index);
+	VkDeviceSize GetBufferSize();
 
 	void CreateDescriptorPool();
 	void CreateDescriptorSetLayout();
@@ -62,4 +63,5 @@ protected:
 	std::vector<VkDeviceMemory> uniformBuffersMemory;
 
 	VkDescriptorPool descriptorPool;
+	VkDeviceSize bufferSize;
 };

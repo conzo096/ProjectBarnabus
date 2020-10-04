@@ -847,7 +847,7 @@ void VulkanRenderer::CreateCommandBuffers(std::vector<BufferInfo>& buffers)
 			vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
 			vkCmdBindIndexBuffer(commandBuffers[i], buffers[j].indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 
-			uint32_t uniformOffset[1] = { (uint32_t)sizeof(VulkanShader::UniformBufferObject) * 0 };
+			uint32_t uniformOffset[1] = { buffers[j].shader->GetBufferSize() * j };
 
 			vkCmdBindDescriptorSets(commandBuffers[i],
 				VK_PIPELINE_BIND_POINT_GRAPHICS, 
