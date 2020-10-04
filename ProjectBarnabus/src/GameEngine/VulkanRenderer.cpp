@@ -249,7 +249,6 @@ bool VulkanRenderer::InitialiseGameEngine()
 	CreateRenderPass();
 	CreateFramebuffers();
 	CreateCommandPool();
-	CreateDescriptorPool();
 	CreateSyncObjects();
 	return true;
 }
@@ -673,14 +672,17 @@ void VulkanRenderer::CreateSyncObjects()
 	}
 }
 
-void VulkanRenderer::RecordCommandBuffer()
+void VulkanRenderer::RecordCommandBuffer(unsigned int imageIndex)
 {
 	std::vector<BufferInfo> buffers;
+	std::vector<VulkanShader::UniformBufferObject> objects;
+
 	for (auto& meshes : meshesToRender)
 	{
 		for (auto& mesh : meshes.second)
 		{
 			buffers.push_back({ mesh.vertexBuffer, mesh.indexBuffer,static_cast<VulkanShader*>(mesh.GetShader()) });
+			objects.push_back({ glm::vec4(1, 0, 0, 1) } );
 		}
 	}
 
@@ -690,6 +692,10 @@ void VulkanRenderer::RecordCommandBuffer()
 		// Got all the buffers - record commands
 		CreateCommandBuffers(buffers);
 	}
+
+	// Work out a better solution - maybe uniform buffer should be stored in a map in renderer  - name of shader - vector of buffers.
+
+	buffers[0].shader->UpdateUniformBuffers(imageIndex, objects);
 }
 
 VulkanRenderer::QueueFamilyIndices VulkanRenderer::FindQueueFamilies(VkPhysicalDevice device)
@@ -841,6 +847,17 @@ void VulkanRenderer::CreateCommandBuffers(std::vector<BufferInfo>& buffers)
 			vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
 			vkCmdBindIndexBuffer(commandBuffers[i], buffers[j].indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 
+			uint32_t uniformOffset[1] = { (uint32_t)sizeof(VulkanShader::UniformBufferObject) * 0 };
+
+			vkCmdBindDescriptorSets(commandBuffers[i],
+				VK_PIPELINE_BIND_POINT_GRAPHICS, 
+				buffers[j].shader->GetPipelineLayout()
+				, 0,
+				1,
+				&buffers[j].shader->GetDescriptorSet(i),
+				1, 
+				uniformOffset);
+
 			// Replace 6 with indicies size.		
 			vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(6), 1, 0, 0, 0);
 		}
@@ -854,34 +871,15 @@ void VulkanRenderer::CreateCommandBuffers(std::vector<BufferInfo>& buffers)
 	}
 }
 
-// Might be better to have a pool per shader?
-void VulkanRenderer::CreateDescriptorPool()
-{
-	VkDescriptorPoolSize poolSize{};
-	poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	poolSize.descriptorCount = static_cast<uint32_t>(swapChainImages.size());
-
-	VkDescriptorPoolCreateInfo poolInfo{};
-	poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-	poolInfo.poolSizeCount = 1;
-	poolInfo.pPoolSizes = &poolSize;
-	poolInfo.maxSets = static_cast<uint32_t>(swapChainImages.size());
-
-	if (vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS)
-	{
-		throw std::runtime_error("failed to create descriptor pool!");
-	}
-}
-
 void VulkanRenderer::Render()
 {
-	RecordCommandBuffer();
 
 	vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
 	uint32_t imageIndex;
 	vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
 
+	RecordCommandBuffer(imageIndex);
 	if (imagesInFlight[imageIndex] != VK_NULL_HANDLE)
 	{
 		vkWaitForFences(device, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);

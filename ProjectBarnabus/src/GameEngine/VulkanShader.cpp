@@ -4,6 +4,8 @@
 #include <fstream>
 #include <array>
 
+const static int NUMBER_OF_UNIFORMS = 50;
+
 namespace
 {
 	std::vector<char> ReadFile(const std::string& filename)
@@ -78,6 +80,51 @@ namespace
 
 		return attributeDescriptions;
 	}
+
+	uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties, VkPhysicalDevice physicalDevice)
+	{
+		VkPhysicalDeviceMemoryProperties memProperties;
+		vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memProperties);
+
+		for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++) {
+			if ((typeFilter & (1 << i)) && (memProperties.memoryTypes[i].propertyFlags & properties) == properties)
+			{
+				return i;
+			}
+		}
+
+		throw std::runtime_error("failed to find suitable memory type!");
+	}
+
+	void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer & buffer, VkDeviceMemory & bufferMemory)
+	{
+		auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
+		VkBufferCreateInfo bufferInfo{};
+		bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+		bufferInfo.size = size;
+		bufferInfo.usage = usage;
+		bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+		if (vkCreateBuffer(renderer->GetDevice(), &bufferInfo, nullptr, &buffer) != VK_SUCCESS)
+		{
+			throw std::runtime_error("failed to create buffer!");
+		}
+
+		VkMemoryRequirements memRequirements;
+		vkGetBufferMemoryRequirements(renderer->GetDevice(), buffer, &memRequirements);
+
+		VkMemoryAllocateInfo allocInfo{};
+		allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+		allocInfo.allocationSize = memRequirements.size;
+		allocInfo.memoryTypeIndex = FindMemoryType(memRequirements.memoryTypeBits, properties, renderer->GetPhysicalDevice());
+
+		if (vkAllocateMemory(renderer->GetDevice(), &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS)
+		{
+			throw std::runtime_error("failed to allocate buffer memory!");
+		}
+
+		vkBindBufferMemory(renderer->GetDevice(), buffer, bufferMemory, 0);
+	}
 }
 
 VulkanShader::VulkanShader()
@@ -115,7 +162,10 @@ bool VulkanShader::AddShaderFromFile(const char * fileName, IShader::GLSLSHADERT
 
 bool VulkanShader::Link()
 {
+	CreateDescriptorPool();
+	CreateUniformBuffers();
 	CreateDescriptorSetLayout();
+	CreateDescriptorSets();
 
 	VkPipelineShaderStageCreateInfo vertShaderStageInfo{};
 	vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -201,8 +251,9 @@ bool VulkanShader::Link()
 
 	VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-	pipelineLayoutInfo.setLayoutCount = 0;
+	pipelineLayoutInfo.setLayoutCount = 1;
 	pipelineLayoutInfo.pushConstantRangeCount = 0;
+	pipelineLayoutInfo.pSetLayouts = &descriptorSetLayout;
 
 	if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS)
 	{
@@ -283,6 +334,16 @@ VkPipeline VulkanShader::GetPipeline()
 	return graphicsPipeline;
 }
 
+VkPipelineLayout VulkanShader::GetPipelineLayout()
+{
+	return pipelineLayout;
+}
+
+VkDescriptorSet& VulkanShader::GetDescriptorSet(unsigned int index)
+{
+	return descriptorSets[index];
+}
+
 void VulkanShader::CreateDescriptorSetLayout()
 {
 	VkDescriptorSetLayoutBinding uboLayoutBinding{};
@@ -300,5 +361,96 @@ void VulkanShader::CreateDescriptorSetLayout()
 	if (vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &descriptorSetLayout) != VK_SUCCESS)
 	{
 		throw std::runtime_error("failed to create descriptor set layout!");
+	}
+}
+
+void VulkanShader::CreateDescriptorSets()
+{
+	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
+
+	std::vector<VkDescriptorSetLayout> layouts(renderer->GetSwapChainImages().size(), descriptorSetLayout);
+
+	VkDescriptorSetAllocateInfo allocInfo{};
+	allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+	allocInfo.descriptorPool = descriptorPool;
+	allocInfo.descriptorSetCount = static_cast<uint32_t>(renderer->GetSwapChainImages().size());
+	allocInfo.pSetLayouts = layouts.data();
+
+	descriptorSets.resize(renderer->GetSwapChainImages().size());
+	if (vkAllocateDescriptorSets(device, &allocInfo, descriptorSets.data()) != VK_SUCCESS)
+	{
+		throw std::runtime_error("failed to allocate descriptor sets!");
+	}
+
+	for (size_t i = 0; i < renderer->GetSwapChainImages().size(); i++)
+	{
+		VkDescriptorBufferInfo bufferInfo{};
+		bufferInfo.buffer = uniformBuffers[i];
+		bufferInfo.offset = 0;
+		bufferInfo.range = sizeof(UniformBufferObject);
+
+		VkWriteDescriptorSet descriptorWrite{};
+		descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descriptorWrite.dstSet = descriptorSets[i];
+		descriptorWrite.dstBinding = 0;
+		descriptorWrite.dstArrayElement = 0;
+		descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+		descriptorWrite.descriptorCount = 1;
+		descriptorWrite.pBufferInfo = &bufferInfo;
+
+		vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
+	}
+}
+
+void VulkanShader::CreateUniformBuffers()
+{
+	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
+
+	// Create 50 elements
+	VkDeviceSize bufferSize = sizeof(UniformBufferObject) * NUMBER_OF_UNIFORMS;
+
+	uniformBuffers.resize(renderer->GetSwapChainImages().size());
+	uniformBuffersMemory.resize(renderer->GetSwapChainImages().size());
+
+	for (size_t i = 0; i < renderer->GetSwapChainImages().size(); i++)
+	{
+		CreateBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
+	}
+}
+
+void VulkanShader::UpdateUniformBuffers(unsigned int index, std::vector<UniformBufferObject>& uniforms)
+{
+	VkMemoryRequirements memoryRequirement;
+	vkGetBufferMemoryRequirements(device, uniformBuffers[index], &memoryRequirement);
+
+	uint8_t *data;
+	vkMapMemory(device, uniformBuffersMemory[index], 0, sizeof(UniformBufferObject), 0, (void **)&data);
+	
+	for (int i = 0; i < uniforms.size(); i++)
+	{
+		memcpy(data, &uniforms[i], sizeof(uniforms[i]));
+		data += sizeof(UniformBufferObject);
+	}
+
+	vkUnmapMemory(device, uniformBuffersMemory[index]);
+}
+
+// Might be better to have a pool per shader?
+void VulkanShader::CreateDescriptorPool()
+{
+	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
+	VkDescriptorPoolSize poolSize{};
+	poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+	poolSize.descriptorCount = static_cast<uint32_t>(renderer->GetSwapChainImages().size());
+
+	VkDescriptorPoolCreateInfo poolInfo{};
+	poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+	poolInfo.poolSizeCount = 1;
+	poolInfo.pPoolSizes = &poolSize;
+	poolInfo.maxSets = static_cast<uint32_t>(renderer->GetSwapChainImages().size());
+
+	if (vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS)
+	{
+		throw std::runtime_error("failed to create descriptor pool!");
 	}
 }

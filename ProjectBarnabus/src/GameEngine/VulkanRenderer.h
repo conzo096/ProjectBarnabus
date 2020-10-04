@@ -90,11 +90,10 @@ private:
 	void CreateFramebuffers();
 	void CreateCommandPool();
 	void CreateCommandBuffers(std::vector<BufferInfo>& buffers);
-	void CreateDescriptorPool();
 	void CreateSyncObjects();
 
 private:
-	void RecordCommandBuffer();
+	void RecordCommandBuffer(unsigned int imageIndex);
 public:
 	QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
 private:
@@ -126,8 +125,6 @@ private:
 
 	VkCommandPool commandPool;
 	std::vector<VkCommandBuffer> commandBuffers;
-
-	VkDescriptorPool descriptorPool;
 
 private:
 	glm::mat4 cameraVP;

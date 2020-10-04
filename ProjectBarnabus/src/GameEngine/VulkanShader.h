@@ -10,6 +10,10 @@ namespace
 class VulkanShader : public IShader
 {
 public:
+	struct UniformBufferObject {
+		glm::vec4 color;
+	};
+public:
 	VulkanShader();
 	~VulkanShader();
 
@@ -31,8 +35,16 @@ public:
 	virtual void DrawMesh(MeshData& meshData) override;
 
 	VkPipeline GetPipeline();
+	VkPipelineLayout GetPipelineLayout();
+	VkDescriptorSet& GetDescriptorSet(unsigned int index);
 
+	void CreateDescriptorPool();
 	void CreateDescriptorSetLayout();
+	void CreateDescriptorSets();
+	void CreateUniformBuffers();
+
+	void UpdateUniformBuffers(unsigned int index, std::vector<UniformBufferObject>& uniforms);
+
 protected:
 	std::string name;
 	VkDevice device;
@@ -44,4 +56,10 @@ protected:
 	VkPipeline graphicsPipeline;
 
 	VkDescriptorSetLayout descriptorSetLayout;
+	std::vector<VkDescriptorSet> descriptorSets;
+
+	std::vector<VkBuffer> uniformBuffers;
+	std::vector<VkDeviceMemory> uniformBuffersMemory;
+
+	VkDescriptorPool descriptorPool;
 };
