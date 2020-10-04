@@ -682,7 +682,8 @@ void VulkanRenderer::RecordCommandBuffer(unsigned int imageIndex)
 		for (auto& mesh : meshes.second)
 		{
 			buffers.push_back({ mesh.vertexBuffer, mesh.indexBuffer,static_cast<VulkanShader*>(mesh.GetShader()) });
-			objects.push_back({ glm::vec4(1, 0, 0, 1) } );
+			const auto mvp = BarnabusGameEngine::Get().GetRenderer()->GetCameraVP() * glm::mat4(mesh.GetTransform());
+			objects.push_back( { mvp } );
 		}
 	}
 
@@ -973,7 +974,7 @@ void VulkanRenderer::AddLight(std::string environmentName, Light * light)
 
 glm::mat4 VulkanRenderer::GetCameraVP()
 {
-	return glm::mat4();
+	return cameraVP;
 }
 
 void VulkanRenderer::AddUiElement(MeshData & md)

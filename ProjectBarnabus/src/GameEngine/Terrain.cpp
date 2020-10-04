@@ -90,85 +90,65 @@ void Terrain::LoadTerrainFromHeightMap(const std::string heightMapPath)
 	}
 
 	MeshData mesh;
-	//for (int z = 0; z < height; z++)
-	//{
-	//	for (int x = 0; x < width; x++)
-	//	{
-	//		float heightPosition = getHeight(x,z,heightMap);
+	for (int z = 0; z < height; z++)
+	{
+		for (int x = 0; x < width; x++)
+		{
+			float heightPosition = getHeight(x,z,heightMap);
 
-	//		Vertex vertex;
-	//		vertex.position = glm::vec3(float(x), heightPosition, float(z));
-	//		vertex.texCoords = glm::vec2(x / heightMap.GetWidth(), z / heightMap.GetHeight());
-	//		vertex.color = glm::vec4(0.34, 0.23, 0.04, 1);
+			Vertex vertex;
+			vertex.position = glm::vec3(float(x), heightPosition, float(z));
+			vertex.texCoords = glm::vec2(x / heightMap.GetWidth(), z / heightMap.GetHeight());
+			vertex.color = glm::vec4(0.34, 0.23, 0.04, 1);
 
-	//		vertices.push_back(vertex);
+			vertices.push_back(vertex);
 
-	//		// Create indices
-	//		if (x < width - 1 && z < height - 1) {
-	//			int leftTop = z * width + x;
-	//			int leftBottom = (z + 1) * width + x;
-	//			int rightBottom = (z + 1) * width + x + 1;
-	//			int rightTop = z * width + x + 1;
+			// Create indices
+			if (x < width - 1 && z < height - 1) {
+				int leftTop = z * width + x;
+				int leftBottom = (z + 1) * width + x;
+				int rightBottom = (z + 1) * width + x + 1;
+				int rightTop = z * width + x + 1;
 
-	//			mesh.InsertIndex(rightTop);
-	//			mesh.InsertIndex(leftBottom);
-	//			mesh.InsertIndex(leftTop);
+				mesh.InsertIndex(rightTop);
+				mesh.InsertIndex(leftBottom);
+				mesh.InsertIndex(leftTop);
 
-	//			mesh.InsertIndex(rightBottom);
-	//			mesh.InsertIndex(leftBottom);
-	//			mesh.InsertIndex(rightTop);
-	//		}
+				mesh.InsertIndex(rightBottom);
+				mesh.InsertIndex(leftBottom);
+				mesh.InsertIndex(rightTop);
+			}
 
-	//		heightPositionsGrid[x][z] = (glm::vec4(vertex.position, 1) * GetTransform()).y;
-	//	}
-	//}
+			heightPositionsGrid[x][z] = (glm::vec4(vertex.position, 1) * GetTransform()).y;
+		}
+	}
 
-	//// calculate normal for terrain
-	//for (int i = 0; i < vertices.size()-2; i+=3)
-	//{
-	//	glm::vec3 normal = glm::normalize((vertices[i + 1].position - vertices[i].position) * (vertices[i + 2].position - vertices[i].position));
-	//	for (int j = 0; j < 3; j++)
-	//	{
-	//		vertices[i + j].normal = normal;
-	//	}
-	//}
+	// calculate normal for terrain
+	for (int i = 0; i < vertices.size()-2; i+=3)
+	{
+		glm::vec3 normal = glm::normalize((vertices[i + 1].position - vertices[i].position) * (vertices[i + 2].position - vertices[i].position));
+		for (int j = 0; j < 3; j++)
+		{
+			vertices[i + j].normal = normal;
+		}
+	}
 
-	//mesh.InsertVertices(vertices);
-
-	//int vertexCounter = 0;
-	//for (int z = 0; z < heightMap.GetHeight() - 1; z++)
-	//{
-	//	for (int x = 0; x < (heightMap.GetWidth()-1); x++)
-	//	{
-	//		mesh.InsertIndex(vertexCounter + x + heightMap.GetWidth());
-	//		mesh.InsertIndex(vertexCounter + x + (heightMap.GetWidth() + 1));
-	//		mesh.InsertIndex(vertexCounter + x + 1);
-
-	//		mesh.InsertIndex(vertexCounter + x + heightMap.GetWidth());
-	//		mesh.InsertIndex(vertexCounter + x + 1);
-	//		mesh.InsertIndex(vertexCounter + x);
-	//	}
-	//	vertexCounter += heightMap.GetHeight();
-	//}
-
-	vertices.resize(4);
-	vertices[0].position = glm::vec3(-1, -0.5, 0);
-	vertices[1].position = glm::vec3(0, -0.5, 0);
-	vertices[2].position = glm::vec3(0, 0.5, 0);
-	vertices[3].position = glm::vec3(-1, 0.5, 0);
-	vertices[0].color = glm::vec4(0,1,0,1);
-	vertices[1].color = glm::vec4(0, 1, 0, 1);
-	vertices[2].color = glm::vec4(0, 1, 0, 1);
-	vertices[3].color = glm::vec4(0, 1, 0, 1);
 	mesh.InsertVertices(vertices);
-	const std::vector<uint16_t> indices =
-	{
-		0, 1, 2, 2, 3, 0
-	};
 
-	for (int i = 0; i < 6; i++)
+	int vertexCounter = 0;
+	for (int z = 0; z < heightMap.GetHeight() - 1; z++)
 	{
-		mesh.InsertIndex(indices[i]);
+		for (int x = 0; x < (heightMap.GetWidth()-1); x++)
+		{
+			mesh.InsertIndex(vertexCounter + x + heightMap.GetWidth());
+			mesh.InsertIndex(vertexCounter + x + (heightMap.GetWidth() + 1));
+			mesh.InsertIndex(vertexCounter + x + 1);
+
+			mesh.InsertIndex(vertexCounter + x + heightMap.GetWidth());
+			mesh.InsertIndex(vertexCounter + x + 1);
+			mesh.InsertIndex(vertexCounter + x);
+		}
+		vertexCounter += heightMap.GetHeight();
 	}
 
 	mesh.SetType(GL_TRIANGLES);

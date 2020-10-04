@@ -439,10 +439,6 @@ void VulkanShader::UpdateUniformBuffers(unsigned int index, std::vector<UniformB
 
 	for (int i = 0; i < uniforms.size(); i++)
 	{
-		if (i == 0)
-		{
-			uniforms[i].color = glm::vec4(1, 1, 0, 1);
-		}
 		memcpy(data, &uniforms[i], sizeof(uniforms[i]));
 		data += bufferSize;
 	}

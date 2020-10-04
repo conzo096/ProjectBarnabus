@@ -3,7 +3,7 @@
 
 layout(binding = 0) uniform UniformBufferObject 
 {
-    vec4 color;
+    mat4 MVP;
 } ubo;
 
 layout(location = 0) in vec3 inPosition;
@@ -13,7 +13,8 @@ layout(location = 0) out vec4 fragColor;
 
 void main() 
 {
-    gl_Position = vec4(inPosition, 1.0);
-    fragColor = ubo.color;
+	vec4 worldPosition = ubo.MVP * vec4(inPosition, 1.0);
+    gl_Position = worldPosition;
+    fragColor = inColor;
 }
 

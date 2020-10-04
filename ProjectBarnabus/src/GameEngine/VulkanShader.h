@@ -10,8 +10,9 @@ namespace
 class VulkanShader : public IShader
 {
 public:
-	struct UniformBufferObject {
-		glm::vec4 color;
+	struct UniformBufferObject
+	{
+		glm::mat4 MVP;
 	};
 public:
 	VulkanShader();
