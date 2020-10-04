@@ -56,7 +56,9 @@ GameUi::~GameUi()
 
 void GameUi::Draw()
 {
-	//uiElements.at("debug")->GetMeshData().SetTexture(BarnabusGameEngine::Get().GetRenderer()->GetFrameBuffer("main")->GetDepthTexture());
+#ifdef VULKAN_RENDERER
+	uiElements.at("debug")->GetMeshData().SetTexture(BarnabusGameEngine::Get().GetRenderer()->GetFrameBuffer("main")->GetDepthTexture());
 	static_cast<TextQuad*>(uiElements.at("example"))->SetText(exampleText);
 	UiDisplay::Draw();
+#endif
 }

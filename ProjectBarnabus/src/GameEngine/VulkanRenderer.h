@@ -14,6 +14,7 @@ struct BufferInfo
 	VkBuffer vertexBuffer;
 	VkBuffer indexBuffer;
 	VulkanShader* shader;
+	size_t numIndices;
 };
 
 class VulkanRenderer : public IRenderer

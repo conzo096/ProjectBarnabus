@@ -681,7 +681,7 @@ void VulkanRenderer::RecordCommandBuffer(unsigned int imageIndex)
 	{
 		for (auto& mesh : meshes.second)
 		{
-			buffers.push_back({ mesh.vertexBuffer, mesh.indexBuffer,static_cast<VulkanShader*>(mesh.GetShader()) });
+			buffers.push_back({ mesh.vertexBuffer, mesh.indexBuffer,static_cast<VulkanShader*>(mesh.GetShader()), mesh.GetIndices().size() });
 			const auto mvp = BarnabusGameEngine::Get().GetRenderer()->GetCameraVP() * glm::mat4(mesh.GetTransform());
 			objects.push_back( { mvp } );
 		}
@@ -860,7 +860,7 @@ void VulkanRenderer::CreateCommandBuffers(std::vector<BufferInfo>& buffers)
 				uniformOffset);
 
 			// Replace 6 with indicies size.		
-			vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(6), 1, 0, 0, 0);
+			vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(buffers[j].numIndices), 1, 0, 0, 0);
 		}
 
 		vkCmdEndRenderPass(commandBuffers[i]);
