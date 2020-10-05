@@ -45,6 +45,10 @@ public:
 	void CreateDescriptorSets();
 	void CreateUniformBuffers();
 
+	void CreateDepthResources();
+	void CreateTextureImage();
+	void CreateTextureImageView();
+	
 	void UpdateUniformBuffers(unsigned int index, std::vector<UniformBufferObject>& uniforms);
 
 protected:
@@ -65,4 +69,14 @@ protected:
 
 	VkDescriptorPool descriptorPool;
 	VkDeviceSize bufferSize;
+
+	//Depth buffer - Add to framebuffer class?
+	VkImage depthImage;
+	VkDeviceMemory depthImageMemory;
+	VkImageView depthImageView;
+
+	VkImage textureImage;
+	VkDeviceMemory textureImageMemory;
+	VkImageView textureImageView;
+
 };
