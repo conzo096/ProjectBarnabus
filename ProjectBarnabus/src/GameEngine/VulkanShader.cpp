@@ -200,11 +200,12 @@ bool VulkanShader::Link()
 	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
 	auto swapChainExtent = renderer->GetSwapChainExtent();
 
+	// Viewport y and height are set to match coordinate system that OpenGL uses.
 	VkViewport viewport{};
 	viewport.x = 0.0f;
-	viewport.y = 0.0f;
+	viewport.y = (float)swapChainExtent.height;
 	viewport.width = (float)swapChainExtent.width;
-	viewport.height = (float)swapChainExtent.height;
+	viewport.height = -(float)swapChainExtent.height;
 	viewport.minDepth = 0.0f;
 	viewport.maxDepth = 1.0f;
 
