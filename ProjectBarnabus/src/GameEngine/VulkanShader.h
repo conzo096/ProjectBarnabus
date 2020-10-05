@@ -39,7 +39,10 @@ public:
 	VkPipelineLayout GetPipelineLayout();
 	VkDescriptorSet& GetDescriptorSet(unsigned int index);
 	VkDeviceSize GetBufferSize();
+	VkRenderPass GetRenderPass();
+	VkImageView GetDepthImageView();
 
+	void CreateRenderPass();
 	void CreateDescriptorPool();
 	void CreateDescriptorSetLayout();
 	void CreateDescriptorSets();
@@ -54,6 +57,8 @@ public:
 protected:
 	std::string name;
 	VkDevice device;
+
+	VkRenderPass renderPass;
 
 	VkShaderModule vertexShaderModule;
 	VkShaderModule fragmentShaderModule;

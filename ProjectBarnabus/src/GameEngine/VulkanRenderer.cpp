@@ -4,7 +4,7 @@
 #include "VulkanShader.h"
 #include <algorithm>
 #include <set>
-
+#include <array>
 namespace
 {
 	const int MAX_FRAMES_IN_FLIGHT = 2;
@@ -222,7 +222,6 @@ VulkanRenderer::~VulkanRenderer()
 	}
 
 	vkDestroySwapchainKHR(device, swapChain, nullptr);
-	vkDestroyRenderPass(device, renderPass, nullptr);
 	vkDestroyCommandPool(device, commandPool, nullptr);
 
 	vkDestroyDevice(device, nullptr);
@@ -272,8 +271,6 @@ bool VulkanRenderer::InitialiseGameEngine()
 	CreateLogicalDevice();
 	CreateSwapChain();
 	CreateImageViews();
-	CreateRenderPass();
-	CreateFramebuffers();
 	CreateCommandPool();
 	CreateSyncObjects();
 	return true;
@@ -304,9 +301,9 @@ VkDevice VulkanRenderer::GetDevice()
 	return device;
 }
 
-VkRenderPass VulkanRenderer::GetRenderPass()
+VkFormat VulkanRenderer::GetSwapChainImageFormat()
 {
-	return renderPass;
+	return swapChainImageFormat;
 }
 
 VkPhysicalDevice VulkanRenderer::GetPhysicalDevice()
@@ -562,72 +559,23 @@ void VulkanRenderer::CreateImageViews()
 
 }
 
-void VulkanRenderer::CreateRenderPass()
-{
-	VkAttachmentDescription colorAttachment{};
-	colorAttachment.format = swapChainImageFormat;
-	colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
 
-	colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-	colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-
-	colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-	colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-
-	colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-	colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-
-	VkAttachmentReference colorAttachmentRef{};
-	colorAttachmentRef.attachment = 0;
-	colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
-	VkSubpassDescription subpass{};
-	subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-
-	subpass.colorAttachmentCount = 1;
-	subpass.pColorAttachments = &colorAttachmentRef;
-
-	VkRenderPassCreateInfo renderPassInfo{};
-	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-	renderPassInfo.attachmentCount = 1;
-	renderPassInfo.pAttachments = &colorAttachment;
-	renderPassInfo.subpassCount = 1;
-	renderPassInfo.pSubpasses = &subpass;
-
-	if (vkCreateRenderPass(device, &renderPassInfo, nullptr, &renderPass) != VK_SUCCESS)
-	{
-		throw std::runtime_error("failed to create render pass!");
-	}
-
-	VkSubpassDependency dependency{};
-	dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
-	dependency.dstSubpass = 0;
-
-	dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-	dependency.srcAccessMask = 0;
-
-	dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-	dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-
-	renderPassInfo.dependencyCount = 1;
-	renderPassInfo.pDependencies = &dependency;
-}
-
-void VulkanRenderer::CreateFramebuffers()
+void VulkanRenderer::CreateFramebuffers(VkRenderPass renderPass, VkImageView depthImageView)
 {
 	swapChainFramebuffers.resize(swapChainImageViews.size());
 
 	for (size_t i = 0; i < swapChainImageViews.size(); i++)
 	{
-		VkImageView attachments[] = {
-			swapChainImageViews[i]
+		std::array<VkImageView, 2> attachments = {
+			swapChainImageViews[i],
+			depthImageView
 		};
 
 		VkFramebufferCreateInfo framebufferInfo{};
 		framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
 		framebufferInfo.renderPass = renderPass;
-		framebufferInfo.attachmentCount = 1;
-		framebufferInfo.pAttachments = attachments;
+		framebufferInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
+		framebufferInfo.pAttachments = attachments.data();
 		framebufferInfo.width = swapChainExtent.width;
 		framebufferInfo.height = swapChainExtent.height;
 		framebufferInfo.layers = 1;
@@ -696,8 +644,9 @@ void VulkanRenderer::RecordCommandBuffer(unsigned int imageIndex)
 	static int t = 0;
 	if (t == 0) {
 		t++;
+		CreateFramebuffers(buffers[0].shader->GetRenderPass(), buffers[0].shader->GetDepthImageView());
 		// Got all the buffers - record commands
-		CreateCommandBuffers(buffers);
+		CreateCommandBuffers(buffers[0].shader->GetRenderPass(),buffers);
 	}
 
 	// Work out a better solution - maybe uniform buffer should be stored in a map in renderer  - name of shader - vector of buffers.
@@ -801,7 +750,7 @@ void VulkanRenderer::UpdateBaseVertexBuffers(MeshData& data)
 }
 
 //maybe better in shader class?
-void VulkanRenderer::CreateCommandBuffers(std::vector<BufferInfo>& buffers)
+void VulkanRenderer::CreateCommandBuffers(VkRenderPass renderPass, std::vector<BufferInfo>& buffers)
 {
 	commandBuffers.resize(swapChainFramebuffers.size());
 
@@ -833,9 +782,12 @@ void VulkanRenderer::CreateCommandBuffers(std::vector<BufferInfo>& buffers)
 		renderPassInfo.renderArea.offset = { 0, 0 };
 		renderPassInfo.renderArea.extent = swapChainExtent;
 
-		VkClearValue clearColor = { 0.1f, 0.0f, 0.4f, 1.0f };
-		renderPassInfo.clearValueCount = 1;
-		renderPassInfo.pClearValues = &clearColor;
+		std::array<VkClearValue, 2> clearValues{};
+		clearValues[0].color = { 0.1f, 0.0f, 0.4f, 1.0f };
+		clearValues[1].depthStencil = { 1.0f, 0 };
+
+		renderPassInfo.clearValueCount = 2;
+		renderPassInfo.pClearValues = clearValues.data();
 
 		auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
 

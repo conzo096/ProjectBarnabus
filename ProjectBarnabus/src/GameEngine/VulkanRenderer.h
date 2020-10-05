@@ -72,7 +72,7 @@ public:
 	VkExtent2D GetSwapChainExtent();
 	VkSwapchainKHR GetSwapChain();
 	VkDevice GetDevice();
-	VkRenderPass GetRenderPass();
+	VkFormat GetSwapChainImageFormat();
 	VkPhysicalDevice GetPhysicalDevice();
 	std::vector<VkFramebuffer>& GetSwapChainFramebuffers();
 	std::vector<VkImage>& GetSwapChainImages();
@@ -87,10 +87,9 @@ private:
 	void CreateSurface();
 	void CreateSwapChain();
 	void CreateImageViews();
-	void CreateRenderPass();
-	void CreateFramebuffers();
+	void CreateFramebuffers(VkRenderPass renderPass, VkImageView depthImageView);
 	void CreateCommandPool();
-	void CreateCommandBuffers(std::vector<BufferInfo>& buffers);
+	void CreateCommandBuffers(VkRenderPass renderPass, std::vector<BufferInfo>& buffers);
 	void CreateSyncObjects();
 
 private:
@@ -121,7 +120,6 @@ private:
 
 	std::vector<VkImageView> swapChainImageViews;
 
-	VkRenderPass renderPass;
 	std::vector<VkFramebuffer> swapChainFramebuffers;
 
 	VkCommandPool commandPool;
