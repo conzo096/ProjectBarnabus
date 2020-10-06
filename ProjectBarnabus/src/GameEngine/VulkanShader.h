@@ -45,14 +45,12 @@ public:
 	VkPipelineLayout GetPipelineLayout();
 	VkDescriptorSet& GetDescriptorSet(unsigned int index);
 	VkDeviceSize GetBufferSize();
-	VkRenderPass GetRenderPass();
 	VkImageView GetDepthImageView();
 	
 	void UpdateUniformBuffers(unsigned int index, std::vector<UniformBufferObject>& uniforms);
 
 	void CleanUp();
 
-	void CreateRenderPass();
 	void CreateGraphicPipelines();
 	void CreateDepthResources();
 
@@ -70,8 +68,6 @@ protected:
 	VkDevice device;
 
 	std::set<PrimativeTypes> primatives;
-
-	VkRenderPass renderPass;
 
 	VkShaderModule vertexShaderModule;
 	VkShaderModule fragmentShaderModule;

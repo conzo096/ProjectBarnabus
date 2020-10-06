@@ -2,6 +2,7 @@
 #include "VulkanRenderer.h"
 #include "BarnabusGameEngine.h"
 #include "VulkanShader.h"
+#include "VulkanUtils.h"
 #include <algorithm>
 #include <set>
 #include <array>
@@ -170,32 +171,6 @@ namespace
 			return actualExtent;
 		}
 	}
-
-	// Duplicate from shader - move to util folder.
-	VkImageView CreateImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags)
-	{
-		auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
-
-		VkImageViewCreateInfo viewInfo{};
-		viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-		viewInfo.image = image;
-		viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-		viewInfo.format = format;
-		viewInfo.subresourceRange.aspectMask = aspectFlags;
-		viewInfo.subresourceRange.baseMipLevel = 0;
-		viewInfo.subresourceRange.levelCount = 1;
-		viewInfo.subresourceRange.baseArrayLayer = 0;
-		viewInfo.subresourceRange.layerCount = 1;
-
-		VkImageView imageView;
-		if (vkCreateImageView(renderer->GetDevice(), &viewInfo, nullptr, &imageView) != VK_SUCCESS)
-		{
-			throw std::runtime_error("failed to create texture image view!");
-		}
-
-		return imageView;
-	}
-
 } //namespace
 
 VulkanRenderer::VulkanRenderer() : physicalDevice(VK_NULL_HANDLE)
@@ -270,6 +245,7 @@ bool VulkanRenderer::InitialiseGameEngine()
 	PickPhysicalDevice();
 	CreateLogicalDevice();
 	CreateSwapChain();
+	CreateRenderPass();
 	CreateImageViews();
 	CreateCommandPool();
 	CreateSyncObjects();
@@ -334,6 +310,11 @@ VkQueue VulkanRenderer::GetPresentQueue()
 VkCommandPool VulkanRenderer::GetCommandPool()
 {
 	return commandPool;
+}
+
+VkRenderPass VulkanRenderer::GetRenderPass()
+{
+	return renderPass;
 }
 
 bool VulkanRenderer::InitVulkanInstance()
@@ -554,7 +535,68 @@ void VulkanRenderer::CreateImageViews()
 
 	for (uint32_t i = 0; i < swapChainImages.size(); i++)
 	{
-		swapChainImageViews[i] = CreateImageView(swapChainImages[i], swapChainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT);
+		swapChainImageViews[i] = VulkanUtils::CreateImageView(device,swapChainImages[i], swapChainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT);
+	}
+
+}
+
+void VulkanRenderer::CreateRenderPass()
+{
+	VkAttachmentDescription colorAttachment{};
+	colorAttachment.format = swapChainImageFormat;
+	colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+	colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+	colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+	colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+	colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
+	VkAttachmentDescription depthAttachment{};
+	depthAttachment.format = VulkanUtils::FindDepthFormat(physicalDevice);
+	depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+	depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+	depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+	depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+	VkAttachmentReference colorAttachmentRef{};
+	colorAttachmentRef.attachment = 0;
+	colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+	VkAttachmentReference depthAttachmentRef{};
+	depthAttachmentRef.attachment = 1;
+	depthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+	VkSubpassDescription subpass{};
+	subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+	subpass.colorAttachmentCount = 1;
+	subpass.pColorAttachments = &colorAttachmentRef;
+	subpass.pDepthStencilAttachment = &depthAttachmentRef;
+
+	VkSubpassDependency dependency{};
+	dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+	dependency.dstSubpass = 0;
+	dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+	dependency.srcAccessMask = 0;
+	dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+	dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
+	std::array<VkAttachmentDescription, 2> attachments = { colorAttachment, depthAttachment };
+	VkRenderPassCreateInfo renderPassInfo{};
+	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+	renderPassInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
+	renderPassInfo.pAttachments = attachments.data();
+	renderPassInfo.subpassCount = 1;
+	renderPassInfo.pSubpasses = &subpass;
+	renderPassInfo.dependencyCount = 1;
+	renderPassInfo.pDependencies = &dependency;
+
+	if (vkCreateRenderPass(device, &renderPassInfo, nullptr, &renderPass) != VK_SUCCESS)
+	{
+		throw std::runtime_error("failed to create render pass!");
 	}
 
 }
@@ -632,6 +674,8 @@ void VulkanRenderer::CleanupSwapChain()
 		vkDestroyFramebuffer(device, framebuffer, nullptr);
 	}
 
+	vkDestroyRenderPass(device, renderPass, nullptr);
+
 	vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
 
 	for (auto imageView : swapChainImageViews)
@@ -663,16 +707,15 @@ void VulkanRenderer::RecreateSwapChain()
 
 	CreateSwapChain();
 	CreateImageViews();
-	
+	CreateRenderPass();
+
 	for (auto& shader : shaders)
 	{
-		static_cast<VulkanShader*>(shader.second.get())->CreateRenderPass();
-		static_cast<VulkanShader*>(shader.second.get())->CreateRenderPass();
 		static_cast<VulkanShader*>(shader.second.get())->CreateGraphicPipelines();
 		static_cast<VulkanShader*>(shader.second.get())->CreateDepthResources();
 	}
 
-	CreateFramebuffers(static_cast<VulkanShader*>(shaders[0].get())->GetRenderPass(), static_cast<VulkanShader*>(shaders[0].get())->GetDepthImageView());
+	CreateFramebuffers(renderPass, static_cast<VulkanShader*>(shaders[0].get())->GetDepthImageView());
 
 	for (auto& shader : shaders)
 	{
@@ -702,8 +745,8 @@ void VulkanRenderer::RecordCommandBuffer(unsigned int imageIndex)
 	// Crashes here if app is minimized.
 	buffers[0].shader->UpdateUniformBuffers(imageIndex, objects);
 	
-	CreateFramebuffers(buffers[0].shader->GetRenderPass(), buffers[0].shader->GetDepthImageView());
-	CreateCommandBuffers(buffers[0].shader->GetRenderPass(),buffers);
+	CreateFramebuffers(renderPass, buffers[0].shader->GetDepthImageView());
+	CreateCommandBuffers(renderPass,buffers);
 }
 
 VulkanRenderer::QueueFamilyIndices VulkanRenderer::FindQueueFamilies(VkPhysicalDevice device)

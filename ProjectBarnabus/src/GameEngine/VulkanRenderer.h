@@ -83,6 +83,8 @@ public:
 	VkQueue GetGraphicsQueue();
 	VkQueue GetPresentQueue();
 	VkCommandPool GetCommandPool();
+	VkRenderPass GetRenderPass();
+
 private:
 	bool InitVulkanInstance();
 	void SetupDebugMessenger();
@@ -91,6 +93,8 @@ private:
 	void CreateSurface();
 	void CreateSwapChain();
 	void CreateImageViews();
+
+	void CreateRenderPass();
 	void CreateFramebuffers(const VkRenderPass& renderPass, const VkImageView& depthImageView);
 	void CreateCommandPool();
 	void CreateCommandBuffers(const VkRenderPass& renderPass, std::vector<BufferInfo>& buffers);
@@ -131,6 +135,8 @@ private:
 
 	VkCommandPool commandPool;
 	std::vector<VkCommandBuffer> commandBuffers;
+
+	VkRenderPass renderPass;
 
 private:
 	glm::mat4 cameraVP;
