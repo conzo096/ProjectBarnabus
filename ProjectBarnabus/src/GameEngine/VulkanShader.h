@@ -35,7 +35,7 @@ public:
 	virtual void UpdateUniforms(MeshData& meshData, const LightInfo& lights) override;
 	virtual void DrawMesh(MeshData& meshData) override;
 
-	VkPipeline GetPipeline();
+	VkPipeline GetPipeline(unsigned int index);
 	VkPipelineLayout GetPipelineLayout();
 	VkDescriptorSet& GetDescriptorSet(unsigned int index);
 	VkDeviceSize GetBufferSize();
@@ -63,8 +63,8 @@ protected:
 	VkShaderModule vertexShaderModule;
 	VkShaderModule fragmentShaderModule;
 
-	VkPipelineLayout pipelineLayout;
-	VkPipeline graphicsPipeline;
+	std::vector<VkPipelineLayout> pipelineLayout;
+	std::vector<VkPipeline> graphicsPipeline;
 
 	VkDescriptorSetLayout descriptorSetLayout;
 	std::vector<VkDescriptorSet> descriptorSets;

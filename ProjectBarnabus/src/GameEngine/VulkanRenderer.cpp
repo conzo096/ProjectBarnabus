@@ -635,7 +635,7 @@ void VulkanRenderer::RecordCommandBuffer(unsigned int imageIndex)
 	{
 		for (auto& mesh : meshes.second)
 		{
-			buffers.push_back({ mesh.vertexBuffer, mesh.indexBuffer,static_cast<VulkanShader*>(mesh.GetShader()), mesh.GetIndices().size() });
+			buffers.push_back({ mesh.vertexBuffer, mesh.indexBuffer,static_cast<VulkanShader*>(mesh.GetShader()), mesh.GetIndices().size(), mesh.GetType() });
 			const auto mvp = BarnabusGameEngine::Get().GetRenderer()->GetCameraVP() * glm::mat4(mesh.GetTransform());
 			objects.push_back( { mvp } );
 		}
@@ -795,8 +795,15 @@ void VulkanRenderer::CreateCommandBuffers(VkRenderPass renderPass, std::vector<B
 
 		for (int j = 0; j < buffers.size(); j++)
 		{
-			// Only rebind if pipeline is different.
-			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, buffers[j].shader->GetPipeline());
+			if (buffers[j].type == 4)
+			{
+				// Only rebind if pipeline is different.
+				vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, buffers[j].shader->GetPipeline(0));
+			}
+			else
+			{
+				vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, buffers[j].shader->GetPipeline(1));
+			}
 
 			// Better to instance the mesh and change uniform locations
 			VkBuffer vertexBuffers[] = { buffers[j].vertexBuffer };

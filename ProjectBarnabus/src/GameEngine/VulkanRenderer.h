@@ -15,6 +15,7 @@ struct BufferInfo
 	VkBuffer indexBuffer;
 	VulkanShader* shader;
 	size_t numIndices;
+	unsigned int type;
 };
 
 class VulkanRenderer : public IRenderer
