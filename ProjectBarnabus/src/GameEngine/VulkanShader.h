@@ -1,7 +1,7 @@
 #pragma once
 #include "IShader.h"
 #include <vulkan/vulkan.h>
-
+#include <set>
 namespace 
 {
 	using LightInfo = std::vector<Light*>;
@@ -10,6 +10,12 @@ namespace
 class VulkanShader : public IShader
 {
 public:
+	enum PrimativeTypes
+	{
+		TRIANGLE,
+		LINE_STRIP
+	};
+
 	struct UniformBufferObject
 	{
 		glm::mat4 MVP;
@@ -41,7 +47,10 @@ public:
 	VkDeviceSize GetBufferSize();
 	VkRenderPass GetRenderPass();
 	VkImageView GetDepthImageView();
+	
+	void UpdateUniformBuffers(unsigned int index, std::vector<UniformBufferObject>& uniforms);
 
+protected:
 	void CreateRenderPass();
 	void CreateDescriptorPool();
 	void CreateDescriptorSetLayout();
@@ -51,12 +60,13 @@ public:
 	void CreateDepthResources();
 	void CreateTextureImage();
 	void CreateTextureImageView();
-	
-	void UpdateUniformBuffers(unsigned int index, std::vector<UniformBufferObject>& uniforms);
 
+	void CreateGraphicPipelines();
 protected:
 	std::string name;
 	VkDevice device;
+
+	std::set<PrimativeTypes> primatives;
 
 	VkRenderPass renderPass;
 
