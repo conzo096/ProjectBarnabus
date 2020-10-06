@@ -48,4 +48,10 @@ private:
 
 	UiQuad* screenQuad;
 	IShader* finalShader;
+
+	std::map<std::string, std::unique_ptr<IShader>> shaders;
+
+	// Inherited via IRenderer
+	virtual bool AddShader(std::string name, std::unique_ptr<IShader> shader) override;
+	virtual IShader * GetShader(const std::string & shaderName) override;
 };

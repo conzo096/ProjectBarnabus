@@ -53,7 +53,6 @@ protected:
 
 // This should be moved to a seperate resource manager
 private:
-	std::map<std::string, std::unique_ptr<IShader>> shaders;
 	std::map<std::string, std::unique_ptr<ITexture>> textures;
 
 private:

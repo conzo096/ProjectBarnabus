@@ -279,3 +279,17 @@ IFrameBuffer* OpenGLRenderer::GetFrameBuffer(const std::string& buffer)
 {
 	return framebuffers.at(buffer);
 }
+
+bool OpenGLRenderer::AddShader(std::string name, std::unique_ptr<IShader> shader)
+{
+	auto result = shaders.insert(std::pair < std::string, std::unique_ptr<IShader>>(name, std::move(shader)));
+	return result.second;
+}
+
+IShader * OpenGLRenderer::GetShader(const std::string & shaderName)
+{
+	auto it = shaders.find(shaderName);
+	assert(it != shaders.end());
+
+	return it->second.get();
+}

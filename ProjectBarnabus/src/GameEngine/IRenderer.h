@@ -42,4 +42,7 @@ public:
 	virtual void AddUiElement(MeshData& md) = 0;
 	virtual void AddFramebuffer(std::pair<std::string, IFrameBuffer*> pair) = 0;
 	virtual IFrameBuffer* GetFrameBuffer(const std::string& buffer) = 0;
+
+	virtual bool AddShader(std::string name, std::unique_ptr<IShader> shader) = 0;
+	virtual IShader* GetShader(const std::string& shaderName) = 0;
 };

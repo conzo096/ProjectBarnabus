@@ -29,16 +29,12 @@ void BarnabusGameEngine::AddMessageLog(StringLog log)
 
 bool BarnabusGameEngine::AddShader(std::string name, std::unique_ptr<IShader> shader)
 {
-	auto result = shaders.insert(std::pair < std::string, std::unique_ptr<IShader>>(name, std::move(shader)));
-	return result.second;
+	return renderer->AddShader(name, std::move(shader));
 }
 
 IShader* BarnabusGameEngine::GetShader(std::string name)
 {
-	auto it = shaders.find(name);
-	assert(it != shaders.end());
-
-	return it->second.get();
+	return renderer->GetShader(name);
 }
 
 bool BarnabusGameEngine::AddTexture(std::string name, std::unique_ptr<ITexture> texture)
