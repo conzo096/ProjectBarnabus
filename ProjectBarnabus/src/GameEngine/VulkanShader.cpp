@@ -83,36 +83,6 @@ namespace
 		return attributeDescriptions;
 	}
 
-	void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer & buffer, VkDeviceMemory & bufferMemory)
-	{
-		auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
-		VkBufferCreateInfo bufferInfo{};
-		bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-		bufferInfo.size = size;
-		bufferInfo.usage = usage;
-		bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-
-		if (vkCreateBuffer(renderer->GetDevice(), &bufferInfo, nullptr, &buffer) != VK_SUCCESS)
-		{
-			throw std::runtime_error("failed to create buffer!");
-		}
-
-		VkMemoryRequirements memRequirements;
-		vkGetBufferMemoryRequirements(renderer->GetDevice(), buffer, &memRequirements);
-
-		VkMemoryAllocateInfo allocInfo{};
-		allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-		allocInfo.allocationSize = memRequirements.size;
-		allocInfo.memoryTypeIndex = VulkanUtils::FindMemoryType(memRequirements.memoryTypeBits, properties, renderer->GetPhysicalDevice());
-
-		if (vkAllocateMemory(renderer->GetDevice(), &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS)
-		{
-			throw std::runtime_error("failed to allocate buffer memory!");
-		}
-
-		vkBindBufferMemory(renderer->GetDevice(), buffer, bufferMemory, 0);
-	}
-
 	VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
 	{
 		auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
@@ -621,7 +591,7 @@ void VulkanShader::CreateUniformBuffers()
 
 	for (size_t i = 0; i < renderer->GetSwapChainImages().size(); i++)
 	{
-		CreateBuffer(bufferSize * 50, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
+		VulkanUtils::CreateBuffer(renderer->GetDevice(), renderer->GetPhysicalDevice(), bufferSize * 50, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
 	}
 }
 
@@ -639,6 +609,8 @@ void VulkanShader::CreateDepthResources()
 // Use Vulkan Texture class.
 void VulkanShader::CreateTextureImage()
 {
+	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
+
 	int texWidth, texHeight, texChannels;
 	stbi_uc* pixels = stbi_load("res\\Textures\\test.png", &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 	VkDeviceSize imageSize = texWidth * texHeight * 4;
@@ -649,7 +621,7 @@ void VulkanShader::CreateTextureImage()
 
 	VkBuffer stagingBuffer;
 	VkDeviceMemory stagingBufferMemory;
-	CreateBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+	VulkanUtils::CreateBuffer(renderer->GetDevice(), renderer->GetPhysicalDevice(), imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
 
 	void* data;
 	vkMapMemory(device, stagingBufferMemory, 0, imageSize, 0, &data);
@@ -658,7 +630,6 @@ void VulkanShader::CreateTextureImage()
 
 	stbi_image_free(pixels);
 
-	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
 	VulkanUtils::CreateImage(renderer->GetDevice(), renderer->GetPhysicalDevice(),texWidth, texHeight, 
 								VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, textureImage, textureImageMemory);
 

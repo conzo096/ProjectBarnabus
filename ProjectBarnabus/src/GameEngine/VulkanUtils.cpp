@@ -85,3 +85,34 @@ uint32_t VulkanUtils::FindMemoryType(uint32_t typeFilter, const VkMemoryProperty
 		}
 	}
 }
+
+/// <summary>Creates a buffer.</summary>
+/// <param name="device">logical device.</param>  
+/// <param name="physicalDevice">physicalDevice.</param>  
+/// <param name="size">size.</param>  
+/// <param name="usage">usage.</param>  
+/// <param name="properties">properties.</param>  
+/// <param name="buffer">buffer.</param>  
+/// <param name="properties">properties.</param>  
+/// <param name="bufferMemory">bufferMemory.</param>
+void VulkanUtils::CreateBuffer(const VkDevice& device, const VkPhysicalDevice& physicalDevice, const VkDeviceSize& size, const VkBufferUsageFlags& usage, const VkMemoryPropertyFlags& properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory)
+{
+	VkBufferCreateInfo bufferInfo{};
+	bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+	bufferInfo.size = size;
+	bufferInfo.usage = usage;
+	bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+	vkCreateBuffer(device, &bufferInfo, nullptr, &buffer);
+
+	VkMemoryRequirements memRequirements;
+	vkGetBufferMemoryRequirements(device, buffer, &memRequirements);
+
+	VkMemoryAllocateInfo allocInfo{};
+	allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+	allocInfo.allocationSize = memRequirements.size;
+	allocInfo.memoryTypeIndex = VulkanUtils::FindMemoryType(memRequirements.memoryTypeBits, properties, physicalDevice);
+
+	vkAllocateMemory(device, &allocInfo, nullptr, &bufferMemory);
+	vkBindBufferMemory(device, buffer, bufferMemory, 0);
+}

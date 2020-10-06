@@ -8,4 +8,6 @@ namespace VulkanUtils
 	void CreateImage(const VkDevice& device, const VkPhysicalDevice& physicalDevice, uint32_t width, uint32_t height, const VkFormat& format,
 		const VkImageTiling& tiling, const VkImageUsageFlags& usage, const VkMemoryPropertyFlags& properties, VkImage& image, VkDeviceMemory& imageMemory);
 
+	void CreateBuffer(const VkDevice& device, const VkPhysicalDevice&, const VkDeviceSize& size, const VkBufferUsageFlags& usage, const VkMemoryPropertyFlags& properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+
 } // namespace VulkanUtils

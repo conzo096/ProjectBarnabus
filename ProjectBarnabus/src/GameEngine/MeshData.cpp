@@ -140,14 +140,14 @@ void MeshData::CreateVertexBuffer(VkBuffer & vertexBuffer, VkDeviceMemory & vert
 
 	VkBuffer stagingBuffer;
 	VkDeviceMemory stagingBufferMemory;
-	CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+	VulkanUtils::CreateBuffer(renderer->GetDevice(),renderer->GetPhysicalDevice(), bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
 
 	void* data;
 	vkMapMemory(renderer->GetDevice(), stagingBufferMemory, 0, bufferSize, 0, &data);
 	memcpy(data, vertices.data(), (size_t)bufferSize);
 	vkUnmapMemory(renderer->GetDevice(), stagingBufferMemory);
 
-	CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertexBuffer, vertexBufferMemory);
+	VulkanUtils::CreateBuffer(renderer->GetDevice(), renderer->GetPhysicalDevice(), bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertexBuffer, vertexBufferMemory);
 
 	CopyBuffer(commandPool, stagingBuffer, vertexBuffer, bufferSize);
 
@@ -163,49 +163,19 @@ void MeshData::CreateIndexBuffer(VkBuffer & indexBuffer, VkDeviceMemory & indexB
 
 	VkBuffer stagingBuffer;
 	VkDeviceMemory stagingBufferMemory;
-	CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+	VulkanUtils::CreateBuffer(renderer->GetDevice(), renderer->GetPhysicalDevice(), bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
 
 	void* data;
 	vkMapMemory(renderer->GetDevice(), stagingBufferMemory, 0, bufferSize, 0, &data);
 	memcpy(data, indices.data(), (size_t)bufferSize);
 	vkUnmapMemory(renderer->GetDevice(), stagingBufferMemory);
 
-	CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, indexBuffer, indexBufferMemory);
+	VulkanUtils::CreateBuffer(renderer->GetDevice(), renderer->GetPhysicalDevice(), bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, indexBuffer, indexBufferMemory);
 
 	CopyBuffer(commandPool, stagingBuffer, indexBuffer, bufferSize);
 
 	vkDestroyBuffer(renderer->GetDevice(), stagingBuffer, nullptr);
 	vkFreeMemory(renderer->GetDevice(), stagingBufferMemory, nullptr);
-}
-
-void MeshData::CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer & buffer, VkDeviceMemory & bufferMemory)
-{
-	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
-	VkBufferCreateInfo bufferInfo{};
-	bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-	bufferInfo.size = size;
-	bufferInfo.usage = usage;
-	bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-
-	if (vkCreateBuffer(renderer->GetDevice(), &bufferInfo, nullptr, &buffer) != VK_SUCCESS)
-	{
-		throw std::runtime_error("failed to create buffer!");
-	}
-
-	VkMemoryRequirements memRequirements;
-	vkGetBufferMemoryRequirements(renderer->GetDevice(), buffer, &memRequirements);
-
-	VkMemoryAllocateInfo allocInfo{};
-	allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-	allocInfo.allocationSize = memRequirements.size;
-	allocInfo.memoryTypeIndex = VulkanUtils::FindMemoryType(memRequirements.memoryTypeBits, properties, renderer->GetPhysicalDevice());
-
-	if (vkAllocateMemory(renderer->GetDevice(), &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS)
-	{
-		throw std::runtime_error("failed to allocate buffer memory!");
-	}
-
-	vkBindBufferMemory(renderer->GetDevice(), buffer, bufferMemory, 0);
 }
 
 void MeshData::CopyBuffer(VkCommandPool commandPool, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
