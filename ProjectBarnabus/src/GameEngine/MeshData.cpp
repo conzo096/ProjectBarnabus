@@ -6,24 +6,7 @@
 #include "BarnabusGameEngine.h"
 
 #include "VulkanRenderer.h"
-
-namespace
-{
-	uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties, VkPhysicalDevice physicalDevice)
-	{
-		VkPhysicalDeviceMemoryProperties memProperties;
-		vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memProperties);
-
-		for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++) {
-			if ((typeFilter & (1 << i)) && (memProperties.memoryTypes[i].propertyFlags & properties) == properties)
-			{
-				return i;
-			}
-		}
-
-		throw std::runtime_error("failed to find suitable memory type!");
-	}
-} // namespace
+#include "VulkanUtils.h"
 
 MeshData::MeshData() : VAO(0), VBO(0), EBO(0), BONES(0)
 {
@@ -215,7 +198,7 @@ void MeshData::CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemor
 	VkMemoryAllocateInfo allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 	allocInfo.allocationSize = memRequirements.size;
-	allocInfo.memoryTypeIndex = FindMemoryType(memRequirements.memoryTypeBits, properties, renderer->GetPhysicalDevice());
+	allocInfo.memoryTypeIndex = VulkanUtils::FindMemoryType(memRequirements.memoryTypeBits, properties, renderer->GetPhysicalDevice());
 
 	if (vkAllocateMemory(renderer->GetDevice(), &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS)
 	{

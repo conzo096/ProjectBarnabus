@@ -43,6 +43,7 @@
     <ClCompile Include="src\GameEngine\VulkanFrameBuffer.cpp" />
     <ClCompile Include="src\GameEngine\VulkanRenderer.cpp" />
     <ClCompile Include="src\GameEngine\VulkanShader.cpp" />
+    <ClCompile Include="src\GameEngine\VulkanUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\GameEngine\AnimatedModel.h" />
@@ -89,6 +90,7 @@
     <ClInclude Include="src\GameEngine\UiDisplay.h" />
     <ClInclude Include="src\GameEngine\UiQuad.h" />
     <ClInclude Include="src\GameEngine\VulkanShader.h" />
+    <ClInclude Include="src\GameEngine\VulkanUtils.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

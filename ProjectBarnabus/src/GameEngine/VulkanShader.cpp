@@ -1,6 +1,8 @@
 #include "VulkanShader.h"
 #include "BarnabusGameEngine.h"
 #include "VulkanRenderer.h"
+#include "VulkanUtils.h"
+
 #include <fstream>
 #include <array>
 
@@ -81,21 +83,6 @@ namespace
 		return attributeDescriptions;
 	}
 
-	uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties, VkPhysicalDevice physicalDevice)
-	{
-		VkPhysicalDeviceMemoryProperties memProperties;
-		vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memProperties);
-
-		for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++) {
-			if ((typeFilter & (1 << i)) && (memProperties.memoryTypes[i].propertyFlags & properties) == properties)
-			{
-				return i;
-			}
-		}
-
-		throw std::runtime_error("failed to find suitable memory type!");
-	}
-
 	void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer & buffer, VkDeviceMemory & bufferMemory)
 	{
 		auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
@@ -116,7 +103,7 @@ namespace
 		VkMemoryAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 		allocInfo.allocationSize = memRequirements.size;
-		allocInfo.memoryTypeIndex = FindMemoryType(memRequirements.memoryTypeBits, properties, renderer->GetPhysicalDevice());
+		allocInfo.memoryTypeIndex = VulkanUtils::FindMemoryType(memRequirements.memoryTypeBits, properties, renderer->GetPhysicalDevice());
 
 		if (vkAllocateMemory(renderer->GetDevice(), &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS)
 		{
@@ -155,70 +142,6 @@ namespace
 			VK_IMAGE_TILING_OPTIMAL,
 			VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT
 		);
-	}
-
-	void CreateImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory)
-	{
-		auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
-
-		VkImageCreateInfo imageInfo{};
-		imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-		imageInfo.imageType = VK_IMAGE_TYPE_2D;
-		imageInfo.extent.width = width;
-		imageInfo.extent.height = height;
-		imageInfo.extent.depth = 1;
-		imageInfo.mipLevels = 1;
-		imageInfo.arrayLayers = 1;
-		imageInfo.format = format;
-		imageInfo.tiling = tiling;
-		imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-		imageInfo.usage = usage;
-		imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
-		imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-
-		if (vkCreateImage(renderer->GetDevice(), &imageInfo, nullptr, &image) != VK_SUCCESS)
-		{
-			throw std::runtime_error("failed to create image!");
-		}
-
-		VkMemoryRequirements memRequirements;
-		vkGetImageMemoryRequirements(renderer->GetDevice(), image, &memRequirements);
-
-		VkMemoryAllocateInfo allocInfo{};
-		allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-		allocInfo.allocationSize = memRequirements.size;
-		allocInfo.memoryTypeIndex = FindMemoryType(memRequirements.memoryTypeBits, properties, renderer->GetPhysicalDevice());
-
-		if (vkAllocateMemory(renderer->GetDevice(), &allocInfo, nullptr, &imageMemory) != VK_SUCCESS)
-		{
-			throw std::runtime_error("failed to allocate image memory!");
-		}
-
-		vkBindImageMemory(renderer->GetDevice(), image, imageMemory, 0);
-	}
-
-	VkImageView CreateImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags)
-	{
-		auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
-
-		VkImageViewCreateInfo viewInfo{};
-		viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-		viewInfo.image = image;
-		viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-		viewInfo.format = format;
-		viewInfo.subresourceRange.aspectMask = aspectFlags;
-		viewInfo.subresourceRange.baseMipLevel = 0;
-		viewInfo.subresourceRange.levelCount = 1;
-		viewInfo.subresourceRange.baseArrayLayer = 0;
-		viewInfo.subresourceRange.layerCount = 1;
-
-		VkImageView imageView;
-		if (vkCreateImageView(renderer->GetDevice(), &viewInfo, nullptr, &imageView) != VK_SUCCESS)
-		{
-			throw std::runtime_error("failed to create texture image view!");
-		}
-
-		return imageView;
 	}
 
 	bool HasStencilComponent(VkFormat format) 
@@ -708,8 +631,9 @@ void VulkanShader::CreateDepthResources()
 
 	VkFormat depthFormat = FindDepthFormat();
 
-	CreateImage(renderer->GetSwapChainExtent().width, renderer->GetSwapChainExtent().height, depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, depthImage, depthImageMemory);
-	depthImageView = CreateImageView(depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
+	VulkanUtils::CreateImage(renderer->GetDevice(),renderer->GetPhysicalDevice(),renderer->GetSwapChainExtent().width, renderer->GetSwapChainExtent().height,
+								depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, depthImage, depthImageMemory);
+	depthImageView = VulkanUtils::CreateImageView(renderer->GetDevice(),depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
 }
 
 // Use Vulkan Texture class.
@@ -734,7 +658,9 @@ void VulkanShader::CreateTextureImage()
 
 	stbi_image_free(pixels);
 
-	CreateImage(texWidth, texHeight, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, textureImage, textureImageMemory);
+	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
+	VulkanUtils::CreateImage(renderer->GetDevice(), renderer->GetPhysicalDevice(),texWidth, texHeight, 
+								VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, textureImage, textureImageMemory);
 
 	TransitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 	CopyBufferToImage(stagingBuffer, textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
@@ -746,7 +672,8 @@ void VulkanShader::CreateTextureImage()
 
 void VulkanShader::CreateTextureImageView()
 {
-	textureImageView = CreateImageView(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT);
+	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
+	textureImageView = VulkanUtils::CreateImageView(renderer->GetDevice(),textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT);
 }
 
 void VulkanShader::UpdateUniformBuffers(unsigned int index, std::vector<UniformBufferObject>& uniforms)

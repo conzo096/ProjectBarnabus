@@ -94,7 +94,12 @@
     <ClCompile Include="src\GameEngine\OpenGLHeightMapTexture.cpp">
       <Filter>Source Files\GameEngine\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameEngine\VulkanFrameBuffer.cpp" />
+    <ClCompile Include="src\GameEngine\VulkanFrameBuffer.cpp">
+      <Filter>Source Files\GameEngine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\VulkanUtils.cpp">
+      <Filter>Source Files\GameEngine\Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -304,6 +309,9 @@
       <Filter>Header Files\GameEngine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\GameEngine\VulkanFrameBuffer.h">
+      <Filter>Header Files\GameEngine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\VulkanUtils.h">
       <Filter>Header Files\GameEngine\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
