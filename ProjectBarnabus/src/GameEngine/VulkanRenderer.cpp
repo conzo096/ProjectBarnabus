@@ -559,8 +559,7 @@ void VulkanRenderer::CreateImageViews()
 
 }
 
-
-void VulkanRenderer::CreateFramebuffers(VkRenderPass renderPass, VkImageView depthImageView)
+void VulkanRenderer::CreateFramebuffers(const VkRenderPass& renderPass, const VkImageView& depthImageView)
 {
 	swapChainFramebuffers.resize(swapChainImageViews.size());
 
@@ -626,10 +625,68 @@ void VulkanRenderer::CreateSyncObjects()
 	}
 }
 
+void VulkanRenderer::CleanupSwapChain()
+{
+	for (auto framebuffer : swapChainFramebuffers)
+	{
+		vkDestroyFramebuffer(device, framebuffer, nullptr);
+	}
+
+	vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
+
+	for (auto imageView : swapChainImageViews)
+	{
+		vkDestroyImageView(device, imageView, nullptr);
+	}
+
+	vkDestroySwapchainKHR(device, swapChain, nullptr);
+
+	for (auto& shader : shaders)
+	{
+		static_cast<VulkanShader*>(shader.second.get())->CleanUp();
+	}
+}
+
+void VulkanRenderer::RecreateSwapChain()
+{
+	int width = 0, height = 0;
+	glfwGetFramebufferSize(window, &width, &height);
+	while (width == 0 || height == 0)
+	{
+		glfwGetFramebufferSize(window, &width, &height);
+		glfwWaitEvents();
+	}
+
+	vkDeviceWaitIdle(device);
+
+	CleanupSwapChain();
+
+	CreateSwapChain();
+	CreateImageViews();
+	
+	for (auto& shader : shaders)
+	{
+		static_cast<VulkanShader*>(shader.second.get())->CreateRenderPass();
+		static_cast<VulkanShader*>(shader.second.get())->CreateRenderPass();
+		static_cast<VulkanShader*>(shader.second.get())->CreateGraphicPipelines();
+		static_cast<VulkanShader*>(shader.second.get())->CreateDepthResources();
+	}
+
+	CreateFramebuffers(static_cast<VulkanShader*>(shaders[0].get())->GetRenderPass(), static_cast<VulkanShader*>(shaders[0].get())->GetDepthImageView());
+
+	for (auto& shader : shaders)
+	{
+		static_cast<VulkanShader*>(shader.second.get())->CreateUniformBuffers();
+		static_cast<VulkanShader*>(shader.second.get())->CreateDescriptorPool();
+		static_cast<VulkanShader*>(shader.second.get())->CreateDescriptorSets();
+	}
+}
+
 void VulkanRenderer::RecordCommandBuffer(unsigned int imageIndex)
 {
-	std::vector<BufferInfo> buffers;
-	std::vector<VulkanShader::UniformBufferObject> objects;
+	// Not static will result in memory issues here. Still working on a better solution.
+	static std::vector<BufferInfo> buffers;
+	static std::vector<VulkanShader::UniformBufferObject> objects;
 
 	for (auto& meshes : meshesToRender)
 	{
@@ -641,17 +698,12 @@ void VulkanRenderer::RecordCommandBuffer(unsigned int imageIndex)
 		}
 	}
 
-	static int t = 0;
-	if (t == 0) {
-		t++;
-		CreateFramebuffers(buffers[0].shader->GetRenderPass(), buffers[0].shader->GetDepthImageView());
-		// Got all the buffers - record commands
-		CreateCommandBuffers(buffers[0].shader->GetRenderPass(),buffers);
-	}
-
 	// Work out a better solution - maybe uniform buffer should be stored in a map in renderer  - name of shader - vector of buffers.
-
+	// Crashes here if app is minimized.
 	buffers[0].shader->UpdateUniformBuffers(imageIndex, objects);
+	
+	CreateFramebuffers(buffers[0].shader->GetRenderPass(), buffers[0].shader->GetDepthImageView());
+	CreateCommandBuffers(buffers[0].shader->GetRenderPass(),buffers);
 }
 
 VulkanRenderer::QueueFamilyIndices VulkanRenderer::FindQueueFamilies(VkPhysicalDevice device)
@@ -750,7 +802,7 @@ void VulkanRenderer::UpdateBaseVertexBuffers(MeshData& data)
 }
 
 //maybe better in shader class?
-void VulkanRenderer::CreateCommandBuffers(VkRenderPass renderPass, std::vector<BufferInfo>& buffers)
+void VulkanRenderer::CreateCommandBuffers(const VkRenderPass& renderPass, std::vector<BufferInfo>& buffers)
 {
 	commandBuffers.resize(swapChainFramebuffers.size());
 
@@ -839,13 +891,18 @@ void VulkanRenderer::CreateCommandBuffers(VkRenderPass renderPass, std::vector<B
 
 void VulkanRenderer::Render()
 {
-
 	vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
 	uint32_t imageIndex;
 	vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
+	if (imageIndex == VK_ERROR_OUT_OF_DATE_KHR)
+	{
+		RecreateSwapChain();
+		return;
+	}
 
 	RecordCommandBuffer(imageIndex);
+
 	if (imagesInFlight[imageIndex] != VK_NULL_HANDLE)
 	{
 		vkWaitForFences(device, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);

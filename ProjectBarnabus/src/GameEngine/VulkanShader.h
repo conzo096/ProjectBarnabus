@@ -50,18 +50,21 @@ public:
 	
 	void UpdateUniformBuffers(unsigned int index, std::vector<UniformBufferObject>& uniforms);
 
-protected:
-	void CreateRenderPass();
-	void CreateDescriptorPool();
-	void CreateDescriptorSetLayout();
-	void CreateDescriptorSets();
-	void CreateUniformBuffers();
+	void CleanUp();
 
+	void CreateRenderPass();
+	void CreateGraphicPipelines();
 	void CreateDepthResources();
+
+	void CreateUniformBuffers();
+	void CreateDescriptorPool();
+	void CreateDescriptorSets();
+
+protected:
+	void CreateDescriptorSetLayout();
+
 	void CreateTextureImage();
 	void CreateTextureImageView();
-
-	void CreateGraphicPipelines();
 protected:
 	std::string name;
 	VkDevice device;

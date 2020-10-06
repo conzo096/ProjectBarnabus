@@ -91,12 +91,15 @@ private:
 	void CreateSurface();
 	void CreateSwapChain();
 	void CreateImageViews();
-	void CreateFramebuffers(VkRenderPass renderPass, VkImageView depthImageView);
+	void CreateFramebuffers(const VkRenderPass& renderPass, const VkImageView& depthImageView);
 	void CreateCommandPool();
-	void CreateCommandBuffers(VkRenderPass renderPass, std::vector<BufferInfo>& buffers);
+	void CreateCommandBuffers(const VkRenderPass& renderPass, std::vector<BufferInfo>& buffers);
 	void CreateSyncObjects();
 
 private:
+	void CleanupSwapChain();
+
+	void RecreateSwapChain();
 	void RecordCommandBuffer(unsigned int imageIndex);
 public:
 	QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);

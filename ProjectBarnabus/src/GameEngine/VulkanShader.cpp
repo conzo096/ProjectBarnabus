@@ -659,6 +659,29 @@ void VulkanShader::UpdateUniformBuffers(unsigned int index, std::vector<UniformB
 	vkUnmapMemory(device, uniformBuffersMemory[index]);
 }
 
+void VulkanShader::CleanUp()
+{
+	vkDestroyImageView(device, depthImageView, nullptr);
+	vkDestroyImage(device, depthImage, nullptr);
+	vkFreeMemory(device, depthImageMemory, nullptr);
+
+	for (int i = 0; i < graphicsPipeline.size(); i++)
+	{
+		vkDestroyPipeline(device, graphicsPipeline[i], nullptr);
+		vkDestroyPipelineLayout(device, pipelineLayout[i], nullptr);
+	}
+
+	vkDestroyRenderPass(device, renderPass, nullptr);
+
+	for (size_t i = 0; i < uniformBuffers.size(); i++)
+	{
+		vkDestroyBuffer(device, uniformBuffers[i], nullptr);
+		vkFreeMemory(device, uniformBuffersMemory[i], nullptr);
+	}
+
+	vkDestroyDescriptorPool(device, descriptorPool, nullptr);
+}
+
 void VulkanShader::CreateRenderPass()
 {
 	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
