@@ -179,6 +179,10 @@ VulkanRenderer::VulkanRenderer() : physicalDevice(VK_NULL_HANDLE)
 
 VulkanRenderer::~VulkanRenderer()
 {
+	for (auto& shader : shaders)
+	{
+		shader.second->~IShader();
+	}
 	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
 	{
 		vkDestroySemaphore(device, renderFinishedSemaphores[i], nullptr);
@@ -669,7 +673,7 @@ void VulkanRenderer::CreateSyncObjects()
 
 void VulkanRenderer::CleanupSwapChain()
 {
-	for (auto framebuffer : swapChainFramebuffers)
+	for (const auto& framebuffer : swapChainFramebuffers)
 	{
 		vkDestroyFramebuffer(device, framebuffer, nullptr);
 	}
@@ -730,7 +734,8 @@ void VulkanRenderer::RecordCommandBuffer(unsigned int imageIndex)
 	// Not static will result in memory issues here. Still working on a better solution.
 	static std::vector<BufferInfo> buffers;
 	static std::vector<VulkanShader::UniformBufferObject> objects;
-
+	buffers.clear();
+	objects.clear();
 	for (auto& meshes : meshesToRender)
 	{
 		for (auto& mesh : meshes.second)

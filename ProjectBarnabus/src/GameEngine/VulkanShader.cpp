@@ -233,7 +233,7 @@ VulkanShader::VulkanShader() : primatives({TRIANGLE, LINE_STRIP})
 
 VulkanShader::~VulkanShader()
 {
-	vkDestroyPipelineLayout(device, pipelineLayout[0], nullptr);
+	CleanUp();
 }
 
 unsigned int VulkanShader::GetId()
@@ -628,7 +628,6 @@ void VulkanShader::CreateGraphicPipelines()
 
 void VulkanShader::UpdateUniformBuffers(unsigned int index, std::vector<UniformBufferObject>& uniforms)
 {
-	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
 	VkMemoryRequirements memoryRequirement;
 	vkGetBufferMemoryRequirements(device, uniformBuffers[index], &memoryRequirement);
 
