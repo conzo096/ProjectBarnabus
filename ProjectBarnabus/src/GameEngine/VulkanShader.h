@@ -1,5 +1,6 @@
 #pragma once
 #include "IShader.h"
+#include "MeshData.h"
 #include <vulkan/vulkan.h>
 #include <set>
 namespace 
@@ -10,12 +11,6 @@ namespace
 class VulkanShader : public IShader
 {
 public:
-	enum PrimativeTypes
-	{
-		TRIANGLE,
-		LINE_STRIP
-	};
-
 	struct UniformBufferObject
 	{
 		glm::mat4 MVP;
@@ -67,7 +62,7 @@ protected:
 	std::string name;
 	VkDevice device;
 
-	std::set<PrimativeTypes> primatives;
+	std::set<MeshData::PrimativeType> primatives;
 
 	VkShaderModule vertexShaderModule;
 	VkShaderModule fragmentShaderModule;

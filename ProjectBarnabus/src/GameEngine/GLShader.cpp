@@ -213,14 +213,30 @@ void GLShader::UpdateUniforms(MeshData & meshData, const LightInfo& lights)
 
 void GLShader::DrawMesh(MeshData& meshData)
 {
+	GLenum type;
+	switch (meshData.GetType())
+	{
+	case MeshData::TRIANGLE:
+		type = GL_TRIANGLES;
+		break;
+	case MeshData::LINE_STRIP:
+		type = GL_LINE_STRIP;
+		break;
+	case MeshData::QUAD:
+		type = GL_QUADS;
+		break;
+	default:
+		break;
+	}
+
 	glBindVertexArray(meshData.GetVao());
 	if (meshData.GetIndices().size() > 0)
 	{
-		glDrawElements(meshData.GetType(), static_cast<GLsizei>(meshData.GetIndices().size()), GL_UNSIGNED_INT, 0);
+		glDrawElements(type, static_cast<GLsizei>(meshData.GetIndices().size()), GL_UNSIGNED_INT, 0);
 	}
 	else
 	{
-		glDrawArrays(meshData.GetType(), 0, static_cast<GLsizei>(meshData.vertices.size()));
+		glDrawArrays(type, 0, static_cast<GLsizei>(meshData.vertices.size()));
 	}
 	glBindVertexArray(0);
 }

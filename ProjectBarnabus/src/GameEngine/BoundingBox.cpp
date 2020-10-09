@@ -68,7 +68,7 @@ void BoundingBox::InitMesh()
 	for (auto& i : indices)
 		data.InsertIndex(i);
 
-	data.SetType(GL_LINE_STRIP);
+	data.SetType(MeshData::LINE_STRIP);
 	data.InitialiseMesh();
 }
 

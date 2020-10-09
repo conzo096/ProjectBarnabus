@@ -23,7 +23,7 @@ namespace
 
 	void LoadMesh(MeshData& mesh, aiMesh* modelMesh, unsigned int& vertexBegin)
 	{
-		mesh.SetType(GL_TRIANGLES);
+		mesh.SetType(MeshData::TRIANGLE);
 		mesh.ResizeBoneData(modelMesh->mNumVertices);
 		// get the vertex positions.
 		for (unsigned int j = 0; j < modelMesh->mNumVertices; j++)

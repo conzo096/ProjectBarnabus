@@ -151,7 +151,7 @@ void Terrain::LoadTerrainFromHeightMap(const std::string heightMapPath)
 		vertexCounter += heightMap.GetHeight();
 	}
 
-	mesh.SetType(GL_TRIANGLES);
+	mesh.SetType(MeshData::TRIANGLE);
 
 	rootNode = new Node;
 	rootNode->name = "Terrain";

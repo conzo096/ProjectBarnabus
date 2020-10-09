@@ -897,15 +897,7 @@ void VulkanRenderer::CreateCommandBuffers(const VkRenderPass& renderPass, std::v
 
 		for (int j = 0; j < buffers.size(); j++)
 		{
-			if (buffers[j].type == 4)
-			{
-				// Only rebind if pipeline is different.
-				vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, buffers[j].shader->GetPipeline(0));
-			}
-			else
-			{
-				vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, buffers[j].shader->GetPipeline(1));
-			}
+			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, buffers[j].shader->GetPipeline(buffers[j].type));
 
 			// Better to instance the mesh and change uniform locations
 			VkBuffer vertexBuffers[] = { buffers[j].vertexBuffer };

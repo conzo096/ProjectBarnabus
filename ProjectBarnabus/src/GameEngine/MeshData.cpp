@@ -21,12 +21,12 @@ void MeshData::UpdateBaseVertexBuffers()
 {
 	BarnabusGameEngine::Get().UpdateBaseVertexBuffers(*this);
 }
-void MeshData::SetType(GLenum meshType)
+void MeshData::SetType(PrimativeType meshType)
 {
 	type = meshType;
 }
 
-GLenum MeshData::GetType()
+MeshData::PrimativeType MeshData::GetType()
 {
 	return type;
 }

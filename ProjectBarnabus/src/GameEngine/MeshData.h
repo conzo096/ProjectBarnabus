@@ -24,6 +24,13 @@ struct Vertex
 class MeshData : public Transform
 {
 public:
+	enum PrimativeType
+	{
+		TRIANGLE,
+		LINE_STRIP,
+		QUAD
+	};
+public:
 	MeshData();
 public:
 	void InitialiseMesh();
@@ -36,8 +43,8 @@ public:
 	unsigned int& GetEbo();
 	unsigned int& GetBones();
 
-	void SetType(GLenum meshType);
-	GLenum GetType();
+	void SetType(PrimativeType meshType);
+	PrimativeType GetType();
 
 
 	void InsertIndex(unsigned int index);
@@ -80,7 +87,7 @@ public:
 
 private:
 	// Skin
-	GLenum type;
+	PrimativeType type;
 	unsigned int VAO, VBO, EBO, BONES;
 	std::vector<unsigned int> indices;
 	ITexture* texture;

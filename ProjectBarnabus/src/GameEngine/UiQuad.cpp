@@ -6,7 +6,7 @@
 
 UiQuad::UiQuad(): width(1),height(1), transparency(1.0f)
 {
-	mesh.SetType(GL_QUADS);
+	mesh.SetType(MeshData::QUAD);
 	std::vector<glm::vec3> positions
 	{
 		glm::vec3(1.0f, 1.0f, 0.0f),
@@ -35,7 +35,7 @@ UiQuad::UiQuad(): width(1),height(1), transparency(1.0f)
 
 UiQuad::UiQuad(glm::vec2 bottomLeft, glm::vec2 topRight) : transparency(1.0f)
 {
-	mesh.SetType(GL_QUADS);
+	mesh.SetType(MeshData::QUAD);
 
 	width = topRight.x - bottomLeft.x;
 	height = topRight.y - bottomLeft.y;

@@ -225,7 +225,7 @@ namespace
 
 } // namespace
 
-VulkanShader::VulkanShader() : primatives({TRIANGLE, LINE_STRIP})
+VulkanShader::VulkanShader() : primatives({MeshData::TRIANGLE, MeshData::LINE_STRIP})
 {
 	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
 	device = renderer->GetDevice();
@@ -585,10 +585,10 @@ void VulkanShader::CreateGraphicPipelines()
 		inputAssembly.primitiveRestartEnable = VK_FALSE;
 		switch (primative)
 		{
-		case TRIANGLE:
+		case MeshData::TRIANGLE:
 			inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 			break;
-		case LINE_STRIP:
+		case MeshData::LINE_STRIP:
 			inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_LINE_STRIP;
 			break;
 		default:
