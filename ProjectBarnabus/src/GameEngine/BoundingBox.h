@@ -24,7 +24,7 @@ public:
 
 public:
 	void Update(glm::mat4 volumeTransform);
-	void Render(std::string environmentName);
+	void Render();
 private: 
 	glm::vec3 minCoordinates = glm::vec3(std::numeric_limits<float>::max());
 	glm::vec3 maxCoordinates = glm::vec3(std::numeric_limits<float>::min());

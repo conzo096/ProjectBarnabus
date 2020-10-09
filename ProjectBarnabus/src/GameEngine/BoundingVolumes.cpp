@@ -68,11 +68,11 @@ void BoundingVolumes::Update(glm::mat4 transform)
 	}
 }
 
-void BoundingVolumes::Render(std::string environmentName)
+void BoundingVolumes::Render()
 {
 	for (auto& bb : boundingBoxes)
 	{
-		bb.Render(environmentName);
+		bb.Render();
 	}
 }
 

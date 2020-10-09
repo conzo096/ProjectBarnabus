@@ -19,7 +19,7 @@ public:
 	void AddBoundingVolumes(const std::vector<Vertex>& vertices, glm::mat4 trans);
 public:
 	void Update(glm::mat4 transform);
-	void Render(std::string environmentName);
+	void Render();
 
 private:
 	std::vector<BoundingBox> boundingBoxes;

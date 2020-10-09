@@ -125,9 +125,9 @@ void BoundingBox::Update(glm::mat4 volumeTransform)
 	data.SetTransform(GetTransform());
 }
 
-void BoundingBox::Render(std::string environmentName)
+void BoundingBox::Render()
 {
-	BarnabusGameEngine::Get().GetRenderer()->AddMesh(environmentName, data);
+	BarnabusGameEngine::Get().GetRenderer()->AddMesh(data);
 }
 
 }

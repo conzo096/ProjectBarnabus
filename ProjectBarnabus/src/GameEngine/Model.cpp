@@ -159,16 +159,16 @@ namespace
 		}
 	}
 
-	void RenderNodes(Node*& meshRootNode, std::string environmentName)
+	void RenderNodes(Node*& meshRootNode)
 	{
 		for (auto& mesh : meshRootNode->data)
 		{
-			BarnabusGameEngine::Get().GetRenderer()->AddMesh(environmentName, mesh);
+			BarnabusGameEngine::Get().GetRenderer()->AddMesh(mesh);
 		}
 
 		for (auto& child : meshRootNode->children)
 		{
-			RenderNodes(child, environmentName);
+			RenderNodes(child);
 		}
 	}
 
@@ -230,5 +230,5 @@ void Model::Update(float deltaTime)
 void Model::Render()
 {
 	assert(rootNode);
-	RenderNodes(rootNode, GetParent()->GetEnvironmentName());
+	RenderNodes(rootNode);
 }

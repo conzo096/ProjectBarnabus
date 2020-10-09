@@ -28,8 +28,8 @@ public:
 	void Render() override;
 	void SetCameraViewProjection(glm::mat4 camera) override;
 
-	void AddMesh(std::string environmentName, MeshData& md) override;
-	void AddLight(std::string environmentName, Light* light) override;
+	void AddMesh(MeshData& md) override;
+	void AddLight(Light* light) override;
 	glm::mat4 GetCameraVP() override;
 
 	void AddUiElement(MeshData& md) override;
@@ -40,7 +40,7 @@ private:
 
 private:
 	glm::mat4 cameraVP;
-	std::map<std::string, std::vector<MeshData>> meshesToRender;
+	std::map<IShader*, std::vector<MeshData>> meshesToRender;
 	std::map<std::string, std::vector<Light*>> environmentLights;
 	std::vector<MeshData> uiElementsToRender;
 	std::map<std::string, IFrameBuffer*> framebuffers;

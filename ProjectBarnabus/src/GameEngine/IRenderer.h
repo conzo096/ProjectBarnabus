@@ -35,8 +35,8 @@ public:
 	virtual void Render() = 0;
 	virtual void SetCameraViewProjection(glm::mat4 camera) = 0;
 
-	virtual void AddMesh(std::string environmentName, MeshData& md) = 0;
-	virtual void AddLight(std::string environmentName, Light* light) = 0;
+	virtual void AddMesh(MeshData& md) = 0;
+	virtual void AddLight(Light* light) = 0;
 	virtual glm::mat4 GetCameraVP() = 0;
 
 	virtual void AddUiElement(MeshData& md) = 0;

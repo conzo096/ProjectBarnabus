@@ -66,7 +66,7 @@ void PhysicsContainer::Update(float deltaTime)
 
 void PhysicsContainer::Render()
 {
-	boundingVolumes.Render(GetParent()->GetEnvironmentName());
+	boundingVolumes.Render();
 }
 
 }

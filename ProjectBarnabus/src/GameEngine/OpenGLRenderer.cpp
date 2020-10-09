@@ -191,16 +191,9 @@ void OpenGLRenderer::Render()
 	glEnable(GL_DEPTH_TEST);
 	for (auto& meshes : meshesToRender)
 	{
-		auto lights = environmentLights.find(meshes.first);
-		if (lights == environmentLights.end())
-		{
-			renderMeshes(meshes.second);
-		}
-		else
-		{
-			renderMeshesWithLights(meshes.second, lights->second);
-		}
+		renderMeshes(meshes.second);
 	}
+
 	meshesToRender.clear();
 
 	// render to screen
@@ -226,16 +219,16 @@ void OpenGLRenderer::SetCameraViewProjection(glm::mat4 camera)
 	cameraVP = camera;
 }
 
-void OpenGLRenderer::AddMesh(std::string environmentName, MeshData& md)
+void OpenGLRenderer::AddMesh(MeshData& md)
 {
-	auto environmentMeshes = meshesToRender.find(environmentName);
+	auto environmentMeshes = meshesToRender.find(md.GetShader());
 
 	// enviroment does not exist. Add a new vector to list
 	if (environmentMeshes == meshesToRender.end())
 	{
 		std::vector<MeshData> newList;
 		newList.push_back(md);
-		meshesToRender.insert(std::pair<std::string, std::vector<MeshData>>(environmentName, newList));
+		meshesToRender.insert(std::pair<IShader*, std::vector<MeshData>>(md.GetShader(), newList));
 	}
 	else
 	{
@@ -243,21 +236,8 @@ void OpenGLRenderer::AddMesh(std::string environmentName, MeshData& md)
 	}
 }
 
-void OpenGLRenderer::AddLight(std::string environmentName, Light* light)
+void OpenGLRenderer::AddLight(Light* light)
 {
-	auto lights = environmentLights.find(environmentName);
-
-	// enviroment does not exist. Add a new vector to list
-	if (lights == environmentLights.end())
-	{
-		std::vector<Light*> newList;
-		newList.push_back(light);
-		environmentLights.insert(std::pair<std::string, std::vector<Light*>>(environmentName, newList));
-	}
-	else
-	{
-		lights->second.push_back(light);
-	}
 }
 
 glm::mat4 OpenGLRenderer::GetCameraVP()
