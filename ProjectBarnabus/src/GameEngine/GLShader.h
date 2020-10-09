@@ -36,4 +36,7 @@ private:
 	GLint program;
 	bool linked;
 	std::string logString;
+
+	// Inherited via IShader
+	virtual std::string GetName() override;
 };

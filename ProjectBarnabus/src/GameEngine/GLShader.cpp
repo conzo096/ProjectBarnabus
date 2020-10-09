@@ -225,6 +225,11 @@ void GLShader::DrawMesh(MeshData& meshData)
 	glBindVertexArray(0);
 }
 
+std::string GLShader::GetName()
+{
+	return name;
+}
+
 void GLShader::Use()
 {
 	glUseProgram(program);

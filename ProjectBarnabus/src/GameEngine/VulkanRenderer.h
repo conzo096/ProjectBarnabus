@@ -140,7 +140,9 @@ private:
 
 private:
 	glm::mat4 cameraVP;
-	std::map<std::string, std::vector<MeshData>> meshesToRender;
+
+	// 
+	std::map<IShader*, std::vector<MeshData>> meshesToRender;
 	std::map<std::string, std::vector<Light*>> environmentLights;
 	std::vector<MeshData> uiElementsToRender;
 	std::map<std::string, IFrameBuffer*> framebuffers;

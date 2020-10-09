@@ -20,6 +20,7 @@ public:
 	};
 
 	virtual unsigned int GetId() = 0;
+	virtual std::string GetName() = 0;
 
 	virtual bool AddShaderFromFile(const char* fileName, GLSLSHADERTYPE type) =0;
 	virtual bool Link() = 0;

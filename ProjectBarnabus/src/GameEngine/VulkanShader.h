@@ -93,4 +93,8 @@ protected:
 	VkDeviceMemory textureImageMemory;
 	VkImageView textureImageView;
 
+
+	// Inherited via IShader
+	virtual std::string GetName() override;
+
 };

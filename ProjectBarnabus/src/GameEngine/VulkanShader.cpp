@@ -284,6 +284,7 @@ bool VulkanShader::IsLinked()
 
 void VulkanShader::CreateProgram(const std::string shaderName)
 {
+	name = shaderName;
 }
 
 void VulkanShader::Use()
@@ -476,6 +477,11 @@ void VulkanShader::CreateTextureImageView()
 	textureImageView = VulkanUtils::CreateImageView(renderer->GetDevice(),textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT);
 }
 
+std::string VulkanShader::GetName()
+{
+	return name;
+}
+
 void VulkanShader::CreateGraphicPipelines()
 {
 
@@ -572,7 +578,6 @@ void VulkanShader::CreateGraphicPipelines()
 	graphicsPipeline.resize(primatives.size());
 	pipelineLayout.resize(primatives.size());
 
-	int index =0;
 	for (const auto& primative : primatives)
 	{
 		VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
@@ -596,7 +601,7 @@ void VulkanShader::CreateGraphicPipelines()
 		pipelineLayoutInfo.pushConstantRangeCount = 0;
 		pipelineLayoutInfo.pSetLayouts = &descriptorSetLayout;
 
-		if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &pipelineLayout[index]) != VK_SUCCESS)
+		if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &pipelineLayout[primative]) != VK_SUCCESS)
 		{
 			throw std::runtime_error("failed to create pipeline layout!");
 		}
@@ -612,17 +617,15 @@ void VulkanShader::CreateGraphicPipelines()
 		pipelineInfo.pMultisampleState = &multisampling;
 		pipelineInfo.pDepthStencilState = &depthStencil;
 		pipelineInfo.pColorBlendState = &colorBlending;
-		pipelineInfo.layout = pipelineLayout[index];
+		pipelineInfo.layout = pipelineLayout[primative];
 		pipelineInfo.renderPass = renderer->GetRenderPass();
 		pipelineInfo.subpass = 0;
 		pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
-		if (vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline[index]) != VK_SUCCESS)
+		if (vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline[primative]) != VK_SUCCESS)
 		{
 			throw std::runtime_error("failed to create graphics pipeline!");
 		}
-
-		index++;
 	}
 }
 

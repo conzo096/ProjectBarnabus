@@ -735,7 +735,8 @@ void VulkanRenderer::RecordCommandBuffer(unsigned int imageIndex)
 	static std::vector<BufferInfo> buffers;
 	static std::vector<VulkanShader::UniformBufferObject> objects;
 	buffers.clear();
-	objects.clear();
+
+	// For every shader gather required objects and update their uniforms.
 	for (auto& meshes : meshesToRender)
 	{
 		for (auto& mesh : meshes.second)
@@ -744,12 +745,13 @@ void VulkanRenderer::RecordCommandBuffer(unsigned int imageIndex)
 			const auto mvp = BarnabusGameEngine::Get().GetRenderer()->GetCameraVP() * glm::mat4(mesh.GetTransform());
 			objects.push_back( { mvp } );
 		}
+		static_cast<VulkanShader*>(meshes.first)->UpdateUniformBuffers(imageIndex, objects);
+		objects.clear();
 	}
 
 	// Work out a better solution - maybe uniform buffer should be stored in a map in renderer  - name of shader - vector of buffers.
 	// Crashes here if app is minimized.
-	buffers[0].shader->UpdateUniformBuffers(imageIndex, objects);
-	
+
 	CreateFramebuffers(renderPass, buffers[0].shader->GetDepthImageView());
 	CreateCommandBuffers(renderPass,buffers);
 }
@@ -1010,14 +1012,14 @@ void VulkanRenderer::SetCameraViewProjection(glm::mat4 camera)
 
 void VulkanRenderer::AddMesh(std::string environmentName, MeshData & md)
 {
-	auto environmentMeshes = meshesToRender.find(environmentName);
+	auto environmentMeshes = meshesToRender.find(md.GetShader());
 
 	// enviroment does not exist. Add a new vector to list
 	if (environmentMeshes == meshesToRender.end())
 	{
 		std::vector<MeshData> newList;
 		newList.push_back(md);
-		meshesToRender.insert(std::pair<std::string, std::vector<MeshData>>(environmentName, newList));
+		meshesToRender.insert(std::pair<IShader*, std::vector<MeshData>>(md.GetShader(), newList));
 	}
 	else
 	{
