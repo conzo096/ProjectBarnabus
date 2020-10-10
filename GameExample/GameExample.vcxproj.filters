@@ -37,6 +37,9 @@
     <Filter Include="Source Files\Shaders">
       <UniqueIdentifier>{9ef00ff0-abb2-42f4-bf68-adf2dec98606}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Shaders\Vulkan">
+      <UniqueIdentifier>{b995e007-8014-4a54-af63-ad0c862ae26a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BarnabusGame.cpp">
@@ -67,7 +70,10 @@
       <Filter>Source Files\Shaders</Filter>
     </ClCompile>
     <ClCompile Include="src\VkBasicShader.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Shaders\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VkTerrainShader.cpp">
+      <Filter>Source Files\Shaders\Vulkan</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -140,6 +146,12 @@
       <Filter>Resource Files\Shaders\Vulkan</Filter>
     </None>
     <None Include="res\Shaders\Vulkan\VkRed.vert">
+      <Filter>Resource Files\Shaders\Vulkan</Filter>
+    </None>
+    <None Include="res\Shaders\Vulkan\VkTerrain.frag">
+      <Filter>Resource Files\Shaders\Vulkan</Filter>
+    </None>
+    <None Include="res\Shaders\Vulkan\VkTerrain.vert">
       <Filter>Resource Files\Shaders\Vulkan</Filter>
     </None>
   </ItemGroup>

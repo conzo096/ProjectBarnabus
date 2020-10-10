@@ -21,6 +21,7 @@
     <ClCompile Include="src\TerrainShader.cpp" />
     <ClCompile Include="src\UiShader.cpp" />
     <ClCompile Include="src\VkBasicShader.cpp" />
+    <ClCompile Include="src\VkTerrainShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AnimationShader.h" />
@@ -55,6 +56,8 @@
     <None Include="res\Shaders\Terrain.vert" />
     <None Include="res\Shaders\Vulkan\VkRed.frag" />
     <None Include="res\Shaders\Vulkan\VkRed.vert" />
+    <None Include="res\Shaders\Vulkan\VkTerrain.frag" />
+    <None Include="res\Shaders\Vulkan\VkTerrain.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
