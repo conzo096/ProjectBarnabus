@@ -100,7 +100,9 @@
     <ClCompile Include="src\GameEngine\VulkanUtils.cpp">
       <Filter>Source Files\GameEngine\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameEngine\VulkanTexture.cpp" />
+    <ClCompile Include="src\GameEngine\VulkanTexture.cpp">
+      <Filter>Source Files\GameEngine\Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">

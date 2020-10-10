@@ -6,8 +6,6 @@
 #include <fstream>
 #include <array>
 
-const static int NUMBER_OF_UNIFORMS = 50;
-
 namespace
 {
 	std::vector<char> ReadFile(const std::string& filename)
@@ -390,7 +388,7 @@ void VulkanShader::CreateUniformBuffers()
 	VkPhysicalDeviceProperties props;
 	vkGetPhysicalDeviceProperties(renderer->GetPhysicalDevice(), &props);
 
-	bufferSize = sizeof(UniformBufferObject) * NUMBER_OF_UNIFORMS;
+	bufferSize = GetUniformItemSize();
 	if (props.limits.minUniformBufferOffsetAlignment)
 		bufferSize = (bufferSize + props.limits.minUniformBufferOffsetAlignment - 1) &
 		~(props.limits.minUniformBufferOffsetAlignment - 1);
@@ -400,7 +398,7 @@ void VulkanShader::CreateUniformBuffers()
 
 	for (size_t i = 0; i < renderer->GetSwapChainImages().size(); i++)
 	{
-		VulkanUtils::CreateBuffer(renderer->GetDevice(), renderer->GetPhysicalDevice(), bufferSize * 50, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
+		VulkanUtils::CreateBuffer(renderer->GetDevice(), renderer->GetPhysicalDevice(), GetUniformBufferSize(), VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
 	}
 }
 

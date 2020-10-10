@@ -2,6 +2,9 @@
 #include "GameEngine/BarnabusGameEngine.h"
 #include "GameEngine/VulkanUtils.h"
 
+namespace {
+	const int NUMBER_OF_UNIFORMS = 50;
+} //namespace
 void VkTerrainShader::Use()
 {
 	VulkanUtils::UpdateUniformBuffer<UniformBufferObject>(device, bufferSize, uniformBuffersMemory[uniformBufferIndex], uniformBuffers[uniformBufferIndex], uniforms);
@@ -17,4 +20,14 @@ void VkTerrainShader::UpdateUniforms(MeshData & meshData)
 
 void VkTerrainShader::UpdateUniforms(MeshData & meshData, const LightInfo & lights)
 {
+}
+
+VkDeviceSize VkTerrainShader::GetUniformBufferSize()
+{
+	return sizeof(UniformBufferObject) * NUMBER_OF_UNIFORMS;
+}
+
+VkDeviceSize VkTerrainShader::GetUniformItemSize()
+{
+	return sizeof(UniformBufferObject);
 }

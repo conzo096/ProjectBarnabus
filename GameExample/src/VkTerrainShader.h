@@ -8,5 +8,8 @@ class VkTerrainShader : public VulkanShader
 	void UpdateUniforms(MeshData & meshData, const LightInfo & lights) override;
 
 protected:
+	VkDeviceSize GetUniformBufferSize() override;
+	VkDeviceSize GetUniformItemSize() override;
+protected:
 	std::vector<UniformBufferObject> uniforms;
 };

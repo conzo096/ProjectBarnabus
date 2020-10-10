@@ -7,5 +7,8 @@ class VkBasicShader : public VulkanShader
 	void UpdateUniforms(MeshData & meshData) override;
 	void UpdateUniforms(MeshData & meshData, const LightInfo & lights) override;
 protected:
+	VkDeviceSize GetUniformBufferSize() override;
+	VkDeviceSize GetUniformItemSize() override;
+protected:
 	std::vector<UniformBufferObject> uniforms;
 };

@@ -65,7 +65,9 @@ public:
 
 protected:
 	void CreateDescriptorSetLayout();
-
+protected:
+	virtual VkDeviceSize GetUniformBufferSize() = 0;
+	virtual VkDeviceSize GetUniformItemSize() = 0;
 protected:
 	std::string name;
 	VkDevice device;
