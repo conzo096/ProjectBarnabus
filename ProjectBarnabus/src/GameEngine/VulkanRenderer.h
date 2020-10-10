@@ -93,9 +93,10 @@ private:
 	void CreateSurface();
 	void CreateSwapChain();
 	void CreateImageViews();
+	void CreateDepthResources();
 
 	void CreateRenderPass();
-	void CreateFramebuffers(const VkRenderPass& renderPass, const VkImageView& depthImageView);
+	void CreateFramebuffers();
 	void CreateCommandPool();
 	void CreateCommandBuffers(const VkRenderPass& renderPass, std::vector<BufferInfo>& buffers);
 	void CreateSyncObjects();
@@ -137,6 +138,11 @@ private:
 	std::vector<VkCommandBuffer> commandBuffers;
 
 	VkRenderPass renderPass;
+
+	//Depth buffer - Add to framebuffer class?
+	VkImage depthImage;
+	VkDeviceMemory depthImageMemory;
+	VkImageView depthImageView;
 
 private:
 	glm::mat4 cameraVP;

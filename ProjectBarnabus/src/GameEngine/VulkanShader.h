@@ -54,12 +54,10 @@ public:
 	VkPipelineLayout GetPipelineLayout();
 	VkDescriptorSet& GetDescriptorSet(unsigned int index);
 	VkDeviceSize GetBufferSize();
-	VkImageView GetDepthImageView();
-	
+
 	void CleanUp();
 
 	void CreateGraphicPipelines();
-	void CreateDepthResources();
 
 	void CreateUniformBuffers();
 	void CreateDescriptorPool();
@@ -88,11 +86,6 @@ protected:
 
 	VkDescriptorPool descriptorPool;
 	VkDeviceSize bufferSize;
-
-	//Depth buffer - Add to framebuffer class?
-	VkImage depthImage;
-	VkDeviceMemory depthImageMemory;
-	VkImageView depthImageView;
 
 	int uniformBufferIndex;
 };

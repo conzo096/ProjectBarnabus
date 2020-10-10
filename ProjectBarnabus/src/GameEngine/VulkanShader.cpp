@@ -260,8 +260,6 @@ bool VulkanShader::AddShaderFromFile(const char * fileName, IShader::GLSLSHADERT
 
 bool VulkanShader::Link()
 {
-	CreateDepthResources();
-
 	CreateDescriptorPool();
 	CreateUniformBuffers();
 	CreateDescriptorSetLayout();
@@ -337,11 +335,6 @@ VkDescriptorSet& VulkanShader::GetDescriptorSet(unsigned int index)
 VkDeviceSize VulkanShader::GetBufferSize()
 {
 	return bufferSize;
-}
-
-VkImageView VulkanShader::GetDepthImageView()
-{
-	return depthImageView;
 }
 
 void VulkanShader::CreateDescriptorSetLayout()
@@ -421,17 +414,6 @@ void VulkanShader::CreateUniformBuffers()
 	{
 		VulkanUtils::CreateBuffer(renderer->GetDevice(), renderer->GetPhysicalDevice(), bufferSize * 50, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
 	}
-}
-
-void VulkanShader::CreateDepthResources()
-{
-	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
-
-	VkFormat depthFormat = VulkanUtils::FindDepthFormat(renderer->GetPhysicalDevice());
-
-	VulkanUtils::CreateImage(renderer->GetDevice(),renderer->GetPhysicalDevice(),renderer->GetSwapChainExtent().width, renderer->GetSwapChainExtent().height,
-								depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, depthImage, depthImageMemory);
-	depthImageView = VulkanUtils::CreateImageView(renderer->GetDevice(),depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
 }
 
 std::string VulkanShader::GetName()
@@ -594,10 +576,6 @@ void VulkanShader::Use(int index)
 
 void VulkanShader::CleanUp()
 {
-	vkDestroyImageView(device, depthImageView, nullptr);
-	vkDestroyImage(device, depthImage, nullptr);
-	vkFreeMemory(device, depthImageMemory, nullptr);
-
 	for (int i = 0; i < graphicsPipeline.size(); i++)
 	{
 		vkDestroyPipeline(device, graphicsPipeline[i], nullptr);

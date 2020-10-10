@@ -252,6 +252,8 @@ bool VulkanRenderer::InitialiseGameEngine()
 	CreateRenderPass();
 	CreateImageViews();
 	CreateCommandPool();
+	CreateDepthResources();
+	CreateFramebuffers();
 	CreateSyncObjects();
 	return true;
 }
@@ -605,8 +607,7 @@ void VulkanRenderer::CreateRenderPass()
 
 }
 
-// small memory leak here.
-void VulkanRenderer::CreateFramebuffers(const VkRenderPass& renderPass, const VkImageView& depthImageView)
+void VulkanRenderer::CreateFramebuffers()
 {
 	for (auto framebuffer : swapChainFramebuffers)
 	{
@@ -679,6 +680,10 @@ void VulkanRenderer::CreateSyncObjects()
 
 void VulkanRenderer::CleanupSwapChain()
 {
+	vkDestroyImageView(device, depthImageView, nullptr);
+	vkDestroyImage(device, depthImage, nullptr);
+	vkFreeMemory(device, depthImageMemory, nullptr);
+
 	for (const auto& framebuffer : swapChainFramebuffers)
 	{
 		vkDestroyFramebuffer(device, framebuffer, nullptr);
@@ -722,10 +727,10 @@ void VulkanRenderer::RecreateSwapChain()
 	for (auto& shader : shaders)
 	{
 		static_cast<VulkanShader*>(shader.second.get())->CreateGraphicPipelines();
-		static_cast<VulkanShader*>(shader.second.get())->CreateDepthResources();
 	}
 
-	CreateFramebuffers(renderPass, static_cast<VulkanShader*>(shaders[0].get())->GetDepthImageView());
+	CreateDepthResources();
+	CreateFramebuffers();
 
 	for (auto& shader : shaders)
 	{
@@ -754,7 +759,7 @@ void VulkanRenderer::RecordCommandBuffer(unsigned int imageIndex)
 		meshes.first->Use(imageIndex);
 	}
 
-	CreateFramebuffers(renderPass, buffers[0].shader->GetDepthImageView());
+	//CreateFramebuffers();
 	CreateCommandBuffers(renderPass, buffers);
 }
 
@@ -1063,4 +1068,13 @@ IShader * VulkanRenderer::GetShader(const std::string & shaderName)
 	assert(it != shaders.end());
 
 	return it->second.get();
+}
+
+void VulkanRenderer::CreateDepthResources()
+{
+	VkFormat depthFormat = VulkanUtils::FindDepthFormat(physicalDevice);
+
+	VulkanUtils::CreateImage(device, physicalDevice, swapChainExtent.width, swapChainExtent.height,
+		depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, depthImage, depthImageMemory);
+	depthImageView = VulkanUtils::CreateImageView(device, depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
 }
