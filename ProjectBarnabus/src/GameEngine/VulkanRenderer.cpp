@@ -605,8 +605,14 @@ void VulkanRenderer::CreateRenderPass()
 
 }
 
+// small memory leak here.
 void VulkanRenderer::CreateFramebuffers(const VkRenderPass& renderPass, const VkImageView& depthImageView)
 {
+	for (auto framebuffer : swapChainFramebuffers)
+	{
+		vkDestroyFramebuffer(device, framebuffer, nullptr);
+	}
+
 	swapChainFramebuffers.resize(swapChainImageViews.size());
 
 	for (size_t i = 0; i < swapChainImageViews.size(); i++)
@@ -749,11 +755,8 @@ void VulkanRenderer::RecordCommandBuffer(unsigned int imageIndex)
 		objects.clear();
 	}
 
-	// Work out a better solution - maybe uniform buffer should be stored in a map in renderer  - name of shader - vector of buffers.
-	// Crashes here if app is minimized.
-
 	CreateFramebuffers(renderPass, buffers[0].shader->GetDepthImageView());
-	CreateCommandBuffers(renderPass,buffers);
+	CreateCommandBuffers(renderPass, buffers);
 }
 
 VulkanRenderer::QueueFamilyIndices VulkanRenderer::FindQueueFamilies(VkPhysicalDevice device)
@@ -851,9 +854,10 @@ void VulkanRenderer::UpdateBaseVertexBuffers(MeshData& data)
 {
 }
 
-//maybe better in shader class?
+//Big memory leak in here
 void VulkanRenderer::CreateCommandBuffers(const VkRenderPass& renderPass, std::vector<BufferInfo>& buffers)
 {
+	vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
 	commandBuffers.resize(swapChainFramebuffers.size());
 
 	VkCommandBufferAllocateInfo allocInfo{};
@@ -867,9 +871,15 @@ void VulkanRenderer::CreateCommandBuffers(const VkRenderPass& renderPass, std::v
 		throw std::runtime_error("failed to allocate command buffers!");
 	}
 
+	VkCommandBufferBeginInfo beginInfo{};
+	VkRenderPassBeginInfo renderPassInfo{};
+	std::array<VkClearValue, 2> clearValues{};
+
+	VkBuffer vertexBuffers[1];
+	VkDeviceSize offsets[1];
+
 	for (size_t i = 0; i < commandBuffers.size(); i++)
 	{
-		VkCommandBufferBeginInfo beginInfo{};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
 		if (vkBeginCommandBuffer(commandBuffers[i], &beginInfo) != VK_SUCCESS)
@@ -877,21 +887,17 @@ void VulkanRenderer::CreateCommandBuffers(const VkRenderPass& renderPass, std::v
 			throw std::runtime_error("failed to begin recording command buffer!");
 		}
 
-		VkRenderPassBeginInfo renderPassInfo{};
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 		renderPassInfo.renderPass = renderPass;
 		renderPassInfo.framebuffer = swapChainFramebuffers[i];
 		renderPassInfo.renderArea.offset = { 0, 0 };
 		renderPassInfo.renderArea.extent = swapChainExtent;
 
-		std::array<VkClearValue, 2> clearValues{};
 		clearValues[0].color = { 0.1f, 0.0f, 0.4f, 1.0f };
 		clearValues[1].depthStencil = { 1.0f, 0 };
 
 		renderPassInfo.clearValueCount = 2;
 		renderPassInfo.pClearValues = clearValues.data();
-
-		auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
 
 		vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
@@ -900,8 +906,8 @@ void VulkanRenderer::CreateCommandBuffers(const VkRenderPass& renderPass, std::v
 			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, buffers[j].shader->GetPipeline(buffers[j].type));
 
 			// Better to instance the mesh and change uniform locations
-			VkBuffer vertexBuffers[] = { buffers[j].vertexBuffer };
-			VkDeviceSize offsets[] = { 0 };
+			vertexBuffers[0] = { buffers[j].vertexBuffer };
+			offsets[0] = { 0 };
 
 			// Bind buffers
 			vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
@@ -994,7 +1000,7 @@ void VulkanRenderer::Render()
 	meshesToRender.clear();
 	uiElementsToRender.clear();
 	environmentLights.clear();
-	glfwSwapBuffers(BarnabusGameEngine::Get().GetWindow());
+	glfwSwapBuffers(window);
 }
 
 void VulkanRenderer::SetCameraViewProjection(glm::mat4 camera)
