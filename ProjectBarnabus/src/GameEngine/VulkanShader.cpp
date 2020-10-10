@@ -283,10 +283,6 @@ void VulkanShader::CreateProgram(const std::string shaderName)
 	name = shaderName;
 }
 
-void VulkanShader::Use()
-{
-}
-
 void VulkanShader::SetUniform(const char * name, const float val)
 {
 }
@@ -303,14 +299,6 @@ unsigned int VulkanShader::GetUniformLocation(const char * name)
 unsigned int VulkanShader::GetUniformLocation(std::string & name)
 {
 	return 0;
-}
-
-void VulkanShader::UpdateUniforms(MeshData & meshData)
-{
-}
-
-void VulkanShader::UpdateUniforms(MeshData & meshData, const LightInfo & lights)
-{
 }
 
 void VulkanShader::DrawMesh(MeshData & meshData)

@@ -43,7 +43,7 @@ public:
 	unsigned int GetUniformLocation(std::string& name) override;
 
 	virtual void UpdateUniforms(MeshData& meshData) = 0;
-	virtual void UpdateUniforms(MeshData& meshData, const LightInfo& lights) override;
+	virtual void UpdateUniforms(MeshData& meshData, const LightInfo& lights) = 0;
 	virtual void DrawMesh(MeshData& meshData) override;
 
 public:
