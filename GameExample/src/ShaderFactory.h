@@ -23,7 +23,7 @@ namespace ShaderFactory
 		{
 			const auto vertFileLocation = fileLocation + "Vert.spv";
 			const auto fragFileLocation = fileLocation + "Frag.spv";
-			auto shader = std::make_unique<VulkanShader>();
+			auto shader = std::make_unique<ShaderT>();
 			
 			shader->CreateProgram(shaderName);
 			shader->AddShaderFromFile(vertFileLocation.c_str(), GLShader::VERTEX);
