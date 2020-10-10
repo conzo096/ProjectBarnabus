@@ -759,7 +759,6 @@ void VulkanRenderer::RecordCommandBuffer(unsigned int imageIndex)
 		meshes.first->Use(imageIndex);
 	}
 
-	//CreateFramebuffers();
 	CreateCommandBuffers(renderPass, buffers);
 }
 

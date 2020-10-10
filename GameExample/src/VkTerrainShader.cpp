@@ -14,3 +14,7 @@ void VkTerrainShader::UpdateUniforms(MeshData & meshData)
 
 	uniforms.push_back(ubo);
 }
+
+void VkTerrainShader::UpdateUniforms(MeshData & meshData, const LightInfo & lights)
+{
+}

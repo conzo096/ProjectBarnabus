@@ -13,3 +13,7 @@ void VkBasicShader::UpdateUniforms(MeshData& meshData)
 
 	uniforms.push_back(ubo);
 }
+
+void VkBasicShader::UpdateUniforms(MeshData & meshData, const LightInfo & lights)
+{
+}
