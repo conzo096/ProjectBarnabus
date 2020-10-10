@@ -25,15 +25,21 @@
     <Filter Include="Resource Files\Shaders\Vulkan">
       <UniqueIdentifier>{4ebfbfa4-94e0-43ec-92f3-a8f6bce407c8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Shaders">
+      <UniqueIdentifier>{56a5b96c-4324-4a76-a0fe-5282f941c8ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Factories">
+      <UniqueIdentifier>{41cdc1b1-c66d-48cc-9151-903062655b51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Shaders\Vulkan">
+      <UniqueIdentifier>{bace5d8d-428c-4faf-86dd-ebbf31c851db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shaders">
+      <UniqueIdentifier>{9ef00ff0-abb2-42f4-bf68-adf2dec98606}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\AnimationShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\BarnabusGame.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RedShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Main.cpp">
@@ -42,49 +48,67 @@
     <ClCompile Include="src\GameUi.cpp">
       <Filter>Source Files\User Interface</Filter>
     </ClCompile>
-    <ClCompile Include="src\UiShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FontShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\MainEnvironment.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\AnimationShader.cpp">
+      <Filter>Source Files\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FontShader.cpp">
+      <Filter>Source Files\Shaders</Filter>
+    </ClCompile>
     <ClCompile Include="src\TerrainShader.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UiShader.cpp">
+      <Filter>Source Files\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BasicShader.cpp">
+      <Filter>Source Files\Shaders</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\AnimationShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\BarnabusGame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\RedShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\GameUi.h">
       <Filter>Header Files\User Interface</Filter>
     </ClInclude>
-    <ClInclude Include="src\UiShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FontShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\EntityFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ShaderFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\MainEnvironment.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\AnimationShader.h">
+      <Filter>Header Files\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FontShader.h">
+      <Filter>Header Files\Shaders</Filter>
+    </ClInclude>
     <ClInclude Include="src\TerrainShader.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UiShader.h">
+      <Filter>Header Files\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EntityFactory.h">
+      <Filter>Header Files\Factories</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ShaderFactory.h">
+      <Filter>Header Files\Factories</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VkBasicShader.h">
+      <Filter>Header Files\Shaders\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VkTerrainShader.h">
+      <Filter>Header Files\Shaders\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VkFontShader.h">
+      <Filter>Header Files\Shaders\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VkUIShader.h">
+      <Filter>Header Files\Shaders\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BasicShader.h">
+      <Filter>Header Files\Shaders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

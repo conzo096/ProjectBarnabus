@@ -17,7 +17,7 @@
     <ClCompile Include="src\GameUi.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\MainEnvironment.cpp" />
-    <ClCompile Include="src\RedShader.cpp" />
+    <ClCompile Include="src\BasicShader.cpp" />
     <ClCompile Include="src\TerrainShader.cpp" />
     <ClCompile Include="src\UiShader.cpp" />
   </ItemGroup>
@@ -28,10 +28,14 @@
     <ClInclude Include="src\FontShader.h" />
     <ClInclude Include="src\GameUi.h" />
     <ClInclude Include="src\MainEnvironment.h" />
-    <ClInclude Include="src\RedShader.h" />
+    <ClInclude Include="src\BasicShader.h" />
     <ClInclude Include="src\ShaderFactory.h" />
     <ClInclude Include="src\TerrainShader.h" />
     <ClInclude Include="src\UiShader.h" />
+    <ClInclude Include="src\VkBasicShader.h" />
+    <ClInclude Include="src\VkFontShader.h" />
+    <ClInclude Include="src\VkTerrainShader.h" />
+    <ClInclude Include="src\VkUIShader.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

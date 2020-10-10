@@ -4,14 +4,14 @@
 #include "GameEngine/BarnabusGameEngine.h"
 namespace ShaderFactory
 {
-	template <class shaderT>
+	template <class ShaderT>
 	static void CreateShader(std::string shaderName, const std::string fileLocation)
 	{
 		if (BarnabusGameEngine::Get().GetRenderType() == IRenderer::OpenGL)
 		{
 			const auto vertFileLocation = fileLocation + ".vert";
 			const auto fragFileLocation = fileLocation + ".frag";
-			auto shader = std::make_unique<shaderT>();
+			auto shader = std::make_unique<ShaderT>();
 
 			shader->CreateProgram(shaderName);
 			shader->AddShaderFromFile(vertFileLocation.c_str(), GLShader::VERTEX);

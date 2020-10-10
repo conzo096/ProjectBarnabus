@@ -1,9 +1,9 @@
-#include "RedShader.h"
+#include "BasicShader.h"
 #include "GameEngine/BarnabusGameEngine.h"
 
 #include <glm\gtc\type_ptr.hpp>
 
-void RedShader::UpdateUniforms(MeshData& meshData)
+void BasicShader::UpdateUniforms(MeshData& meshData)
 {
 	Use();
 	// Bind Uniforms.

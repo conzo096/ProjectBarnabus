@@ -4,7 +4,9 @@
 #include "ShaderFactory.h"
 #include "AnimationShader.h"
 #include "TerrainShader.h"
-#include "RedShader.h"
+#include "BasicShader.h"
+
+#include "VkBasicShader.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -59,13 +61,13 @@ void MainEnvironment::LoadGameContent()
 	{
 		ShaderFactory::CreateShader<AnimationShader>("animation", "res\\Shaders\\BasicAnimation");
 		ShaderFactory::CreateShader<TerrainShader>("terrain", "res\\Shaders\\Terrain");
-		ShaderFactory::CreateShader<RedShader>("red", "res\\Shaders\\Red");
+		ShaderFactory::CreateShader<BasicShader>("red", "res\\Shaders\\Red");
 	}
 	else
 	{
 		ShaderFactory::CreateShader<AnimationShader>("animation", "res\\Shaders\\Vulkan\\VkRed");
 		ShaderFactory::CreateShader<TerrainShader>("terrain", "res\\Shaders\\Vulkan\\VkRed");
-		ShaderFactory::CreateShader<RedShader>("red", "res\\Shaders\\Vulkan\\VkRed");
+		ShaderFactory::CreateShader<VkBasicShader>("red", "res\\Shaders\\Vulkan\\VkRed");
 	}
 
 	AddEntity("camera", EntityFactory::CreateCamera());
