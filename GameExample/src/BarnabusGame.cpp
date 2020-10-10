@@ -13,8 +13,8 @@ bool BarnabusGame::LoadGameContent()
 {
 	mainScene.LoadGameContent();
 
-	ui.InitGameUi();
-	ui.InitaliseAllQuads();
+	//ui.InitGameUi();
+	//ui.InitaliseAllQuads();
 	return true;
 }
 
@@ -39,7 +39,7 @@ bool BarnabusGame::Update(float deltaTime)
 bool BarnabusGame::Render(float deltaTime)
 {
 	mainScene.Render(deltaTime);
-	ui.Draw();
+	//ui.Draw();
 
 	BarnabusGameEngine::Get().GetRenderer()->Render();
 

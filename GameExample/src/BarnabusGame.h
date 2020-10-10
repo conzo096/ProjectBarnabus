@@ -14,5 +14,5 @@ public:
 
 private:
 	MainEnvironment mainScene;
-	GameUi ui;
+	//GameUi ui;
 };

@@ -2,10 +2,13 @@
 #include "GameEngine/DirectionalLight.h"
 #include "EntityFactory.h"
 #include "ShaderFactory.h"
+
 #include "AnimationShader.h"
 #include "TerrainShader.h"
 #include "BasicShader.h"
 
+#include "VkAnimationShader.h"
+#include "VkTerrainShader.h"
 #include "VkBasicShader.h"
 
 #define _USE_MATH_DEFINES
@@ -65,8 +68,8 @@ void MainEnvironment::LoadGameContent()
 	}
 	else
 	{
-		ShaderFactory::CreateShader<AnimationShader>("animation", "res\\Shaders\\Vulkan\\VkRed");
-		ShaderFactory::CreateShader<TerrainShader>("terrain", "res\\Shaders\\Vulkan\\VkRed");
+		ShaderFactory::CreateShader<VkAnimationShader>("animation", "res\\Shaders\\Vulkan\\VkRed");
+		ShaderFactory::CreateShader<VkTerrainShader>("terrain", "res\\Shaders\\Vulkan\\VkRed");
 		ShaderFactory::CreateShader<VkBasicShader>("red", "res\\Shaders\\Vulkan\\VkRed");
 	}
 

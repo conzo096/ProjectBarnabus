@@ -110,6 +110,9 @@
     <ClInclude Include="src\BasicShader.h">
       <Filter>Header Files\Shaders</Filter>
     </ClInclude>
+    <ClInclude Include="src\VkAnimationShader.h">
+      <Filter>Header Files\Shaders\Vulkan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\Shaders\BasicAnimation.vert">

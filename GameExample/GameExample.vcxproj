@@ -32,6 +32,7 @@
     <ClInclude Include="src\ShaderFactory.h" />
     <ClInclude Include="src\TerrainShader.h" />
     <ClInclude Include="src\UiShader.h" />
+    <ClInclude Include="src\VkAnimationShader.h" />
     <ClInclude Include="src\VkBasicShader.h" />
     <ClInclude Include="src\VkFontShader.h" />
     <ClInclude Include="src\VkTerrainShader.h" />
