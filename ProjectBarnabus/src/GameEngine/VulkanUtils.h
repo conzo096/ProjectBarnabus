@@ -14,4 +14,28 @@ namespace VulkanUtils
 
 	VkFormat FindSupportedFormat(const VkPhysicalDevice& physicalDevice, const std::vector<VkFormat>& candidates, const VkImageTiling& tiling, const VkFormatFeatureFlags& features);
 	VkFormat FindDepthFormat(const VkPhysicalDevice& physicalDevice);
+
+	template<class UniformT>
+	void UpdateUniformBuffer(VkDevice& device, VkDeviceSize bufferSize, VkDeviceMemory& uniformBuffersMemory,VkBuffer& uniformBuffer, std::vector<UniformT>& uniforms )
+	{
+		// Make this part a templated in utils method.
+		VkMemoryRequirements memoryRequirement;
+		vkGetBufferMemoryRequirements(device, uniformBuffer, &memoryRequirement);
+
+		uint8_t *data;
+		vkMapMemory(device, uniformBuffersMemory, 0, sizeof(UniformT), 0, (void **)&data);
+
+		for (int i = 0; i < uniforms.size(); i++)
+		{
+			memcpy(data, &uniforms[i], sizeof(uniforms[i]));
+			data += bufferSize;
+		}
+
+		vkUnmapMemory(device, uniformBuffersMemory);
+	}
+
+
+
+
+
 } // namespace VulkanUtils

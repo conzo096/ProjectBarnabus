@@ -142,7 +142,7 @@ private:
 	glm::mat4 cameraVP;
 
 	// 
-	std::map<IShader*, std::vector<MeshData>> meshesToRender;
+	std::map<VulkanShader*, std::vector<MeshData>> meshesToRender;
 	std::map<std::string, std::vector<Light*>> environmentLights;
 	std::vector<MeshData> uiElementsToRender;
 	std::map<std::string, IFrameBuffer*> framebuffers;
@@ -153,9 +153,6 @@ private:
 	std::vector<VkFence> inFlightFences;
 	std::vector<VkFence> imagesInFlight;
 	size_t currentFrame = 0;
-
-	UiQuad* screenQuad;
-	IShader* finalShader;
 
 	std::map<std::string, std::unique_ptr<IShader>> shaders;
 };

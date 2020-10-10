@@ -68,8 +68,8 @@ void MainEnvironment::LoadGameContent()
 	}
 	else
 	{
-		ShaderFactory::CreateShader<VkAnimationShader>("animation", "res\\Shaders\\Vulkan\\VkRed");
-		ShaderFactory::CreateShader<VkTerrainShader>("terrain", "res\\Shaders\\Vulkan\\VkRed");
+		ShaderFactory::CreateShader<VkBasicShader>("animation", "res\\Shaders\\Vulkan\\VkRed");
+		ShaderFactory::CreateShader<VkBasicShader>("terrain", "res\\Shaders\\Vulkan\\VkRed");
 		ShaderFactory::CreateShader<VkBasicShader>("red", "res\\Shaders\\Vulkan\\VkRed");
 	}
 

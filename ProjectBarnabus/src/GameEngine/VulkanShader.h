@@ -11,6 +11,15 @@ namespace
 class VulkanShader : public IShader
 {
 public:
+
+	// Info gathered from meshData
+	// Can be created interally in shaders that use it
+	// Need size of struct - Can be extracted into a method that is pure virtual
+	// Need to update buffer. 
+	// Can do this by making use of the Use function -> for vulkan Calling this could update the uniform buffers then
+	// Thus - Update uniforms (Creates struct, adds to a list.) - Use - Updates buffers & clears list
+	// UpdateUniformsBuffers needs an index past in. Could add a setId function & make use of that?
+
 	struct UniformBufferObject
 	{
 		glm::mat4 MVP;
@@ -25,25 +34,27 @@ public:
 	bool Link() override;
 	bool IsLinked() override;
 	void CreateProgram(const std::string shaderName) override;
-	void Use() override;
+	void Use() = 0;
 	void SetUniform(const char* name, const float val) override;
 	void SetUniform(const char* name, const int val) override;
-
+	std::string GetName() override;
 	unsigned int GetUniformLocation(const char* name) override;
 	unsigned int GetUniformLocation(std::string& name) override;
 
-	virtual void UpdateUniforms(MeshData& meshData) override;
+	virtual void UpdateUniforms(MeshData& meshData) = 0;
 	virtual void UpdateUniforms(MeshData& meshData, const LightInfo& lights) override;
 	virtual void DrawMesh(MeshData& meshData) override;
 
+public:
+	void Use(int index);
+
+public:
 	VkPipeline GetPipeline(unsigned int index);
 	VkPipelineLayout GetPipelineLayout();
 	VkDescriptorSet& GetDescriptorSet(unsigned int index);
 	VkDeviceSize GetBufferSize();
 	VkImageView GetDepthImageView();
 	
-	void UpdateUniformBuffers(unsigned int index, std::vector<UniformBufferObject>& uniforms);
-
 	void CleanUp();
 
 	void CreateGraphicPipelines();
@@ -88,8 +99,5 @@ protected:
 	VkDeviceMemory textureImageMemory;
 	VkImageView textureImageView;
 
-
-	// Inherited via IShader
-	virtual std::string GetName() override;
-
+	int uniformBufferIndex;
 };

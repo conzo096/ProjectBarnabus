@@ -20,6 +20,7 @@
     <ClCompile Include="src\BasicShader.cpp" />
     <ClCompile Include="src\TerrainShader.cpp" />
     <ClCompile Include="src\UiShader.cpp" />
+    <ClCompile Include="src\VkBasicShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AnimationShader.h" />

@@ -66,6 +66,9 @@
     <ClCompile Include="src\BasicShader.cpp">
       <Filter>Source Files\Shaders</Filter>
     </ClCompile>
+    <ClCompile Include="src\VkBasicShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BarnabusGame.h">

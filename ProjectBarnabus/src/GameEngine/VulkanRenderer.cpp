@@ -739,7 +739,6 @@ void VulkanRenderer::RecordCommandBuffer(unsigned int imageIndex)
 {
 	// Not static will result in memory issues here. Still working on a better solution.
 	static std::vector<BufferInfo> buffers;
-	static std::vector<VulkanShader::UniformBufferObject> objects;
 	buffers.clear();
 
 	// For every shader gather required objects and update their uniforms.
@@ -747,12 +746,12 @@ void VulkanRenderer::RecordCommandBuffer(unsigned int imageIndex)
 	{
 		for (auto& mesh : meshes.second)
 		{
-			buffers.push_back({ mesh.vertexBuffer, mesh.indexBuffer,static_cast<VulkanShader*>(mesh.GetShader()), mesh.GetIndices().size(), mesh.GetType() });
-			const auto mvp = BarnabusGameEngine::Get().GetRenderer()->GetCameraVP() * glm::mat4(mesh.GetTransform());
-			objects.push_back( { mvp } );
+			buffers.push_back({ mesh.vertexBuffer, mesh.indexBuffer, meshes.first, mesh.GetIndices().size(), mesh.GetType() });
+			meshes.first->UpdateUniforms(mesh);
 		}
-		static_cast<VulkanShader*>(meshes.first)->UpdateUniformBuffers(imageIndex, objects);
-		objects.clear();
+
+		// Tell Shader here to use shader.
+		meshes.first->Use(imageIndex);
 	}
 
 	CreateFramebuffers(renderPass, buffers[0].shader->GetDepthImageView());
@@ -1010,18 +1009,23 @@ void VulkanRenderer::SetCameraViewProjection(glm::mat4 camera)
 
 void VulkanRenderer::AddMesh(MeshData & md)
 {
-	auto environmentMeshes = meshesToRender.find(md.GetShader());
+	VulkanShader* shader = dynamic_cast<VulkanShader*>(md.GetShader());
 
-	// enviroment does not exist. Add a new vector to list
-	if (environmentMeshes == meshesToRender.end())
+	if (shader)
 	{
-		std::vector<MeshData> newList;
-		newList.push_back(md);
-		meshesToRender.insert(std::pair<IShader*, std::vector<MeshData>>(md.GetShader(), newList));
-	}
-	else
-	{
-		environmentMeshes->second.push_back(md);
+		auto environmentMeshes = meshesToRender.find(shader);
+
+		// enviroment does not exist. Add a new vector to list
+		if (environmentMeshes == meshesToRender.end())
+		{
+			std::vector<MeshData> newList;
+			newList.push_back(md);
+			meshesToRender.insert(std::pair<VulkanShader*, std::vector<MeshData>>(shader, newList));
+		}
+		else
+		{
+			environmentMeshes->second.push_back(md);
+		}
 	}
 }
 
