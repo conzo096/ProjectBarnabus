@@ -100,6 +100,7 @@
     <ClCompile Include="src\GameEngine\VulkanUtils.cpp">
       <Filter>Source Files\GameEngine\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\GameEngine\VulkanTexture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -312,6 +313,9 @@
       <Filter>Header Files\GameEngine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\GameEngine\VulkanUtils.h">
+      <Filter>Header Files\GameEngine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\VulkanTexture.h">
       <Filter>Header Files\GameEngine\Renderer</Filter>
     </ClInclude>
   </ItemGroup>

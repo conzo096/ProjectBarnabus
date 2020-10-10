@@ -1,6 +1,7 @@
 #pragma once
 #include "IShader.h"
 #include "MeshData.h"
+#include "VulkanTexture.h"
 #include <vulkan/vulkan.h>
 #include <set>
 namespace 
@@ -67,8 +68,6 @@ public:
 protected:
 	void CreateDescriptorSetLayout();
 
-	void CreateTextureImage();
-	void CreateTextureImageView();
 protected:
 	std::string name;
 	VkDevice device;
@@ -94,10 +93,6 @@ protected:
 	VkImage depthImage;
 	VkDeviceMemory depthImageMemory;
 	VkImageView depthImageView;
-
-	VkImage textureImage;
-	VkDeviceMemory textureImageMemory;
-	VkImageView textureImageView;
 
 	int uniformBufferIndex;
 };
