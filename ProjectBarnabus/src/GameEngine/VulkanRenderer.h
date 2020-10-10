@@ -98,7 +98,7 @@ private:
 	void CreateRenderPass();
 	void CreateFramebuffers();
 	void CreateCommandPool();
-	void CreateCommandBuffers(const VkRenderPass& renderPass, std::vector<BufferInfo>& buffers);
+	void CreateCommandBuffers(std::vector<BufferInfo>& buffers);
 	void CreateSyncObjects();
 
 private:

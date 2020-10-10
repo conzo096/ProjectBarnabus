@@ -760,7 +760,7 @@ void VulkanRenderer::RecordCommandBuffer(unsigned int imageIndex)
 	}
 
 	CreateFramebuffers();
-	CreateCommandBuffers(renderPass, buffers);
+	CreateCommandBuffers(buffers);
 }
 
 VulkanRenderer::QueueFamilyIndices VulkanRenderer::FindQueueFamilies(VkPhysicalDevice device)
@@ -859,7 +859,7 @@ void VulkanRenderer::UpdateBaseVertexBuffers(MeshData& data)
 }
 
 //Big memory leak in here
-void VulkanRenderer::CreateCommandBuffers(const VkRenderPass& renderPass, std::vector<BufferInfo>& buffers)
+void VulkanRenderer::CreateCommandBuffers(std::vector<BufferInfo>& buffers)
 {
 	vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
 	commandBuffers.resize(swapChainFramebuffers.size());
