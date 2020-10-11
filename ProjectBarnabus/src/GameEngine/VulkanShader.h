@@ -51,7 +51,7 @@ public:
 
 public:
 	VkPipeline GetPipeline(unsigned int index);
-	VkPipelineLayout GetPipelineLayout();
+	VkPipelineLayout GetPipelineLayout(unsigned int index);
 	VkDescriptorSet& GetDescriptorSet(unsigned int index);
 	VkDeviceSize GetBufferSize();
 

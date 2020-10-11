@@ -8,7 +8,7 @@
 #include <array>
 namespace
 {
-	const int MAX_FRAMES_IN_FLIGHT = 2;
+	const int MAX_FRAMES_IN_FLIGHT = 1;
 
 #ifdef NDEBUG
 	const bool enableValidationLayers = false;
@@ -905,10 +905,17 @@ void VulkanRenderer::CreateCommandBuffers(std::vector<BufferInfo>& buffers)
 
 		vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
+		VulkanShader* previousShader = nullptr;
+		int stride = 0;
 		for (int j = 0; j < buffers.size(); j++)
 		{
 			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, buffers[j].shader->GetPipeline(buffers[j].type));
 
+			if (buffers[j].shader != previousShader)
+			{
+				previousShader = buffers[j].shader;
+				stride = 0;
+			}
 			// Better to instance the mesh and change uniform locations
 			vertexBuffers[0] = { buffers[j].vertexBuffer };
 			offsets[0] = { 0 };
@@ -917,11 +924,13 @@ void VulkanRenderer::CreateCommandBuffers(std::vector<BufferInfo>& buffers)
 			vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
 			vkCmdBindIndexBuffer(commandBuffers[i], buffers[j].indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 
-			uint32_t uniformOffset[1] = { buffers[j].shader->GetBufferSize() * j };
+			// Each shader has its own buffer. So 
+			uint32_t uniformOffset[1] = { buffers[j].shader->GetBufferSize() * stride };
+			stride++;
 
 			vkCmdBindDescriptorSets(commandBuffers[i],
 				VK_PIPELINE_BIND_POINT_GRAPHICS, 
-				buffers[j].shader->GetPipelineLayout()
+				buffers[j].shader->GetPipelineLayout(buffers[j].type)
 				, 0,
 				1,
 				&buffers[j].shader->GetDescriptorSet(i),

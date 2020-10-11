@@ -308,9 +308,9 @@ VkPipeline VulkanShader::GetPipeline(unsigned int index)
 	return graphicsPipeline[index];
 }
 
-VkPipelineLayout VulkanShader::GetPipelineLayout()
+VkPipelineLayout VulkanShader::GetPipelineLayout(unsigned int index)
 {
-	return pipelineLayout[0];
+	return pipelineLayout[index];
 }
 
 VkDescriptorSet& VulkanShader::GetDescriptorSet(unsigned int index)
