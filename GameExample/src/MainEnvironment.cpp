@@ -68,9 +68,9 @@ void MainEnvironment::LoadGameContent()
 	}
 	else
 	{
-		ShaderFactory::CreateShader<VkBasicShader>("animation", "res\\Shaders\\Vulkan\\VkRed");
+		ShaderFactory::CreateShader<VkBasicShader>("animation", "res\\Shaders\\Vulkan\\VkBasicAnimation");
 		ShaderFactory::CreateShader<VkTerrainShader>("terrain", "res\\Shaders\\Vulkan\\VkTerrain");
-		ShaderFactory::CreateShader<VkBasicShader>("red", "res\\Shaders\\Vulkan\\VkRed");
+		ShaderFactory::CreateShader<VkBasicShader>("red", "res\\Shaders\\Vulkan\\VkBasic");
 	}
 
 	AddEntity("camera", EntityFactory::CreateCamera());

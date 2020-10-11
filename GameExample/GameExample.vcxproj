@@ -20,6 +20,7 @@
     <ClCompile Include="src\BasicShader.cpp" />
     <ClCompile Include="src\TerrainShader.cpp" />
     <ClCompile Include="src\UiShader.cpp" />
+    <ClCompile Include="src\VkAnimationShader.cpp" />
     <ClCompile Include="src\VkBasicShader.cpp" />
     <ClCompile Include="src\VkTerrainShader.cpp" />
   </ItemGroup>
@@ -54,8 +55,10 @@
     <None Include="res\Shaders\Red.vert" />
     <None Include="res\Shaders\Terrain.frag" />
     <None Include="res\Shaders\Terrain.vert" />
-    <None Include="res\Shaders\Vulkan\VkRed.frag" />
-    <None Include="res\Shaders\Vulkan\VkRed.vert" />
+    <None Include="res\Shaders\Vulkan\VkBasic.frag" />
+    <None Include="res\Shaders\Vulkan\VkBasic.vert" />
+    <None Include="res\Shaders\Vulkan\VkBasicAnimation.frag" />
+    <None Include="res\Shaders\Vulkan\VkBasicAnimation.vert" />
     <None Include="res\Shaders\Vulkan\VkTerrain.frag" />
     <None Include="res\Shaders\Vulkan\VkTerrain.vert" />
   </ItemGroup>

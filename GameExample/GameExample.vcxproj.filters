@@ -75,6 +75,9 @@
     <ClCompile Include="src\VkTerrainShader.cpp">
       <Filter>Source Files\Shaders\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="src\VkAnimationShader.cpp">
+      <Filter>Source Files\Shaders\Vulkan</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BarnabusGame.h">
@@ -142,16 +145,22 @@
     <None Include="res\Shaders\Terrain.vert">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="res\Shaders\Vulkan\VkRed.frag">
-      <Filter>Resource Files\Shaders\Vulkan</Filter>
-    </None>
-    <None Include="res\Shaders\Vulkan\VkRed.vert">
-      <Filter>Resource Files\Shaders\Vulkan</Filter>
-    </None>
     <None Include="res\Shaders\Vulkan\VkTerrain.frag">
       <Filter>Resource Files\Shaders\Vulkan</Filter>
     </None>
     <None Include="res\Shaders\Vulkan\VkTerrain.vert">
+      <Filter>Resource Files\Shaders\Vulkan</Filter>
+    </None>
+    <None Include="res\Shaders\Vulkan\VkBasic.frag">
+      <Filter>Resource Files\Shaders\Vulkan</Filter>
+    </None>
+    <None Include="res\Shaders\Vulkan\VkBasic.vert">
+      <Filter>Resource Files\Shaders\Vulkan</Filter>
+    </None>
+    <None Include="res\Shaders\Vulkan\VkBasicAnimation.frag">
+      <Filter>Resource Files\Shaders\Vulkan</Filter>
+    </None>
+    <None Include="res\Shaders\Vulkan\VkBasicAnimation.vert">
       <Filter>Resource Files\Shaders\Vulkan</Filter>
     </None>
   </ItemGroup>
