@@ -15,6 +15,16 @@ void VkAnimationShader::Use()
 void VkAnimationShader::UpdateUniforms(MeshData& meshData)
 {
 	AnimationUBO ubo{ BarnabusGameEngine::Get().GetRenderer()->GetCameraVP() * glm::mat4(meshData.GetTransform()) };
+	
+	for (int i = 0; i < 100; i++)
+	{
+		ubo.bones[i] = glm::mat4(1.0f);
+	}
+	for (int i = 0; i < meshData.transforms.size(); i++)
+	{
+		const auto& transform = meshData.transforms.at(i);
+		ubo.bones[i] = transform;
+	}
 
 	uniforms.push_back(ubo);
 }
@@ -25,13 +35,30 @@ void VkAnimationShader::UpdateUniforms(MeshData & meshData, const LightInfo & li
 
 VkDeviceSize VkAnimationShader::GetUniformBufferSize()
 {
-	return sizeof(UniformBufferObject) * NUMBER_OF_UNIFORMS;
+	return sizeof(AnimationUBO) * NUMBER_OF_UNIFORMS;
 }
 
 VkDeviceSize VkAnimationShader::GetUniformItemSize()
 {
-	return sizeof(UniformBufferObject);
+	return sizeof(AnimationUBO);
 }
+
+std::vector< VkVertexInputBindingDescription> VkAnimationShader::GetBindingDescription()
+{
+	std::vector<VkVertexInputBindingDescription> vertexInputBinding;
+	vertexInputBinding.resize(2);
+
+	vertexInputBinding[0].binding = 0;
+	vertexInputBinding[0].stride = sizeof(Vertex);
+	vertexInputBinding[0].inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+	vertexInputBinding[1].binding = 1;
+	vertexInputBinding[1].stride = sizeof(VertexBoneData);
+	vertexInputBinding[1].inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+	return vertexInputBinding;
+}
+
 
 std::vector<VkVertexInputAttributeDescription> VkAnimationShader::GetAttributeDescriptions()
 {

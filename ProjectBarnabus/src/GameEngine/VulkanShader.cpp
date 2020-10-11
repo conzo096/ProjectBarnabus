@@ -391,12 +391,12 @@ void VulkanShader::CreateGraphicPipelines()
 	VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
 	vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 
-	auto bindingDescription = GetBindingDescription();
+	auto bindingDescriptions = GetBindingDescription();
 	auto attributeDescriptions = GetAttributeDescriptions();
 
-	vertexInputInfo.vertexBindingDescriptionCount = 1;
+	vertexInputInfo.vertexBindingDescriptionCount = static_cast<uint32_t>(bindingDescriptions.size());;
 	vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
-	vertexInputInfo.pVertexBindingDescriptions = &bindingDescription;
+	vertexInputInfo.pVertexBindingDescriptions = bindingDescriptions.data();
 	vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
 
 	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
@@ -560,12 +560,14 @@ void VulkanShader::CreateDescriptorPool()
 	}
 }
 
-VkVertexInputBindingDescription VulkanShader::GetBindingDescription()
+std::vector<VkVertexInputBindingDescription> VulkanShader::GetBindingDescription()
 {
-	VkVertexInputBindingDescription bindingDescription{};
-	bindingDescription.binding = 0;
-	bindingDescription.stride = sizeof(Vertex);
-	bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+	std::vector<VkVertexInputBindingDescription> bindingDescription;
+	bindingDescription.resize(1);
+	
+	bindingDescription[0].binding = 0;
+	bindingDescription[0].stride = sizeof(Vertex);
+	bindingDescription[0].inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
 	return bindingDescription;
 }

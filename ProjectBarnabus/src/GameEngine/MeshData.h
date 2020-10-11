@@ -77,13 +77,15 @@ public:
 
 	void CreateVertexBuffer(VkBuffer& vertexBuffer, VkDeviceMemory& vertexBufferMemory, VkCommandPool& commandPool);
 	void CreateIndexBuffer(VkBuffer& indexBuffer, VkDeviceMemory& indexBufferMemory, VkCommandPool& commandPool);
-
+	void CreateBoneBuffer(VkBuffer & boneBuffer, VkDeviceMemory & bonexBufferMemory, VkCommandPool & commandPool);
 	void CopyBuffer(VkCommandPool commandPool, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 
 	VkBuffer vertexBuffer;
 	VkDeviceMemory vertexBufferMemory;
 	VkBuffer indexBuffer;
 	VkDeviceMemory indexBufferMemory;
+	VkBuffer boneBuffer;
+	VkDeviceMemory boneBufferMemory;
 
 private:
 	// Skin

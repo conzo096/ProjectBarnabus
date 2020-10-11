@@ -751,7 +751,7 @@ void VulkanRenderer::RecordCommandBuffer(unsigned int imageIndex)
 	{
 		for (auto& mesh : meshes.second)
 		{
-			buffers.push_back({ mesh.vertexBuffer, mesh.indexBuffer, meshes.first, mesh.GetIndices().size(), mesh.GetType() });
+			buffers.push_back({ mesh.vertexBuffer, mesh.indexBuffer,mesh.boneBuffer, meshes.first, mesh.GetIndices().size(), mesh.GetType() });
 			meshes.first->UpdateUniforms(mesh);
 		}
 
@@ -852,6 +852,12 @@ void VulkanRenderer::InitialiseMesh(MeshData& data)
 {
 	data.CreateVertexBuffer(data.vertexBuffer, data.vertexBufferMemory, commandPool);
 	data.CreateIndexBuffer(data.indexBuffer, data.indexBufferMemory, commandPool);
+
+	// If data has animation data.
+	if (data.GetBoneData().size() > 0)
+	{
+		data.CreateBoneBuffer(data.boneBuffer, data.boneBufferMemory, commandPool);
+	}
 }
 
 void VulkanRenderer::UpdateBaseVertexBuffers(MeshData& data)
@@ -922,6 +928,16 @@ void VulkanRenderer::CreateCommandBuffers(std::vector<BufferInfo>& buffers)
 
 			// Bind buffers
 			vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
+
+			if (buffers[j].bonesBuffer)
+			{
+				VkBuffer vertexBuffers[1];
+				VkDeviceSize offsets[1];
+				vertexBuffers[0] = { buffers[j].vertexBuffer };
+				offsets[0] = { 0 };
+				vkCmdBindVertexBuffers(commandBuffers[i], 1, 1, vertexBuffers, offsets);
+			}
+
 			vkCmdBindIndexBuffer(commandBuffers[i], buffers[j].indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 
 			// Each shader has its own buffer. So 

@@ -7,6 +7,7 @@ public:
 	struct AnimationUBO
 	{
 		glm::mat4 MVP;
+		glm::mat4 bones[100];
 	};
 
 public:
@@ -17,6 +18,7 @@ public:
 	VkDeviceSize GetUniformBufferSize() override;
 	VkDeviceSize GetUniformItemSize() override;
 protected:
+	std::vector< VkVertexInputBindingDescription> GetBindingDescription() override;
 	std::vector<VkVertexInputAttributeDescription> GetAttributeDescriptions() override;
 private:
 	std::vector<AnimationUBO> uniforms;

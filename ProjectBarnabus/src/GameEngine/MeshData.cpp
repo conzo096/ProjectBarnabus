@@ -178,6 +178,30 @@ void MeshData::CreateIndexBuffer(VkBuffer & indexBuffer, VkDeviceMemory & indexB
 	vkFreeMemory(renderer->GetDevice(), stagingBufferMemory, nullptr);
 }
 
+void MeshData::CreateBoneBuffer(VkBuffer & boneBuffer, VkDeviceMemory & boneBufferMemory, VkCommandPool & commandPool)
+{
+	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
+
+	VkDeviceSize bufferSize = sizeof(bonesData[0]) * bonesData.size();
+
+	VkBuffer stagingBuffer;
+	VkDeviceMemory stagingBufferMemory;
+	VulkanUtils::CreateBuffer(renderer->GetDevice(), renderer->GetPhysicalDevice(), bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+
+	void* data;
+	vkMapMemory(renderer->GetDevice(), stagingBufferMemory, 0, bufferSize, 0, &data);
+	memcpy(data, indices.data(), (size_t)bufferSize);
+	vkUnmapMemory(renderer->GetDevice(), stagingBufferMemory);
+
+	VulkanUtils::CreateBuffer(renderer->GetDevice(), renderer->GetPhysicalDevice(), bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, boneBuffer, boneBufferMemory);
+
+	CopyBuffer(commandPool, stagingBuffer, boneBuffer, bufferSize);
+
+	vkDestroyBuffer(renderer->GetDevice(), stagingBuffer, nullptr);
+	vkFreeMemory(renderer->GetDevice(), stagingBufferMemory, nullptr);
+}
+
+
 void MeshData::CopyBuffer(VkCommandPool commandPool, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
 {
 	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
