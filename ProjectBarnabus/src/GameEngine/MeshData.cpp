@@ -193,7 +193,7 @@ void MeshData::CreateBoneBuffer(VkBuffer & boneBuffer, VkDeviceMemory & boneBuff
 	memcpy(data, indices.data(), (size_t)bufferSize);
 	vkUnmapMemory(renderer->GetDevice(), stagingBufferMemory);
 
-	VulkanUtils::CreateBuffer(renderer->GetDevice(), renderer->GetPhysicalDevice(), bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, boneBuffer, boneBufferMemory);
+	VulkanUtils::CreateBuffer(renderer->GetDevice(), renderer->GetPhysicalDevice(), bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, boneBuffer, boneBufferMemory);
 
 	CopyBuffer(commandPool, stagingBuffer, boneBuffer, bufferSize);
 

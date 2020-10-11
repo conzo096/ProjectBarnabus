@@ -14,6 +14,7 @@ struct BufferInfo
 	VkBuffer vertexBuffer;
 	VkBuffer indexBuffer;
 	VkBuffer bonesBuffer;
+	bool useBonesBuffer;
 	VulkanShader* shader;
 	size_t numIndices;
 	MeshData::PrimativeType type;

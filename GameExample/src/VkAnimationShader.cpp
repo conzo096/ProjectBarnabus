@@ -81,12 +81,12 @@ std::vector<VkVertexInputAttributeDescription> VkAnimationShader::GetAttributeDe
 	attributeDescriptions[3].format = VK_FORMAT_R32G32_SFLOAT;
 	attributeDescriptions[3].offset = offsetof(Vertex, texCoords);
 
-	attributeDescriptions[4].binding = 0;
+	attributeDescriptions[4].binding = 1;
 	attributeDescriptions[4].location = 4;
 	attributeDescriptions[4].format = VK_FORMAT_R32G32B32A32_SINT;
 	attributeDescriptions[4].offset = offsetof(VertexBoneData, boneIds);
 
-	attributeDescriptions[5].binding = 0;
+	attributeDescriptions[5].binding = 1;
 	attributeDescriptions[5].location = 5;
 	attributeDescriptions[5].format = VK_FORMAT_R32G32B32A32_SFLOAT;
 	attributeDescriptions[5].offset = offsetof(VertexBoneData, weights);
