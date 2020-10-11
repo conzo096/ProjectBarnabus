@@ -3,7 +3,7 @@
 
 const int MAX_BONES = 100;
 
-layout(binding = 0) uniform UniformBufferObject 
+layout(binding = 0) uniform AnimationUBO 
 {
     mat4 MVP;
 	mat4 bones[MAX_BONES];
@@ -28,9 +28,9 @@ void main()
 			
 	vec4 vertexOut = boneTransform * vertexIn; 
 
-	gl_Position = ubo.MVP * vec4(inPosition.xyz,1);
+	gl_Position = ubo.MVP * vertexOut;
 
-	fragColor.xyz = vertexOut.xyz;
+	fragColor = inColor;
 	fragColor.a = 1.0f;
 }
 
