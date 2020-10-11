@@ -16,10 +16,6 @@ void VkAnimationShader::UpdateUniforms(MeshData& meshData)
 {
 	AnimationUBO ubo{ BarnabusGameEngine::Get().GetRenderer()->GetCameraVP() * glm::mat4(meshData.GetTransform()) };
 	
-	for (int i = 0; i < 100; i++)
-	{
-		ubo.bones[i] = glm::mat4(1.0f);
-	}
 	for (int i = 0; i < meshData.transforms.size(); i++)
 	{
 		const auto& transform = meshData.transforms.at(i);
@@ -87,7 +83,7 @@ std::vector<VkVertexInputAttributeDescription> VkAnimationShader::GetAttributeDe
 
 	attributeDescriptions[4].binding = 0;
 	attributeDescriptions[4].location = 4;
-	attributeDescriptions[4].format = VK_FORMAT_R32G32B32A32_SFLOAT;
+	attributeDescriptions[4].format = VK_FORMAT_R32G32B32A32_SINT;
 	attributeDescriptions[4].offset = offsetof(VertexBoneData, boneIds);
 
 	attributeDescriptions[5].binding = 0;

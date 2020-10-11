@@ -28,8 +28,9 @@ void main()
 			
 	vec4 vertexOut = boneTransform * vertexIn; 
 
-	gl_Position = ubo.MVP * vec4(vertexOut.xyz,1);
+	gl_Position = ubo.MVP * vec4(inPosition.xyz,1);
 
-	fragColor = inColor;
+	fragColor.xyz = vertexOut.xyz;
+	fragColor.a = 1.0f;
 }
 
