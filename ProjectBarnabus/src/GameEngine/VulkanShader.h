@@ -68,6 +68,8 @@ protected:
 protected:
 	virtual VkDeviceSize GetUniformBufferSize() = 0;
 	virtual VkDeviceSize GetUniformItemSize() = 0;
+	virtual VkVertexInputBindingDescription GetBindingDescription();
+	virtual	std::vector<VkVertexInputAttributeDescription> GetAttributeDescriptions();
 protected:
 	std::string name;
 	VkDevice device;
