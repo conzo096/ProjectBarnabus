@@ -40,6 +40,7 @@
     <ClCompile Include="src\GameEngine\Transform.cpp" />
     <ClCompile Include="src\GameEngine\UiDisplay.cpp" />
     <ClCompile Include="src\GameEngine\UiQuad.cpp" />
+    <ClCompile Include="src\GameEngine\VkFinalPassShader.cpp" />
     <ClCompile Include="src\GameEngine\VulkanFrameBuffer.cpp" />
     <ClCompile Include="src\GameEngine\VulkanRenderer.cpp" />
     <ClCompile Include="src\GameEngine\VulkanShader.cpp" />
@@ -69,6 +70,7 @@
     <ClInclude Include="src\GameEngine\GLShader.h" />
     <ClInclude Include="src\GameEngine\OpenGLHeightMapTexture.h" />
     <ClInclude Include="src\GameEngine\IShader.h" />
+    <ClInclude Include="src\GameEngine\VkFinalPassShader.h" />
     <ClInclude Include="src\GameEngine\VulkanFrameBuffer.h" />
     <ClInclude Include="src\GameEngine\VulkanRenderer.h" />
     <ClInclude Include="src\GameEngine\OpenGLRenderer.h" />

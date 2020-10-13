@@ -186,7 +186,11 @@ namespace
 
 } // namespace
 
-VulkanShader::VulkanShader() : primatives({MeshData::TRIANGLE, MeshData::LINE_STRIP})
+VulkanShader::VulkanShader() : VulkanShader({MeshData::TRIANGLE, MeshData::LINE_STRIP})
+{
+}
+
+VulkanShader::VulkanShader(std::set<MeshData::PrimativeType> types) : primatives(types)
 {
 	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
 	device = renderer->GetDevice();
@@ -266,12 +270,12 @@ void VulkanShader::DrawMesh(MeshData & meshData)
 {
 }
 
-VkPipeline VulkanShader::GetPipeline(unsigned int index)
+VkPipeline VulkanShader::GetPipeline(MeshData::PrimativeType index)
 {
 	return graphicsPipeline[index];
 }
 
-VkPipelineLayout VulkanShader::GetPipelineLayout(unsigned int index)
+VkPipelineLayout VulkanShader::GetPipelineLayout(MeshData::PrimativeType index)
 {
 	return pipelineLayout[index];
 }
@@ -462,12 +466,11 @@ void VulkanShader::CreateGraphicPipelines()
 	colorBlending.blendConstants[2] = 0.0f;
 	colorBlending.blendConstants[3] = 0.0f;
 
-	// Create a pipeline for each primative that might be used.
-	graphicsPipeline.resize(primatives.size());
-	pipelineLayout.resize(primatives.size());
-
 	for (const auto& primative : primatives)
 	{
+		graphicsPipeline.insert(std::pair<MeshData::PrimativeType, VkPipeline>({ primative , VkPipeline()}));
+		pipelineLayout.insert(std::pair<MeshData::PrimativeType, VkPipelineLayout>({ primative, VkPipelineLayout()}));
+
 		VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
 		inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
 		inputAssembly.primitiveRestartEnable = VK_FALSE;
@@ -478,6 +481,9 @@ void VulkanShader::CreateGraphicPipelines()
 			break;
 		case MeshData::LINE_STRIP:
 			inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_LINE_STRIP;
+			break;
+		case MeshData::QUAD:
+			inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
 			break;
 		default:
 			break;
@@ -525,12 +531,14 @@ void VulkanShader::Use(int index)
 
 void VulkanShader::CleanUp()
 {
-	for (int i = 0; i < graphicsPipeline.size(); i++)
+	for (auto const& x : graphicsPipeline)
 	{
-		vkDestroyPipeline(device, graphicsPipeline[i], nullptr);
-		vkDestroyPipelineLayout(device, pipelineLayout[i], nullptr);
+		vkDestroyPipeline(device, x.second, nullptr);
 	}
-
+	for (auto const& x : pipelineLayout)
+	{
+		vkDestroyPipelineLayout(device, x.second, nullptr);
+	}
 	for (size_t i = 0; i < uniformBuffers.size(); i++)
 	{
 		vkDestroyBuffer(device, uniformBuffers[i], nullptr);

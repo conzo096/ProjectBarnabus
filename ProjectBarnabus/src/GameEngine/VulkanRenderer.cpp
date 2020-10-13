@@ -1,8 +1,12 @@
 #define GLFW_INCLUDE_VULKAN
 #include "VulkanRenderer.h"
 #include "BarnabusGameEngine.h"
-#include "VulkanShader.h"
+
 #include "VulkanUtils.h"
+#include "VkFinalPassShader.h"
+
+#include "UiQuad.h"
+
 #include <algorithm>
 #include <set>
 #include <array>
@@ -255,6 +259,18 @@ bool VulkanRenderer::InitialiseGameEngine()
 	CreateDepthResources();
 	CreateFramebuffers();
 	CreateSyncObjects();
+
+	screenQuad = new UiQuad(glm::vec2(-1, -1), glm::vec2(1, 1));
+	screenQuad->InitQuad();
+
+	// Add final shader
+	auto finalShader = std::make_unique<VkFinalPassShader>();
+	finalShader->CreateProgram("FinalRender");
+	finalShader->AddShaderFromFile("res\\shaders\\vulkan\\VkFinalPassVert.spv", GLShader::VERTEX);
+	finalShader->AddShaderFromFile("res\\shaders\\vulkan\\VkFinalPassFrag.spv", GLShader::FRAGMENT);
+	finalShader->Link();
+	AddShader("final", std::move(finalShader));
+
 	return true;
 }
 
@@ -945,19 +961,44 @@ void VulkanRenderer::CreateCommandBuffers(std::vector<BufferInfo>& buffers)
 			stride++;
 
 			vkCmdBindDescriptorSets(commandBuffers[i],
-				VK_PIPELINE_BIND_POINT_GRAPHICS, 
+				VK_PIPELINE_BIND_POINT_GRAPHICS,
 				buffers[j].shader->GetPipelineLayout(buffers[j].type)
 				, 0,
 				1,
 				&buffers[j].shader->GetDescriptorSet(i),
-				1, 
+				1,
 				uniformOffset);
 
 			// Replace 6 with indicies size.		
 			vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(buffers[j].numIndices), 1, 0, 0, 0);
 		}
 
+		// Draw to screen.
+
+
+		// Bind pipeline
+		VulkanShader* shader = static_cast<VulkanShader*>(shaders["final"].get());
+		vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, shader->GetPipeline(screenQuad->GetMeshData().GetType()));
+
+		VkBuffer vertexBuffers[] = { screenQuad->GetMeshData().vertexBuffer };
+		VkDeviceSize offsets[] = {0};
+		vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
+		vkCmdBindIndexBuffer(commandBuffers[i], screenQuad->GetMeshData().indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+
+
+		// Draw UI 
+		
 		vkCmdEndRenderPass(commandBuffers[i]);
+
+		// Create a single final shader for vulkan. 
+		// Add to render.
+		// Bind to it last & draw screenquad
+
+		// Render first mesh
+
+		// Start second pass
+		// Get texture from first pass
+		// display
 
 		if (vkEndCommandBuffer(commandBuffers[i]) != VK_SUCCESS)
 		{
@@ -1070,6 +1111,7 @@ glm::mat4 VulkanRenderer::GetCameraVP()
 
 void VulkanRenderer::AddUiElement(MeshData & md)
 {
+	uiElementsToRender.push_back(md);
 }
 
 void VulkanRenderer::AddFramebuffer(std::pair<std::string, IFrameBuffer*> pair)

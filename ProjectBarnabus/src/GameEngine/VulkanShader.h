@@ -4,6 +4,7 @@
 #include "VulkanTexture.h"
 #include <vulkan/vulkan.h>
 #include <set>
+#include <map>
 namespace 
 {
 	using LightInfo = std::vector<Light*>;
@@ -27,6 +28,7 @@ public:
 	};
 public:
 	VulkanShader();
+	VulkanShader(std::set<MeshData::PrimativeType> types);
 	~VulkanShader();
 
 	unsigned int GetId() override;
@@ -50,8 +52,8 @@ public:
 	void Use(int index);
 
 public:
-	VkPipeline GetPipeline(unsigned int index);
-	VkPipelineLayout GetPipelineLayout(unsigned int index);
+	VkPipeline GetPipeline(MeshData::PrimativeType index);
+	VkPipelineLayout GetPipelineLayout(MeshData::PrimativeType index);
 	VkDescriptorSet& GetDescriptorSet(unsigned int index);
 	VkDeviceSize GetBufferSize();
 
@@ -79,8 +81,8 @@ protected:
 	VkShaderModule vertexShaderModule;
 	VkShaderModule fragmentShaderModule;
 
-	std::vector<VkPipelineLayout> pipelineLayout;
-	std::vector<VkPipeline> graphicsPipeline;
+	std::map<MeshData::PrimativeType, VkPipelineLayout> pipelineLayout;
+	std::map<MeshData::PrimativeType,VkPipeline> graphicsPipeline;
 
 	VkDescriptorSetLayout descriptorSetLayout;
 	std::vector<VkDescriptorSet> descriptorSets;

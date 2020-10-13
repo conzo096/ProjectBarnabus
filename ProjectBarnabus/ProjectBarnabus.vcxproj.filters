@@ -103,6 +103,9 @@
     <ClCompile Include="src\GameEngine\VulkanTexture.cpp">
       <Filter>Source Files\GameEngine\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\GameEngine\VkFinalPassShader.cpp">
+      <Filter>Source Files\GameEngine\Renderer\Shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -179,6 +182,9 @@
     </Filter>
     <Filter Include="Source Files\GameEngine\Components\Physics">
       <UniqueIdentifier>{fc99fa1f-32aa-4ecf-aef9-a44f7d07a361}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameEngine\Shader\Vulkan">
+      <UniqueIdentifier>{8d76f565-6b3c-4a60-b4d5-58bb2655bc32}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -290,9 +296,6 @@
     <ClInclude Include="src\GameEngine\IShader.h">
       <Filter>Header Files\GameEngine\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="src\GameEngine\VulkanShader.h">
-      <Filter>Header Files\GameEngine\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="src\GameEngine\IRenderer.h">
       <Filter>Header Files\GameEngine\Renderer</Filter>
     </ClInclude>
@@ -319,6 +322,12 @@
     </ClInclude>
     <ClInclude Include="src\GameEngine\VulkanTexture.h">
       <Filter>Header Files\GameEngine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\VulkanShader.h">
+      <Filter>Header Files\GameEngine\Shader\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\VkFinalPassShader.h">
+      <Filter>Header Files\GameEngine\Shader\Vulkan</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

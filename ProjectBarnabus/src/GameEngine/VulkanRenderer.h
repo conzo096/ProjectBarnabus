@@ -152,6 +152,7 @@ private:
 	// 
 	std::map<VulkanShader*, std::vector<MeshData>> meshesToRender;
 	std::map<std::string, std::vector<Light*>> environmentLights;
+	
 	std::vector<MeshData> uiElementsToRender;
 	std::map<std::string, IFrameBuffer*> framebuffers;
 	glm::vec4 backgroundColour;
@@ -163,4 +164,6 @@ private:
 	size_t currentFrame = 0;
 
 	std::map<std::string, std::unique_ptr<IShader>> shaders;
+
+	UiQuad* screenQuad;
 };

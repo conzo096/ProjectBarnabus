@@ -63,6 +63,7 @@ UiQuad::UiQuad(glm::vec2 bottomLeft, glm::vec2 topRight) : transparency(1.0f)
 		v.texCoords = tex_coords.at(i);
 
 		mesh.InsertVertex(v);
+		mesh.InsertIndex(i);
 	}
 }
 
