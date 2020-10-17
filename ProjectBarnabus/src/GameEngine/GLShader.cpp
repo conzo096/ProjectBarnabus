@@ -223,7 +223,7 @@ void GLShader::DrawMesh(MeshData& meshData)
 		type = GL_LINE_STRIP;
 		break;
 	case MeshData::QUAD:
-		type = GL_QUADS;
+		type = GL_TRIANGLES;
 		break;
 	default:
 		break;

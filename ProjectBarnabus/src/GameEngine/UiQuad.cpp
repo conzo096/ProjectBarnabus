@@ -7,6 +7,7 @@
 UiQuad::UiQuad(): width(1),height(1), transparency(1.0f)
 {
 	mesh.SetType(MeshData::QUAD);
+
 	std::vector<glm::vec3> positions
 	{
 		glm::vec3(1.0f, 1.0f, 0.0f),
@@ -31,6 +32,14 @@ UiQuad::UiQuad(): width(1),height(1), transparency(1.0f)
 
 		mesh.InsertVertex(v);
 	}
+
+	mesh.InsertIndex(0);
+	mesh.InsertIndex(1);
+	mesh.InsertIndex(2);
+	mesh.InsertIndex(2);
+	mesh.InsertIndex(3);
+	mesh.InsertIndex(0);
+
 }
 
 UiQuad::UiQuad(glm::vec2 bottomLeft, glm::vec2 topRight) : transparency(1.0f)
@@ -63,8 +72,14 @@ UiQuad::UiQuad(glm::vec2 bottomLeft, glm::vec2 topRight) : transparency(1.0f)
 		v.texCoords = tex_coords.at(i);
 
 		mesh.InsertVertex(v);
-		mesh.InsertIndex(i);
 	}
+
+	mesh.InsertIndex(0);
+	mesh.InsertIndex(1);
+	mesh.InsertIndex(2);
+	mesh.InsertIndex(2);
+	mesh.InsertIndex(3);
+	mesh.InsertIndex(0);
 }
 
 MeshData& UiQuad::GetMeshData()
