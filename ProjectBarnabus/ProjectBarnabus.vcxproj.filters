@@ -186,6 +186,15 @@
     <Filter Include="Header Files\GameEngine\Shader\Vulkan">
       <UniqueIdentifier>{8d76f565-6b3c-4a60-b4d5-58bb2655bc32}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{01eb37b9-9985-4e28-ab78-0239c593935d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\Shaders">
+      <UniqueIdentifier>{f39cb166-5a5e-493f-bce6-c6ecb3d85ba1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\Shaders\Vulkan">
+      <UniqueIdentifier>{a9d30258-b882-4f41-a7c1-2950ddc3d03a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\GameEngine\BarnabusGameEngine.h">
@@ -329,5 +338,13 @@
     <ClInclude Include="src\GameEngine\VkFinalPassShader.h">
       <Filter>Header Files\GameEngine\Shader\Vulkan</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\GameExample\res\Shaders\Vulkan\VkFinalPass.frag">
+      <Filter>Resources\Shaders\Vulkan</Filter>
+    </None>
+    <None Include="..\GameExample\res\Shaders\Vulkan\VkFinalPass.vert">
+      <Filter>Resources\Shaders\Vulkan</Filter>
+    </None>
   </ItemGroup>
 </Project>

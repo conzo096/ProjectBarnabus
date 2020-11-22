@@ -96,6 +96,10 @@
     <ClInclude Include="src\GameEngine\VulkanTexture.h" />
     <ClInclude Include="src\GameEngine\VulkanUtils.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\GameExample\res\Shaders\Vulkan\VkFinalPass.frag" />
+    <None Include="..\GameExample\res\Shaders\Vulkan\VkFinalPass.vert" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{BDEA051C-068A-49E9-A13B-B6FAF6C867C7}</ProjectGuid>
