@@ -830,7 +830,8 @@ void VulkanRenderer::RecreateSwapChain()
 void VulkanRenderer::RecordCommandBuffer(unsigned int imageIndex)
 {
 	// Not static will result in memory issues here. Still working on a better solution.
-	std::vector<BufferInfo> buffers;
+	static std::vector<BufferInfo> buffers;
+	buffers.clear();
 	// For every shader gather required objects and update their uniforms.
 	for (auto& meshes : meshesToRender)
 	{
