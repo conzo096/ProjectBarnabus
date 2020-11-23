@@ -41,6 +41,14 @@ public:
 		std::vector<VkPresentModeKHR> presentModes;
 	};
 
+	struct Semaphores
+	{
+		// Swap chain image presentation
+		VkSemaphore presentComplete;
+		// Command buffer submission and execution
+		VkSemaphore renderComplete;
+	};
+
 public:
 	VulkanRenderer();
 	~VulkanRenderer();
@@ -100,7 +108,8 @@ private:
 	void CreateRenderPass();
 	void CreateFramebuffers();
 	void CreateCommandPool();
-	void CreateCommandBuffers(std::vector<BufferInfo>& buffers);
+	void CreateCommandBuffers();
+	void CreateOffScreenCommandBuffer(std::vector<BufferInfo>& buffers, unsigned int imageIndex);
 	void CreateSyncObjects();
 
 private:
@@ -138,6 +147,8 @@ private:
 
 	VkCommandPool commandPool;
 	std::vector<VkCommandBuffer> commandBuffers;
+	VkCommandBuffer offScreenCmdBuffer = VK_NULL_HANDLE;
+
 
 	VkRenderPass renderPass;
 
@@ -145,6 +156,15 @@ private:
 	VkImage depthImage;
 	VkDeviceMemory depthImageMemory;
 	VkImageView depthImageView;
+
+
+	// Semaphore used to synchronize between offscreen and final scene rendering
+	VkSemaphore offscreenSemaphore = VK_NULL_HANDLE;
+
+	Semaphores semaphores;
+
+	size_t currentFrame = 0;
+	std::vector<VkFence> waitFences;
 
 private:
 	glm::mat4 cameraVP;
@@ -156,12 +176,6 @@ private:
 	std::vector<MeshData> uiElementsToRender;
 	std::map<std::string, IFrameBuffer*> framebuffers;
 	glm::vec4 backgroundColour;
-
-	std::vector<VkSemaphore> imageAvailableSemaphores;
-	std::vector<VkSemaphore> renderFinishedSemaphores;
-	std::vector<VkFence> inFlightFences;
-	std::vector<VkFence> imagesInFlight;
-	size_t currentFrame = 0;
 
 	std::map<std::string, std::unique_ptr<IShader>> shaders;
 

@@ -12,8 +12,6 @@
 #include <array>
 namespace
 {
-	const int MAX_FRAMES_IN_FLIGHT = 1;
-
 #ifdef NDEBUG
 	const bool enableValidationLayers = false;
 #else
@@ -187,11 +185,14 @@ VulkanRenderer::~VulkanRenderer()
 	{
 		shader.second->~IShader();
 	}
-	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
+
+	vkDestroySemaphore(device, semaphores.presentComplete, nullptr);
+	vkDestroySemaphore(device, semaphores.renderComplete, nullptr);
+	vkDestroySemaphore(device, offscreenSemaphore, nullptr);
+
+	for (auto& fence : waitFences)
 	{
-		vkDestroySemaphore(device, renderFinishedSemaphores[i], nullptr);
-		vkDestroySemaphore(device, imageAvailableSemaphores[i], nullptr);
-		vkDestroyFence(device, inFlightFences[i], nullptr);
+		vkDestroyFence(device, fence, nullptr);
 	}
 
 	for (auto framebuffer : swapChainFramebuffers)
@@ -258,6 +259,7 @@ bool VulkanRenderer::InitialiseGameEngine()
 	CreateCommandPool();
 	CreateDepthResources();
 	CreateFramebuffers();
+
 	CreateSyncObjects();
 
 	screenQuad = new UiQuad(glm::vec2(-1, -1), glm::vec2(1, 1));
@@ -270,6 +272,8 @@ bool VulkanRenderer::InitialiseGameEngine()
 	finalShader->AddShaderFromFile("res\\shaders\\vulkan\\VkFinalPassFrag.spv", GLShader::FRAGMENT);
 	finalShader->Link();
 	AddShader("final", std::move(finalShader));
+
+	CreateCommandBuffers();
 
 	return true;
 }
@@ -670,12 +674,75 @@ void VulkanRenderer::CreateCommandPool()
 	}
 }
 
+// Create the buffer that uses the UI and game buffers & displays to screen.
+void VulkanRenderer::CreateCommandBuffers()
+{
+	commandBuffers.resize(swapChainFramebuffers.size());
+
+	VkCommandBufferAllocateInfo allocInfo{};
+	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+	allocInfo.commandPool = commandPool;
+	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+	allocInfo.commandBufferCount = (uint32_t)commandBuffers.size();
+
+	if (vkAllocateCommandBuffers(device, &allocInfo, commandBuffers.data()) != VK_SUCCESS)
+	{
+		throw std::runtime_error("failed to allocate command buffers!");
+	}
+
+	VkCommandBufferBeginInfo beginInfo{};
+	VkRenderPassBeginInfo renderPassInfo{};
+	std::array<VkClearValue, 2> clearValues{};
+
+	for (size_t i = 0; i < commandBuffers.size(); i++)
+	{
+		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+
+		if (vkBeginCommandBuffer(commandBuffers[i], &beginInfo) != VK_SUCCESS)
+		{
+			throw std::runtime_error("failed to begin recording command buffer!");
+		}
+
+		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+		renderPassInfo.renderPass = renderPass;
+		renderPassInfo.framebuffer = swapChainFramebuffers[i];
+		renderPassInfo.renderArea.offset = { 0, 0 };
+		renderPassInfo.renderArea.extent = swapChainExtent;
+
+		clearValues[0].color = { 0.1f, 0.0f, 0.4f, 1.0f };
+		clearValues[1].depthStencil = { 1.0f, 0 };
+
+		renderPassInfo.clearValueCount = 2;
+		renderPassInfo.pClearValues = clearValues.data();
+
+		vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+
+		// Draw the UI to the texture buffer 
+
+		// Draw to screen - passing in both texture buffers
+		VulkanShader* shader = static_cast<VulkanShader*>(shaders["final"].get());
+		vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, shader->GetPipeline(screenQuad->GetMeshData().GetType()));
+
+		VkBuffer vertexBuffers[] = { screenQuad->GetMeshData().vertexBuffer };
+		VkDeviceSize offsets[] = { 0 };
+		vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
+		vkCmdBindIndexBuffer(commandBuffers[i], screenQuad->GetMeshData().indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+
+		vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(screenQuad->GetMeshData().GetIndices().size()), 1, 0, 0, 0);
+
+		vkCmdEndRenderPass(commandBuffers[i]);
+
+		if (vkEndCommandBuffer(commandBuffers[i]) != VK_SUCCESS)
+		{
+			throw std::runtime_error("failed to record command buffer!");
+		}
+	}
+}
+
 void VulkanRenderer::CreateSyncObjects()
 {
-	imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
-	renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
-	inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
-	imagesInFlight.resize(swapChainImages.size(), VK_NULL_HANDLE);
+	waitFences.resize(swapChainFramebuffers.size());
 
 	VkSemaphoreCreateInfo semaphoreInfo{};
 	semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
@@ -684,14 +751,18 @@ void VulkanRenderer::CreateSyncObjects()
 	fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
 	fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
-	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
+	vkCreateSemaphore(device, &semaphoreInfo, nullptr, &semaphores.presentComplete);
+	vkCreateSemaphore(device, &semaphoreInfo, nullptr, &semaphores.renderComplete);
+
+	for (auto& fence : waitFences)
 	{
-		if (vkCreateSemaphore(device, &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]) != VK_SUCCESS ||
-			vkCreateSemaphore(device, &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS ||
-			vkCreateFence(device, &fenceInfo, nullptr, &inFlightFences[i]) != VK_SUCCESS) {
+		if (vkCreateFence(device, &fenceInfo, nullptr, &fence) != VK_SUCCESS)
+		{
 			throw std::runtime_error("failed to create synchronization objects for a frame!");
 		}
 	}
+
+	vkCreateSemaphore(device, &semaphoreInfo, nullptr, &offscreenSemaphore);
 }
 
 void VulkanRenderer::CleanupSwapChain()
@@ -759,9 +830,7 @@ void VulkanRenderer::RecreateSwapChain()
 void VulkanRenderer::RecordCommandBuffer(unsigned int imageIndex)
 {
 	// Not static will result in memory issues here. Still working on a better solution.
-	static std::vector<BufferInfo> buffers;
-	buffers.clear();
-
+	std::vector<BufferInfo> buffers;
 	// For every shader gather required objects and update their uniforms.
 	for (auto& meshes : meshesToRender)
 	{
@@ -775,8 +844,8 @@ void VulkanRenderer::RecordCommandBuffer(unsigned int imageIndex)
 		meshes.first->Use(imageIndex);
 	}
 
-	CreateFramebuffers();
-	CreateCommandBuffers(buffers);
+	vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(1), &offScreenCmdBuffer);
+	CreateOffScreenCommandBuffer(buffers, imageIndex);
 }
 
 VulkanRenderer::QueueFamilyIndices VulkanRenderer::FindQueueFamilies(VkPhysicalDevice device)
@@ -880,140 +949,107 @@ void VulkanRenderer::UpdateBaseVertexBuffers(MeshData& data)
 {
 }
 
-//Big memory leak in here
-void VulkanRenderer::CreateCommandBuffers(std::vector<BufferInfo>& buffers)
+void VulkanRenderer::CreateOffScreenCommandBuffer(std::vector<BufferInfo>& buffers, unsigned int imageIndex)
 {
-	vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
-	commandBuffers.resize(swapChainFramebuffers.size());
-
 	VkCommandBufferAllocateInfo allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 	allocInfo.commandPool = commandPool;
 	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-	allocInfo.commandBufferCount = (uint32_t)commandBuffers.size();
+	allocInfo.commandBufferCount = 1;
 
-	if (vkAllocateCommandBuffers(device, &allocInfo, commandBuffers.data()) != VK_SUCCESS)
+	if (vkAllocateCommandBuffers(device, &allocInfo, &offScreenCmdBuffer) != VK_SUCCESS)
 	{
 		throw std::runtime_error("failed to allocate command buffers!");
 	}
 
+	// Record command buffer
+
 	VkCommandBufferBeginInfo beginInfo{};
 	VkRenderPassBeginInfo renderPassInfo{};
+
+	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+	renderPassInfo.renderPass = renderPass;
+	renderPassInfo.framebuffer = swapChainFramebuffers[imageIndex]; // Needs its own render framebuffer.
+	renderPassInfo.renderArea.offset = { 0, 0 };
+	renderPassInfo.renderArea.extent = swapChainExtent;
 	std::array<VkClearValue, 2> clearValues{};
 
+	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+
+	if (vkBeginCommandBuffer(offScreenCmdBuffer, &beginInfo) != VK_SUCCESS)
+	{
+		throw std::runtime_error("failed to begin recording command buffer!");
+	}
+
+	clearValues[0].color = { 0.1f, 0.0f, 0.4f, 1.0f };
+	clearValues[1].depthStencil = { 1.0f, 0 };
+
+	renderPassInfo.clearValueCount = 2;
+	renderPassInfo.pClearValues = clearValues.data();
+
+	vkCmdBeginRenderPass(offScreenCmdBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+	// Draw the game to the texture buffer
 	VkBuffer vertexBuffers[1];
 	VkDeviceSize offsets[1];
 
-	for (size_t i = 0; i < commandBuffers.size(); i++)
+	VulkanShader* previousShader = nullptr;
+	int stride = 0;
+	for (int j = 0; j < buffers.size(); j++)
 	{
-		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+		vkCmdBindPipeline(offScreenCmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, buffers[j].shader->GetPipeline(buffers[j].type));
 
-		if (vkBeginCommandBuffer(commandBuffers[i], &beginInfo) != VK_SUCCESS)
+		if (buffers[j].shader != previousShader)
 		{
-			throw std::runtime_error("failed to begin recording command buffer!");
+			previousShader = buffers[j].shader;
+			stride = 0;
 		}
+		// Better to instance the mesh and change uniform locations
+		vertexBuffers[0] = { buffers[j].vertexBuffer };
+		offsets[0] = { 0 };
 
-		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		renderPassInfo.renderPass = renderPass;
-		renderPassInfo.framebuffer = swapChainFramebuffers[i];
-		renderPassInfo.renderArea.offset = { 0, 0 };
-		renderPassInfo.renderArea.extent = swapChainExtent;
+		// Bind buffers
+		vkCmdBindVertexBuffers(offScreenCmdBuffer, 0, 1, vertexBuffers, offsets);
 
-		clearValues[0].color = { 0.1f, 0.0f, 0.4f, 1.0f };
-		clearValues[1].depthStencil = { 1.0f, 0 };
-
-		renderPassInfo.clearValueCount = 2;
-		renderPassInfo.pClearValues = clearValues.data();
-
-		vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
-
-		VulkanShader* previousShader = nullptr;
-		int stride = 0;
-		for (int j = 0; j < buffers.size(); j++)
+		if (buffers[j].useBonesBuffer)
 		{
-			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, buffers[j].shader->GetPipeline(buffers[j].type));
-
-			if (buffers[j].shader != previousShader)
-			{
-				previousShader = buffers[j].shader;
-				stride = 0;
-			}
-			// Better to instance the mesh and change uniform locations
-			vertexBuffers[0] = { buffers[j].vertexBuffer };
+			VkBuffer vertexBuffers[1];
+			VkDeviceSize offsets[1];
+			vertexBuffers[0] = { buffers[j].bonesBuffer };
 			offsets[0] = { 0 };
-
-			// Bind buffers
-			vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
-
-			if (buffers[j].useBonesBuffer)
-			{
-				VkBuffer vertexBuffers[1];
-				VkDeviceSize offsets[1];
-				vertexBuffers[0] = { buffers[j].bonesBuffer };
-				offsets[0] = { 0 };
-				vkCmdBindVertexBuffers(commandBuffers[i], 1, 1, vertexBuffers, offsets);
-			}
-
-			vkCmdBindIndexBuffer(commandBuffers[i], buffers[j].indexBuffer, 0, VK_INDEX_TYPE_UINT32);
-
-			// Each shader has its own buffer. So 
-			uint32_t uniformOffset[1] = { buffers[j].shader->GetBufferSize() * stride };
-			stride++;
-
-			vkCmdBindDescriptorSets(commandBuffers[i],
-				VK_PIPELINE_BIND_POINT_GRAPHICS,
-				buffers[j].shader->GetPipelineLayout(buffers[j].type)
-				, 0,
-				1,
-				&buffers[j].shader->GetDescriptorSet(i),
-				1,
-				uniformOffset);
-
-			// Replace 6 with indicies size.		
-			vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(buffers[j].numIndices), 1, 0, 0, 0);
+			vkCmdBindVertexBuffers(offScreenCmdBuffer, 1, 1, vertexBuffers, offsets);
 		}
 
-		// Draw to screen.
+		vkCmdBindIndexBuffer(offScreenCmdBuffer, buffers[j].indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 
+		// Each shader has its own buffer. So 
+		uint32_t uniformOffset[1] = { buffers[j].shader->GetBufferSize() * stride };
+		stride++;
 
-		// Bind pipeline
-		VulkanShader* shader = static_cast<VulkanShader*>(shaders["final"].get());
-		vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, shader->GetPipeline(screenQuad->GetMeshData().GetType()));
+		vkCmdBindDescriptorSets(offScreenCmdBuffer,
+			VK_PIPELINE_BIND_POINT_GRAPHICS,
+			buffers[j].shader->GetPipelineLayout(buffers[j].type)
+			, 0,
+			1,
+			&buffers[j].shader->GetDescriptorSet(imageIndex),
+			1,
+			uniformOffset);
 
-		VkBuffer vertexBuffers[] = { screenQuad->GetMeshData().vertexBuffer };
-		VkDeviceSize offsets[] = {0};
-		vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
-		vkCmdBindIndexBuffer(commandBuffers[i], screenQuad->GetMeshData().indexBuffer, 0, VK_INDEX_TYPE_UINT32);
-
-		vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(screenQuad->GetMeshData().GetIndices().size()), 1, 0, 0, 0);
-
-		// Draw UI 
-		
-		vkCmdEndRenderPass(commandBuffers[i]);
-
-		// Create a single final shader for vulkan. 
-		// Add to render.
-		// Bind to it last & draw screenquad
-
-		// Render first mesh
-
-		// Start second pass
-		// Get texture from first pass
-		// display
-
-		if (vkEndCommandBuffer(commandBuffers[i]) != VK_SUCCESS)
-		{
-			throw std::runtime_error("failed to record command buffer!");
-		}
+		// Replace 6 with indicies size.		
+		vkCmdDrawIndexed(offScreenCmdBuffer, static_cast<uint32_t>(buffers[j].numIndices), 1, 0, 0, 0);
 	}
+
+	vkCmdEndRenderPass(offScreenCmdBuffer);
+
+	vkEndCommandBuffer(offScreenCmdBuffer);
 }
 
 void VulkanRenderer::Render()
 {
-	vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
+	vkWaitForFences(device, 1, &waitFences[currentFrame], VK_TRUE, UINT64_MAX);
 
 	uint32_t imageIndex;
-	VkResult result = vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
+	VkResult result = vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, semaphores.presentComplete, VK_NULL_HANDLE, &imageIndex);
 	if (result == VK_ERROR_OUT_OF_DATE_KHR)
 	{
 		RecreateSwapChain();
@@ -1022,32 +1058,35 @@ void VulkanRenderer::Render()
 
 	RecordCommandBuffer(imageIndex);
 
-	if (imagesInFlight[imageIndex] != VK_NULL_HANDLE)
-	{
-		vkWaitForFences(device, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
-	}
-
-	imagesInFlight[imageIndex] = inFlightFences[currentFrame];
 
 	VkSubmitInfo submitInfo{};
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-
-	VkSemaphore waitSemaphores[] = { imageAvailableSemaphores[currentFrame] };
-	VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
 	submitInfo.waitSemaphoreCount = 1;
-	submitInfo.pWaitSemaphores = waitSemaphores;
+	submitInfo.signalSemaphoreCount = 1;
+
+	// OffScreen rendering
+
+	VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
 	submitInfo.pWaitDstStageMask = waitStages;
+
+	submitInfo.pWaitSemaphores = &semaphores.presentComplete;
+	submitInfo.pSignalSemaphores = &offscreenSemaphore;
 
 	submitInfo.commandBufferCount = 1;
 	submitInfo.pCommandBuffers = &commandBuffers[imageIndex];
 
-	VkSemaphore signalSemaphores[] = { renderFinishedSemaphores[currentFrame] };
-	submitInfo.signalSemaphoreCount = 1;
-	submitInfo.pSignalSemaphores = signalSemaphores;
+	//vkResetFences(device, 1, &waitFences[currentFrame]);
+	//vkQueueSubmit(graphicsQueue, 1, &submitInfo, waitFences[imageIndex]);
 
-	vkResetFences(device, 1, &inFlightFences[currentFrame]);
+	// Now draw to screen.
 
-	if (vkQueueSubmit(graphicsQueue, 1, &submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS)
+	submitInfo.pWaitSemaphores = &offscreenSemaphore;
+	submitInfo.pSignalSemaphores = &semaphores.renderComplete;
+
+	submitInfo.pCommandBuffers = &commandBuffers[imageIndex];
+
+	vkResetFences(device, 1, &waitFences[currentFrame]);
+	if (vkQueueSubmit(graphicsQueue, 1, &submitInfo, waitFences[imageIndex]) != VK_SUCCESS)
 	{
 		throw std::runtime_error("failed to submit draw command buffer!");
 	}
@@ -1055,18 +1094,17 @@ void VulkanRenderer::Render()
 	VkPresentInfoKHR presentInfo{};
 	presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
 
-	presentInfo.waitSemaphoreCount = 1;
-	presentInfo.pWaitSemaphores = signalSemaphores;
+	presentInfo.pWaitSemaphores = &semaphores.renderComplete;
 
 	VkSwapchainKHR swapChains[] = { swapChain };
 	presentInfo.swapchainCount = 1;
-	presentInfo.pSwapchains = swapChains;
+	presentInfo.pSwapchains = &swapChain;
 
 	presentInfo.pImageIndices = &imageIndex;
 
 	vkQueuePresentKHR(presentQueue, &presentInfo);
 
-	currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
+	currentFrame = (currentFrame + 1) % waitFences.size();
 
 	meshesToRender.clear();
 	uiElementsToRender.clear();
