@@ -1084,8 +1084,6 @@ void VulkanRenderer::Render()
 
 	vkQueueWaitIdle(presentQueue);
 
-	currentFrame = (currentFrame + 1) % swapChainFramebuffers.size();
-
 	meshesToRender.clear();
 	uiElementsToRender.clear();
 	environmentLights.clear();

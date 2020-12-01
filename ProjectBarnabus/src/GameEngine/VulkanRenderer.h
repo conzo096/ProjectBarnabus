@@ -163,9 +163,6 @@ private:
 
 	Semaphores semaphores;
 
-	size_t currentFrame = 0;
-	std::vector<VkFence> waitFences;
-
 private:
 	glm::mat4 cameraVP;
 
