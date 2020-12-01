@@ -812,28 +812,6 @@ void VulkanRenderer::RecreateSwapChain()
 	}
 }
 
-void VulkanRenderer::RecordCommandBuffer(unsigned int imageIndex)
-{
-	// Not static will result in memory issues here. Still working on a better solution.
-	static std::vector<BufferInfo> buffers;
-	buffers.clear();
-	// For every shader gather required objects and update their uniforms.
-	for (auto& meshes : meshesToRender)
-	{
-		for (auto& mesh : meshes.second)
-		{
-			buffers.push_back({ mesh.vertexBuffer, mesh.indexBuffer,mesh.boneBuffer, (mesh.bonesData.size() > 0) , meshes.first, mesh.GetIndices().size(), mesh.GetType() });
-			meshes.first->UpdateUniforms(mesh);
-		}
-
-		// Tell Shader here to use shader.
-		meshes.first->Use(imageIndex);
-	}
-
-	vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(1), &offScreenCmdBuffer);
-	CreateOffScreenCommandBuffer(buffers, imageIndex);
-}
-
 VulkanRenderer::QueueFamilyIndices VulkanRenderer::FindQueueFamilies(VkPhysicalDevice device)
 {
 	QueueFamilyIndices indices;
@@ -935,8 +913,26 @@ void VulkanRenderer::UpdateBaseVertexBuffers(MeshData& data)
 {
 }
 
-void VulkanRenderer::CreateOffScreenCommandBuffer(std::vector<BufferInfo>& buffers, unsigned int imageIndex)
+void VulkanRenderer::CreateOffScreenCommandBuffer(unsigned int imageIndex)
 {
+	// Not static will result in memory issues here. Still working on a better solution.
+	static std::vector<BufferInfo> buffers;
+	buffers.clear();
+	// For every shader gather required objects and update their uniforms.
+	for (auto& meshes : meshesToRender)
+	{
+		for (auto& mesh : meshes.second)
+		{
+			buffers.push_back({ mesh.vertexBuffer, mesh.indexBuffer,mesh.boneBuffer, (mesh.bonesData.size() > 0) , meshes.first, mesh.GetIndices().size(), mesh.GetType() });
+			meshes.first->UpdateUniforms(mesh);
+		}
+
+		// Tell Shader here to use shader.
+		meshes.first->Use(imageIndex);
+	}
+
+	vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(1), &offScreenCmdBuffer);
+
 	VkCommandBufferAllocateInfo allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 	allocInfo.commandPool = commandPool;
@@ -1040,7 +1036,7 @@ void VulkanRenderer::Render()
 		return;
 	}
 
-	RecordCommandBuffer(imageIndex);
+	CreateOffScreenCommandBuffer(imageIndex);
 
 	VkSubmitInfo submitInfo{};
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -1056,7 +1052,7 @@ void VulkanRenderer::Render()
 	submitInfo.pSignalSemaphores = &offscreenSemaphore;
 
 	submitInfo.commandBufferCount = 1;
-	submitInfo.pCommandBuffers = &commandBuffers[imageIndex];
+	submitInfo.pCommandBuffers = &offScreenCmdBuffer;
 
 	vkQueueSubmit(graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
 

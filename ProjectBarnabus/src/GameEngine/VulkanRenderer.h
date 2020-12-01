@@ -109,14 +109,13 @@ private:
 	void CreateFramebuffers();
 	void CreateCommandPool();
 	void CreateCommandBuffers();
-	void CreateOffScreenCommandBuffer(std::vector<BufferInfo>& buffers, unsigned int imageIndex);
+	void CreateOffScreenCommandBuffer(unsigned int imageIndex);
 	void CreateSyncObjects();
 
 private:
 	void CleanupSwapChain();
 
 	void RecreateSwapChain();
-	void RecordCommandBuffer(unsigned int imageIndex);
 public:
 	QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
 private:
