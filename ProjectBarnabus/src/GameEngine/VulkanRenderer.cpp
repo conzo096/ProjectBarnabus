@@ -190,11 +190,6 @@ VulkanRenderer::~VulkanRenderer()
 	vkDestroySemaphore(device, semaphores.renderComplete, nullptr);
 	vkDestroySemaphore(device, offscreenSemaphore, nullptr);
 
-	for (auto& fence : waitFences)
-	{
-		vkDestroyFence(device, fence, nullptr);
-	}
-
 	for (auto framebuffer : swapChainFramebuffers)
 	{
 		vkDestroyFramebuffer(device, framebuffer, nullptr);
@@ -742,8 +737,6 @@ void VulkanRenderer::CreateCommandBuffers()
 
 void VulkanRenderer::CreateSyncObjects()
 {
-	waitFences.resize(swapChainFramebuffers.size());
-
 	VkSemaphoreCreateInfo semaphoreInfo{};
 	semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
@@ -753,14 +746,6 @@ void VulkanRenderer::CreateSyncObjects()
 
 	vkCreateSemaphore(device, &semaphoreInfo, nullptr, &semaphores.presentComplete);
 	vkCreateSemaphore(device, &semaphoreInfo, nullptr, &semaphores.renderComplete);
-
-	for (auto& fence : waitFences)
-	{
-		if (vkCreateFence(device, &fenceInfo, nullptr, &fence) != VK_SUCCESS)
-		{
-			throw std::runtime_error("failed to create synchronization objects for a frame!");
-		}
-	}
 
 	vkCreateSemaphore(device, &semaphoreInfo, nullptr, &offscreenSemaphore);
 }
@@ -1047,18 +1032,15 @@ void VulkanRenderer::CreateOffScreenCommandBuffer(std::vector<BufferInfo>& buffe
 
 void VulkanRenderer::Render()
 {
-	vkWaitForFences(device, 1, &waitFences[currentFrame], VK_TRUE, UINT64_MAX);
-
 	uint32_t imageIndex;
 	VkResult result = vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, semaphores.presentComplete, VK_NULL_HANDLE, &imageIndex);
-	if (result == VK_ERROR_OUT_OF_DATE_KHR)
+	if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR )
 	{
 		RecreateSwapChain();
 		return;
 	}
 
 	RecordCommandBuffer(imageIndex);
-
 
 	VkSubmitInfo submitInfo{};
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -1076,28 +1058,23 @@ void VulkanRenderer::Render()
 	submitInfo.commandBufferCount = 1;
 	submitInfo.pCommandBuffers = &commandBuffers[imageIndex];
 
-	//vkResetFences(device, 1, &waitFences[currentFrame]);
-	//vkQueueSubmit(graphicsQueue, 1, &submitInfo, waitFences[imageIndex]);
+	vkQueueSubmit(graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
 
 	// Now draw to screen.
 
 	submitInfo.pWaitSemaphores = &offscreenSemaphore;
 	submitInfo.pSignalSemaphores = &semaphores.renderComplete;
-
 	submitInfo.pCommandBuffers = &commandBuffers[imageIndex];
+	vkQueueSubmit(graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
 
-	vkResetFences(device, 1, &waitFences[currentFrame]);
-	if (vkQueueSubmit(graphicsQueue, 1, &submitInfo, waitFences[imageIndex]) != VK_SUCCESS)
-	{
-		throw std::runtime_error("failed to submit draw command buffer!");
-	}
-
+	// Put this in a swapchain class?
 	VkPresentInfoKHR presentInfo{};
 	presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+	presentInfo.pNext = NULL;
 
+	presentInfo.waitSemaphoreCount = 1;
 	presentInfo.pWaitSemaphores = &semaphores.renderComplete;
 
-	VkSwapchainKHR swapChains[] = { swapChain };
 	presentInfo.swapchainCount = 1;
 	presentInfo.pSwapchains = &swapChain;
 
@@ -1105,7 +1082,9 @@ void VulkanRenderer::Render()
 
 	vkQueuePresentKHR(presentQueue, &presentInfo);
 
-	currentFrame = (currentFrame + 1) % waitFences.size();
+	vkQueueWaitIdle(presentQueue);
+
+	currentFrame = (currentFrame + 1) % swapChainFramebuffers.size();
 
 	meshesToRender.clear();
 	uiElementsToRender.clear();
