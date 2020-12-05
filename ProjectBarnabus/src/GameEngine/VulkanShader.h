@@ -62,11 +62,11 @@ public:
 	void CreateGraphicPipelines();
 
 	void CreateUniformBuffers();
-	void CreateDescriptorPool();
-	void CreateDescriptorSets();
+	virtual void CreateDescriptorPool();
+	virtual void CreateDescriptorSets();
 
 protected:
-	void CreateDescriptorSetLayout();
+	virtual void CreateDescriptorSetLayout();
 protected:
 	virtual VkDeviceSize GetUniformBufferSize() = 0;
 	virtual VkDeviceSize GetUniformItemSize() = 0;

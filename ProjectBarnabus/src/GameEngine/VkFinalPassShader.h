@@ -21,6 +21,10 @@ public:
 
 	virtual VkDeviceSize GetUniformItemSize() override;
 
+	void CreateDescriptorPool() override;
+	void CreateDescriptorSetLayout() override;
+	void CreateDescriptorSets() override;
+
 protected:
 	std::vector<FinalPassUBO> uniforms;
 };

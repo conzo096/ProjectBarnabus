@@ -369,7 +369,17 @@ VkRenderPass VulkanRenderer::GetRenderPass()
 
 VkRenderPass VulkanRenderer::GetOffScreenRenderPass()
 {
-	return offScreenRenderPass;
+	return offScreenFrameBuf.renderPass;
+}
+
+VkSampler VulkanRenderer::GetColorSampler()
+{
+	return colorSampler;
+}
+
+VulkanRenderer::FrameBuffer VulkanRenderer::GetOffscreenFrameBuffer()
+{
+	return offScreenFrameBuf;
 }
 
 bool VulkanRenderer::InitVulkanInstance()
@@ -653,12 +663,6 @@ void VulkanRenderer::CreateRenderPass()
 	{
 		throw std::runtime_error("failed to create render pass!");
 	}
-
-	if (vkCreateRenderPass(device, &renderPassInfo, nullptr, &offScreenRenderPass) != VK_SUCCESS)
-	{
-		throw std::runtime_error("failed to create offscreen render pass!");
-	}
-
 }
 
 void VulkanRenderer::CreateFramebuffers()
@@ -756,7 +760,19 @@ void VulkanRenderer::CreateCommandBuffers()
 		// Draw the UI to the texture buffer 
 
 		// Draw to screen - passing in both texture buffers
-		VulkanShader* shader = static_cast<VulkanShader*>(shaders["final"].get());
+		VkFinalPassShader* shader = static_cast<VkFinalPassShader*>(shaders["final"].get());
+
+		uint32_t uniformOffset[1] = { 0 };
+
+		vkCmdBindDescriptorSets(commandBuffers[i],
+			VK_PIPELINE_BIND_POINT_GRAPHICS,
+			shader->GetPipelineLayout(MeshData::PrimativeType::QUAD),
+			0,
+			1,
+			&shader->GetDescriptorSet(i),
+			1,
+			uniformOffset);
+
 		vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, shader->GetPipeline(screenQuad->GetMeshData().GetType()));
 
 		VkBuffer vertexBuffers[] = { screenQuad->GetMeshData().vertexBuffer };
@@ -990,8 +1006,8 @@ void VulkanRenderer::CreateOffScreenCommandBuffer(unsigned int imageIndex)
 	VkRenderPassBeginInfo renderPassInfo{};
 
 	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-	renderPassInfo.renderPass = offScreenRenderPass;
-	renderPassInfo.framebuffer = swapChainFramebuffers[imageIndex]; // Needs its own render framebuffer.
+	renderPassInfo.renderPass = offScreenFrameBuf.renderPass;
+	renderPassInfo.framebuffer = offScreenFrameBuf.frameBuffer;
 	renderPassInfo.renderArea.offset = { 0, 0 };
 	renderPassInfo.renderArea.extent = swapChainExtent;
 	std::array<VkClearValue, 2> clearValues{};
@@ -1076,12 +1092,7 @@ void VulkanRenderer::Render()
 		return;
 	}
 
-	static bool temp = false;
-	if (!temp)
-	{
-		CreateOffScreenCommandBuffer(imageIndex);
-		temp = true;
-	}
+	CreateOffScreenCommandBuffer(imageIndex);
 
 	VkSubmitInfo submitInfo{};
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -1266,20 +1277,6 @@ void VulkanRenderer::PrepareOffscreenFramebuffer()
 	offScreenFrameBuf.width = 1920;
 	offScreenFrameBuf.height = 1080;
 
-	// Color attachments
-
-	// (World space) Positions
-	CreateAttachement(
-		VK_FORMAT_R16G16B16A16_SFLOAT,
-		VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-		&offScreenFrameBuf.position);
-
-	// (World space) Normals
-	CreateAttachement(
-		VK_FORMAT_R16G16B16A16_SFLOAT,
-		VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-		&offScreenFrameBuf.normal);
-
 	// Albedo (color)
 	CreateAttachement(
 		VK_FORMAT_R8G8B8A8_UNORM,
@@ -1301,15 +1298,16 @@ void VulkanRenderer::PrepareOffscreenFramebuffer()
 	// Set up separate renderpass with references to the color and depth attachments
 	std::array<VkAttachmentDescription, 4> attachmentDescs = {};
 
+
 	// Init attachment properties
-	for (uint32_t i = 0; i < 4; ++i)
+	for (uint32_t i = 0; i < 2; ++i)
 	{
 		attachmentDescs[i].samples = VK_SAMPLE_COUNT_1_BIT;
 		attachmentDescs[i].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
 		attachmentDescs[i].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
 		attachmentDescs[i].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 		attachmentDescs[i].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-		if (i == 3)
+		if (i == 1)
 		{
 			attachmentDescs[i].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 			attachmentDescs[i].finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
@@ -1321,19 +1319,14 @@ void VulkanRenderer::PrepareOffscreenFramebuffer()
 		}
 	}
 
-	// Formats
-	attachmentDescs[0].format = offScreenFrameBuf.position.format;
-	attachmentDescs[1].format = offScreenFrameBuf.normal.format;
-	attachmentDescs[2].format = offScreenFrameBuf.albedo.format;
-	attachmentDescs[3].format = offScreenFrameBuf.depth.format;
+	attachmentDescs[0].format = offScreenFrameBuf.albedo.format;
+	attachmentDescs[1].format = offScreenFrameBuf.depth.format;
 
 	std::vector<VkAttachmentReference> colorReferences;
 	colorReferences.push_back({ 0, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL });
-	colorReferences.push_back({ 1, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL });
-	colorReferences.push_back({ 2, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL });
-
+	
 	VkAttachmentReference depthReference = {};
-	depthReference.attachment = 3;
+	depthReference.attachment = 1;
 	depthReference.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
 	VkSubpassDescription subpass = {};
@@ -1372,11 +1365,9 @@ void VulkanRenderer::PrepareOffscreenFramebuffer()
 
 	vkCreateRenderPass(device, &renderPassInfo, nullptr, &offScreenFrameBuf.renderPass);
 
-	std::array<VkImageView, 4> attachments;
-	attachments[0] = offScreenFrameBuf.position.view;
-	attachments[1] = offScreenFrameBuf.normal.view;
-	attachments[2] = offScreenFrameBuf.albedo.view;
-	attachments[3] = offScreenFrameBuf.depth.view;
+	std::array<VkImageView, 2> attachments;
+	attachments[0] = offScreenFrameBuf.albedo.view;
+	attachments[1] = offScreenFrameBuf.depth.view;
 
 	VkFramebufferCreateInfo fbufCreateInfo = {};
 	fbufCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -1389,18 +1380,20 @@ void VulkanRenderer::PrepareOffscreenFramebuffer()
 	fbufCreateInfo.layers = 1;
 	vkCreateFramebuffer(device, &fbufCreateInfo, nullptr, &offScreenFrameBuf.frameBuffer);
 
-	//// Create sampler to sample from the color attachments
-	//VkSamplerCreateInfo sampler = vks::initializers::samplerCreateInfo();
-	//sampler.magFilter = VK_FILTER_NEAREST;
-	//sampler.minFilter = VK_FILTER_NEAREST;
-	//sampler.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
-	//sampler.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-	//sampler.addressModeV = sampler.addressModeU;
-	//sampler.addressModeW = sampler.addressModeU;
-	//sampler.mipLodBias = 0.0f;
-	//sampler.maxAnisotropy = 1.0f;
-	//sampler.minLod = 0.0f;
-	//sampler.maxLod = 1.0f;
-	//sampler.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
-	//vkCreateSampler(device, &sampler, nullptr, &colorSampler);
+	// Create sampler to sample from the color attachments
+	VkSamplerCreateInfo sampler{};
+	sampler.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+	sampler.maxAnisotropy = 1.0f;
+	sampler.magFilter = VK_FILTER_NEAREST;
+	sampler.minFilter = VK_FILTER_NEAREST;
+	sampler.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+	sampler.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+	sampler.addressModeV = sampler.addressModeU;
+	sampler.addressModeW = sampler.addressModeU;
+	sampler.mipLodBias = 0.0f;
+	sampler.maxAnisotropy = 1.0f;
+	sampler.minLod = 0.0f;
+	sampler.maxLod = 1.0f;
+	sampler.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
+	vkCreateSampler(device, &sampler, nullptr, &colorSampler);
 }

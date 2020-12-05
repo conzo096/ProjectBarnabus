@@ -57,6 +57,15 @@ public:
 		VkFormat format;
 	};
 
+	struct FrameBuffer
+	{
+		int32_t width, height;
+		VkFramebuffer frameBuffer;
+		FrameBufferAttachment albedo;
+		FrameBufferAttachment depth;
+		VkRenderPass renderPass;
+	};
+
 public:
 	VulkanRenderer();
 	~VulkanRenderer();
@@ -103,6 +112,8 @@ public:
 	VkCommandPool GetCommandPool();
 	VkRenderPass GetRenderPass();
 	VkRenderPass GetOffScreenRenderPass();
+	VkSampler GetColorSampler();
+	FrameBuffer GetOffscreenFrameBuffer();
 private:
 	bool InitVulkanInstance();
 	void SetupDebugMessenger();
@@ -161,22 +172,15 @@ private:
 
 
 	VkRenderPass renderPass;
-	VkRenderPass offScreenRenderPass;
 
 	//Depth buffer - Add to framebuffer class?
 	VkImage depthImage;
 	VkDeviceMemory depthImageMemory;
 	VkImageView depthImageView;
 
-	struct FrameBuffer {
-		int32_t width, height;
-		VkFramebuffer frameBuffer;
-		FrameBufferAttachment position, normal, albedo;
-		FrameBufferAttachment depth;
-		VkRenderPass renderPass;
-	} offScreenFrameBuf;
+	struct FrameBuffer offScreenFrameBuf;
 
-
+	VkSampler colorSampler;
 	// Semaphore used to synchronize between offscreen and final scene rendering
 	VkSemaphore offscreenSemaphore = VK_NULL_HANDLE;
 
