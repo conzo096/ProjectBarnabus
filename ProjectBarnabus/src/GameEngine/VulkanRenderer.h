@@ -49,6 +49,14 @@ public:
 		VkSemaphore renderComplete;
 	};
 
+	// Framebuffer for offscreen rendering
+	struct FrameBufferAttachment {
+		VkImage image;
+		VkDeviceMemory mem;
+		VkImageView view;
+		VkFormat format;
+	};
+
 public:
 	VulkanRenderer();
 	~VulkanRenderer();
@@ -94,7 +102,7 @@ public:
 	VkQueue GetPresentQueue();
 	VkCommandPool GetCommandPool();
 	VkRenderPass GetRenderPass();
-
+	VkRenderPass GetOffScreenRenderPass();
 private:
 	bool InitVulkanInstance();
 	void SetupDebugMessenger();
@@ -112,6 +120,8 @@ private:
 	void CreateOffScreenCommandBuffer(unsigned int imageIndex);
 	void CreateSyncObjects();
 
+	void CreateAttachement(VkFormat format, VkImageUsageFlagBits usage, FrameBufferAttachment *attachment);
+	void PrepareOffscreenFramebuffer();
 private:
 	void CleanupSwapChain();
 
@@ -142,6 +152,7 @@ private:
 
 	std::vector<VkImageView> swapChainImageViews;
 
+	VkFramebuffer              offscreenFramebuffer;
 	std::vector<VkFramebuffer> swapChainFramebuffers;
 
 	VkCommandPool commandPool;
@@ -150,11 +161,20 @@ private:
 
 
 	VkRenderPass renderPass;
+	VkRenderPass offScreenRenderPass;
 
 	//Depth buffer - Add to framebuffer class?
 	VkImage depthImage;
 	VkDeviceMemory depthImageMemory;
 	VkImageView depthImageView;
+
+	struct FrameBuffer {
+		int32_t width, height;
+		VkFramebuffer frameBuffer;
+		FrameBufferAttachment position, normal, albedo;
+		FrameBufferAttachment depth;
+		VkRenderPass renderPass;
+	} offScreenFrameBuf;
 
 
 	// Semaphore used to synchronize between offscreen and final scene rendering
