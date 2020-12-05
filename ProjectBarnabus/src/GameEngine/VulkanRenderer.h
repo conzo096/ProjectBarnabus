@@ -163,7 +163,6 @@ private:
 
 	std::vector<VkImageView> swapChainImageViews;
 
-	VkFramebuffer              offscreenFramebuffer;
 	std::vector<VkFramebuffer> swapChainFramebuffers;
 
 	VkCommandPool commandPool;

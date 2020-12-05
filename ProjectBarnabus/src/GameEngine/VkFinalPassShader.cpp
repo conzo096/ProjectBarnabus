@@ -98,7 +98,7 @@ void VkFinalPassShader::CreateDescriptorSets()
 	VkDescriptorImageInfo texDescriptorAlbedo;
 	texDescriptorAlbedo.sampler = colorSampler;
 	texDescriptorAlbedo.imageView = offScreenFrameBuf.albedo.view;
-	texDescriptorAlbedo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+	texDescriptorAlbedo.imageLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
 	VkDescriptorSetAllocateInfo allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
