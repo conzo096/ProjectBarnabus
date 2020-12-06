@@ -1,9 +1,11 @@
 #pragma once
 #include "IFramebuffer.h"
+#include "VulkanTexture.h"
 
 class VulkanFrameBuffer : public IFrameBuffer
 {
 public:
+	VulkanFrameBuffer();
 	VulkanFrameBuffer(const std::string& frameBufferName);
 	~VulkanFrameBuffer();
 
@@ -13,4 +15,19 @@ public:
 
 	void LoadFrameBuffer(int w, int h);
 	void BindFrameBuffer();
+
+	unsigned int GetWidth();
+	unsigned int GetHeight();
+	VkFramebuffer GetVulkanFrameBuffer();
+	void CreateRenderPass(VkDevice device, VkPhysicalDevice physicalDevice, VkFormat format);
+	void CreateFrameBuffer(VkDevice device);
+public:
+	VkRenderPass GetRenderPass();
+private:
+	unsigned int width = 1920;
+	unsigned int height = 1080;
+	VkRenderPass renderPass;
+	VkFramebuffer frameBuffer;
+	VulkanTexture frameTexture;
+	VulkanTexture depthTexture;
 };

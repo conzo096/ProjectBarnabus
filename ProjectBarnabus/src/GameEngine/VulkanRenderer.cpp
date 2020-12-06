@@ -369,7 +369,7 @@ VkRenderPass VulkanRenderer::GetRenderPass()
 
 VkRenderPass VulkanRenderer::GetOffScreenRenderPass()
 {
-	return offScreenFrameBuf.renderPass;
+	return offScreenFrameBuf.GetRenderPass();
 }
 
 VkSampler VulkanRenderer::GetColorSampler()
@@ -377,7 +377,7 @@ VkSampler VulkanRenderer::GetColorSampler()
 	return colorSampler;
 }
 
-VulkanRenderer::FrameBuffer VulkanRenderer::GetOffscreenFrameBuffer()
+VulkanFrameBuffer VulkanRenderer::GetOffscreenFrameBuffer()
 {
 	return offScreenFrameBuf;
 }
@@ -664,7 +664,7 @@ void VulkanRenderer::CreateRenderPass()
 		throw std::runtime_error("failed to create render pass!");
 	}
 
-	vkCreateRenderPass(device, &renderPassInfo, nullptr, &offScreenFrameBuf.renderPass);
+	offScreenFrameBuf.CreateRenderPass(device, physicalDevice, swapChainImageFormat);
 }
 
 void VulkanRenderer::CreateFramebuffers()
@@ -698,22 +698,7 @@ void VulkanRenderer::CreateFramebuffers()
 		}
 	}
 
-	std::array<VkImageView, 2> attachments;
-	attachments[0] = offScreenFrameBuf.albedo.GetImageView();
-	attachments[1] = offScreenFrameBuf.depth.GetImageView();
-
-	VkFramebufferCreateInfo fbufCreateInfo = {};
-	fbufCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-	fbufCreateInfo.pNext = NULL;
-	fbufCreateInfo.renderPass = offScreenFrameBuf.renderPass;
-	fbufCreateInfo.pAttachments = attachments.data();
-	fbufCreateInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
-	fbufCreateInfo.width = offScreenFrameBuf.width;
-	fbufCreateInfo.height = offScreenFrameBuf.height;
-	fbufCreateInfo.layers = 1;
-
-	vkCreateFramebuffer(device, &fbufCreateInfo, nullptr, &offScreenFrameBuf.frameBuffer);
-
+	offScreenFrameBuf.CreateFrameBuffer(device);
 }
 
 void VulkanRenderer::CreateCommandPool()
@@ -1022,8 +1007,8 @@ void VulkanRenderer::CreateOffScreenCommandBuffer(unsigned int imageIndex)
 	VkRenderPassBeginInfo renderPassInfo{};
 
 	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-	renderPassInfo.renderPass = offScreenFrameBuf.renderPass;
-	renderPassInfo.framebuffer = offScreenFrameBuf.frameBuffer;
+	renderPassInfo.renderPass = offScreenFrameBuf.GetRenderPass();
+	renderPassInfo.framebuffer = offScreenFrameBuf.GetVulkanFrameBuffer();
 	renderPassInfo.renderArea.offset = { 0, 0 };
 	renderPassInfo.renderArea.extent = swapChainExtent;
 	std::array<VkClearValue, 2> clearValues{};
@@ -1275,8 +1260,8 @@ void VulkanRenderer::CreateAttachement(VkFormat format, VkImageUsageFlagBits usa
 	image.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 	image.imageType = VK_IMAGE_TYPE_2D;
 	image.format = format;
-	image.extent.width = offScreenFrameBuf.width;
-	image.extent.height = offScreenFrameBuf.height;
+	image.extent.width = offScreenFrameBuf.GetWidth();
+	image.extent.height = offScreenFrameBuf.GetHeight();
 	image.extent.depth = 1;
 	image.mipLevels = 1;
 	image.arrayLayers = 1;
@@ -1311,14 +1296,17 @@ void VulkanRenderer::CreateAttachement(VkFormat format, VkImageUsageFlagBits usa
 
 void VulkanRenderer::PrepareOffscreenFramebuffer()
 {
-	offScreenFrameBuf.width = 1920;
-	offScreenFrameBuf.height = 1080;
+	offScreenFrameBuf.LoadFrameBuffer(1920, 1080);
+
+	// Get textures
+	auto frameTexture = static_cast<VulkanTexture*>(offScreenFrameBuf.GetFrameTexture());
+	auto depthTexture = static_cast<VulkanTexture*>(offScreenFrameBuf.GetDepthTexture());
 
 	// Albedo (color)
 	CreateAttachement(
 		VK_FORMAT_B8G8R8A8_SRGB,
 		VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-		&offScreenFrameBuf.albedo);
+		frameTexture);
 
 	// Depth attachment
 
@@ -1330,7 +1318,7 @@ void VulkanRenderer::PrepareOffscreenFramebuffer()
 	CreateAttachement(
 		attDepthFormat,
 		VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
-		&offScreenFrameBuf.depth);
+		depthTexture);
 
 	// Create sampler to sample from the color attachments
 	VkSamplerCreateInfo sampler{};

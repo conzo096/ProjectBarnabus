@@ -2,6 +2,7 @@
 #define GLFW_INCLUDE_VULKAN
 #include "IRenderer.h"
 #include "VulkanTexture.h"
+#include "VulkanFrameBuffer.h"
 #include "GLFW/glfw3.h"
 #include <optional>
 #include <map>
@@ -50,14 +51,14 @@ public:
 		VkSemaphore renderComplete;
 	};
 
-	struct FrameBuffer
-	{
-		int32_t width, height;
-		VkFramebuffer frameBuffer;
-		VulkanTexture albedo;
-		VulkanTexture depth;
-		VkRenderPass renderPass;
-	};
+	//struct FrameBuffer
+	//{
+	//	int32_t width, height;
+	//	VkFramebuffer frameBuffer;
+	//	VulkanTexture albedo;
+	//	VulkanTexture depth;
+	//	VkRenderPass renderPass;
+	//};
 
 public:
 	VulkanRenderer();
@@ -106,7 +107,8 @@ public:
 	VkRenderPass GetRenderPass();
 	VkRenderPass GetOffScreenRenderPass();
 	VkSampler GetColorSampler();
-	FrameBuffer GetOffscreenFrameBuffer();
+	VulkanFrameBuffer GetOffscreenFrameBuffer();
+
 private:
 	bool InitVulkanInstance();
 	void SetupDebugMessenger();
@@ -164,11 +166,10 @@ private:
 
 
 	VkRenderPass renderPass;
-
 	//Depth buffer - Add to framebuffer class?
 	VulkanTexture depthTexture;
 
-	struct FrameBuffer offScreenFrameBuf;
+	VulkanFrameBuffer offScreenFrameBuf;
 
 	VkSampler colorSampler;
 	// Semaphore used to synchronize between offscreen and final scene rendering
