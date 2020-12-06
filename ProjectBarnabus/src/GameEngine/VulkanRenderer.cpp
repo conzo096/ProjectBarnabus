@@ -1259,5 +1259,4 @@ void VulkanRenderer::PrepareOffscreenFramebuffer()
 		attDepthFormat,
 		VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
 		depthTexture);
-
 }

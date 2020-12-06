@@ -9,21 +9,15 @@ VkFinalPassShader::VkFinalPassShader() : VulkanShader( { MeshData::QUAD })
 
 void VkFinalPassShader::Use()
 {
-	VulkanUtils::UpdateUniformBuffer<FinalPassUBO>(device, bufferSize, uniformBuffersMemory[uniformBufferIndex], uniformBuffers[uniformBufferIndex], uniforms);
-	uniforms.clear();
 }
 
 void VkFinalPassShader::UpdateUniforms(MeshData & meshData)
 {
-	FinalPassUBO ubo{ };
-
-	uniforms.push_back(ubo);
 }
 
 void VkFinalPassShader::UpdateUniforms(MeshData & meshData, const LightInfo & lights)
 {
 }
-
 
 VkDeviceSize VkFinalPassShader::GetUniformBufferSize()
 {
@@ -40,17 +34,14 @@ void VkFinalPassShader::CreateDescriptorPool()
 	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
 
 	std::vector<VkDescriptorPoolSize> poolSizes;
-	poolSizes.resize(2);
+	poolSizes.resize(1);
 
-	poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+	poolSizes[0].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 	poolSizes[0].descriptorCount = static_cast<uint32_t>(renderer->GetSwapChainImages().size());
-
-	poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-	poolSizes[1].descriptorCount = static_cast<uint32_t>(renderer->GetSwapChainImages().size());
 
 	VkDescriptorPoolCreateInfo poolInfo{};
 	poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-	poolInfo.poolSizeCount = 2;
+	poolInfo.poolSizeCount = 1;
 	poolInfo.pPoolSizes = poolSizes.data();
 	poolInfo.maxSets = static_cast<uint32_t>(renderer->GetSwapChainImages().size());
 
@@ -63,18 +54,12 @@ void VkFinalPassShader::CreateDescriptorPool()
 void VkFinalPassShader::CreateDescriptorSetLayout()
 {
 	std::vector<VkDescriptorSetLayoutBinding> setLayoutBindings;
-	setLayoutBindings.resize(2);
+	setLayoutBindings.resize(1);
 
-	setLayoutBindings[0].binding = 0;
+	setLayoutBindings[0].binding = 1;
 	setLayoutBindings[0].descriptorCount = 1;
-	setLayoutBindings[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
-	setLayoutBindings[0].pImmutableSamplers = nullptr;
-	setLayoutBindings[0].stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-
-	setLayoutBindings[1].binding = 1;
-	setLayoutBindings[1].descriptorCount = 1;
-	setLayoutBindings[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-	setLayoutBindings[1].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+	setLayoutBindings[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+	setLayoutBindings[0].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 	
 	VkDescriptorSetLayoutCreateInfo layoutInfo{};
 	layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;

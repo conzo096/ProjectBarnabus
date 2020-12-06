@@ -26,6 +26,5 @@ public:
 	void CreateDescriptorSets() override;
 
 protected:
-	std::vector<FinalPassUBO> uniforms;
 	VkSampler colorSampler;
 };
