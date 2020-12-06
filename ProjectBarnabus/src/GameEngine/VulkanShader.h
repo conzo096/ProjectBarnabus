@@ -64,11 +64,12 @@ public:
 	void CreateGraphicPipelines();
 
 	void CreateUniformBuffers();
-	virtual void CreateDescriptorPool();
-	virtual void CreateDescriptorSets();
+	virtual void CreateDescriptorPool() = 0;
+	virtual void CreateDescriptorSets() = 0;
 
 protected:
-	virtual void CreateDescriptorSetLayout();
+	virtual void CreateDescriptorSetLayout() = 0;
+	virtual void BindDescriptorSet(MeshData & meshData, VkCommandBuffer& buffer, int imageIndex, unsigned int stride) = 0;
 protected:
 	virtual VkDeviceSize GetUniformBufferSize() = 0;
 	virtual VkDeviceSize GetUniformItemSize() = 0;

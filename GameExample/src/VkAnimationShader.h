@@ -22,4 +22,16 @@ protected:
 	std::vector<VkVertexInputAttributeDescription> GetAttributeDescriptions() override;
 private:
 	std::vector<AnimationUBO> uniforms;
+
+	// Inherited via VulkanShader
+	virtual void CreateDescriptorSetLayout() override;
+
+	// Inherited via VulkanShader
+	virtual void CreateDescriptorSets() override;
+
+	// Inherited via VulkanShader
+	virtual void CreateDescriptorPool() override;
+
+	// Inherited via VulkanShader
+	virtual void BindDescriptorSet(MeshData & meshData, VkCommandBuffer & buffer, int imageIndex, unsigned int stride) override;
 };

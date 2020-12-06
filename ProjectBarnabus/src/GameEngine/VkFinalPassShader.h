@@ -27,4 +27,7 @@ public:
 
 protected:
 	VkSampler colorSampler;
+
+	// Inherited via VulkanShader
+	virtual void BindDescriptorSet(MeshData & meshData, VkCommandBuffer & buffer, int imageIndex, unsigned int stride) override;
 };

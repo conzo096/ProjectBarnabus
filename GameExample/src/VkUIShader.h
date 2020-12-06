@@ -16,4 +16,16 @@ public:
 	virtual void UpdateUniforms(MeshData & meshData, const LightInfo & lights) override;
 	virtual VkDeviceSize GetUniformBufferSize() override;
 	virtual VkDeviceSize GetUniformItemSize() override;
+
+	// Inherited via VulkanShader
+	virtual void CreateDescriptorSetLayout() override;
+
+	// Inherited via VulkanShader
+	virtual void CreateDescriptorSets() override;
+
+	// Inherited via VulkanShader
+	virtual void CreateDescriptorPool() override;
+
+	// Inherited via VulkanShader
+	virtual void BindDescriptorSet(MeshData & meshData, VkCommandBuffer & buffer, int imageIndex, unsigned int stride) override;
 };

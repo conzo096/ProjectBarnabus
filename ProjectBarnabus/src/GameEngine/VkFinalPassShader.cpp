@@ -133,3 +133,17 @@ void VkFinalPassShader::CreateDescriptorSets()
 		vkUpdateDescriptorSets(device, static_cast<uint32_t>(writeDescriptorSets.size()), writeDescriptorSets.data(), 0, nullptr);
 	}
 }
+
+void VkFinalPassShader::BindDescriptorSet(MeshData & meshData, VkCommandBuffer & buffer, int imageIndex, unsigned int stride)
+{
+	uint32_t uniformOffset[1] = { GetBufferSize() * stride };
+
+	vkCmdBindDescriptorSets(buffer,
+		VK_PIPELINE_BIND_POINT_GRAPHICS,
+		GetPipelineLayout(meshData.GetType())
+		, 0,
+		1,
+		&GetDescriptorSet(imageIndex),
+		1,
+		uniformOffset);
+}
