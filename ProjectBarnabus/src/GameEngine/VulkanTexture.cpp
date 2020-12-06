@@ -164,3 +164,34 @@ bool VulkanTexture::LoadTexture(const std::string & file)
 
 	return false;
 }
+
+VkImage& VulkanTexture::GetImage()
+{
+	return image;
+}
+
+VkDeviceMemory& VulkanTexture::GetImageMemory()
+{
+	return imageMemory;
+}
+
+VkImageView& VulkanTexture::GetImageView()
+{
+	return imageView;
+}
+
+
+VkFormat VulkanTexture::GetFormat()
+{
+	return format;
+}
+
+void VulkanTexture::SetImageView(VkImageView imgView)
+{
+	imageView = imgView;
+}
+
+void VulkanTexture::SetFormat(VkFormat form)
+{
+	format = form;
+}

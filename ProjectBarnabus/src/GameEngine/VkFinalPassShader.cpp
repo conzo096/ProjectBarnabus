@@ -97,7 +97,7 @@ void VkFinalPassShader::CreateDescriptorSets()
 	// Image descriptors for the offscreen color attachments
 	VkDescriptorImageInfo texDescriptorAlbedo;
 	texDescriptorAlbedo.sampler = colorSampler;
-	texDescriptorAlbedo.imageView = offScreenFrameBuf.albedo.view;
+	texDescriptorAlbedo.imageView = offScreenFrameBuf.albedo.GetImageView();
 	texDescriptorAlbedo.imageLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
 	VkDescriptorSetAllocateInfo allocInfo{};

@@ -680,7 +680,7 @@ void VulkanRenderer::CreateFramebuffers()
 	{
 		std::array<VkImageView, 2> attachments = {
 			swapChainImageViews[i],
-			depthImageView
+			depthTexture.GetImageView()
 		};
 
 		VkFramebufferCreateInfo framebufferInfo{};
@@ -699,8 +699,8 @@ void VulkanRenderer::CreateFramebuffers()
 	}
 
 	std::array<VkImageView, 2> attachments;
-	attachments[0] = offScreenFrameBuf.albedo.view;
-	attachments[1] = offScreenFrameBuf.depth.view;
+	attachments[0] = offScreenFrameBuf.albedo.GetImageView();
+	attachments[1] = offScreenFrameBuf.depth.GetImageView();
 
 	VkFramebufferCreateInfo fbufCreateInfo = {};
 	fbufCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -823,9 +823,9 @@ void VulkanRenderer::CreateSyncObjects()
 
 void VulkanRenderer::CleanupSwapChain()
 {
-	vkDestroyImageView(device, depthImageView, nullptr);
-	vkDestroyImage(device, depthImage, nullptr);
-	vkFreeMemory(device, depthImageMemory, nullptr);
+	vkDestroyImageView(device, depthTexture.GetImageView() , nullptr);
+	vkDestroyImage(device, depthTexture.GetImage(), nullptr);
+	vkFreeMemory(device, depthTexture.GetImageMemory(), nullptr);
 
 	for (const auto& framebuffer : swapChainFramebuffers)
 	{
@@ -1246,16 +1246,17 @@ void VulkanRenderer::CreateDepthResources()
 	VkFormat depthFormat = VulkanUtils::FindDepthFormat(physicalDevice);
 
 	VulkanUtils::CreateImage(device, physicalDevice, swapChainExtent.width, swapChainExtent.height,
-		depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, depthImage, depthImageMemory);
-	depthImageView = VulkanUtils::CreateImageView(device, depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
+		depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, depthTexture.GetImage(), depthTexture.GetImageMemory());
+	depthTexture.SetImageView(VulkanUtils::CreateImageView(device, depthTexture.GetImage(), depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT));
 }
 
-void VulkanRenderer::CreateAttachement(VkFormat format, VkImageUsageFlagBits usage, FrameBufferAttachment * attachment)
+//todo move this into the texture class
+void VulkanRenderer::CreateAttachement(VkFormat format, VkImageUsageFlagBits usage, VulkanTexture * attachment)
 {
 	VkImageAspectFlags aspectMask = 0;
 	VkImageLayout imageLayout;
 
-	attachment->format = format;
+	attachment->SetFormat(format);
 
 	if (usage & VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT)
 	{
@@ -1287,12 +1288,12 @@ void VulkanRenderer::CreateAttachement(VkFormat format, VkImageUsageFlagBits usa
 	memAlloc.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 	VkMemoryRequirements memReqs;
 
-	vkCreateImage(device, &image, nullptr, &attachment->image);
-	vkGetImageMemoryRequirements(device, attachment->image, &memReqs);
+	vkCreateImage(device, &image, nullptr, &attachment->GetImage());
+	vkGetImageMemoryRequirements(device, attachment->GetImage(), &memReqs);
 	memAlloc.allocationSize = memReqs.size;
 	memAlloc.memoryTypeIndex = VulkanUtils::FindMemoryType(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, physicalDevice);
-	vkAllocateMemory(device, &memAlloc, nullptr, &attachment->mem);
-	vkBindImageMemory(device, attachment->image, attachment->mem, 0);
+	vkAllocateMemory(device, &memAlloc, nullptr, &attachment->GetImageMemory());
+	vkBindImageMemory(device, attachment->GetImage(), attachment->GetImageMemory(), 0);
 
 	VkImageViewCreateInfo imageView{};
 	imageView.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -1304,8 +1305,8 @@ void VulkanRenderer::CreateAttachement(VkFormat format, VkImageUsageFlagBits usa
 	imageView.subresourceRange.levelCount = 1;
 	imageView.subresourceRange.baseArrayLayer = 0;
 	imageView.subresourceRange.layerCount = 1;
-	imageView.image = attachment->image;
-	vkCreateImageView(device, &imageView, nullptr, &attachment->view);
+	imageView.image = attachment->GetImage();
+	vkCreateImageView(device, &imageView, nullptr, &attachment->GetImageView());
 }
 
 void VulkanRenderer::PrepareOffscreenFramebuffer()

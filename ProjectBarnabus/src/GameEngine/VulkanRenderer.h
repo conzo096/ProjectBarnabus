@@ -1,6 +1,7 @@
 #pragma once
 #define GLFW_INCLUDE_VULKAN
 #include "IRenderer.h"
+#include "VulkanTexture.h"
 #include "GLFW/glfw3.h"
 #include <optional>
 #include <map>
@@ -49,20 +50,12 @@ public:
 		VkSemaphore renderComplete;
 	};
 
-	// Framebuffer for offscreen rendering
-	struct FrameBufferAttachment {
-		VkImage image;
-		VkDeviceMemory mem;
-		VkImageView view;
-		VkFormat format;
-	};
-
 	struct FrameBuffer
 	{
 		int32_t width, height;
 		VkFramebuffer frameBuffer;
-		FrameBufferAttachment albedo;
-		FrameBufferAttachment depth;
+		VulkanTexture albedo;
+		VulkanTexture depth;
 		VkRenderPass renderPass;
 	};
 
@@ -131,7 +124,7 @@ private:
 	void CreateOffScreenCommandBuffer(unsigned int imageIndex);
 	void CreateSyncObjects();
 
-	void CreateAttachement(VkFormat format, VkImageUsageFlagBits usage, FrameBufferAttachment *attachment);
+	void CreateAttachement(VkFormat format, VkImageUsageFlagBits usage, VulkanTexture *attachment);
 	void PrepareOffscreenFramebuffer();
 private:
 	void CleanupSwapChain();
@@ -173,9 +166,7 @@ private:
 	VkRenderPass renderPass;
 
 	//Depth buffer - Add to framebuffer class?
-	VkImage depthImage;
-	VkDeviceMemory depthImageMemory;
-	VkImageView depthImageView;
+	VulkanTexture depthTexture;
 
 	struct FrameBuffer offScreenFrameBuf;
 

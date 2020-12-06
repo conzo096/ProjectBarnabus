@@ -9,6 +9,13 @@ public:
 	VulkanTexture(unsigned int w, unsigned int h);
 	bool LoadTexture(const std::string& file) override;
 
+	VkImage& GetImage();
+	VkDeviceMemory& GetImageMemory();
+	VkImageView& GetImageView();
+	VkFormat GetFormat();
+
+	void SetImageView(VkImageView imgView);
+	void SetFormat(VkFormat form);
 protected:
 	std::string filePath;
 	int channels;
@@ -17,4 +24,5 @@ protected:
 	VkImage image;
 	VkDeviceMemory imageMemory;
 	VkImageView imageView;
+	VkFormat format;
 };
