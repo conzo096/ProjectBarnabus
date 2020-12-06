@@ -74,7 +74,7 @@ void VkFinalPassShader::CreateDescriptorSetLayout()
 
 void VkFinalPassShader::CreateDescriptorSets()
 {
-	// Create sampler to sample from the color attachments
+	// Create sampler to sample from the color attachments - Should be part of Texture class. 
 	VkSamplerCreateInfo sampler{};
 	sampler.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
 	sampler.maxAnisotropy = 1.0f;
@@ -114,7 +114,7 @@ void VkFinalPassShader::CreateDescriptorSets()
 	}
 
 	std::vector<VkWriteDescriptorSet> writeDescriptorSets;
-	writeDescriptorSets.resize(2);
+	writeDescriptorSets.resize(1);
 
 	for (size_t i = 0; i < renderer->GetSwapChainImages().size(); i++)
 	{
@@ -125,18 +125,10 @@ void VkFinalPassShader::CreateDescriptorSets()
 
 		writeDescriptorSets[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 		writeDescriptorSets[0].dstSet = descriptorSets[i];
-		writeDescriptorSets[0].dstBinding = 0;
-		writeDescriptorSets[0].dstArrayElement = 0;
-		writeDescriptorSets[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+		writeDescriptorSets[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		writeDescriptorSets[0].dstBinding = 1;
+		writeDescriptorSets[0].pImageInfo = &texDescriptorAlbedo;
 		writeDescriptorSets[0].descriptorCount = 1;
-		writeDescriptorSets[0].pBufferInfo = &bufferInfo;
-
-		writeDescriptorSets[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		writeDescriptorSets[1].dstSet = descriptorSets[i];
-		writeDescriptorSets[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-		writeDescriptorSets[1].dstBinding = 1;
-		writeDescriptorSets[1].pImageInfo = &texDescriptorAlbedo;
-		writeDescriptorSets[1].descriptorCount = 1;
 
 		vkUpdateDescriptorSets(device, static_cast<uint32_t>(writeDescriptorSets.size()), writeDescriptorSets.data(), 0, nullptr);
 	}

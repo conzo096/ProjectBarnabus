@@ -1155,6 +1155,7 @@ void VulkanRenderer::CreateAttachement(VkFormat format, VkImageUsageFlagBits usa
 	imageView.subresourceRange.baseArrayLayer = 0;
 	imageView.subresourceRange.layerCount = 1;
 	imageView.image = attachment->GetImage();
+
 	vkCreateImageView(device, &imageView, nullptr, &attachment->GetImageView());
 }
 
