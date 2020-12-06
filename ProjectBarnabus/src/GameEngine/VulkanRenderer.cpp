@@ -985,6 +985,7 @@ void VulkanRenderer::InitialiseMesh(MeshData& data)
 
 void VulkanRenderer::UpdateBaseVertexBuffers(MeshData& data)
 {
+	data.CreateVertexBuffer(data.vertexBuffer, data.vertexBufferMemory, commandPool);
 }
 
 void VulkanRenderer::CreateOffScreenCommandBuffer(unsigned int imageIndex)
@@ -1094,6 +1095,9 @@ void VulkanRenderer::CreateOffScreenCommandBuffer(unsigned int imageIndex)
 		// Replace 6 with indicies size.		
 		vkCmdDrawIndexed(offScreenCmdBuffer, static_cast<uint32_t>(buffers[j].numIndices), 1, 0, 0, 0);
 	}
+
+	// Now draw all the UI elements
+	// Vertices update each frame?
 
 	vkCmdEndRenderPass(offScreenCmdBuffer);
 

@@ -17,6 +17,7 @@ void TextQuad::Draw()
 		};
 
 		mesh.vertices.clear();
+		mesh.GetIndices().clear();
 		for (unsigned int i = 0; i < text.length(); i++)
 		{
 			glm::vec3 UpLeftVertex = glm::vec3(position.x + i * size, position.y + size, 0);
@@ -36,7 +37,9 @@ void TextQuad::Draw()
 			AddVertex(UpLeftVertex, upLeftTextCoord);
 			AddVertex(downLeftVertex, downLeftTexCoord);
 			AddVertex(rightDownVertex, downRightTexCoord);
+			AddVertex(rightDownVertex, downRightTexCoord);
 			AddVertex(upRightVertex, upRightTexCoord);
+			AddVertex(UpLeftVertex, upLeftTextCoord);
 		}
 
 		mesh.UpdateBaseVertexBuffers();
@@ -48,6 +51,11 @@ void TextQuad::Draw()
 
 void TextQuad::SetText(std::string newText)
 {
+	if (newText == text)
+	{
+		return;
+	}
+
 	text = newText;
 	textChanged = true;
 }

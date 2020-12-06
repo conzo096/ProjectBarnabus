@@ -13,10 +13,10 @@ void UiDisplay::InitaliseAllQuads()
 {
 	for (auto& pair : uiElements)
 	{
-		//pair.second->InitQuad();
+		pair.second->InitQuad();
 	}
 
-	BarnabusGameEngine::Get().AddMessageLog(StringLog("Initialised UI: TODO GET NAME", StringLog::Priority::Low));
+	BarnabusGameEngine::Get().AddMessageLog(StringLog("Initialised UI display", StringLog::Priority::Low));
 }
 
 void UiDisplay::Draw()

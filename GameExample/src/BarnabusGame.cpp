@@ -13,15 +13,15 @@ bool BarnabusGame::LoadGameContent()
 {
 	mainScene.LoadGameContent();
 
-	//ui.InitGameUi();
-	//ui.InitaliseAllQuads();
+	ui.InitGameUi();
+	ui.InitaliseAllQuads();
 	return true;
 }
 
 bool BarnabusGame::Update(float deltaTime)
 {
 	mainScene.Update(deltaTime);
-//	ui.SetExampleText(glm::to_string(mainScene.GetEntity("player")->GetPosition()));
+	ui.SetExampleText(glm::to_string(mainScene.GetEntity("player")->GetPosition()));
 
 	// Close the window if it has been asked too.
 	if (BarnabusGameEngine::Get().ShouldWindowClose() || glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -39,7 +39,7 @@ bool BarnabusGame::Update(float deltaTime)
 bool BarnabusGame::Render(float deltaTime)
 {
 	mainScene.Render(deltaTime);
-	//ui.Draw();
+	ui.Draw();
 
 	BarnabusGameEngine::Get().GetRenderer()->Render();
 

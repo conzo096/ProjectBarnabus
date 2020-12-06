@@ -8,8 +8,8 @@
 GameUi::GameUi()
 {
 	// Create initial quad.
-	UiQuad* debugInformation = new UiQuad(glm::vec2(0.6,0.6),glm::vec2(1,1));
-	uiElements.insert(std::pair<std::string, UiQuad*>("debug", debugInformation));
+	//UiQuad* debugInformation = new UiQuad(glm::vec2(0.6,0.6),glm::vec2(1,1));
+	//uiElements.insert(std::pair<std::string, UiQuad*>("debug", debugInformation));
 	TextQuad* example = new TextQuad(glm::vec2(-1, -1), glm::vec2(1,1));
 	uiElements.insert(std::pair<std::string, UiQuad*>("example", example));
 }
@@ -28,7 +28,7 @@ void GameUi::InitGameUi()
 		ShaderFactory::CreateShader<FontShader>("font", "res\\Shaders\\Vulkan\\VkRed");
 	}
 
-	uiElements.at("debug")->GetMeshData().SetShader(BarnabusGameEngine::Get().GetShader("ui"));
+	//uiElements.at("debug")->GetMeshData().SetShader(BarnabusGameEngine::Get().GetShader("ui"));
 	uiElements.at("example")->GetMeshData().SetShader(BarnabusGameEngine::Get().GetShader("font"));
 
 	ITexture* texture = nullptr;
@@ -56,9 +56,7 @@ GameUi::~GameUi()
 
 void GameUi::Draw()
 {
-#ifdef VULKAN_RENDERER
-	uiElements.at("debug")->GetMeshData().SetTexture(BarnabusGameEngine::Get().GetRenderer()->GetFrameBuffer("main")->GetDepthTexture());
+	//uiElements.at("debug")->GetMeshData().SetTexture(BarnabusGameEngine::Get().GetRenderer()->GetFrameBuffer("main")->GetDepthTexture());
 	static_cast<TextQuad*>(uiElements.at("example"))->SetText(exampleText);
 	UiDisplay::Draw();
-#endif
 }
