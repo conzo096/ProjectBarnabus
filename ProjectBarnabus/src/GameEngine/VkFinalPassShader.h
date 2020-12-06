@@ -3,14 +3,9 @@
 
 class VkFinalPassShader : public VulkanShader
 {
-	struct FinalPassUBO
-	{
-	};
 public:
 	VkFinalPassShader();
 
-
-	// Inherited via VulkanShader
 	virtual void Use() override;
 
 	virtual void UpdateUniforms(MeshData & meshData) override;
@@ -26,8 +21,7 @@ public:
 	void CreateDescriptorSets() override;
 
 protected:
+	void BindDescriptorSet(MeshData & meshData, VkCommandBuffer & buffer, int imageIndex, unsigned int stride) override;
+protected:
 	VkSampler colorSampler;
-
-	// Inherited via VulkanShader
-	virtual void BindDescriptorSet(MeshData & meshData, VkCommandBuffer & buffer, int imageIndex, unsigned int stride) override;
 };

@@ -21,12 +21,12 @@ void VkFinalPassShader::UpdateUniforms(MeshData & meshData, const LightInfo & li
 
 VkDeviceSize VkFinalPassShader::GetUniformBufferSize()
 {
-	return sizeof(FinalPassUBO);
+	return 0;
 }
 
 VkDeviceSize VkFinalPassShader::GetUniformItemSize()
 {
-	return sizeof(FinalPassUBO);
+	return 0;
 }
 
 void VkFinalPassShader::CreateDescriptorPool()
@@ -136,14 +136,12 @@ void VkFinalPassShader::CreateDescriptorSets()
 
 void VkFinalPassShader::BindDescriptorSet(MeshData & meshData, VkCommandBuffer & buffer, int imageIndex, unsigned int stride)
 {
-	uint32_t uniformOffset[1] = { GetBufferSize() * stride };
-
 	vkCmdBindDescriptorSets(buffer,
 		VK_PIPELINE_BIND_POINT_GRAPHICS,
 		GetPipelineLayout(meshData.GetType())
 		, 0,
 		1,
 		&GetDescriptorSet(imageIndex),
-		1,
-		uniformOffset);
+		0,
+		0);
 }
