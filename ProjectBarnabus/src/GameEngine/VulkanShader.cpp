@@ -129,6 +129,47 @@ void VulkanShader::DrawMesh(MeshData & meshData)
 {
 }
 
+void VulkanShader::DrawMesh(MeshData & meshData, VkCommandBuffer& buffer, int imageIndex, unsigned int stride)
+{
+	vkCmdBindPipeline(buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, GetPipeline(meshData.GetType()));
+
+	// Draw the game to the texture buffer
+	VkBuffer vertexBuffers[1];
+	VkDeviceSize offsets[1];
+
+	// Better to instance the mesh and change uniform locations
+	vertexBuffers[0] = { meshData.vertexBuffer };
+	offsets[0] = { 0 };
+
+	// Bind buffers
+	vkCmdBindVertexBuffers(buffer, 0, 1, vertexBuffers, offsets);
+
+	if (meshData.bonesData.size() > 0)
+	{
+		VkBuffer vertexBuffers[1];
+		VkDeviceSize offsets[1];
+		vertexBuffers[0] = { meshData.boneBuffer };
+		offsets[0] = { 0 };
+		vkCmdBindVertexBuffers(buffer, 1, 1, vertexBuffers, offsets);
+	}
+
+	vkCmdBindIndexBuffer(buffer, meshData.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+
+	// Each shader has its own buffer. So 
+	uint32_t uniformOffset[1] = { GetBufferSize() * stride };
+
+	vkCmdBindDescriptorSets(buffer,
+		VK_PIPELINE_BIND_POINT_GRAPHICS,
+		GetPipelineLayout(meshData.GetType())
+		, 0,
+		1,
+		&GetDescriptorSet(imageIndex),
+		1,
+		uniformOffset);
+	
+	vkCmdDrawIndexed(buffer, static_cast<uint32_t>(meshData.GetIndices().size()), 1, 0, 0, 0);
+}
+
 VkPipeline VulkanShader::GetPipeline(MeshData::PrimativeType index)
 {
 	return graphicsPipeline[index];

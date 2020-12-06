@@ -883,22 +883,6 @@ void VulkanRenderer::UpdateBaseVertexBuffers(MeshData& data)
 
 void VulkanRenderer::CreateOffScreenCommandBuffer(unsigned int imageIndex)
 {
-	// Not static will result in memory issues here. Still working on a better solution.
-	static std::vector<BufferInfo> buffers;
-	buffers.clear();
-	// For every shader gather required objects and update their uniforms.
-	for (auto& meshes : meshesToRender)
-	{
-		for (auto& mesh : meshes.second)
-		{
-			buffers.push_back({ mesh.vertexBuffer, mesh.indexBuffer,mesh.boneBuffer, (mesh.bonesData.size() > 0) , meshes.first, mesh.GetIndices().size(), mesh.GetType() });
-			meshes.first->UpdateUniforms(mesh);
-		}
-
-		// Tell Shader here to use shader.
-		meshes.first->Use(imageIndex);
-	}
-
 	vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(1), &offScreenCmdBuffer);
 
 	VkCommandBufferAllocateInfo allocInfo{};
@@ -939,55 +923,24 @@ void VulkanRenderer::CreateOffScreenCommandBuffer(unsigned int imageIndex)
 
 	vkCmdBeginRenderPass(offScreenCmdBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-	// Draw the game to the texture buffer
+	unsigned int stride = 0;
+	for (auto& meshes : meshesToRender)
+	{
+		// Tell Shader here to use shader.
+		meshes.first->Use(imageIndex);
+	
+		for (auto& mesh : meshes.second)
+		{
+			meshes.first->UpdateUniforms(mesh);
+			meshes.first->DrawMesh(mesh, offScreenCmdBuffer, imageIndex, stride);
+			stride++;
+		}
+		stride = 0;
+	}
+
+	// Draw ui elements now
 	VkBuffer vertexBuffers[1];
 	VkDeviceSize offsets[1];
-
-	VulkanShader* previousShader = nullptr;
-	int stride = 0;
-	for (int j = 0; j < buffers.size(); j++)
-	{
-		vkCmdBindPipeline(offScreenCmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, buffers[j].shader->GetPipeline(buffers[j].type));
-
-		if (buffers[j].shader != previousShader)
-		{
-			previousShader = buffers[j].shader;
-			stride = 0;
-		}
-		// Better to instance the mesh and change uniform locations
-		vertexBuffers[0] = { buffers[j].vertexBuffer };
-		offsets[0] = { 0 };
-
-		// Bind buffers
-		vkCmdBindVertexBuffers(offScreenCmdBuffer, 0, 1, vertexBuffers, offsets);
-
-		if (buffers[j].useBonesBuffer)
-		{
-			VkBuffer vertexBuffers[1];
-			VkDeviceSize offsets[1];
-			vertexBuffers[0] = { buffers[j].bonesBuffer };
-			offsets[0] = { 0 };
-			vkCmdBindVertexBuffers(offScreenCmdBuffer, 1, 1, vertexBuffers, offsets);
-		}
-
-		vkCmdBindIndexBuffer(offScreenCmdBuffer, buffers[j].indexBuffer, 0, VK_INDEX_TYPE_UINT32);
-
-		// Each shader has its own buffer. So 
-		uint32_t uniformOffset[1] = { buffers[j].shader->GetBufferSize() * stride };
-		stride++;
-
-		vkCmdBindDescriptorSets(offScreenCmdBuffer,
-			VK_PIPELINE_BIND_POINT_GRAPHICS,
-			buffers[j].shader->GetPipelineLayout(buffers[j].type)
-			, 0,
-			1,
-			&buffers[j].shader->GetDescriptorSet(imageIndex),
-			1,
-			uniformOffset);
-
-		// Replace 6 with indicies size.		
-		vkCmdDrawIndexed(offScreenCmdBuffer, static_cast<uint32_t>(buffers[j].numIndices), 1, 0, 0, 0);
-	}
 	for (int i = 0; i < uiElementsToRender.size(); i++)
 	{
 		vkCmdBindPipeline(offScreenCmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, static_cast<VulkanShader*>(uiElementsToRender[i].GetShader())->GetPipeline(MeshData::PrimativeType::QUAD));
@@ -1004,8 +957,7 @@ void VulkanRenderer::CreateOffScreenCommandBuffer(unsigned int imageIndex)
 			&static_cast<VulkanShader*>(uiElementsToRender[i].GetShader())->GetDescriptorSet(imageIndex),
 			1,
 			uniformOffset);
-
-		// Replace 6 with indicies size.		
+	
 		vkCmdDrawIndexed(offScreenCmdBuffer, static_cast<uint32_t>(uiElementsToRender[i].GetIndices().size()), 1, 0, 0, 0);
 	}
 

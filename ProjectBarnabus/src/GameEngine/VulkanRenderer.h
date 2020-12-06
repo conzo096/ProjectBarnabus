@@ -11,17 +11,6 @@ class Light;
 class UiQuad;
 class VulkanShader;
 
-struct BufferInfo
-{
-	VkBuffer vertexBuffer;
-	VkBuffer indexBuffer;
-	VkBuffer bonesBuffer;
-	bool useBonesBuffer;
-	VulkanShader* shader;
-	size_t numIndices;
-	MeshData::PrimativeType type;
-};
-
 class VulkanRenderer : public IRenderer
 {
 public:

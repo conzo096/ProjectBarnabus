@@ -52,6 +52,8 @@ public:
 	void Use(int index);
 
 public:
+	void DrawMesh(MeshData& meshData, VkCommandBuffer& buffer, int imageIndex, unsigned int stride);
+public:
 	VkPipeline GetPipeline(MeshData::PrimativeType index);
 	VkPipelineLayout GetPipelineLayout(MeshData::PrimativeType index);
 	VkDescriptorSet& GetDescriptorSet(unsigned int index);
