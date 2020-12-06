@@ -155,11 +155,9 @@ private:
 	std::vector<VkCommandBuffer> commandBuffers;
 	VkCommandBuffer offScreenCmdBuffer = VK_NULL_HANDLE;
 
-
-	VkRenderPass renderPass;
-	//Depth buffer - Add to framebuffer class?
-	VulkanTexture depthTexture;
-
+	// Renders to the screen.
+	VulkanFrameBuffer mainFramebuffer;
+	// Renders to a texture which mainFramebuffer uses
 	VulkanFrameBuffer offScreenFrameBuf;
 
 	// Semaphore used to synchronize between offscreen and final scene rendering
