@@ -982,7 +982,7 @@ void VulkanRenderer::InitialiseMesh(MeshData& data)
 
 void VulkanRenderer::UpdateBaseVertexBuffers(MeshData& data)
 {
-	data.CreateVertexBuffer(data.vertexBuffer, data.vertexBufferMemory, commandPool);
+	//data.CreateVertexBuffer(data.vertexBuffer, data.vertexBufferMemory, commandPool);
 }
 
 void VulkanRenderer::CreateOffScreenCommandBuffer(unsigned int imageIndex)
@@ -1092,28 +1092,26 @@ void VulkanRenderer::CreateOffScreenCommandBuffer(unsigned int imageIndex)
 		// Replace 6 with indicies size.		
 		vkCmdDrawIndexed(offScreenCmdBuffer, static_cast<uint32_t>(buffers[j].numIndices), 1, 0, 0, 0);
 	}
+	for (int i = 0; i < uiElementsToRender.size(); i++)
+	{
+		vkCmdBindPipeline(offScreenCmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, static_cast<VulkanShader*>(uiElementsToRender[i].GetShader())->GetPipeline(MeshData::PrimativeType::QUAD));
+		vertexBuffers[0] = { uiElementsToRender[i].vertexBuffer };
+		offsets[0] = { 0 };
+		uint32_t uniformOffset[1] = { 0 };
+		vkCmdBindVertexBuffers(offScreenCmdBuffer, 0, 1, vertexBuffers, offsets);
 
-	//// Now draw all the UI elements
-	//for (int i = 0; i < uiElementsToRender.size(); i++)
-	//{
-	//	vkCmdBindPipeline(offScreenCmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, static_cast<VulkanShader*>(uiElementsToRender[i].GetShader())->GetPipeline(MeshData::PrimativeType::QUAD));
-	//	vertexBuffers[0] = { uiElementsToRender[i].vertexBuffer };
-	//	offsets[0] = { 0 };
-	//	uint32_t uniformOffset[1] = { 0 };
-	//	vkCmdBindVertexBuffers(offScreenCmdBuffer, 0, 1, vertexBuffers, offsets);
+		vkCmdBindDescriptorSets(offScreenCmdBuffer,
+			VK_PIPELINE_BIND_POINT_GRAPHICS,
+			static_cast<VulkanShader*>(uiElementsToRender[i].GetShader())->GetPipelineLayout(MeshData::PrimativeType::QUAD)
+			, 0,
+			1,
+			&static_cast<VulkanShader*>(uiElementsToRender[i].GetShader())->GetDescriptorSet(imageIndex),
+			1,
+			uniformOffset);
 
-	//	vkCmdBindDescriptorSets(offScreenCmdBuffer,
-	//		VK_PIPELINE_BIND_POINT_GRAPHICS,
-	//		static_cast<VulkanShader*>(uiElementsToRender[i].GetShader())->GetPipelineLayout(MeshData::PrimativeType::QUAD)
-	//		, 0,
-	//		1,
-	//		&static_cast<VulkanShader*>(uiElementsToRender[i].GetShader())->GetDescriptorSet(imageIndex),
-	//		1,
-	//		uniformOffset);
-
-	//	// Replace 6 with indicies size.		
-	//	vkCmdDrawIndexed(offScreenCmdBuffer, static_cast<uint32_t>(uiElementsToRender[i].GetIndices().size()), 1, 0, 0, 0);
-	//}
+		// Replace 6 with indicies size.		
+		vkCmdDrawIndexed(offScreenCmdBuffer, static_cast<uint32_t>(uiElementsToRender[i].GetIndices().size()), 1, 0, 0, 0);
+	}
 
 	vkCmdEndRenderPass(offScreenCmdBuffer);
 
@@ -1317,7 +1315,7 @@ void VulkanRenderer::PrepareOffscreenFramebuffer()
 
 	// Albedo (color)
 	CreateAttachement(
-		VK_FORMAT_R8G8B8A8_UNORM,
+		VK_FORMAT_B8G8R8A8_SRGB,
 		VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
 		&offScreenFrameBuf.albedo);
 

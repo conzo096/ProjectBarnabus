@@ -24,6 +24,7 @@
     <ClCompile Include="src\VkBasicShader.cpp" />
     <ClCompile Include="src\VkFontShader.cpp" />
     <ClCompile Include="src\VkTerrainShader.cpp" />
+    <ClCompile Include="src\VkUIShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AnimationShader.h" />

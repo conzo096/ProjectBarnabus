@@ -2,6 +2,7 @@
 #include "UiShader.h"
 #include "FontShader.h"
 #include "VkFontShader.h"
+#include "VkUIShader.h"
 #include "ShaderFactory.h"
 #include <GameEngine/TextQuad.h>
 #include <GameEngine/BarnabusGameEngine.h>
@@ -9,10 +10,10 @@
 GameUi::GameUi()
 {
 	// Create initial quad.
-	//UiQuad* debugInformation = new UiQuad(glm::vec2(0.6,0.6),glm::vec2(1,1));
-	//uiElements.insert(std::pair<std::string, UiQuad*>("debug", debugInformation));
-	TextQuad* example = new TextQuad(glm::vec2(-1, -1), glm::vec2(1,1));
-	uiElements.insert(std::pair<std::string, UiQuad*>("example", example));
+	UiQuad* debugInformation = new UiQuad(glm::vec2(0.6,0.6),glm::vec2(1,1));
+	uiElements.insert(std::pair<std::string, UiQuad*>("debug", debugInformation));
+	//TextQuad* example = new TextQuad(glm::vec2(-1, -1), glm::vec2(1,1));
+	//uiElements.insert(std::pair<std::string, UiQuad*>("example", example));
 }
 
 void GameUi::InitGameUi()
@@ -25,12 +26,12 @@ void GameUi::InitGameUi()
 	}
 	else
 	{
-		//ShaderFactory::CreateShader<UiShader>("ui", "res\\Shaders\\Vulkan\\VkRed");
-		ShaderFactory::CreateShader<VkFontShader>("font", "res\\Shaders\\Vulkan\\VkFont");
+		ShaderFactory::CreateShader<VkUIShader>("ui", "res\\Shaders\\Vulkan\\VkUI");
+	//	ShaderFactory::CreateShader<VkFontShader>("font", "res\\Shaders\\Vulkan\\VkFont");
 	}
 
-	//uiElements.at("debug")->GetMeshData().SetShader(BarnabusGameEngine::Get().GetShader("ui"));
-	uiElements.at("example")->GetMeshData().SetShader(BarnabusGameEngine::Get().GetShader("font"));
+	uiElements.at("debug")->GetMeshData().SetShader(BarnabusGameEngine::Get().GetShader("ui"));
+	//uiElements.at("example")->GetMeshData().SetShader(BarnabusGameEngine::Get().GetShader("font"));
 
 	ITexture* texture = nullptr;
 	if (BarnabusGameEngine::Get().GetRenderType() == IRenderer::OpenGL)
@@ -39,7 +40,7 @@ void GameUi::InitGameUi()
 		texture->LoadTexture("res\\textures\\GameFont.png");
 	}
 		
-	uiElements.at("example")->GetMeshData().SetTexture(texture);
+	//uiElements.at("example")->GetMeshData().SetTexture(texture);
 }
 
 void GameUi::SetExampleText(std::string text)
@@ -58,6 +59,6 @@ GameUi::~GameUi()
 void GameUi::Draw()
 {
 	//uiElements.at("debug")->GetMeshData().SetTexture(BarnabusGameEngine::Get().GetRenderer()->GetFrameBuffer("main")->GetDepthTexture());
-	static_cast<TextQuad*>(uiElements.at("example"))->SetText(exampleText);
+	//static_cast<TextQuad*>(uiElements.at("example"))->SetText(exampleText);
 	UiDisplay::Draw();
 }

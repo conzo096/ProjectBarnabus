@@ -8,4 +8,6 @@ C:/VulkanSDK/1.2.148.1/Bin32/glslc.exe VkFinalPass.vert -o VkFinalPassVert.spv
 C:/VulkanSDK/1.2.148.1/Bin32/glslc.exe VkFinalPass.frag -o VkFinalPassFrag.spv
 C:/VulkanSDK/1.2.148.1/Bin32/glslc.exe VkFont.vert -o VkFontVert.spv
 C:/VulkanSDK/1.2.148.1/Bin32/glslc.exe VkFont.frag -o VkFontFrag.spv
+C:/VulkanSDK/1.2.148.1/Bin32/glslc.exe VkUI.vert -o VkUIVert.spv
+C:/VulkanSDK/1.2.148.1/Bin32/glslc.exe VkUI.frag -o VkUIFrag.spv
 pause

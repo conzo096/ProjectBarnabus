@@ -81,6 +81,9 @@
     <ClCompile Include="src\VkFontShader.cpp">
       <Filter>Source Files\Shaders\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="src\VkUIShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BarnabusGame.h">
