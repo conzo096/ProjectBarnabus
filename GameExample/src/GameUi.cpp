@@ -1,6 +1,7 @@
 #include "GameUi.h"
 #include "UiShader.h"
 #include "FontShader.h"
+#include "VkFontShader.h"
 #include "ShaderFactory.h"
 #include <GameEngine/TextQuad.h>
 #include <GameEngine/BarnabusGameEngine.h>
@@ -24,8 +25,8 @@ void GameUi::InitGameUi()
 	}
 	else
 	{
-		ShaderFactory::CreateShader<UiShader>("ui", "res\\Shaders\\Vulkan\\VkRed");
-		ShaderFactory::CreateShader<FontShader>("font", "res\\Shaders\\Vulkan\\VkRed");
+		//ShaderFactory::CreateShader<UiShader>("ui", "res\\Shaders\\Vulkan\\VkRed");
+		ShaderFactory::CreateShader<VkFontShader>("font", "res\\Shaders\\Vulkan\\VkFont");
 	}
 
 	//uiElements.at("debug")->GetMeshData().SetShader(BarnabusGameEngine::Get().GetShader("ui"));

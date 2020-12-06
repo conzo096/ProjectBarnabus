@@ -774,9 +774,6 @@ void VulkanRenderer::CreateCommandBuffers()
 
 		vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-
-		// Draw the UI to the texture buffer 
-
 		// Draw to screen - passing in both texture buffers
 		VkFinalPassShader* shader = static_cast<VkFinalPassShader*>(shaders["final"].get());
 
@@ -1096,8 +1093,27 @@ void VulkanRenderer::CreateOffScreenCommandBuffer(unsigned int imageIndex)
 		vkCmdDrawIndexed(offScreenCmdBuffer, static_cast<uint32_t>(buffers[j].numIndices), 1, 0, 0, 0);
 	}
 
-	// Now draw all the UI elements
-	// Vertices update each frame?
+	//// Now draw all the UI elements
+	//for (int i = 0; i < uiElementsToRender.size(); i++)
+	//{
+	//	vkCmdBindPipeline(offScreenCmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, static_cast<VulkanShader*>(uiElementsToRender[i].GetShader())->GetPipeline(MeshData::PrimativeType::QUAD));
+	//	vertexBuffers[0] = { uiElementsToRender[i].vertexBuffer };
+	//	offsets[0] = { 0 };
+	//	uint32_t uniformOffset[1] = { 0 };
+	//	vkCmdBindVertexBuffers(offScreenCmdBuffer, 0, 1, vertexBuffers, offsets);
+
+	//	vkCmdBindDescriptorSets(offScreenCmdBuffer,
+	//		VK_PIPELINE_BIND_POINT_GRAPHICS,
+	//		static_cast<VulkanShader*>(uiElementsToRender[i].GetShader())->GetPipelineLayout(MeshData::PrimativeType::QUAD)
+	//		, 0,
+	//		1,
+	//		&static_cast<VulkanShader*>(uiElementsToRender[i].GetShader())->GetDescriptorSet(imageIndex),
+	//		1,
+	//		uniformOffset);
+
+	//	// Replace 6 with indicies size.		
+	//	vkCmdDrawIndexed(offScreenCmdBuffer, static_cast<uint32_t>(uiElementsToRender[i].GetIndices().size()), 1, 0, 0, 0);
+	//}
 
 	vkCmdEndRenderPass(offScreenCmdBuffer);
 

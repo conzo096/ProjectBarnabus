@@ -78,6 +78,9 @@
     <ClCompile Include="src\VkAnimationShader.cpp">
       <Filter>Source Files\Shaders\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="src\VkFontShader.cpp">
+      <Filter>Source Files\Shaders\Vulkan</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BarnabusGame.h">
@@ -161,6 +164,12 @@
       <Filter>Resource Files\Shaders\Vulkan</Filter>
     </None>
     <None Include="res\Shaders\Vulkan\VkBasicAnimation.vert">
+      <Filter>Resource Files\Shaders\Vulkan</Filter>
+    </None>
+    <None Include="res\Shaders\Vulkan\VkFont.frag">
+      <Filter>Resource Files\Shaders\Vulkan</Filter>
+    </None>
+    <None Include="res\Shaders\Vulkan\VkFont.vert">
       <Filter>Resource Files\Shaders\Vulkan</Filter>
     </None>
   </ItemGroup>
