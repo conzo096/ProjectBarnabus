@@ -119,7 +119,6 @@ void VulkanUtils::CreateBuffer(const VkDevice& device, const VkPhysicalDevice& p
 
 VkFormat VulkanUtils::FindSupportedFormat(const VkPhysicalDevice& physicalDevice, const std::vector<VkFormat>& candidates, const VkImageTiling& tiling, const VkFormatFeatureFlags& features)
 {
-
 	for (const VkFormat& format : candidates)
 	{
 		VkFormatProperties props;
