@@ -89,8 +89,24 @@ void VkFinalPassShader::CreateDescriptorSetLayout()
 
 void VkFinalPassShader::CreateDescriptorSets()
 {
+	// Create sampler to sample from the color attachments
+	VkSamplerCreateInfo sampler{};
+	sampler.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+	sampler.maxAnisotropy = 1.0f;
+	sampler.magFilter = VK_FILTER_NEAREST;
+	sampler.minFilter = VK_FILTER_NEAREST;
+	sampler.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+	sampler.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+	sampler.addressModeV = sampler.addressModeU;
+	sampler.addressModeW = sampler.addressModeU;
+	sampler.mipLodBias = 0.0f;
+	sampler.maxAnisotropy = 1.0f;
+	sampler.minLod = 0.0f;
+	sampler.maxLod = 1.0f;
+	sampler.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
+	vkCreateSampler(device, &sampler, nullptr, &colorSampler);
+
 	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
-	auto colorSampler = renderer->GetColorSampler();
 	auto offScreenFrameBuf = renderer->GetOffscreenFrameBuffer();
 	std::vector<VkDescriptorSetLayout> layouts(renderer->GetSwapChainImages().size(), descriptorSetLayout);
 

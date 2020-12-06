@@ -27,4 +27,5 @@ public:
 
 protected:
 	std::vector<FinalPassUBO> uniforms;
+	VkSampler colorSampler;
 };

@@ -51,15 +51,6 @@ public:
 		VkSemaphore renderComplete;
 	};
 
-	//struct FrameBuffer
-	//{
-	//	int32_t width, height;
-	//	VkFramebuffer frameBuffer;
-	//	VulkanTexture albedo;
-	//	VulkanTexture depth;
-	//	VkRenderPass renderPass;
-	//};
-
 public:
 	VulkanRenderer();
 	~VulkanRenderer();
@@ -106,7 +97,7 @@ public:
 	VkCommandPool GetCommandPool();
 	VkRenderPass GetRenderPass();
 	VkRenderPass GetOffScreenRenderPass();
-	VkSampler GetColorSampler();
+
 	VulkanFrameBuffer GetOffscreenFrameBuffer();
 
 private:
@@ -171,7 +162,6 @@ private:
 
 	VulkanFrameBuffer offScreenFrameBuf;
 
-	VkSampler colorSampler;
 	// Semaphore used to synchronize between offscreen and final scene rendering
 	VkSemaphore offscreenSemaphore = VK_NULL_HANDLE;
 
