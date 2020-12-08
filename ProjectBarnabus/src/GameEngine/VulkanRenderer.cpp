@@ -941,24 +941,15 @@ void VulkanRenderer::CreateOffScreenCommandBuffer(unsigned int imageIndex)
 	// Draw ui elements now
 	VkBuffer vertexBuffers[1];
 	VkDeviceSize offsets[1];
-	for (int i = 0; i < uiElementsToRender.size(); i++)
+	// Rough version for the now.
+	for (auto& mesh : uiElementsToRender)
 	{
-		vkCmdBindPipeline(offScreenCmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, static_cast<VulkanShader*>(uiElementsToRender[i].GetShader())->GetPipeline(MeshData::PrimativeType::QUAD));
-		vertexBuffers[0] = { uiElementsToRender[i].vertexBuffer };
-		offsets[0] = { 0 };
-		uint32_t uniformOffset[1] = { 0 };
-		vkCmdBindVertexBuffers(offScreenCmdBuffer, 0, 1, vertexBuffers, offsets);
-
-		vkCmdBindDescriptorSets(offScreenCmdBuffer,
-			VK_PIPELINE_BIND_POINT_GRAPHICS,
-			static_cast<VulkanShader*>(uiElementsToRender[i].GetShader())->GetPipelineLayout(MeshData::PrimativeType::QUAD)
-			, 0,
-			1,
-			&static_cast<VulkanShader*>(uiElementsToRender[i].GetShader())->GetDescriptorSet(imageIndex),
-			1,
-			uniformOffset);
-	
-		vkCmdDrawIndexed(offScreenCmdBuffer, static_cast<uint32_t>(uiElementsToRender[i].GetIndices().size()), 1, 0, 0, 0);
+		// Tell Shader here to use shader.
+		auto shader = static_cast<VulkanShader*>(mesh.GetShader());
+		shader->Use(imageIndex);
+		shader->UpdateUniforms(mesh);
+		shader->DrawMesh(mesh, offScreenCmdBuffer, imageIndex, stride);
+		stride++;
 	}
 
 	vkCmdEndRenderPass(offScreenCmdBuffer);
@@ -1157,6 +1148,23 @@ void VulkanRenderer::CreateAttachement(VkFormat format, VkImageUsageFlagBits usa
 	imageView.image = attachment->GetImage();
 
 	vkCreateImageView(device, &imageView, nullptr, &attachment->GetImageView());
+
+	// Create sampler to sample from the color attachments - Should be part of Texture class. 
+	VkSamplerCreateInfo sampleInfo{};
+	sampleInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+	sampleInfo.maxAnisotropy = 1.0f;
+	sampleInfo.magFilter = VK_FILTER_NEAREST;
+	sampleInfo.minFilter = VK_FILTER_NEAREST;
+	sampleInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+	sampleInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+	sampleInfo.addressModeV = sampleInfo.addressModeU;
+	sampleInfo.addressModeW = sampleInfo.addressModeU;
+	sampleInfo.mipLodBias = 0.0f;
+	sampleInfo.maxAnisotropy = 1.0f;
+	sampleInfo.minLod = 0.0f;
+	sampleInfo.maxLod = 1.0f;
+	sampleInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
+	vkCreateSampler(device, &sampleInfo, nullptr, &attachment->GetSampler());
 }
 
 void VulkanRenderer::PrepareOffscreenFramebuffer()

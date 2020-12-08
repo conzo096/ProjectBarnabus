@@ -22,6 +22,4 @@ public:
 
 protected:
 	void BindDescriptorSet(MeshData & meshData, VkCommandBuffer & buffer, int imageIndex, unsigned int stride) override;
-protected:
-	VkSampler colorSampler;
 };

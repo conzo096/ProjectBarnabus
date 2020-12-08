@@ -39,8 +39,13 @@ void GameUi::InitGameUi()
 		texture = new OpenGLTexture;
 		texture->LoadTexture("res\\textures\\GameFont.png");
 	}
+	else if (BarnabusGameEngine::Get().GetRenderType() == IRenderer::Vulkan)
+	{
+		//texture = new VulkanTexture;
+		//texture->LoadTexture("res\\textures\\GameFont.png");
+	}
 		
-	//uiElements.at("example")->GetMeshData().SetTexture(texture);
+	//uiElements.at("debug")->GetMeshData().SetTexture(texture);
 }
 
 void GameUi::SetExampleText(std::string text)

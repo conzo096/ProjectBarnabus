@@ -28,4 +28,7 @@ public:
 
 	// Inherited via VulkanShader
 	virtual void BindDescriptorSet(MeshData & meshData, VkCommandBuffer & buffer, int imageIndex, unsigned int stride) override;
+protected:
+	// This is the texture that the shader will present. Should come from mesh data later.
+	VulkanTexture* texture;
 };

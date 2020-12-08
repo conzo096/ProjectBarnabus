@@ -13,6 +13,7 @@ public:
 	VkDeviceMemory& GetImageMemory();
 	VkImageView& GetImageView();
 	VkFormat GetFormat();
+	VkSampler& GetSampler();
 
 	void SetImageView(VkImageView imgView);
 	void SetFormat(VkFormat form);
@@ -25,4 +26,5 @@ protected:
 	VkDeviceMemory imageMemory;
 	VkImageView imageView;
 	VkFormat format;
+	VkSampler sampler;
 };

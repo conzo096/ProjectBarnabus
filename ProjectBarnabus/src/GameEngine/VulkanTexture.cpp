@@ -155,12 +155,43 @@ bool VulkanTexture::LoadTexture(const std::string & file)
 	VulkanUtils::CreateImage(renderer->GetDevice(), renderer->GetPhysicalDevice(), texWidth, texHeight,
 		VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, image, imageMemory);
 
+	VkImageViewCreateInfo view{};
+	view.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+	view.viewType = VK_IMAGE_VIEW_TYPE_2D;
+	view.format = format;
+	view.subresourceRange = {};
+	view.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+	view.subresourceRange.baseMipLevel = 0;
+	view.subresourceRange.levelCount = 1;
+	view.subresourceRange.baseArrayLayer = 0;
+	view.subresourceRange.layerCount = 1;
+	view.image = image;
+
+	vkCreateImageView(renderer->GetDevice(), &view, nullptr, &imageView);
+
 	TransitionImageLayout(image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 	CopyBufferToImage(stagingBuffer, image, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
 	TransitionImageLayout(image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
 	vkDestroyBuffer(renderer->GetDevice(), stagingBuffer, nullptr);
 	vkFreeMemory(renderer->GetDevice(), stagingBufferMemory, nullptr);
+
+	// Create sampler to sample from the color attachments - Should be part of Texture class. 
+	VkSamplerCreateInfo sampleInfo{};
+	sampleInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+	sampleInfo.maxAnisotropy = 1.0f;
+	sampleInfo.magFilter = VK_FILTER_NEAREST;
+	sampleInfo.minFilter = VK_FILTER_NEAREST;
+	sampleInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+	sampleInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+	sampleInfo.addressModeV = sampleInfo.addressModeU;
+	sampleInfo.addressModeW = sampleInfo.addressModeU;
+	sampleInfo.mipLodBias = 0.0f;
+	sampleInfo.maxAnisotropy = 1.0f;
+	sampleInfo.minLod = 0.0f;
+	sampleInfo.maxLod = 1.0f;
+	sampleInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
+	vkCreateSampler(renderer->GetDevice(), &sampleInfo, nullptr, &sampler);
 
 	return false;
 }
@@ -184,6 +215,11 @@ VkImageView& VulkanTexture::GetImageView()
 VkFormat VulkanTexture::GetFormat()
 {
 	return format;
+}
+
+VkSampler& VulkanTexture::GetSampler()
+{
+	return sampler;
 }
 
 void VulkanTexture::SetImageView(VkImageView imgView)

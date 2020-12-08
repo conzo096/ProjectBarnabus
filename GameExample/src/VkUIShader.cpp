@@ -1,6 +1,7 @@
 #include "VkUIShader.h"
-#include "GameEngine/VulkanRenderer.h"
+#include "GameEngine/VulkanUtils.h"
 #include "GameEngine/BarnabusGameEngine.h"
+#include "GameEngine/VulkanRenderer.h"
 
 VkUIShader::VkUIShader() : VulkanShader({ MeshData::QUAD })
 {
@@ -20,27 +21,50 @@ void VkUIShader::UpdateUniforms(MeshData & meshData, const LightInfo & lights)
 
 VkDeviceSize VkUIShader::GetUniformBufferSize()
 {
-	return sizeof(UIUBO);
+	return 0;
 }
 
 VkDeviceSize VkUIShader::GetUniformItemSize()
 {
-	return sizeof(UIUBO);
+	return 0;
+}
+
+void VkUIShader::CreateDescriptorPool()
+{
+	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
+
+	std::vector<VkDescriptorPoolSize> poolSizes;
+	poolSizes.resize(1);
+
+	poolSizes[0].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+	poolSizes[0].descriptorCount = static_cast<uint32_t>(renderer->GetSwapChainImages().size());
+
+	VkDescriptorPoolCreateInfo poolInfo{};
+	poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+	poolInfo.poolSizeCount = 1;
+	poolInfo.pPoolSizes = poolSizes.data();
+	poolInfo.maxSets = static_cast<uint32_t>(renderer->GetSwapChainImages().size());
+
+	if (vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS)
+	{
+		throw std::runtime_error("failed to create descriptor pool!");
+	}
 }
 
 void VkUIShader::CreateDescriptorSetLayout()
 {
-	VkDescriptorSetLayoutBinding uboLayoutBinding{};
-	uboLayoutBinding.binding = 0;
-	uboLayoutBinding.descriptorCount = 1;
-	uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
-	uboLayoutBinding.pImmutableSamplers = nullptr;
-	uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+	std::vector<VkDescriptorSetLayoutBinding> setLayoutBindings;
+	setLayoutBindings.resize(1);
+
+	setLayoutBindings[0].binding = 1;
+	setLayoutBindings[0].descriptorCount = 1;
+	setLayoutBindings[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+	setLayoutBindings[0].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 
 	VkDescriptorSetLayoutCreateInfo layoutInfo{};
 	layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-	layoutInfo.bindingCount = 1;
-	layoutInfo.pBindings = &uboLayoutBinding;
+	layoutInfo.bindingCount = static_cast<uint32_t>(setLayoutBindings.size());
+	layoutInfo.pBindings = setLayoutBindings.data();
 
 	if (vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &descriptorSetLayout) != VK_SUCCESS)
 	{
@@ -50,9 +74,18 @@ void VkUIShader::CreateDescriptorSetLayout()
 
 void VkUIShader::CreateDescriptorSets()
 {
-	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
+	texture = new VulkanTexture;
+	texture->SetFormat(VK_FORMAT_R8G8B8A8_SRGB);
+	texture->LoadTexture("res\\textures\\GameFont.png");
 
+	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
 	std::vector<VkDescriptorSetLayout> layouts(renderer->GetSwapChainImages().size(), descriptorSetLayout);
+
+	// Image descriptors for the offscreen color attachments
+	VkDescriptorImageInfo texDescriptorAlbedo;
+	texDescriptorAlbedo.sampler = texture->GetSampler();
+	texDescriptorAlbedo.imageView = texture->GetImageView();
+	texDescriptorAlbedo.imageLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
 	VkDescriptorSetAllocateInfo allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -66,6 +99,9 @@ void VkUIShader::CreateDescriptorSets()
 		throw std::runtime_error("failed to allocate descriptor sets!");
 	}
 
+	std::vector<VkWriteDescriptorSet> writeDescriptorSets;
+	writeDescriptorSets.resize(1);
+
 	for (size_t i = 0; i < renderer->GetSwapChainImages().size(); i++)
 	{
 		VkDescriptorBufferInfo bufferInfo{};
@@ -73,48 +109,25 @@ void VkUIShader::CreateDescriptorSets()
 		bufferInfo.offset = 0;
 		bufferInfo.range = GetUniformItemSize();
 
-		VkWriteDescriptorSet descriptorWrite{};
-		descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descriptorWrite.dstSet = descriptorSets[i];
-		descriptorWrite.dstBinding = 0;
-		descriptorWrite.dstArrayElement = 0;
-		descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
-		descriptorWrite.descriptorCount = 1;
-		descriptorWrite.pBufferInfo = &bufferInfo;
+		writeDescriptorSets[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		writeDescriptorSets[0].dstSet = descriptorSets[i];
+		writeDescriptorSets[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		writeDescriptorSets[0].dstBinding = 1;
+		writeDescriptorSets[0].pImageInfo = &texDescriptorAlbedo;
+		writeDescriptorSets[0].descriptorCount = 1;
 
-		vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
-	}
-}
-
-void VkUIShader::CreateDescriptorPool()
-{
-	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
-	VkDescriptorPoolSize poolSize{};
-	poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
-	poolSize.descriptorCount = static_cast<uint32_t>(renderer->GetSwapChainImages().size());
-
-	VkDescriptorPoolCreateInfo poolInfo{};
-	poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-	poolInfo.poolSizeCount = 1;
-	poolInfo.pPoolSizes = &poolSize;
-	poolInfo.maxSets = static_cast<uint32_t>(renderer->GetSwapChainImages().size());
-
-	if (vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS)
-	{
-		throw std::runtime_error("failed to create descriptor pool!");
+		vkUpdateDescriptorSets(device, static_cast<uint32_t>(writeDescriptorSets.size()), writeDescriptorSets.data(), 0, nullptr);
 	}
 }
 
 void VkUIShader::BindDescriptorSet(MeshData & meshData, VkCommandBuffer & buffer, int imageIndex, unsigned int stride)
 {
-	uint32_t uniformOffset[1] = { GetBufferSize() * stride };
-
 	vkCmdBindDescriptorSets(buffer,
 		VK_PIPELINE_BIND_POINT_GRAPHICS,
 		GetPipelineLayout(meshData.GetType())
 		, 0,
 		1,
 		&GetDescriptorSet(imageIndex),
-		1,
-		uniformOffset);
+		0,
+		0);
 }
