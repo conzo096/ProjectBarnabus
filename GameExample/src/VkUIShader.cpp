@@ -74,18 +74,15 @@ void VkUIShader::CreateDescriptorSetLayout()
 
 void VkUIShader::CreateDescriptorSets()
 {
-	texture = new VulkanTexture;
-	texture->SetFormat(VK_FORMAT_R8G8B8A8_SRGB);
-	texture->LoadTexture("res\\textures\\GameFont.png");
-
 	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
+	texture = static_cast<VulkanTexture*>(renderer->GetOffscreenFrameBuffer().GetDepthTexture());
 	std::vector<VkDescriptorSetLayout> layouts(renderer->GetSwapChainImages().size(), descriptorSetLayout);
 
 	// Image descriptors for the offscreen color attachments
 	VkDescriptorImageInfo texDescriptorAlbedo;
 	texDescriptorAlbedo.sampler = texture->GetSampler();
 	texDescriptorAlbedo.imageView = texture->GetImageView();
-	texDescriptorAlbedo.imageLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+	texDescriptorAlbedo.imageLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
 	VkDescriptorSetAllocateInfo allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;

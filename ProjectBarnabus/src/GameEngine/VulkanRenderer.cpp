@@ -1105,7 +1105,7 @@ void VulkanRenderer::CreateAttachement(VkFormat format, VkImageUsageFlagBits usa
 	}
 	if (usage & VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
 	{
-		aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
+		aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
 		imageLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 	}
 
@@ -1123,7 +1123,7 @@ void VulkanRenderer::CreateAttachement(VkFormat format, VkImageUsageFlagBits usa
 	image.samples = VK_SAMPLE_COUNT_1_BIT;
 	image.tiling = VK_IMAGE_TILING_OPTIMAL;
 	image.usage = usage | VK_IMAGE_USAGE_SAMPLED_BIT;
-
+	
 	VkMemoryAllocateInfo memAlloc{};
 	memAlloc.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 	VkMemoryRequirements memReqs;
@@ -1146,6 +1146,14 @@ void VulkanRenderer::CreateAttachement(VkFormat format, VkImageUsageFlagBits usa
 	imageView.subresourceRange.baseArrayLayer = 0;
 	imageView.subresourceRange.layerCount = 1;
 	imageView.image = attachment->GetImage();
+	if (usage & VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
+	{
+		imageView.components.r = VK_COMPONENT_SWIZZLE_R;
+		imageView.components.g = VK_COMPONENT_SWIZZLE_R;
+		imageView.components.b = VK_COMPONENT_SWIZZLE_R;
+		imageView.components.a = VK_COMPONENT_SWIZZLE_R;
+	}
+
 
 	vkCreateImageView(device, &imageView, nullptr, &attachment->GetImageView());
 
