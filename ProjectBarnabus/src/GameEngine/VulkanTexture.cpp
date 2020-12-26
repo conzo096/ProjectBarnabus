@@ -130,6 +130,7 @@ VulkanTexture::VulkanTexture(unsigned int w, unsigned int h)
 // load a texture from file
 bool VulkanTexture::LoadTexture(const std::string & file)
 {
+	format = VK_FORMAT_R8G8B8A8_SRGB;
 	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
 
 	int texWidth, texHeight, texChannels;

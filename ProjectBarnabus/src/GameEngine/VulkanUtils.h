@@ -33,9 +33,4 @@ namespace VulkanUtils
 
 		vkUnmapMemory(device, uniformBuffersMemory);
 	}
-
-
-
-
-
 } // namespace VulkanUtils

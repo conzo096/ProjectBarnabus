@@ -19,4 +19,6 @@ public:
 	virtual void CreateDescriptorPool() override;
 	virtual void CreateDescriptorSets() override;
 	virtual void BindDescriptorSet(MeshData & meshData, VkCommandBuffer & buffer, int imageIndex, unsigned int stride) override;
+
+	VulkanTexture* texture;
 };

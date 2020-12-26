@@ -153,11 +153,17 @@ void VulkanShader::DrawMesh(MeshData & meshData, VkCommandBuffer& buffer, int im
 		vkCmdBindVertexBuffers(buffer, 1, 1, vertexBuffers, offsets);
 	}
 
-	vkCmdBindIndexBuffer(buffer, meshData.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
-
 	BindDescriptorSet(meshData, buffer, imageIndex, stride);
-	
-	vkCmdDrawIndexed(buffer, static_cast<uint32_t>(meshData.GetIndices().size()), 1, 0, 0, 0);
+
+	if (meshData.GetIndices().size() > 0)
+	{
+		vkCmdBindIndexBuffer(buffer, meshData.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+		vkCmdDrawIndexed(buffer, static_cast<uint32_t>(meshData.GetIndices().size()), 1, 0, 0, 0);
+	}
+	else
+	{
+		vkCmdDraw(buffer, meshData.vertices.size(), 1, 0, 0);
+	}
 }
 
 VkPipeline VulkanShader::GetPipeline(MeshData::PrimativeType index)

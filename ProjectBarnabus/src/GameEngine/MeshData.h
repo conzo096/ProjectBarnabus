@@ -80,6 +80,8 @@ public:
 	void CreateBoneBuffer(VkBuffer & boneBuffer, VkDeviceMemory & bonexBufferMemory, VkCommandPool & commandPool);
 	void CopyBuffer(VkCommandPool commandPool, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 
+	void UpdateVertexBuffer(VkBuffer& vertexBuffer, VkDeviceMemory& vertexBufferMemory, VkCommandPool& commandPool);
+
 	VkBuffer vertexBuffer;
 	VkDeviceMemory vertexBufferMemory;
 	VkBuffer indexBuffer;

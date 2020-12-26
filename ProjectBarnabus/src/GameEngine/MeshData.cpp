@@ -147,7 +147,7 @@ void MeshData::CreateVertexBuffer(VkBuffer & vertexBuffer, VkDeviceMemory & vert
 	memcpy(data, vertices.data(), (size_t)bufferSize);
 	vkUnmapMemory(renderer->GetDevice(), stagingBufferMemory);
 
-	VulkanUtils::CreateBuffer(renderer->GetDevice(), renderer->GetPhysicalDevice(), bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertexBuffer, vertexBufferMemory);
+	VulkanUtils::CreateBuffer(renderer->GetDevice(), renderer->GetPhysicalDevice(), bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertexBuffer, vertexBufferMemory);
 
 	CopyBuffer(commandPool, stagingBuffer, vertexBuffer, bufferSize);
 
@@ -237,4 +237,29 @@ void MeshData::CopyBuffer(VkCommandPool commandPool, VkBuffer srcBuffer, VkBuffe
 	vkQueueWaitIdle(graphicsQueue);
 
 	vkFreeCommandBuffers(renderer->GetDevice(), commandPool, 1, &commandBuffer);
+}
+
+void MeshData::UpdateVertexBuffer(VkBuffer & vertexBuffer, VkDeviceMemory & vertexBufferMemory, VkCommandPool & commandPool)
+{
+	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
+	vkDestroyBuffer(renderer->GetDevice(), vertexBuffer, nullptr);
+	vkFreeMemory(renderer->GetDevice(), vertexBufferMemory, nullptr);
+
+	CreateVertexBuffer(vertexBuffer, vertexBufferMemory, commandPool);
+	//auto device = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer())->GetDevice();
+	//// Make this part a templated in utils method.
+	//VkMemoryRequirements memoryRequirement;
+	//vkGetBufferMemoryRequirements(device, vertexBuffer, &memoryRequirement);
+
+	//uint8_t *data;
+
+	//vkMapMemory(device, vertexBufferMemory, 0, sizeof(Vertex), 0, (void **)&data);
+
+	//for (int i = 0; i < vertices.size(); i++)
+	//{
+	//	memcpy(data, &vertices[i], sizeof(vertices[i]));
+	//	data += static_cast<VkDeviceSize>(sizeof(Vertex));
+	//}
+
+	//vkUnmapMemory(device, vertexBufferMemory);
 }

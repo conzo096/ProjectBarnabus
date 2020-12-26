@@ -888,7 +888,7 @@ void VulkanRenderer::InitialiseMesh(MeshData& data)
 
 void VulkanRenderer::UpdateBaseVertexBuffers(MeshData& data)
 {
-	//data.CreateVertexBuffer(data.vertexBuffer, data.vertexBufferMemory, commandPool);
+	data.UpdateVertexBuffer(data.vertexBuffer, data.vertexBufferMemory, commandPool);
 }
 
 void VulkanRenderer::CreateOffScreenCommandBuffer(unsigned int imageIndex)
