@@ -189,6 +189,7 @@ VulkanRenderer::~VulkanRenderer()
 	vkDestroySemaphore(device, semaphores.presentComplete, nullptr);
 	vkDestroySemaphore(device, semaphores.renderComplete, nullptr);
 	vkDestroySemaphore(device, offscreenSemaphore, nullptr);
+	vkDestroySemaphore(device, uiSemaphore, nullptr);
 
 	for (auto framebuffer : swapChainFramebuffers)
 	{
@@ -254,6 +255,7 @@ bool VulkanRenderer::InitialiseGameEngine()
 	CreateCommandPool();
 	CreateDepthResources();
 	PrepareOffscreenFramebuffer();
+	PrepareUIFramebuffer();
 	CreateFramebuffers();
 
 	CreateSyncObjects();
@@ -347,6 +349,11 @@ VkRenderPass VulkanRenderer::GetOffScreenRenderPass()
 VulkanFrameBuffer VulkanRenderer::GetOffscreenFrameBuffer()
 {
 	return offScreenFrameBuf;
+}
+
+VulkanFrameBuffer VulkanRenderer::GetUiFrameBuffer()
+{
+	return uiFrameBuf;
 }
 
 bool VulkanRenderer::InitVulkanInstance()
@@ -576,6 +583,7 @@ void VulkanRenderer::CreateRenderPass()
 {
 	mainFramebuffer.CreateRenderPass(device, physicalDevice, swapChainImageFormat);
 	offScreenFrameBuf.CreateRenderPass(device, physicalDevice, swapChainImageFormat);
+	uiFrameBuf.CreateRenderPass(device, physicalDevice, swapChainImageFormat);
 }
 
 void VulkanRenderer::CreateFramebuffers()
@@ -610,6 +618,7 @@ void VulkanRenderer::CreateFramebuffers()
 	}
 
 	offScreenFrameBuf.CreateFrameBuffer(device);
+	uiFrameBuf.CreateFrameBuffer(device);
 }
 
 void VulkanRenderer::CreateCommandPool()
@@ -715,6 +724,7 @@ void VulkanRenderer::CreateSyncObjects()
 	vkCreateSemaphore(device, &semaphoreInfo, nullptr, &semaphores.renderComplete);
 
 	vkCreateSemaphore(device, &semaphoreInfo, nullptr, &offscreenSemaphore);
+	vkCreateSemaphore(device, &semaphoreInfo, nullptr, &uiSemaphore);
 }
 
 void VulkanRenderer::CleanupSwapChain()
@@ -938,23 +948,68 @@ void VulkanRenderer::CreateOffScreenCommandBuffer(unsigned int imageIndex)
 		stride = 0;
 	}
 
-	// Draw ui elements now
+	vkCmdEndRenderPass(offScreenCmdBuffer);
+
+	vkEndCommandBuffer(offScreenCmdBuffer);
+}
+
+void VulkanRenderer::CreateUICommandBuffer(unsigned int imageIndex)
+{
+	vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(1), &uiCmdBuffer);
+
+	VkCommandBufferAllocateInfo allocInfo{};
+	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+	allocInfo.commandPool = commandPool;
+	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+	allocInfo.commandBufferCount = 1;
+
+	if (vkAllocateCommandBuffers(device, &allocInfo, &uiCmdBuffer) != VK_SUCCESS)
+	{
+		throw std::runtime_error("failed to allocate command buffers!");
+	}
+
+	// Record command buffer
+
+	VkCommandBufferBeginInfo beginInfo{};
+	VkRenderPassBeginInfo renderPassInfo{};
+
+	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+	renderPassInfo.renderPass = uiFrameBuf.GetRenderPass();
+	renderPassInfo.framebuffer = uiFrameBuf.GetVulkanFrameBuffer();
+	renderPassInfo.renderArea.offset = { 0, 0 };
+	renderPassInfo.renderArea.extent = swapChainExtent;
+	std::array<VkClearValue, 2> clearValues{};
+
+	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+
+	if (vkBeginCommandBuffer(uiCmdBuffer, &beginInfo) != VK_SUCCESS)
+	{
+		throw std::runtime_error("failed to begin recording command buffer!");
+	}
+
+	clearValues[0].color = { 0.1f, 0.0f, 0.4f, 0.0f };
+	clearValues[1].depthStencil = { 1.0f, 0 };
+
+	renderPassInfo.clearValueCount = 2;
+	renderPassInfo.pClearValues = clearValues.data();
+
+	vkCmdBeginRenderPass(uiCmdBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+	unsigned int stride = 0;
 	VkBuffer vertexBuffers[1];
 	VkDeviceSize offsets[1];
-	// Rough version for the now.
 	for (auto& mesh : uiElementsToRender)
 	{
 		// Tell Shader here to use shader.
 		auto shader = static_cast<VulkanShader*>(mesh.GetShader());
 		shader->Use(imageIndex);
 		shader->UpdateUniforms(mesh);
-		shader->DrawMesh(mesh, offScreenCmdBuffer, imageIndex, stride);
+		shader->DrawMesh(mesh, uiCmdBuffer, imageIndex, stride);
 		stride++;
 	}
 
-	vkCmdEndRenderPass(offScreenCmdBuffer);
-
-	vkEndCommandBuffer(offScreenCmdBuffer);
+	vkCmdEndRenderPass(uiCmdBuffer);
+	vkEndCommandBuffer(uiCmdBuffer);
 }
 
 void VulkanRenderer::Render()
@@ -968,6 +1023,7 @@ void VulkanRenderer::Render()
 	}
 
 	CreateOffScreenCommandBuffer(imageIndex);
+	CreateUICommandBuffer(imageIndex);
 
 	VkSubmitInfo submitInfo{};
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -983,12 +1039,15 @@ void VulkanRenderer::Render()
 	submitInfo.pWaitSemaphores = &semaphores.presentComplete;
 	submitInfo.pSignalSemaphores = &offscreenSemaphore;
 	submitInfo.pCommandBuffers = &offScreenCmdBuffer;
+	vkQueueSubmit(graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
 
+	submitInfo.pWaitSemaphores = &offscreenSemaphore;
+	submitInfo.pSignalSemaphores = &uiSemaphore;
+	submitInfo.pCommandBuffers = &uiCmdBuffer;
 	vkQueueSubmit(graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
 
 	// Now draw to screen.
-
-	submitInfo.pWaitSemaphores = &offscreenSemaphore;
+	submitInfo.pWaitSemaphores = &uiSemaphore;
 	submitInfo.pSignalSemaphores = &semaphores.renderComplete;
 	submitInfo.pCommandBuffers = &commandBuffers[imageIndex];
 	vkQueueSubmit(graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
@@ -1115,8 +1174,8 @@ void VulkanRenderer::CreateAttachement(VkFormat format, VkImageUsageFlagBits usa
 	image.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 	image.imageType = VK_IMAGE_TYPE_2D;
 	image.format = format;
-	image.extent.width = offScreenFrameBuf.GetWidth();
-	image.extent.height = offScreenFrameBuf.GetHeight();
+	image.extent.width = 1920;
+	image.extent.height = 1080;
 	image.extent.depth = 1;
 	image.mipLevels = 1;
 	image.arrayLayers = 1;
@@ -1173,6 +1232,31 @@ void VulkanRenderer::CreateAttachement(VkFormat format, VkImageUsageFlagBits usa
 	sampleInfo.maxLod = 1.0f;
 	sampleInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
 	vkCreateSampler(device, &sampleInfo, nullptr, &attachment->GetSampler());
+}
+
+void VulkanRenderer::PrepareUIFramebuffer()
+{
+	uiFrameBuf.LoadFrameBuffer(1920, 1080);
+
+	// Get textures
+	auto frameTexture = static_cast<VulkanTexture*>(uiFrameBuf.GetFrameTexture());
+	auto depthTexture = static_cast<VulkanTexture*>(uiFrameBuf.GetDepthTexture());
+
+	// Albedo (color)
+	CreateAttachement(
+		VK_FORMAT_B8G8R8A8_SRGB,
+		VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+		frameTexture);
+
+	// Depth attachment
+
+	// Find a suitable depth format
+	VkFormat attDepthFormat = VulkanUtils::FindDepthFormat(physicalDevice);
+
+	CreateAttachement(
+		attDepthFormat,
+		VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
+		depthTexture);
 }
 
 void VulkanRenderer::PrepareOffscreenFramebuffer()

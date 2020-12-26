@@ -34,14 +34,17 @@ void VkFinalPassShader::CreateDescriptorPool()
 	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
 
 	std::vector<VkDescriptorPoolSize> poolSizes;
-	poolSizes.resize(1);
+	poolSizes.resize(2);
 
 	poolSizes[0].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 	poolSizes[0].descriptorCount = static_cast<uint32_t>(renderer->GetSwapChainImages().size());
 
+	poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+	poolSizes[1].descriptorCount = static_cast<uint32_t>(renderer->GetSwapChainImages().size());
+
 	VkDescriptorPoolCreateInfo poolInfo{};
 	poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-	poolInfo.poolSizeCount = 1;
+	poolInfo.poolSizeCount = poolSizes.size();
 	poolInfo.pPoolSizes = poolSizes.data();
 	poolInfo.maxSets = static_cast<uint32_t>(renderer->GetSwapChainImages().size());
 
@@ -54,13 +57,18 @@ void VkFinalPassShader::CreateDescriptorPool()
 void VkFinalPassShader::CreateDescriptorSetLayout()
 {
 	std::vector<VkDescriptorSetLayoutBinding> setLayoutBindings;
-	setLayoutBindings.resize(1);
+	setLayoutBindings.resize(2);
 
 	setLayoutBindings[0].binding = 1;
 	setLayoutBindings[0].descriptorCount = 1;
 	setLayoutBindings[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 	setLayoutBindings[0].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 	
+	setLayoutBindings[1].binding = 2;
+	setLayoutBindings[1].descriptorCount = 1;
+	setLayoutBindings[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+	setLayoutBindings[1].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+
 	VkDescriptorSetLayoutCreateInfo layoutInfo{};
 	layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
 	layoutInfo.bindingCount = static_cast<uint32_t>(setLayoutBindings.size());
@@ -76,6 +84,7 @@ void VkFinalPassShader::CreateDescriptorSets()
 {
 	auto renderer = static_cast<VulkanRenderer*>(BarnabusGameEngine::Get().GetRenderer());
 	auto offScreenFrameBuf = renderer->GetOffscreenFrameBuffer();
+	auto uiFrameBuf = renderer->GetUiFrameBuffer();
 	std::vector<VkDescriptorSetLayout> layouts(renderer->GetSwapChainImages().size(), descriptorSetLayout);
 
 	// Image descriptors for the offscreen color attachments
@@ -83,6 +92,12 @@ void VkFinalPassShader::CreateDescriptorSets()
 	texDescriptorAlbedo.sampler = static_cast<VulkanTexture*>(offScreenFrameBuf.GetFrameTexture())->GetSampler();
 	texDescriptorAlbedo.imageView = static_cast<VulkanTexture*>(offScreenFrameBuf.GetFrameTexture())->GetImageView();
 	texDescriptorAlbedo.imageLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
+	// Image descriptors for the ui
+	VkDescriptorImageInfo texDescriptorUI;
+	texDescriptorUI.sampler = static_cast<VulkanTexture*>(uiFrameBuf.GetFrameTexture())->GetSampler();
+	texDescriptorUI.imageView = static_cast<VulkanTexture*>(uiFrameBuf.GetFrameTexture())->GetImageView();
+	texDescriptorUI.imageLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
 	VkDescriptorSetAllocateInfo allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -97,7 +112,7 @@ void VkFinalPassShader::CreateDescriptorSets()
 	}
 
 	std::vector<VkWriteDescriptorSet> writeDescriptorSets;
-	writeDescriptorSets.resize(1);
+	writeDescriptorSets.resize(2);
 
 	for (size_t i = 0; i < renderer->GetSwapChainImages().size(); i++)
 	{
@@ -112,6 +127,15 @@ void VkFinalPassShader::CreateDescriptorSets()
 		writeDescriptorSets[0].dstBinding = 1;
 		writeDescriptorSets[0].pImageInfo = &texDescriptorAlbedo;
 		writeDescriptorSets[0].descriptorCount = 1;
+		writeDescriptorSets[0].pBufferInfo = &bufferInfo;
+
+		writeDescriptorSets[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		writeDescriptorSets[1].dstSet = descriptorSets[i];
+		writeDescriptorSets[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		writeDescriptorSets[1].dstBinding = 2;
+		writeDescriptorSets[1].pImageInfo = &texDescriptorUI;
+		writeDescriptorSets[1].descriptorCount = 1;
+		writeDescriptorSets[1].pBufferInfo = &bufferInfo;
 
 		vkUpdateDescriptorSets(device, static_cast<uint32_t>(writeDescriptorSets.size()), writeDescriptorSets.data(), 0, nullptr);
 	}

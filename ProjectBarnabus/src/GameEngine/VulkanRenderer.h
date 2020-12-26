@@ -88,6 +88,7 @@ public:
 	VkRenderPass GetOffScreenRenderPass();
 
 	VulkanFrameBuffer GetOffscreenFrameBuffer();
+	VulkanFrameBuffer GetUiFrameBuffer();
 
 private:
 	bool InitVulkanInstance();
@@ -104,9 +105,11 @@ private:
 	void CreateCommandPool();
 	void CreateCommandBuffers();
 	void CreateOffScreenCommandBuffer(unsigned int imageIndex);
+	void CreateUICommandBuffer(unsigned int imageIndex);
 	void CreateSyncObjects();
 
 	void CreateAttachement(VkFormat format, VkImageUsageFlagBits usage, VulkanTexture *attachment);
+	void PrepareUIFramebuffer();
 	void PrepareOffscreenFramebuffer();
 private:
 	void CleanupSwapChain();
@@ -143,14 +146,19 @@ private:
 	VkCommandPool commandPool;
 	std::vector<VkCommandBuffer> commandBuffers;
 	VkCommandBuffer offScreenCmdBuffer = VK_NULL_HANDLE;
+	VkCommandBuffer uiCmdBuffer = VK_NULL_HANDLE;
 
 	// Renders to the screen.
 	VulkanFrameBuffer mainFramebuffer;
 	// Renders to a texture which mainFramebuffer uses
 	VulkanFrameBuffer offScreenFrameBuf;
 
+	VulkanFrameBuffer uiFrameBuf;
+
 	// Semaphore used to synchronize between offscreen and final scene rendering
 	VkSemaphore offscreenSemaphore = VK_NULL_HANDLE;
+	// Semaphore used to synchronize between ui and final scene rendering
+	VkSemaphore uiSemaphore = VK_NULL_HANDLE;
 
 	Semaphores semaphores;
 
