@@ -9,7 +9,9 @@ layout(location = 0) out vec4 colour;
 
 void main()
 {
-	vec4 albedo = texture(samplerAlbedo, tex_coord);
+	vec2 texcoord = tex_coord;
+	texcoord.y = 1 - tex_coord.y;
+	vec4 albedo = texture(samplerAlbedo, texcoord);
 	albedo.a = 1;
     colour = albedo;
 }
