@@ -6,6 +6,7 @@
 #include "GameEngine/Terrain.h"
 #include "GameEngine/Movement.h"
 #include "GameEngine/ArcBallCamera.h"
+#include "GameEngine/FreeCamera.h"
 #include "GameEngine/PhysicsContainer.h"
 #include <memory>
 
@@ -90,6 +91,16 @@ namespace EntityFactory
 		auto camera = std::make_unique<Entity>("camera");
 
 		auto cameraComponent = std::make_unique<ArcBallCamera>();
+		camera->AddComponent(std::move(cameraComponent));
+
+		return camera;
+	}
+
+	static std::unique_ptr<Entity> CreateBuilderCamera()
+	{
+		auto camera = std::make_unique<Entity>("builderCamera");
+
+		auto cameraComponent = std::make_unique<FreeCamera>(70.0f);
 		camera->AddComponent(std::move(cameraComponent));
 
 		return camera;
