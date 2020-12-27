@@ -82,7 +82,7 @@
       <Filter>Source Files\Shaders\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="src\VkUIShader.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Shaders</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

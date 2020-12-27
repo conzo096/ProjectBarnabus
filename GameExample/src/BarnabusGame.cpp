@@ -21,7 +21,14 @@ bool BarnabusGame::LoadGameContent()
 bool BarnabusGame::Update(float deltaTime)
 {
 	mainScene.Update(deltaTime);
-	ui.SetExampleText(glm::to_string(mainScene.GetEntity("player")->GetPosition()));
+	if (mainScene.GetCurrentMode() == MainEnvironment::PLAYING)
+	{
+		ui.SetExampleText("PLAYING");
+	}
+	else
+	{
+		ui.SetExampleText("BUILDING");
+	}
 
 	// Close the window if it has been asked too.
 	if (BarnabusGameEngine::Get().ShouldWindowClose() || glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)

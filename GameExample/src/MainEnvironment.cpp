@@ -13,12 +13,14 @@
 
 #define _USE_MATH_DEFINES
 #include <math.h>
-MainEnvironment::MainEnvironment(std::string environmentName) : Environment(environmentName)
+MainEnvironment::MainEnvironment(std::string environmentName) : Environment(environmentName),currentMode(PLAYING)
 {
 }
 
 void MainEnvironment::Update(float deltaTime)
 {
+	timeElapsed += deltaTime;
+
 	currentTime += deltaTime;
 	if (currentTime > duration)
 	{
@@ -42,16 +44,36 @@ void MainEnvironment::Update(float deltaTime)
 	auto worldLight = static_cast<DirectionalLight*>(GetLight("test"));
 	worldLight->SetPosition(GetEntity("sun")->GetPosition());
 
-
 	auto camera = GetEntity("camera");
 	camera->GetComponent<ArcBallCamera>().SetTarget(GetEntity("player")->GetPosition() + glm::vec3(0, 5, 0));
+
+	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_1) == GLFW_PRESS && timeElapsed >= 0.5f)
+	{
+		timeElapsed = 0;
+
+		if (currentMode == PLAYING)
+		{
+			currentMode = BUILDING;
+		}
+		else
+		{
+			currentMode = PLAYING;
+		}
+	}
 
 	Environment::Update(deltaTime);
 }
 
 void MainEnvironment::Render(float deltaTime)
 {
-	BarnabusGameEngine::Get().GetRenderer()->SetCameraViewProjection(GetEntity("camera")->GetComponent<ArcBallCamera>().GetProjection() * GetEntity("camera")->GetComponent<ArcBallCamera>().GetView());
+	if (currentMode == PLAYING)
+	{
+		BarnabusGameEngine::Get().GetRenderer()->SetCameraViewProjection(GetEntity("camera")->GetComponent<ArcBallCamera>().GetProjection() * GetEntity("camera")->GetComponent<ArcBallCamera>().GetView());
+	}
+	else
+	{
+		BarnabusGameEngine::Get().GetRenderer()->SetCameraViewProjection(GetEntity("builderCamera")->GetComponent<FreeCamera>().GetProjection() * GetEntity("builderCamera")->GetComponent<FreeCamera>().GetView());
+	}
 
 	Environment::Render(deltaTime);
 }
@@ -74,6 +96,7 @@ void MainEnvironment::LoadGameContent()
 	}
 
 	AddEntity("camera", EntityFactory::CreateCamera());
+	AddEntity("builderCamera", EntityFactory::CreateBuilderCamera());
 	AddEntity("terrain", EntityFactory::CreateTerrain(BarnabusGameEngine::Get().GetShader("terrain")));
 	AddEntity("player", EntityFactory::CreatePlayer(glm::vec3(0), BarnabusGameEngine::Get().GetShader("animation"), &GetEntity("terrain")->GetComponent<Terrain>(),GetEntity("camera")->GetCompatibleComponent<ArcBallCamera>()));
 	AddEntity("building", EntityFactory::CreateBuilding(glm::vec3(0), BarnabusGameEngine::Get().GetShader("red")));
@@ -81,4 +104,9 @@ void MainEnvironment::LoadGameContent()
 
 	AddEntity("sun", EntityFactory::CreateSphere(glm::vec3(100, 300, 100), BarnabusGameEngine::Get().GetShader("red")));
 	GetEntity("sun")->SetScale(glm::vec3(10, 10, 10));
+}
+
+MainEnvironment::GameMode MainEnvironment::GetCurrentMode()
+{
+	return currentMode;
 }
