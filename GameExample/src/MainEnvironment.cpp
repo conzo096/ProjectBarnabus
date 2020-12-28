@@ -139,6 +139,24 @@ void MainEnvironment::PlayingKeyCallback(int key, int action)
 
 void MainEnvironment::BuildingKeyCallback(int key, int action)
 {
+	FreeCamera* camera = GetEntity("builderCamera")->GetCompatibleComponent<FreeCamera>();
+	if (key == GLFW_KEY_W && (action == GLFW_PRESS || action == GLFW_REPEAT))
+	{
+		camera->Move(CameraMovement::FORWARD, 0.1);
+	}
+	if (key == GLFW_KEY_S && (action == GLFW_PRESS || action == GLFW_REPEAT))
+	{
+		camera->Move(CameraMovement::BACKWARD, 0.1);
+	}
+	if (key == GLFW_KEY_A && (action == GLFW_PRESS || action == GLFW_REPEAT))
+	{
+		camera->Move(CameraMovement::LEFT, 0.1);
+	}
+	if (key == GLFW_KEY_D && (action == GLFW_PRESS || action == GLFW_REPEAT))
+	{
+		camera->Move(CameraMovement::RIGHT, 0.1);
+	}
+
 	if (key == GLFW_KEY_1 && action == GLFW_PRESS)
 	{
 		BarnabusGameEngine::Get().SetKeyCallback([this](int key, int action) { PlayingKeyCallback(key, action); });

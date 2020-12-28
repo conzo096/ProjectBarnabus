@@ -4,6 +4,11 @@
 // Update free camera for this frame
 void FreeCamera::Update(float deltaTime)
 {
+	if (!IsActive())
+	{
+		return;
+	}
+
 	glfwSetInputMode(BarnabusGameEngine::Get().GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	fieldOfView = 70;
 	projection = glm::perspective(fieldOfView, (float)1920 / 1080, 2.414f, 1000.0f);
@@ -31,14 +36,6 @@ void FreeCamera::Update(float deltaTime)
 	deltaY *= ratioHeight;
 
 	Rotate(deltaX*deltaTime, deltaY*deltaTime);
-	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_W) == GLFW_PRESS)
-		Move(CameraMovement::FORWARD, deltaTime*moveSpeed);
-	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_S) == GLFW_PRESS)
-		Move(CameraMovement::BACKWARD, deltaTime*moveSpeed);
-	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_A) == GLFW_PRESS)
-		Move(CameraMovement::LEFT, deltaTime*moveSpeed);
-	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_D) == GLFW_PRESS)
-		Move(CameraMovement::RIGHT, deltaTime*moveSpeed);
 
 	// Calculate the forward direction (spherical co-ordinates to Cartesian co-ordinates)
 	glm::dvec3 temp_forward(cos(pitch) * -sin(yaw), sin(pitch), -cos(yaw) * cos(pitch));

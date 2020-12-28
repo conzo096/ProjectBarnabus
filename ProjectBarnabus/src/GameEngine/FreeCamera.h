@@ -18,10 +18,6 @@ private:
 	// The current field of view
 	float fieldOfView;
 
-
-private:
-	void Move(CameraMovement direction, float dist);
-
 public:
 	// Create free camera
 	FreeCamera(float fov) : 
@@ -68,4 +64,7 @@ public:
 		pitch += deltaPitch;
 		yaw -= deltaYaw;
 	}
+
+	void Move(CameraMovement direction, float dist);
+
 };
