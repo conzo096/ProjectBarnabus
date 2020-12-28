@@ -9,30 +9,12 @@ void FreeCamera::Update(float deltaTime)
 		return;
 	}
 
-	glfwSetInputMode(BarnabusGameEngine::Get().GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	fieldOfView = 70;
 	projection = glm::perspective(fieldOfView, (float)1920 / 1080, 2.414f, 1000.0f);
 	// The ratio of pixels to rotation
 	float ratioWidth = fieldOfView / static_cast<float>(1920);
 	float ratioHeight = (fieldOfView * (static_cast<float>(1080)
 		/ static_cast<float>(1920)))
 		/ static_cast<float>(1080);
-
-	double currentX;
-	double currentY;
-
-	// Get current cursor position
-	glfwGetCursorPos(BarnabusGameEngine::Get().GetWindow(), &currentX, &currentY);
-
-	// Calculate delta of cursor positions from last frame
-	double deltaX = (currentX - cursorX);
-	double deltaY = (cursorY - currentY);
-
-	// Multiply deltas by ratios to get change in orientation
-	deltaX *= ratioWidth;
-	deltaY *= ratioHeight;
-
-	Rotate(deltaX*deltaTime, deltaY*deltaTime);
 
 	// Calculate the forward direction (spherical co-ordinates to Cartesian co-ordinates)
 	glm::dvec3 temp_forward(cos(pitch) * -sin(yaw), sin(pitch), -cos(yaw) * cos(pitch));
@@ -63,8 +45,6 @@ void FreeCamera::Update(float deltaTime)
 
 	// Calculate view matrix
 	view = glm::lookAt(GetPosition(), target, up);
-
-	glfwGetCursorPos(BarnabusGameEngine::Get().GetWindow(), &cursorX, &cursorY);
 }
 
 void FreeCamera::Move(CameraMovement direction, float dist)

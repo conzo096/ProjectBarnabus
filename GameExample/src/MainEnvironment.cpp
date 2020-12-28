@@ -151,11 +151,11 @@ void MainEnvironment::BuildingKeyCallback(float deltaTime)
 
 	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_W) == GLFW_PRESS)
 	{
-		camera->Move(CameraMovement::FORWARD, moveSpeed);
+		camera->Move(CameraMovement::UP, moveSpeed);
 	}
 	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_S) == GLFW_PRESS)
 	{
-		camera->Move(CameraMovement::BACKWARD, moveSpeed);
+		camera->Move(CameraMovement::DOWN, moveSpeed);
 	}
 	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_A) == GLFW_PRESS)
 	{
@@ -165,6 +165,15 @@ void MainEnvironment::BuildingKeyCallback(float deltaTime)
 	{
 		camera->Move(CameraMovement::RIGHT, moveSpeed);
 	}
+	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_Q) == GLFW_PRESS)
+	{
+		camera->Rotate(5*deltaTime, 0);
+	}
+	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_E) == GLFW_PRESS)
+	{
+		camera->Rotate(5*deltaTime, 0);
+	}
+
 	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_1) == GLFW_PRESS && keyCooldown > 0.3f)
 	{
 		keyCallback = [this](float deltaTime) {PlayingKeyCallback(deltaTime); };

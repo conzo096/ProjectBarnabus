@@ -101,7 +101,11 @@ namespace EntityFactory
 		auto camera = std::make_unique<Entity>("builderCamera");
 
 		auto cameraComponent = std::make_unique<FreeCamera>(70.0f);
+		cameraComponent->SetPosition(glm::vec3(0, 100, 0));
+		cameraComponent->Rotate(0, -1.5708);
 		camera->AddComponent(std::move(cameraComponent));
+
+		camera->SetActive(false);
 
 		return camera;
 	}
