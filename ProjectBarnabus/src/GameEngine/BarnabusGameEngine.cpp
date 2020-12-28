@@ -2,6 +2,14 @@
 #include <iostream>
 #include <time.h>  
 
+namespace
+{
+	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+	{
+		BarnabusGameEngine::Get().GetKeyCallback()(key, action);
+	}
+}
+
 GLFWwindow* BarnabusGameEngine::GetWindow()
 {
 	return renderer ? renderer->GetWindow() : nullptr;
@@ -148,4 +156,15 @@ bool BarnabusGameEngine::StartGame(std::unique_ptr<IRenderer> renderEngine)
 
 	// Still need to handle game conditions
 	return engineRenderResult;
+}
+
+void BarnabusGameEngine::SetKeyCallback(std::function<void(int, int)> callback)
+{
+	keyCallback = callback;
+	glfwSetKeyCallback(GetWindow(), key_callback);
+}
+
+std::function<void(int, int)> BarnabusGameEngine::GetKeyCallback()
+{
+	return keyCallback;
 }

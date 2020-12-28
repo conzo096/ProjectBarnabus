@@ -53,10 +53,12 @@ void MainEnvironment::Update(float deltaTime)
 
 		if (currentMode == PLAYING)
 		{
+			BarnabusGameEngine::Get().SetKeyCallback([this](int key, int action) { BuildingKeyCallback(key, action); });
 			currentMode = BUILDING;
 		}
 		else
 		{
+			BarnabusGameEngine::Get().SetKeyCallback([this](int key, int action) { PlayingKeyCallback(key, action); });
 			currentMode = PLAYING;
 		}
 	}
@@ -109,4 +111,20 @@ void MainEnvironment::LoadGameContent()
 MainEnvironment::GameMode MainEnvironment::GetCurrentMode()
 {
 	return currentMode;
+}
+
+void MainEnvironment::PlayingKeyCallback(int key, int action)
+{
+	if (key == GLFW_KEY_W && action == GLFW_PRESS)
+	{
+		GetEntity("sun")->Scale(glm::vec3(2));
+	}
+}
+
+void MainEnvironment::BuildingKeyCallback(int key, int action)
+{
+	if (key == GLFW_KEY_W && action == GLFW_PRESS)
+	{
+		GetEntity("sun")->Scale(glm::vec3(0.5));
+	}
 }

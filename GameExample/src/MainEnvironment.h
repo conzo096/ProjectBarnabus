@@ -20,6 +20,9 @@ public:
 	GameMode GetCurrentMode();
 
 private:
+	void PlayingKeyCallback(int key, int action);
+	void BuildingKeyCallback(int key, int action);
+private:
 	float duration = 100;
 	float currentTime = 0;
 	GameMode currentMode;
