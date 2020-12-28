@@ -1,5 +1,6 @@
 #pragma once
 #include "GameEngine/Environment.h"
+#include <functional>
 
 class MainEnvironment : public Environment
 {
@@ -20,11 +21,12 @@ public:
 	GameMode GetCurrentMode();
 
 private:
-	void PlayingKeyCallback(int key, int action);
-	void BuildingKeyCallback(int key, int action);
+	void PlayingKeyCallback();
+	void BuildingKeyCallback();
 private:
 	float duration = 100;
 	float currentTime = 0;
 	GameMode currentMode;
 
+	std::function<void()> keyCallback;
 };

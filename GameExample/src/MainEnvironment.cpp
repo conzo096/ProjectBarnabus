@@ -19,6 +19,9 @@ MainEnvironment::MainEnvironment(std::string environmentName) : Environment(envi
 
 void MainEnvironment::Update(float deltaTime)
 {
+	// Handle input
+	keyCallback();
+
 	currentTime += deltaTime;
 	if (currentTime > duration)
 	{
@@ -89,7 +92,7 @@ void MainEnvironment::LoadGameContent()
 	AddEntity("sun", EntityFactory::CreateSphere(glm::vec3(100, 300, 100), BarnabusGameEngine::Get().GetShader("red")));
 	GetEntity("sun")->SetScale(glm::vec3(10, 10, 10));
 
-	BarnabusGameEngine::Get().SetKeyCallback([this](int key, int action) { PlayingKeyCallback(key, action); });
+	keyCallback = [this]() {PlayingKeyCallback(); };
 }
 
 MainEnvironment::GameMode MainEnvironment::GetCurrentMode()
@@ -97,7 +100,7 @@ MainEnvironment::GameMode MainEnvironment::GetCurrentMode()
 	return currentMode;
 }
 
-void MainEnvironment::PlayingKeyCallback(int key, int action)
+void MainEnvironment::PlayingKeyCallback()
 {
 	Camera* camera = GetEntity("camera")->GetCompatibleComponent<ArcBallCamera>();
 	glm::vec3 up = camera->GetOrientation();
@@ -109,57 +112,57 @@ void MainEnvironment::PlayingKeyCallback(int key, int action)
 	float speed = 0.05 * 10;
 
 	glm::vec3 movement(0);
-	if (key ==  GLFW_KEY_W && (action == GLFW_PRESS || action == GLFW_REPEAT))
+	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_W) == GLFW_PRESS)
 	{
 		movement += dir * speed;
 	}
-	if (key == GLFW_KEY_S && (action == GLFW_PRESS || action == GLFW_REPEAT))
+	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_S) == GLFW_PRESS)
 	{
 		movement += -dir * speed;
 	}
-	if (key == GLFW_KEY_A && (action == GLFW_PRESS || action == GLFW_REPEAT))
+	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_A) == GLFW_PRESS)
 	{
 		movement += left * speed;
 	}
-	if (key == GLFW_KEY_D && (action == GLFW_PRESS || action == GLFW_REPEAT))
+	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_D) == GLFW_PRESS)
 	{
 		movement += -left * speed;
 	}
 	GetEntity("player")->GetComponent<Movement>().SetMovement(movement);
 
 	// Check if camera is to be switched.
-	if (key == GLFW_KEY_1 && action == GLFW_PRESS)
+	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_1) == GLFW_PRESS)
 	{
-		BarnabusGameEngine::Get().SetKeyCallback([this](int key, int action) { BuildingKeyCallback(key, action); });
+		keyCallback = [this]() {BuildingKeyCallback(); };
 		currentMode = BUILDING;
 		GetEntity("camera")->SetActive(false);
 		GetEntity("builderCamera")->SetActive(true);
 	}
 }
 
-void MainEnvironment::BuildingKeyCallback(int key, int action)
+void MainEnvironment::BuildingKeyCallback()
 {
 	FreeCamera* camera = GetEntity("builderCamera")->GetCompatibleComponent<FreeCamera>();
-	if (key == GLFW_KEY_W && (action == GLFW_PRESS || action == GLFW_REPEAT))
+
+	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_W) == GLFW_PRESS)
 	{
 		camera->Move(CameraMovement::FORWARD, 0.1);
 	}
-	if (key == GLFW_KEY_S && (action == GLFW_PRESS || action == GLFW_REPEAT))
+	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_S) == GLFW_PRESS)
 	{
 		camera->Move(CameraMovement::BACKWARD, 0.1);
 	}
-	if (key == GLFW_KEY_A && (action == GLFW_PRESS || action == GLFW_REPEAT))
+	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_A) == GLFW_PRESS)
 	{
 		camera->Move(CameraMovement::LEFT, 0.1);
 	}
-	if (key == GLFW_KEY_D && (action == GLFW_PRESS || action == GLFW_REPEAT))
+	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_D) == GLFW_PRESS)
 	{
 		camera->Move(CameraMovement::RIGHT, 0.1);
 	}
-
-	if (key == GLFW_KEY_1 && action == GLFW_PRESS)
+	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_1) == GLFW_PRESS)
 	{
-		BarnabusGameEngine::Get().SetKeyCallback([this](int key, int action) { PlayingKeyCallback(key, action); });
+		keyCallback = [this]() {PlayingKeyCallback(); };
 		currentMode = PLAYING;
 		GetEntity("camera")->SetActive(true);
 		GetEntity("builderCamera")->SetActive(false);

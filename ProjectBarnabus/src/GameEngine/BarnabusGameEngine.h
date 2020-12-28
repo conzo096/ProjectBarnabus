@@ -17,7 +17,6 @@
 #include "IShader.h"
 #include "ITexture.h"
 #include <map>
-#include <functional>
 
 #include <GLFW/glfw3.h>
 
@@ -41,9 +40,6 @@ public:
 
 	IRenderer::GraphicsRenderer GetRenderType();
 	IRenderer* GetRenderer();
-
-	void SetKeyCallback(std::function<void(int, int)> callback);
-	std::function<void(int, int)> GetKeyCallback();
 public:
 	// For meshes
 	void InitialiseMesh(MeshData& data);
@@ -67,6 +63,4 @@ private:
 	StringLog::Priority messagePriority = StringLog::Priority::AllLogs;
 	std::vector<StringLog> logs;
 	int frameRate = 0;
-
-	std::function<void(int, int)> keyCallback;
 };
