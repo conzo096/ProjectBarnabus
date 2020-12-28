@@ -91,5 +91,5 @@ bool Ray::IsCollision(Entity& entity, glm::vec3 & poi)
 		}
 	}
 
-	return true;
+	return false;
 }
