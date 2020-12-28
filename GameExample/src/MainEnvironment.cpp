@@ -14,6 +14,8 @@
 
 #define _USE_MATH_DEFINES
 #include <math.h>
+
+#include <glm/matrix.hpp>
 MainEnvironment::MainEnvironment(std::string environmentName) : Environment(environmentName),currentMode(PLAYING)
 {
 	ray.SetDirection(glm::vec3(0, -1, 0));
@@ -56,8 +58,24 @@ void MainEnvironment::Update(float deltaTime)
 
 	if (currentMode == BUILDING)
 	{
+
+		auto builderCam = GetEntity("builderCamera")->GetCompatibleComponent<FreeCamera>();
 		// position should be based on where the cursor on the screen - will test with center of camera for now.
-		ray.SetPosition(GetEntity("builderCamera")->GetCompatibleComponent<FreeCamera>()->GetPosition());
+		double xpos, ypos;
+		glfwGetCursorPos(BarnabusGameEngine::Get().GetWindow(), &xpos, &ypos);
+		glm::vec2 mouse = glm::vec2(xpos, ypos);
+
+		double winX = (double)mouse.x;
+		double winY = 1080 - (double)mouse.y;
+
+		auto near = glm::unProject(glm::vec3(winX, winY, 0.0), builderCam->GetView(), builderCam->GetProjection(),
+			glm::vec4(0, 0, 1920,1080));
+		auto far = glm::unProject(glm::vec3(winX, winY, 1.0), builderCam->GetView(), builderCam->GetProjection(),
+			glm::vec4(0, 0, 1920, 1080));
+
+		ray.SetPosition(near);
+		far.z -= 1.0f;
+		ray.SetDirection(glm::normalize(far - near));
 
 		glm::vec3 poi;
 		ray.IsCollision( *GetEntity("player"), poi);
