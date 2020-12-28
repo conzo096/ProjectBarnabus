@@ -6,7 +6,7 @@ Movement::Movement() : Component("Movement")
 {
 }
 
-Movement::Movement(Terrain* const entityTerrain, Camera* const entityCamera) : Component("Movement"), terrain(entityTerrain), camera(entityCamera)
+Movement::Movement(Terrain* const entityTerrain) : Component("Movement"), terrain(entityTerrain)
 {
 
 }
@@ -22,37 +22,8 @@ void Movement::SetTerrain(Terrain* const entityTerrain)
 
 void Movement::Update(float deltaTime)
 {
-	glm::vec3 up = camera->GetOrientation();
-	glm::vec3 dir = glm::normalize(camera->GetTarget() - camera->GetPosition());
-	dir.y = 0;
-	glm::vec3 left = glm::normalize(glm::cross(up, dir));
-	left.y = 0;
-	auto speed = deltaTime * 10;
-	// w is foward * amount
-	// s is -forward * amount
-	// a is left of forward so foward * ?
-	// d is right of forward so opposite of above
-
 	auto& animator = GetParent()->GetComponent<AnimatedModel>().GetAnimator();
 	animator.SetState(AnimationState::PAUSE);
-
-	glm::vec3 movement(0);
-	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_W) == GLFW_PRESS)
-	{
-		movement += dir*speed;
-	}
-	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_S) == GLFW_PRESS)
-	{
-		movement += -dir * speed;
-	}
-	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_A) == GLFW_PRESS)
-	{
-		movement += left * speed;
-	}
-	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_D) == GLFW_PRESS)
-	{
-		movement += -left*speed;
-	}
 
 	if (movement != glm::vec3(0))
 	{
@@ -60,4 +31,11 @@ void Movement::Update(float deltaTime)
 		GetParent()->SetPosition(terrain->GetWorldPositionFromGrid(GetParent()->GetPosition()));
 		animator.SetState(AnimationState::PLAY);
 	}
+
+	movement = glm::vec3(0);
+}
+
+void Movement::SetMovement(glm::vec3 move)
+{
+	movement += move;
 }

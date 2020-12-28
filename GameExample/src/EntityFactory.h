@@ -12,11 +12,11 @@
 
 namespace EntityFactory
 {
-	static std::unique_ptr<Entity> CreatePlayer(glm::vec3 position, IShader* shader, Terrain* terrain, Camera* camera)
+	static std::unique_ptr<Entity> CreatePlayer(glm::vec3 position, IShader* shader, Terrain* terrain)
 	{
 		auto player = std::make_unique<Entity>("player");
 
-		player->AddComponent(std::make_unique<Movement>(terrain, camera));
+		player->AddComponent(std::make_unique<Movement>(terrain));
 		std::string fileName("res\\Models\\AnimatedModels\\Player.fbx");
 		auto animatedModelComponent = std::make_unique<AnimatedModel>(fileName);
 		animatedModelComponent->SetShader(shader);

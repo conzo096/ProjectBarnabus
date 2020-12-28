@@ -130,12 +130,12 @@ bool BarnabusGameEngine::StartGame(std::unique_ptr<IRenderer> renderEngine)
 				time += deltaTime;
 				lastTime = static_cast<float>(clock());
 
+				// process events.
+				glfwPollEvents();
 				running = game->Update(deltaTime);
 				PrintLogs();
 				game->Render(deltaTime);
 				PrintLogs();
-				// process events.
-				glfwPollEvents();
 			}
 		}
 		else

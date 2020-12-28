@@ -26,6 +26,5 @@ private:
 	float duration = 100;
 	float currentTime = 0;
 	GameMode currentMode;
-	// Used to limit key calls.
-	float timeElapsed = 0.5f;
+
 };
