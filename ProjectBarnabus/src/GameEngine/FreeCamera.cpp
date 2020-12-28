@@ -21,9 +21,6 @@ void FreeCamera::Update(float deltaTime)
 	double currentX;
 	double currentY;
 
-	// The camera's movement speed
-	float moveSpeed = 25.0f;
-
 	// Get current cursor position
 	glfwGetCursorPos(BarnabusGameEngine::Get().GetWindow(), &currentX, &currentY);
 

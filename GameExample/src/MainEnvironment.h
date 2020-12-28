@@ -21,12 +21,12 @@ public:
 	GameMode GetCurrentMode();
 
 private:
-	void PlayingKeyCallback();
-	void BuildingKeyCallback();
+	void PlayingKeyCallback(float deltaTime);
+	void BuildingKeyCallback(float deltaTime);
 private:
 	float duration = 100;
 	float currentTime = 0;
 	GameMode currentMode;
-
-	std::function<void()> keyCallback;
+	float keyCooldown = 0.3;
+	std::function<void(float)> keyCallback;
 };

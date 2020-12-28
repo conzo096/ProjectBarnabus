@@ -20,7 +20,8 @@ MainEnvironment::MainEnvironment(std::string environmentName) : Environment(envi
 void MainEnvironment::Update(float deltaTime)
 {
 	// Handle input
-	keyCallback();
+	keyCooldown += deltaTime;
+	keyCallback(deltaTime);
 
 	currentTime += deltaTime;
 	if (currentTime > duration)
@@ -92,7 +93,7 @@ void MainEnvironment::LoadGameContent()
 	AddEntity("sun", EntityFactory::CreateSphere(glm::vec3(100, 300, 100), BarnabusGameEngine::Get().GetShader("red")));
 	GetEntity("sun")->SetScale(glm::vec3(10, 10, 10));
 
-	keyCallback = [this]() {PlayingKeyCallback(); };
+	keyCallback = [this](float deltaTime) {PlayingKeyCallback(deltaTime); };
 }
 
 MainEnvironment::GameMode MainEnvironment::GetCurrentMode()
@@ -100,7 +101,7 @@ MainEnvironment::GameMode MainEnvironment::GetCurrentMode()
 	return currentMode;
 }
 
-void MainEnvironment::PlayingKeyCallback()
+void MainEnvironment::PlayingKeyCallback(float deltaTime)
 {
 	Camera* camera = GetEntity("camera")->GetCompatibleComponent<ArcBallCamera>();
 	glm::vec3 up = camera->GetOrientation();
@@ -109,7 +110,7 @@ void MainEnvironment::PlayingKeyCallback()
 	glm::vec3 left = glm::normalize(glm::cross(up, dir));
 	left.y = 0;
 
-	float speed = 0.05 * 10;
+	float speed = deltaTime * 10;
 
 	glm::vec3 movement(0);
 	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_W) == GLFW_PRESS)
@@ -131,40 +132,46 @@ void MainEnvironment::PlayingKeyCallback()
 	GetEntity("player")->GetComponent<Movement>().SetMovement(movement);
 
 	// Check if camera is to be switched.
-	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_1) == GLFW_PRESS)
+	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_1) == GLFW_PRESS && keyCooldown > 0.3f)
 	{
-		keyCallback = [this]() {BuildingKeyCallback(); };
+		keyCallback = [this](float deltaTime) {BuildingKeyCallback(deltaTime); };
 		currentMode = BUILDING;
 		GetEntity("camera")->SetActive(false);
 		GetEntity("builderCamera")->SetActive(true);
+
+		keyCooldown = 0;
 	}
 }
 
-void MainEnvironment::BuildingKeyCallback()
+void MainEnvironment::BuildingKeyCallback(float deltaTime)
 {
 	FreeCamera* camera = GetEntity("builderCamera")->GetCompatibleComponent<FreeCamera>();
+	// The camera's movement speed - Maybe better stored in class.
+	float moveSpeed = 25.0f * deltaTime;
 
 	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_W) == GLFW_PRESS)
 	{
-		camera->Move(CameraMovement::FORWARD, 0.1);
+		camera->Move(CameraMovement::FORWARD, moveSpeed);
 	}
 	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_S) == GLFW_PRESS)
 	{
-		camera->Move(CameraMovement::BACKWARD, 0.1);
+		camera->Move(CameraMovement::BACKWARD, moveSpeed);
 	}
 	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_A) == GLFW_PRESS)
 	{
-		camera->Move(CameraMovement::LEFT, 0.1);
+		camera->Move(CameraMovement::LEFT, moveSpeed);
 	}
 	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_D) == GLFW_PRESS)
 	{
-		camera->Move(CameraMovement::RIGHT, 0.1);
+		camera->Move(CameraMovement::RIGHT, moveSpeed);
 	}
-	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_1) == GLFW_PRESS)
+	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_1) == GLFW_PRESS && keyCooldown > 0.3f)
 	{
-		keyCallback = [this]() {PlayingKeyCallback(); };
+		keyCallback = [this](float deltaTime) {PlayingKeyCallback(deltaTime); };
 		currentMode = PLAYING;
 		GetEntity("camera")->SetActive(true);
 		GetEntity("builderCamera")->SetActive(false);
+
+		keyCooldown = 0;
 	}
 }
