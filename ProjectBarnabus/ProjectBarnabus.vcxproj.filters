@@ -106,6 +106,7 @@
     <ClCompile Include="src\GameEngine\VkFinalPassShader.cpp">
       <Filter>Source Files\GameEngine\Renderer\Shader</Filter>
     </ClCompile>
+    <ClCompile Include="src\GameEngine\Ray.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -194,6 +195,9 @@
     </Filter>
     <Filter Include="Resources\Shaders\Vulkan">
       <UniqueIdentifier>{a9d30258-b882-4f41-a7c1-2950ddc3d03a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameEngine\Physics">
+      <UniqueIdentifier>{1f21e0cd-e141-4392-b163-c0fcc5075fd3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -337,6 +341,9 @@
     </ClInclude>
     <ClInclude Include="src\GameEngine\VkFinalPassShader.h">
       <Filter>Header Files\GameEngine\Shader\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Ray.h">
+      <Filter>Header Files\GameEngine\Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

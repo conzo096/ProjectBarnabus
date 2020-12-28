@@ -1,5 +1,6 @@
 #pragma once
 #include "GameEngine/Environment.h"
+#include "GameEngine/Ray.h"
 #include <functional>
 
 class MainEnvironment : public Environment
@@ -29,4 +30,6 @@ private:
 	GameMode currentMode;
 	float keyCooldown = 0.3;
 	std::function<void(float)> keyCallback;
+private:
+	Ray ray;
 };

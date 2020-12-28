@@ -1,6 +1,7 @@
 #include "MainEnvironment.h"
 #include "GameEngine/DirectionalLight.h"
 #include "EntityFactory.h"
+
 #include "ShaderFactory.h"
 
 #include "AnimationShader.h"
@@ -15,6 +16,8 @@
 #include <math.h>
 MainEnvironment::MainEnvironment(std::string environmentName) : Environment(environmentName),currentMode(PLAYING)
 {
+	ray.SetDirection(glm::vec3(0, -1, 0));
+	ray.SetLength(150);
 }
 
 void MainEnvironment::Update(float deltaTime)
@@ -50,6 +53,15 @@ void MainEnvironment::Update(float deltaTime)
 	camera->GetComponent<ArcBallCamera>().SetTarget(GetEntity("player")->GetPosition() + glm::vec3(0, 5, 0));
 
 	Environment::Update(deltaTime);
+
+	if (currentMode == BUILDING)
+	{
+		// position should be based on where the cursor on the screen - will test with center of camera for now.
+		ray.SetPosition(GetEntity("builderCamera")->GetCompatibleComponent<FreeCamera>()->GetPosition());
+
+		glm::vec3 poi;
+		ray.IsCollision( *GetEntity("player"), poi);
+	}
 }
 
 void MainEnvironment::Render(float deltaTime)
