@@ -1,6 +1,8 @@
 #pragma once
 #include <glm/glm.hpp>
 #include "Entity.h"
+#include "BoundingBox.h"
+
 class Ray
 {
 public:
@@ -13,6 +15,8 @@ public:
 public:
 	bool IsCollision(Entity& entity, glm::vec3& poi);
 
+private:
+	bool TestBoundingBoxCollision(BoundingVolumes::BoundingBox bb);
 private:
 	glm::vec3 position;
 	glm::vec3 direction;

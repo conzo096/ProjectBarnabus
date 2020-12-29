@@ -88,6 +88,7 @@ void MainEnvironment::Update(float deltaTime)
 				{
 					ui.SetEntityInfoText(entity.second->GetName());
 					entitySelected = true;
+					break;
 				}
 			}
 			if (!entitySelected)
