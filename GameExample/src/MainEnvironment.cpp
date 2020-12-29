@@ -58,7 +58,6 @@ void MainEnvironment::Update(float deltaTime)
 
 	if (currentMode == BUILDING)
 	{
-
 		auto builderCam = GetEntity("builderCamera")->GetCompatibleComponent<FreeCamera>();
 		// position should be based on where the cursor on the screen - will test with center of camera for now.
 		double xpos, ypos;
@@ -78,8 +77,28 @@ void MainEnvironment::Update(float deltaTime)
 		ray.SetDirection(glm::normalize(far - near));
 
 		glm::vec3 poi;
-		ray.IsCollision( *GetEntity("player"), poi);
+		if(ray.IsCollision(*GetEntity("player"), poi))
+		{
+			// Set UI info here.
+			static int oldState = GLFW_RELEASE;
+			int newState = glfwGetMouseButton(BarnabusGameEngine::Get().GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
+			if (newState == GLFW_RELEASE && oldState == GLFW_PRESS)
+			{
+				GetEntity("player")->Scale(glm::vec3(2));
+			}
+			oldState = newState;
+		}
 	}
+
+	if (currentMode == MainEnvironment::PLAYING)
+	{
+		ui.SetExampleText("PLAYING");
+	}
+	else
+	{
+		ui.SetExampleText("BUILDING");
+	}
+
 }
 
 void MainEnvironment::Render(float deltaTime)
@@ -93,6 +112,7 @@ void MainEnvironment::Render(float deltaTime)
 		BarnabusGameEngine::Get().GetRenderer()->SetCameraViewProjection(GetEntity("builderCamera")->GetComponent<FreeCamera>().GetProjection() * GetEntity("builderCamera")->GetComponent<FreeCamera>().GetView());
 	}
 
+	ui.Draw();
 	Environment::Render(deltaTime);
 }
 
@@ -124,6 +144,9 @@ void MainEnvironment::LoadGameContent()
 	GetEntity("sun")->SetScale(glm::vec3(10, 10, 10));
 
 	keyCallback = [this](float deltaTime) {PlayingKeyCallback(deltaTime); };
+
+	ui.InitGameUi();
+	ui.InitaliseAllQuads();
 }
 
 MainEnvironment::GameMode MainEnvironment::GetCurrentMode()

@@ -1,6 +1,7 @@
 #pragma once
 #include "GameEngine/Environment.h"
 #include "GameEngine/Ray.h"
+#include "GameUi.h"
 #include <functional>
 
 class MainEnvironment : public Environment
@@ -32,4 +33,5 @@ private:
 	std::function<void(float)> keyCallback;
 private:
 	Ray ray;
+	GameUi ui;
 };

@@ -1,7 +1,6 @@
 #pragma once
 #include <GameEngine/IGame.h>
 #include "MainEnvironment.h"
-#include "GameUi.h"
 
 class BarnabusGame : public IGame
 {
@@ -14,5 +13,4 @@ public:
 
 private:
 	MainEnvironment mainScene;
-	GameUi ui;
 };
