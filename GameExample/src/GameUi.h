@@ -9,9 +9,7 @@ public:
 
 	void InitGameUi();
 	void SetExampleText(std::string text);
+	void SetEntityInfoText(std::string text);
 
 	void Draw() override;
-
-private:
-	std::string exampleText;
 };

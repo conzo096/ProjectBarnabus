@@ -15,4 +15,5 @@ private:
 	int size = 40;
 	std::string text = "Text Not Initialised";
 	bool textChanged = true;
+	bool render = true;
 };

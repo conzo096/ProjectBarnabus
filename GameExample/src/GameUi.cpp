@@ -15,6 +15,10 @@ GameUi::GameUi()
 	
 	TextQuad* textExample = new TextQuad(glm::vec2(-1, -1), glm::vec2(1,1));
 	uiElements.insert(std::pair<std::string, UiQuad*>("textExample", textExample));
+
+	TextQuad* entityInfoText = new TextQuad(glm::vec2(-1, -1), glm::vec2(1, 1));
+	entityInfoText->SetPosition(glm::vec2(2500, 200));
+	uiElements.insert(std::pair<std::string, UiQuad*>("entityInfoText", entityInfoText));
 }
 
 void GameUi::InitGameUi()
@@ -33,6 +37,7 @@ void GameUi::InitGameUi()
 
 	uiElements.at("depthTexture")->GetMeshData().SetShader(BarnabusGameEngine::Get().GetShader("ui"));
 	uiElements.at("textExample")->GetMeshData().SetShader(BarnabusGameEngine::Get().GetShader("font"));
+	uiElements.at("entityInfoText")->GetMeshData().SetShader(BarnabusGameEngine::Get().GetShader("font"));
 
 	ITexture* texture = nullptr;
 	if (BarnabusGameEngine::Get().GetRenderType() == IRenderer::OpenGL)
@@ -49,11 +54,17 @@ void GameUi::InitGameUi()
 	}
 		
 	uiElements.at("textExample")->GetMeshData().SetTexture(texture);
+	uiElements.at("entityInfoText")->GetMeshData().SetTexture(texture);
 }
 
 void GameUi::SetExampleText(std::string text)
 {
-	exampleText = text;
+	static_cast<TextQuad*>(uiElements.at("textExample"))->SetText(text);
+}
+
+void GameUi::SetEntityInfoText(std::string text)
+{
+	static_cast<TextQuad*>(uiElements.at("entityInfoText"))->SetText(text);
 }
 
 GameUi::~GameUi()
@@ -66,7 +77,5 @@ GameUi::~GameUi()
 
 void GameUi::Draw()
 {
-	//uiElements.at("textExample")->GetMeshData().SetTexture(BarnabusGameEngine::Get().GetRenderer()->GetFrameBuffer("main")->GetDepthTexture());
-	static_cast<TextQuad*>(uiElements.at("textExample"))->SetText(exampleText);
 	UiDisplay::Draw();
 }

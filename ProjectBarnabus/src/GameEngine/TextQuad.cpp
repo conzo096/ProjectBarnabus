@@ -46,11 +46,18 @@ void TextQuad::Draw()
 		textChanged = false;
 	}
 
-	UiQuad::Draw();
+	if (render)
+	{
+		UiQuad::Draw();
+	}
 }
 
 void TextQuad::SetText(std::string newText)
 {
+	if (text.size() == 0)
+	{
+		render = false;
+	}
 	if (newText == text)
 	{
 		return;
@@ -58,6 +65,7 @@ void TextQuad::SetText(std::string newText)
 
 	text = newText;
 	textChanged = true;
+	render = true;
 }
 
 void TextQuad::SetPosition(glm::vec2 screenPosition)

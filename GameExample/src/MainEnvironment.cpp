@@ -76,18 +76,26 @@ void MainEnvironment::Update(float deltaTime)
 		far.z -= 1.0f;
 		ray.SetDirection(glm::normalize(far - near));
 
-		glm::vec3 poi;
-		if(ray.IsCollision(*GetEntity("player"), poi))
+		static int oldState = GLFW_RELEASE;
+		int newState = glfwGetMouseButton(BarnabusGameEngine::Get().GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
+		if (newState == GLFW_RELEASE && oldState == GLFW_PRESS)
 		{
-			// Set UI info here.
-			static int oldState = GLFW_RELEASE;
-			int newState = glfwGetMouseButton(BarnabusGameEngine::Get().GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
-			if (newState == GLFW_RELEASE && oldState == GLFW_PRESS)
+			bool entitySelected = false;
+			for (auto const& entity : entities)
 			{
-				GetEntity("player")->Scale(glm::vec3(2));
+				glm::vec3 poi;
+				if (ray.IsCollision(*entity.second, poi))
+				{
+					ui.SetEntityInfoText(entity.second->GetName());
+					entitySelected = true;
+				}
 			}
-			oldState = newState;
+			if (!entitySelected)
+			{
+				ui.SetEntityInfoText("");
+			}
 		}
+		oldState = newState;
 	}
 
 	if (currentMode == MainEnvironment::PLAYING)
@@ -98,7 +106,6 @@ void MainEnvironment::Update(float deltaTime)
 	{
 		ui.SetExampleText("BUILDING");
 	}
-
 }
 
 void MainEnvironment::Render(float deltaTime)
