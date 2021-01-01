@@ -70,17 +70,24 @@ bool Entity::IsActive() { return active; }
 
 void Entity::Update(const float delta)
 {
-	UpdateTransforms();
-	for (auto &c : components)
+	if (active)
 	{
-		c.second->UpdateTransforms();
-		c.second->SetTransform(GetTransform()*c.second->GetTransform());
-		c.second->Update(delta);
+
+		UpdateTransforms();
+		for (auto &c : components)
+		{
+			c.second->UpdateTransforms();
+			c.second->SetTransform(GetTransform()*c.second->GetTransform());
+			c.second->Update(delta);
+		}
 	}
 }
 
 void Entity::Render() {
-	for (auto &c : components) {
-		c.second->Render();
+	if (active)
+	{
+		for (auto &c : components) {
+			c.second->Render();
+		}
 	}
 }

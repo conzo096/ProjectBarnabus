@@ -4,11 +4,6 @@
 // Update free camera for this frame
 void FreeCamera::Update(float deltaTime)
 {
-	if (!IsActive())
-	{
-		return;
-	}
-
 	projection = glm::perspective(fieldOfView, (float)1920 / 1080, 2.414f, 1000.0f);
 	// The ratio of pixels to rotation
 	float ratioWidth = fieldOfView / static_cast<float>(1920);

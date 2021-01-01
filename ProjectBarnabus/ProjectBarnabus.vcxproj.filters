@@ -73,9 +73,6 @@
     <ClCompile Include="src\GameEngine\Transform.cpp">
       <Filter>Source Files\GameEngine</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameEngine\TextQuad.cpp">
-      <Filter>Source Files\GameEngine</Filter>
-    </ClCompile>
     <ClCompile Include="src\GameEngine\OpenGLRenderer.cpp">
       <Filter>Source Files\GameEngine\Renderer</Filter>
     </ClCompile>
@@ -107,6 +104,9 @@
       <Filter>Source Files\GameEngine\Renderer\Shader</Filter>
     </ClCompile>
     <ClCompile Include="src\GameEngine\Ray.cpp" />
+    <ClCompile Include="src\GameEngine\TextQuad.cpp">
+      <Filter>Source Files\GameEngine\User Interface</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
