@@ -54,19 +54,19 @@ void MainEnvironment::Update(float deltaTime)
 	auto camera = GetEntity("camera");
 	camera->GetComponent<ArcBallCamera>().SetTarget(GetEntity("player")->GetPosition() + glm::vec3(0, 5, 0));
 
+	// Updates all the components.
 	Environment::Update(deltaTime);
 
 	if (currentMode == BUILDING)
 	{
 		auto builderCam = GetEntity("builderCamera")->GetCompatibleComponent<FreeCamera>();
-		// position should be based on where the cursor on the screen - will test with center of camera for now.
+
 		double xpos, ypos;
 		glfwGetCursorPos(BarnabusGameEngine::Get().GetWindow(), &xpos, &ypos);
-		glm::vec2 mouse = glm::vec2(xpos, ypos);
 
-		double winX = (double)mouse.x;
-		double winY = 1080 - (double)mouse.y;
-
+		double winX = xpos;
+		double winY = 1080 - ypos;
+	
 		auto near = glm::unProject(glm::vec3(winX, winY, 0.0), builderCam->GetView(), builderCam->GetProjection(),
 			glm::vec4(0, 0, 1920,1080));
 		auto far = glm::unProject(glm::vec3(winX, winY, 1.0), builderCam->GetView(), builderCam->GetProjection(),
@@ -75,6 +75,8 @@ void MainEnvironment::Update(float deltaTime)
 		ray.SetPosition(near);
 		far.z -= 1.0f;
 		ray.SetDirection(glm::normalize(far - near));
+
+
 
 		static int oldState = GLFW_RELEASE;
 		int newState = glfwGetMouseButton(BarnabusGameEngine::Get().GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
@@ -242,6 +244,24 @@ void MainEnvironment::BuildingKeyCallback(float deltaTime)
 		GetEntity("camera")->SetActive(true);
 		GetEntity("builderCamera")->SetActive(false);
 
+		keyCooldown = 0;
+	}
+
+	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_2) == GLFW_PRESS && keyCooldown > 0.3f)
+	{
+		static int counter = 0;
+
+		//  To do find poi against terrain
+		glm::vec3 rayPoi = glm::vec3(ray.GetPosition().x,0,ray.GetPosition().z); // 0 will be replaced with map height at x,z position.
+	
+		// Position is height * direction against direction.
+
+		auto builderCam = GetEntity("builderCamera")->GetCompatibleComponent<FreeCamera>();
+		glm::vec3 newPosition = (ray.GetDirection() * builderCam->GetPosition().y ) + ray.GetPosition();
+
+
+		AddEntity("Test" + counter, EntityFactory::CreateBuilding(newPosition, BarnabusGameEngine::Get().GetShader("red")));
+		counter++;
 		keyCooldown = 0;
 	}
 }

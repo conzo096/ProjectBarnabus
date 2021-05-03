@@ -14,9 +14,19 @@ void Ray::SetPosition(glm::vec3 pos)
 	position = pos;
 }
 
+glm::vec3 Ray::GetPosition()
+{
+	return position;
+}
+
 void Ray::SetDirection(glm::vec3 dir)
 {
 	direction = dir;
+}
+
+glm::vec3 Ray::GetDirection()
+{
+	return direction;
 }
 
 void Ray::SetLength(float len)

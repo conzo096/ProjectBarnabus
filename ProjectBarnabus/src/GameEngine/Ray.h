@@ -10,7 +10,9 @@ public:
 	Ray(glm::vec3 pos, glm::vec3 dir, float len);
 public:
 	void SetPosition(glm::vec3 pos);
+	glm::vec3 GetPosition();
 	void SetDirection(glm::vec3 dir);
+	glm::vec3 GetDirection();
 	void SetLength(float len);
 public:
 	bool IsCollision(Entity& entity, glm::vec3& poi);
