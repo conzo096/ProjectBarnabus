@@ -16,7 +16,7 @@
     <ClCompile Include="src\FontShader.cpp" />
     <ClCompile Include="src\GameUi.cpp" />
     <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\MainEnvironment.cpp" />
+    <ClCompile Include="src\MainLevel.cpp" />
     <ClCompile Include="src\BasicShader.cpp" />
     <ClCompile Include="src\TerrainShader.cpp" />
     <ClCompile Include="src\UiShader.cpp" />
@@ -32,7 +32,7 @@
     <ClInclude Include="src\EntityFactory.h" />
     <ClInclude Include="src\FontShader.h" />
     <ClInclude Include="src\GameUi.h" />
-    <ClInclude Include="src\MainEnvironment.h" />
+    <ClInclude Include="src\MainLevel.h" />
     <ClInclude Include="src\BasicShader.h" />
     <ClInclude Include="src\ShaderFactory.h" />
     <ClInclude Include="src\TerrainShader.h" />

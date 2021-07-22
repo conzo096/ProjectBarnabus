@@ -1,4 +1,4 @@
-#include "MainEnvironment.h"
+#include "MainLevel.h"
 #include "GameEngine/DirectionalLight.h"
 #include "EntityFactory.h"
 
@@ -16,13 +16,13 @@
 #include <math.h>
 
 #include <glm/matrix.hpp>
-MainEnvironment::MainEnvironment(std::string environmentName) : Environment(environmentName),currentMode(PLAYING)
+MainLevel::MainLevel(std::string environmentName) : Level(environmentName),currentMode(PLAYING)
 {
 	ray.SetDirection(glm::vec3(0, -1, 0));
 	ray.SetLength(150);
 }
 
-void MainEnvironment::Update(float deltaTime)
+void MainLevel::Update(float deltaTime)
 {
 	// Handle input
 	keyCooldown += deltaTime;
@@ -55,7 +55,7 @@ void MainEnvironment::Update(float deltaTime)
 	camera->GetComponent<ArcBallCamera>().SetTarget(GetEntity("player")->GetPosition() + glm::vec3(0, 5, 0));
 
 	// Updates all the components.
-	Environment::Update(deltaTime);
+	Level::Update(deltaTime);
 
 	if (currentMode == BUILDING)
 	{
@@ -101,7 +101,7 @@ void MainEnvironment::Update(float deltaTime)
 		oldState = newState;
 	}
 
-	if (currentMode == MainEnvironment::PLAYING)
+	if (currentMode == MainLevel::PLAYING)
 	{
 		ui.SetExampleText("PLAYING");
 	}
@@ -111,7 +111,7 @@ void MainEnvironment::Update(float deltaTime)
 	}
 }
 
-void MainEnvironment::Render(float deltaTime)
+void MainLevel::Render(float deltaTime)
 {
 	if (currentMode == PLAYING)
 	{
@@ -123,10 +123,10 @@ void MainEnvironment::Render(float deltaTime)
 	}
 
 	ui.Draw();
-	Environment::Render(deltaTime);
+	Level::Render(deltaTime);
 }
 
-void MainEnvironment::LoadGameContent()
+void MainLevel::LoadGameContent()
 {
 	AddLight("test", std::make_unique<DirectionalLight>(glm::vec4(0.5081, 0.5713, 0.6446, 1)));
 
@@ -143,14 +143,32 @@ void MainEnvironment::LoadGameContent()
 		ShaderFactory::CreateShader<VkBasicShader>("red", "res\\Shaders\\Vulkan\\VkBasic");
 	}
 
-	AddEntity("camera", EntityFactory::CreateCamera());
-	AddEntity("builderCamera", EntityFactory::CreateBuilderCamera());
-	AddEntity("terrain", EntityFactory::CreateTerrain(BarnabusGameEngine::Get().GetShader("terrain")));
-	AddEntity("player", EntityFactory::CreatePlayer(glm::vec3(0), BarnabusGameEngine::Get().GetShader("animation"), &GetEntity("terrain")->GetComponent<Terrain>()));
-	AddEntity("building", EntityFactory::CreateBuilding(glm::vec3(0), BarnabusGameEngine::Get().GetShader("red")));
+	Entity* newEntity = GetEntityFromPool();
+	EntityFactory::CreateCamera(newEntity);
+	AddEntity("camera", newEntity );
+
+	newEntity = GetEntityFromPool();
+	EntityFactory::CreateBuilderCamera(newEntity);
+	AddEntity("builderCamera", newEntity);
+
+	newEntity = GetEntityFromPool();
+	EntityFactory::CreateTerrain(newEntity, BarnabusGameEngine::Get().GetShader("terrain"));
+	AddEntity("terrain", newEntity);
+
+	newEntity = GetEntityFromPool();
+	EntityFactory::CreatePlayer(newEntity, glm::vec3(0), BarnabusGameEngine::Get().GetShader("animation"), &GetEntity("terrain")->GetComponent<Terrain>());
+	AddEntity("player", newEntity);
+
+	newEntity = GetEntityFromPool();
+	EntityFactory::CreateBuilding(newEntity, glm::vec3(0), BarnabusGameEngine::Get().GetShader("red"));
+
+	AddEntity("building", newEntity);
 	GetEntity("building")->SetScale(glm::vec3(2, 2, 2));
 
-	AddEntity("sun", EntityFactory::CreateSphere(glm::vec3(100, 300, 100), BarnabusGameEngine::Get().GetShader("red")));
+	newEntity = GetEntityFromPool();
+	EntityFactory::CreateSphere(newEntity, glm::vec3(100, 300, 100), BarnabusGameEngine::Get().GetShader("red"));
+
+	AddEntity("sun", newEntity);
 	GetEntity("sun")->SetScale(glm::vec3(10, 10, 10));
 
 	keyCallback = [this](float deltaTime) {PlayingKeyCallback(deltaTime); };
@@ -159,12 +177,12 @@ void MainEnvironment::LoadGameContent()
 	ui.InitaliseAllQuads();
 }
 
-MainEnvironment::GameMode MainEnvironment::GetCurrentMode()
+MainLevel::GameMode MainLevel::GetCurrentMode()
 {
 	return currentMode;
 }
 
-void MainEnvironment::PlayingKeyCallback(float deltaTime)
+void MainLevel::PlayingKeyCallback(float deltaTime)
 {
 	Camera* camera = GetEntity("camera")->GetCompatibleComponent<ArcBallCamera>();
 	glm::vec3 up = camera->GetOrientation();
@@ -206,7 +224,7 @@ void MainEnvironment::PlayingKeyCallback(float deltaTime)
 	}
 }
 
-void MainEnvironment::BuildingKeyCallback(float deltaTime)
+void MainLevel::BuildingKeyCallback(float deltaTime)
 {
 	FreeCamera* camera = GetEntity("builderCamera")->GetCompatibleComponent<FreeCamera>();
 	// The camera's movement speed - Maybe better stored in class.
@@ -249,8 +267,6 @@ void MainEnvironment::BuildingKeyCallback(float deltaTime)
 
 	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_2) == GLFW_PRESS && keyCooldown > 0.3f)
 	{
-		static int counter = 0;
-
 		// Position is height * direction against direction.
 
 		auto builderCam = GetEntity("builderCamera")->GetCompatibleComponent<FreeCamera>();
@@ -258,21 +274,18 @@ void MainEnvironment::BuildingKeyCallback(float deltaTime)
 		newPosition.y = 0;
 
 
-		int nextFree = spawnableObjects.GetNextFreeEntity();
-		// If nextFree is a valid entity
-		if (nextFree != -1)
-		{
-			auto entity = spawnableObjects.GetEntity(nextFree);
-			// Create building object
-			EntityFactory::CreateBuilding(entity, newPosition, BarnabusGameEngine::Get().GetShader("red"));
-			// Add entity to list?
+		auto entity = GetEntityFromPool();
+		EntityFactory::CreateBuilding(entity, newPosition, BarnabusGameEngine::Get().GetShader("red"));
+		AddEntity(entity->GetName(),entity ); // Needs unique name
 
-			//AddEntity(entity, "Test" + counter, );
-
-
-		}
-
-		counter++;
 		keyCooldown = 0;
 	}
+}
+
+Entity * MainLevel::GetEntityFromPool()
+{
+	int nextFree = entityPool.GetNextFreeEntity();
+	// If nextFree is a valid entity
+	assert(nextFree != -1);
+	return entityPool.GetEntity(nextFree);
 }

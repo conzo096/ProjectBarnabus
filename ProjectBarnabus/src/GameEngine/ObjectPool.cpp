@@ -4,7 +4,7 @@ ObjectPool::ObjectPool()
 {
 	for (int i = 0; i < MAX_OBJECT_COUNT; i++)
 	{
-		m_entities[i] = new Entity("Entity" + i);
+		m_entities[i] = new Entity( std::string("Entity ") + std::to_string(i) );
 	}
 }
 

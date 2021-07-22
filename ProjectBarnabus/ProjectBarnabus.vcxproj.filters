@@ -55,9 +55,6 @@
     <ClCompile Include="src\GameEngine\DirectionalLight.cpp">
       <Filter>Source Files\GameEngine\Lighting</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameEngine\Environment.cpp">
-      <Filter>Source Files\GameEngine</Filter>
-    </ClCompile>
     <ClCompile Include="src\GameEngine\Light.cpp">
       <Filter>Source Files\GameEngine\Lighting</Filter>
     </ClCompile>
@@ -108,6 +105,9 @@
       <Filter>Source Files\GameEngine\User Interface</Filter>
     </ClCompile>
     <ClCompile Include="src\GameEngine\ObjectPool.cpp" />
+    <ClCompile Include="src\GameEngine\Level.cpp">
+      <Filter>Source Files\GameEngine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -280,9 +280,6 @@
     <ClInclude Include="src\GameEngine\DirectionalLight.h">
       <Filter>Header Files\GameEngine\Lighting</Filter>
     </ClInclude>
-    <ClInclude Include="src\GameEngine\Environment.h">
-      <Filter>Header Files\GameEngine</Filter>
-    </ClInclude>
     <ClInclude Include="src\GameEngine\Light.h">
       <Filter>Header Files\GameEngine\Lighting</Filter>
     </ClInclude>
@@ -347,6 +344,9 @@
       <Filter>Header Files\GameEngine\Physics</Filter>
     </ClInclude>
     <ClInclude Include="src\GameEngine\ObjectPool.h">
+      <Filter>Header Files\GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Level.h">
       <Filter>Header Files\GameEngine</Filter>
     </ClInclude>
   </ItemGroup>

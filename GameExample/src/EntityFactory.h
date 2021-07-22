@@ -12,9 +12,9 @@
 
 namespace EntityFactory
 {
-	static std::unique_ptr<Entity> CreatePlayer(glm::vec3 position, IShader* shader, Terrain* terrain)
+	static void CreatePlayer(Entity* player, glm::vec3 position, IShader* shader, Terrain* terrain)
 	{
-		auto player = std::make_unique<Entity>("player");
+		player->SetName("player");
 
 		player->AddComponent(std::make_unique<Movement>(terrain));
 		std::string fileName("res\\Models\\AnimatedModels\\Player.fbx");
@@ -32,13 +32,11 @@ namespace EntityFactory
 		player->AddComponent(std::move(physicsComponent));
 
 		player->SetPosition(position);
-
-		return player;
 	}
 
-	static std::unique_ptr<Entity> CreateSphere(glm::vec3 position, IShader* shader)
+	static void CreateSphere(Entity* sphere, glm::vec3 position, IShader* shader)
 	{
-		auto sphere = std::make_unique<Entity>("sun");
+		sphere->SetName("sun");
 
 		std::string fileName("res\\Models\\Sphere.fbx");
 		auto modelComponent = std::make_unique<Model>(fileName);
@@ -47,13 +45,11 @@ namespace EntityFactory
 		sphere->AddComponent(std::move(modelComponent));
 		
 		sphere->SetPosition(position);
-
-		return sphere;
 	}
 
-	static std::unique_ptr<Entity> CreateTerrain(IShader* shader)
+	static void CreateTerrain(Entity* terrain, IShader* shader)
 	{
-		auto terrain = std::make_unique<Entity>("terrain");
+		terrain->SetName("terrain");
 		auto fileName = "res\\Textures\\HeightMap.png";
 		auto terrainComponent = std::make_unique<Terrain>(fileName, Terrain::TerrainType::Image);
 		terrainComponent->SetShader(shader);
@@ -61,29 +57,6 @@ namespace EntityFactory
 		terrain->AddComponent(std::move(terrainComponent));
 
 		terrain->SetPosition(glm::vec3(-50, 0, -50));
-		return terrain;
-	}
-
-	static std::unique_ptr<Entity> CreateBuilding(glm::vec3 position, IShader* shader)
-	{
-		auto building = std::make_unique<Entity>("building");
-
-		std::string fileName("res\\Models\\Building.fbx");
-		auto modelComponent = std::make_unique<Model>(fileName);
-		modelComponent->SetShader(shader);
-		modelComponent->InitModel();
-		
-		auto physicsComponent = std::make_unique<Physics::PhysicsContainer>(false);
-		physicsComponent->AddBoundingVolumes(modelComponent->GetRootNode());
-		physicsComponent->SetShader(BarnabusGameEngine::Get().GetShader("red"));
-		physicsComponent->InitMeshes();
-				
-		building->AddComponent(std::move(modelComponent));
-		building->AddComponent(std::move(physicsComponent));
-		
-		building->SetPosition(position);
-
-		return building;
 	}
 
 	static void CreateBuilding(Entity* building, glm::vec3 position, IShader* shader)
@@ -104,19 +77,16 @@ namespace EntityFactory
 		building->SetPosition(position);
 	}
 
-	static std::unique_ptr<Entity> CreateCamera()
+	static void CreateCamera(Entity* camera)
 	{
-		auto camera = std::make_unique<Entity>("camera");
-
+		camera->SetName("camera");
 		auto cameraComponent = std::make_unique<ArcBallCamera>();
 		camera->AddComponent(std::move(cameraComponent));
-
-		return camera;
 	}
 
-	static std::unique_ptr<Entity> CreateBuilderCamera()
+	static void CreateBuilderCamera(Entity* camera)
 	{
-		auto camera = std::make_unique<Entity>("builderCamera");
+		camera->SetName("builderCamera");
 
 		auto cameraComponent = std::make_unique<FreeCamera>(70.0f);
 		cameraComponent->SetPosition(glm::vec3(0, 100, 0));
@@ -124,7 +94,5 @@ namespace EntityFactory
 		camera->AddComponent(std::move(cameraComponent));
 
 		camera->SetActive(false);
-
-		return camera;
 	}
 }

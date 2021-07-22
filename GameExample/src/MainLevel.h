@@ -1,11 +1,11 @@
 #pragma once
-#include "GameEngine/Environment.h"
+#include "GameEngine/Level.h"
 #include "GameEngine/Ray.h"
 #include "GameUi.h"
 #include "GameEngine/ObjectPool.h"
 #include <functional>
 
-class MainEnvironment : public Environment
+class MainLevel : public Level
 {
 public:
 	enum GameMode {
@@ -13,7 +13,7 @@ public:
 		BUILDING
 	};
 public:
-	MainEnvironment(std::string environmentName);
+	MainLevel(std::string environmentName);
 
 public:
 	void Update(float deltaTime) override;
@@ -26,6 +26,8 @@ public:
 private:
 	void PlayingKeyCallback(float deltaTime);
 	void BuildingKeyCallback(float deltaTime);
+
+	Entity* GetEntityFromPool();
 private:
 	float duration = 100;
 	float currentTime = 0;
@@ -36,5 +38,5 @@ private:
 	Ray ray;
 	GameUi ui;
 
-	ObjectPool spawnableObjects;
+	ObjectPool entityPool;
 };

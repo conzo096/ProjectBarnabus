@@ -1,6 +1,6 @@
 // Holds a collection of entities
 #pragma once
-#define MAX_OBJECT_COUNT 50
+#define MAX_OBJECT_COUNT 10
 
 #include <vector>
 #include "Entity.h"

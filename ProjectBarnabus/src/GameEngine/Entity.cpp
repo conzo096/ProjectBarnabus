@@ -52,16 +52,6 @@ const string Entity::GetName() const { return name; }
 
 void Entity::SetName(string const &name) { this->name = name; }
 
-const std::string Entity::GetEnvironmentName() const
-{
-	return environmentName;
-}
-
-void Entity::SetEnvironmentName(std::string const & name)
-{
-	environmentName = name;
-}
-
 void Entity::SetActive(bool a)
 {
 	active = a; 

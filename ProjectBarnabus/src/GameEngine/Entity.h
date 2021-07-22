@@ -33,7 +33,6 @@ class Entity : public Transform
 {
 protected:
 	std::string name;
-	std::string environmentName;
 	using map = std::map<std::type_index, std::unique_ptr<Component>>;
 	map components;
 	bool active;
@@ -46,8 +45,6 @@ public:
 	void ClearEntity();
 	const std::string GetName() const;
 	void SetName(std::string const &name);
-	const std::string GetEnvironmentName() const;
-	void SetEnvironmentName(std::string const &name);
 	bool IsActive();
 	void SetActive(bool a);
 

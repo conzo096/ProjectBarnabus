@@ -4,14 +4,14 @@
 #include "IDayCycle.h"
 #include <map>
 #include <memory>
-class Environment
+class Level
 {
 public:
-	Environment(std::string environmentName);
-	~Environment();
+	Level(std::string environmentName);
+	~Level();
 
 	const std::string GetName();
-	bool AddEntity(std::string name, std::unique_ptr<Entity> entity);
+	bool AddEntity(std::string name, Entity* entity);
 	Entity* GetEntity(std::string entityName);
 	bool AddLight(std::string entityName, std::unique_ptr<Light> light);
 	Light* GetLight(std::string lightName);
@@ -21,7 +21,7 @@ public:
 
 protected:
 	std::string name;
-	std::map<std::string, std::unique_ptr<Entity>> entities;
+	std::map<std::string, Entity*> entities;
 	std::map<std::string, std::unique_ptr<Light>> lights;
 };
 

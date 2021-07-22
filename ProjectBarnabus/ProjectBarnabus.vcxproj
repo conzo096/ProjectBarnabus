@@ -20,8 +20,8 @@
     <ClCompile Include="src\GameEngine\BoundingVolumes.cpp" />
     <ClCompile Include="src\GameEngine\DirectionalLight.cpp" />
     <ClCompile Include="src\GameEngine\Entity.cpp" />
-    <ClCompile Include="src\GameEngine\Environment.cpp" />
     <ClCompile Include="src\GameEngine\FinalPassShader.cpp" />
+    <ClCompile Include="src\GameEngine\Level.cpp" />
     <ClCompile Include="src\GameEngine\ObjectPool.cpp" />
     <ClCompile Include="src\GameEngine\OpenGLFramebuffer.cpp" />
     <ClCompile Include="src\GameEngine\FreeCamera.cpp" />
@@ -61,7 +61,7 @@
     <ClInclude Include="src\GameEngine\Camera.h" />
     <ClInclude Include="src\GameEngine\DirectionalLight.h" />
     <ClInclude Include="src\GameEngine\Entity.h" />
-    <ClInclude Include="src\GameEngine\Environment.h" />
+    <ClInclude Include="src\GameEngine\Level.h" />
     <ClInclude Include="src\GameEngine\FinalPassShader.h" />
     <ClInclude Include="src\GameEngine\ITexture.h" />
     <ClInclude Include="src\GameEngine\ObjectPool.h" />

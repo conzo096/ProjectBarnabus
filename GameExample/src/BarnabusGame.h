@@ -1,6 +1,6 @@
 #pragma once
 #include <GameEngine/IGame.h>
-#include "MainEnvironment.h"
+#include "MainLevel.h"
 
 class BarnabusGame : public IGame
 {
@@ -12,5 +12,5 @@ public:
 	bool Render(float deltaTime) override;
 
 private:
-	MainEnvironment mainScene;
+	MainLevel mainScene;
 };

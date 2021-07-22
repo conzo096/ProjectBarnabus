@@ -51,9 +51,6 @@
     <ClCompile Include="src\GameUi.cpp">
       <Filter>Source Files\User Interface</Filter>
     </ClCompile>
-    <ClCompile Include="src\MainEnvironment.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\AnimationShader.cpp">
       <Filter>Source Files\Shaders</Filter>
     </ClCompile>
@@ -84,6 +81,9 @@
     <ClCompile Include="src\VkUIShader.cpp">
       <Filter>Source Files\Shaders</Filter>
     </ClCompile>
+    <ClCompile Include="src\MainLevel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BarnabusGame.h">
@@ -91,9 +91,6 @@
     </ClInclude>
     <ClInclude Include="src\GameUi.h">
       <Filter>Header Files\User Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="src\MainEnvironment.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\AnimationShader.h">
       <Filter>Header Files\Shaders</Filter>
@@ -130,6 +127,9 @@
     </ClInclude>
     <ClInclude Include="src\VkAnimationShader.h">
       <Filter>Header Files\Shaders\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MainLevel.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

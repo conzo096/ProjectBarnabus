@@ -1,4 +1,4 @@
-#include "Environment.h"
+#include "Level.h"
 #include "BarnabusGameEngine.h"
 #include "PhysicsContainer.h"
 
@@ -62,42 +62,41 @@ void ResolveCollisions(const std::vector<Physics::PhysicsContainer*>& boundingVo
 
 }
 
-Environment::Environment(std::string environmentName) : name(environmentName)
+Level::Level(std::string environmentName) : name(environmentName)
 {
 }
 
-Environment::~Environment()
+Level::~Level()
 {
 }
 
-const std::string Environment::GetName()
+const std::string Level::GetName()
 {
 	return name;
 }
 
-bool Environment::AddEntity(std::string entityName, std::unique_ptr<Entity> entity)
+bool Level::AddEntity(std::string entityName, Entity* entity)
 {
-	entity->SetEnvironmentName(name);
-	auto ret = entities.insert(std::pair<std::string, std::unique_ptr<Entity> >(entityName, std::move(entity)));
+	auto ret = entities.insert(std::pair<std::string, Entity* >(entityName, entity));
 	return ret.second;
 }
 
-Entity * Environment::GetEntity(std::string entityName)
+Entity * Level::GetEntity(std::string entityName)
 {
 	auto it = entities.find(entityName);
 	assert(it != entities.end());
 
-	return it->second.get();
+	return it->second;
 }
 
-bool Environment::AddLight(std::string name, std::unique_ptr<Light> light)
+bool Level::AddLight(std::string name, std::unique_ptr<Light> light)
 {
 	light->SetName(name);
 	auto ret = lights.insert(std::pair<std::string, std::unique_ptr<Light> >(name, std::move(light)));
 	return ret.second;
 }
 
-Light* Environment::GetLight(std::string lightName)
+Light* Level::GetLight(std::string lightName)
 {
 	auto it = lights.find(lightName);
 	assert(it != lights.end());
@@ -105,7 +104,7 @@ Light* Environment::GetLight(std::string lightName)
 	return it->second.get();
 }
 
-void Environment::Update(float deltaTime)
+void Level::Update(float deltaTime)
 {
 	std::vector<Physics::PhysicsContainer*> allPhysicsObjects;
 	
@@ -127,7 +126,7 @@ void Environment::Update(float deltaTime)
 
 }
 
-void Environment::Render(float deltaTime)
+void Level::Render(float deltaTime)
 {
 	for (auto it = lights.begin(); it != lights.end(); ++it)
 	{
