@@ -57,8 +57,14 @@ void MainLevel::Update(float deltaTime)
 	// Updates all the components.
 	Level::Update(deltaTime);
 
-	if (currentMode == BUILDING)
+	if (currentMode == MainLevel::PLAYING)
 	{
+		ui.SetExampleText("PLAYING");
+	}
+	else if (currentMode == BUILDING)
+	{
+		ui.SetExampleText("BUILDING");
+
 		auto builderCam = GetEntity("builderCamera")->GetCompatibleComponent<FreeCamera>();
 
 		double xpos, ypos;
@@ -76,38 +82,39 @@ void MainLevel::Update(float deltaTime)
 		far.z -= 1.0f;
 		ray.SetDirection(glm::normalize(far - near));
 
-
-
-		static int oldState = GLFW_RELEASE;
 		int newState = glfwGetMouseButton(BarnabusGameEngine::Get().GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
-		if (newState == GLFW_RELEASE && oldState == GLFW_PRESS)
+		if (newState == GLFW_RELEASE && m_oldMouseState == GLFW_PRESS)
 		{
-			bool entitySelected = false;
 			for (auto const& entity : entities)
 			{
 				glm::vec3 poi;
 				if (ray.IsCollision(*entity.second, poi))
 				{
 					ui.SetEntityInfoText(entity.second->GetName());
-					entitySelected = true;
-					break;
+					m_selectedEntity = entity.second;
+					return;
 				}
 			}
-			if (!entitySelected)
-			{
+			if(!m_selectedEntity)
 				ui.SetEntityInfoText("");
-			}
 		}
-		oldState = newState;
-	}
+		if (newState == GLFW_PRESS && m_oldMouseState == GLFW_PRESS && m_selectedEntity) // Dragging actions.
+		{
+			// Move entity
+			auto builderCam = GetEntity("builderCamera")->GetCompatibleComponent<FreeCamera>();
+			glm::vec3 newPosition = (ray.GetDirection() * builderCam->GetPosition().y) + ray.GetPosition();
+			newPosition.y = 0;
+			m_selectedEntity->SetPosition(newPosition);
+		}
+		if (newState == GLFW_RELEASE && m_oldMouseState == GLFW_RELEASE && m_selectedEntity)
+		{
+			ui.SetEntityInfoText("");
+			m_selectedEntity = NULL;
+		}
+	
 
-	if (currentMode == MainLevel::PLAYING)
-	{
-		ui.SetExampleText("PLAYING");
-	}
-	else
-	{
-		ui.SetExampleText("BUILDING");
+		m_oldMouseState = newState;
+
 	}
 }
 
@@ -276,7 +283,7 @@ void MainLevel::BuildingKeyCallback(float deltaTime)
 
 		auto entity = GetEntityFromPool();
 		EntityFactory::CreateBuilding(entity, newPosition, BarnabusGameEngine::Get().GetShader("red"));
-		AddEntity(entity->GetName(),entity ); // Needs unique name
+		AddEntity(entity->GetName(),entity );
 
 		keyCooldown = 0;
 	}

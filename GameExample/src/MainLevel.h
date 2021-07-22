@@ -4,6 +4,7 @@
 #include "GameUi.h"
 #include "GameEngine/ObjectPool.h"
 #include <functional>
+#include <GLFW/glfw3.h>
 
 class MainLevel : public Level
 {
@@ -39,4 +40,7 @@ private:
 	GameUi ui;
 
 	ObjectPool entityPool;
+
+	int m_oldMouseState = GLFW_RELEASE;
+	Entity* m_selectedEntity;
 };
