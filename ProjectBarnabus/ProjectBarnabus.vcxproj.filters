@@ -107,6 +107,7 @@
     <ClCompile Include="src\GameEngine\TextQuad.cpp">
       <Filter>Source Files\GameEngine\User Interface</Filter>
     </ClCompile>
+    <ClCompile Include="src\GameEngine\ObjectPool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -344,6 +345,9 @@
     </ClInclude>
     <ClInclude Include="src\GameEngine\Ray.h">
       <Filter>Header Files\GameEngine\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\ObjectPool.h">
+      <Filter>Header Files\GameEngine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

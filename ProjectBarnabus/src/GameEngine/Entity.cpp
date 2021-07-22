@@ -30,16 +30,22 @@ void Component::SetParent(Entity* p) { entity = p; }
 Entity* Component::GetParent() const { return entity; }
 
 
-
 //############## ENTITY ##############
 
-Entity::Entity(const std::string & entityName)  : name(entityName), active(true)
+Entity::Entity(const std::string & entityName) : name(entityName), active(true), m_inUse(false)
 {
 }
 
 Entity::~Entity()
 {	components.clear();
 	BarnabusGameEngine::Get().AddMessageLog(StringLog("Goodbye from entity " + name, StringLog::Priority::Low));
+}
+
+void Entity::ClearEntity()
+{
+	components.clear();
+	m_inUse = false;
+	active = true; // todo fix this.
 }
 
 const string Entity::GetName() const { return name; }
@@ -81,6 +87,16 @@ void Entity::Update(const float delta)
 			c.second->Update(delta);
 		}
 	}
+}
+
+bool Entity::InUse()
+{
+	return m_inUse;
+}
+
+void Entity::SetUse(bool inUse)
+{
+	m_inUse = inUse;
 }
 
 void Entity::Render() {

@@ -2,6 +2,7 @@
 #include "GameEngine/Environment.h"
 #include "GameEngine/Ray.h"
 #include "GameUi.h"
+#include "GameEngine/ObjectPool.h"
 #include <functional>
 
 class MainEnvironment : public Environment
@@ -34,4 +35,6 @@ private:
 private:
 	Ray ray;
 	GameUi ui;
+
+	ObjectPool spawnableObjects;
 };

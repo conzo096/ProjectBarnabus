@@ -86,6 +86,24 @@ namespace EntityFactory
 		return building;
 	}
 
+	static void CreateBuilding(Entity* building, glm::vec3 position, IShader* shader)
+	{
+		std::string fileName("res\\Models\\Building.fbx");
+		auto modelComponent = std::make_unique<Model>(fileName);
+		modelComponent->SetShader(shader);
+		modelComponent->InitModel();
+
+		auto physicsComponent = std::make_unique<Physics::PhysicsContainer>(false);
+		physicsComponent->AddBoundingVolumes(modelComponent->GetRootNode());
+		physicsComponent->SetShader(BarnabusGameEngine::Get().GetShader("red"));
+		physicsComponent->InitMeshes();
+
+		building->AddComponent(std::move(modelComponent));
+		building->AddComponent(std::move(physicsComponent));
+
+		building->SetPosition(position);
+	}
+
 	static std::unique_ptr<Entity> CreateCamera()
 	{
 		auto camera = std::make_unique<Entity>("camera");

@@ -251,16 +251,27 @@ void MainEnvironment::BuildingKeyCallback(float deltaTime)
 	{
 		static int counter = 0;
 
-		//  To do find poi against terrain
-		glm::vec3 rayPoi = glm::vec3(ray.GetPosition().x,0,ray.GetPosition().z); // 0 will be replaced with map height at x,z position.
-	
 		// Position is height * direction against direction.
 
 		auto builderCam = GetEntity("builderCamera")->GetCompatibleComponent<FreeCamera>();
 		glm::vec3 newPosition = (ray.GetDirection() * builderCam->GetPosition().y ) + ray.GetPosition();
+		newPosition.y = 0;
 
 
-		AddEntity("Test" + counter, EntityFactory::CreateBuilding(newPosition, BarnabusGameEngine::Get().GetShader("red")));
+		int nextFree = spawnableObjects.GetNextFreeEntity();
+		// If nextFree is a valid entity
+		if (nextFree != -1)
+		{
+			auto entity = spawnableObjects.GetEntity(nextFree);
+			// Create building object
+			EntityFactory::CreateBuilding(entity, newPosition, BarnabusGameEngine::Get().GetShader("red"));
+			// Add entity to list?
+
+			//AddEntity(entity, "Test" + counter, );
+
+
+		}
+
 		counter++;
 		keyCooldown = 0;
 	}

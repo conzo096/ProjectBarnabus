@@ -22,6 +22,7 @@
     <ClCompile Include="src\GameEngine\Entity.cpp" />
     <ClCompile Include="src\GameEngine\Environment.cpp" />
     <ClCompile Include="src\GameEngine\FinalPassShader.cpp" />
+    <ClCompile Include="src\GameEngine\ObjectPool.cpp" />
     <ClCompile Include="src\GameEngine\OpenGLFramebuffer.cpp" />
     <ClCompile Include="src\GameEngine\FreeCamera.cpp" />
     <ClCompile Include="src\GameEngine\GLShader.cpp" />
@@ -63,6 +64,7 @@
     <ClInclude Include="src\GameEngine\Environment.h" />
     <ClInclude Include="src\GameEngine\FinalPassShader.h" />
     <ClInclude Include="src\GameEngine\ITexture.h" />
+    <ClInclude Include="src\GameEngine\ObjectPool.h" />
     <ClInclude Include="src\GameEngine\OpenGLFramebuffer.h" />
     <ClInclude Include="src\GameEngine\FreeCamera.h" />
     <ClInclude Include="src\GameEngine\IDayCycle.h" />

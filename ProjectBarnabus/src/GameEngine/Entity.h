@@ -37,17 +37,22 @@ protected:
 	using map = std::map<std::type_index, std::unique_ptr<Component>>;
 	map components;
 	bool active;
+	bool m_inUse; // used for object pools
 public:
 	Entity(const std::string& entityName);
 	Entity() = delete;
 	~Entity();
 
+	void ClearEntity();
 	const std::string GetName() const;
 	void SetName(std::string const &name);
 	const std::string GetEnvironmentName() const;
 	void SetEnvironmentName(std::string const &name);
 	bool IsActive();
 	void SetActive(bool a);
+
+	bool InUse();
+	void SetUse(bool inUse);
 
 	void Update(const float delta);
 	void Render();
