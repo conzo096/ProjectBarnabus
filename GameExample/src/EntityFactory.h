@@ -53,8 +53,8 @@ namespace EntityFactory
 		auto fileName = "res\\Textures\\Height1.png";
 		auto terrainComponent = std::make_unique<Terrain>();
 		terrain->AddComponent(std::move(terrainComponent));
-		terrain->SetScale(glm::vec3(1, 0.3, 1));
-		terrain->SetPosition(glm::vec3(-50, 0, -50));
+		terrain->SetScale(glm::vec3(1, 0.1, 1));
+		terrain->SetPosition(glm::vec3(-50, -10, -50));
 		terrain->UpdateTransforms();
 		terrain->GetComponent<Terrain>().LoadTerrainFromHeightMap(fileName);
 		terrain->GetComponent<Terrain>().InitModel();

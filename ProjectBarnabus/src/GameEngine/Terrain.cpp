@@ -22,12 +22,11 @@ Terrain::Terrain()
 
 glm::vec3 Terrain::GetWorldPositionFromGrid(glm::vec3 worldPosition)
 {
-	glm::vec3 convertedPosition = glm::vec4(worldPosition, 1) * glm::inverse(GetParent()->GetTransform());
 	glm::vec3 destination = worldPosition;
 
 	// Convert world space to local space. This needs to take into account the offset. 
-	float terrainX = convertedPosition.x - GetParent()->GetPosition().x;
-	float terrainZ = convertedPosition.z - GetParent()->GetPosition().z;
+	float terrainX = worldPosition.x - GetParent()->GetPosition().x;
+	float terrainZ = worldPosition.z - GetParent()->GetPosition().z;
 
 	float gridSquare = m_length / (m_length - 1);
 	int gridX = (int)floor(terrainX / gridSquare);
@@ -54,7 +53,7 @@ glm::vec3 Terrain::GetWorldPositionFromGrid(glm::vec3 worldPosition)
 				heightPositionsGrid[gridX][gridZ + 1], 1), glm::vec2(xCoord, zCoord));
 	}
 
-	destination.y = yAnswer *GetParent()->GetScale().y;
+	destination.y = (yAnswer * GetParent()->GetScale().y) + GetParent()->GetPosition().y;
 	return destination;
 }
 
