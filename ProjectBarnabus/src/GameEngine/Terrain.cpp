@@ -29,10 +29,10 @@ glm::vec3 Terrain::GetWorldPositionFromGrid(glm::vec3 worldPosition)
 	float terrainX = convertedPosition.x - GetParent()->GetPosition().x;
 	float terrainZ = convertedPosition.z - GetParent()->GetPosition().z;
 
-	float gridSquare = height / (height - 1);
+	float gridSquare = m_length / (m_length - 1);
 	int gridX = (int)floor(terrainX / gridSquare);
 	int gridZ = (int)floor(terrainZ / gridSquare);
-	if (gridX >= height - 1 || gridZ >= height - 1 ||
+	if (gridX >= m_length - 1 || gridZ >= m_length - 1 ||
 		gridX < 0 || gridZ < 0)
 	{
 		return worldPosition;
@@ -54,7 +54,7 @@ glm::vec3 Terrain::GetWorldPositionFromGrid(glm::vec3 worldPosition)
 				heightPositionsGrid[gridX][gridZ + 1], 1), glm::vec2(xCoord, zCoord));
 	}
 
-	destination.y = yAnswer;// *GetParent()->GetScale().y;
+	destination.y = yAnswer *GetParent()->GetScale().y;
 	return destination;
 }
 
@@ -74,7 +74,7 @@ void Terrain::LoadTerrainFromHeightMap(const std::string heightMapPath)
 
 	HeightMapTexture heightMap(heightMapPath);
 	width = heightMap.GetWidth();
-	height = heightMap.GetHeight();
+	m_length = heightMap.GetHeight();
 	std::vector<Vertex> vertices;
 
 	heightPositionsGrid = new float*[heightMap.GetWidth()];
@@ -85,7 +85,7 @@ void Terrain::LoadTerrainFromHeightMap(const std::string heightMapPath)
 	}
 
 	MeshData mesh;
-	for (int z = 0; z < height; z++)
+	for (int z = 0; z < m_length; z++)
 	{
 		for (int x = 0; x < width; x++)
 		{
@@ -99,7 +99,7 @@ void Terrain::LoadTerrainFromHeightMap(const std::string heightMapPath)
 			vertices.push_back(vertex);
 
 			// Create indices
-			if (x < width - 1 && z < height - 1) {
+			if (x < width - 1 && z < m_length - 1) {
 				int leftTop = z * width + x;
 				int leftBottom = (z + 1) * width + x;
 				int rightBottom = (z + 1) * width + x + 1;
@@ -114,7 +114,7 @@ void Terrain::LoadTerrainFromHeightMap(const std::string heightMapPath)
 				mesh.InsertIndex(rightTop);
 			}
 
-			heightPositionsGrid[x][z] = (glm::vec4(vertex.position, 1) * GetParent()->GetTransform()).y;
+			heightPositionsGrid[x][z] = vertex.position.y;
 		}
 	}
 

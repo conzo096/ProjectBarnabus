@@ -19,6 +19,8 @@ public:
 
 private:
 	float** heightPositionsGrid;
-	int width = 0, height = 0;
+	std::vector < std::vector<float>> m_grid;
+
+	int width = 0, m_length = 0;
 };
 

@@ -50,7 +50,7 @@ namespace EntityFactory
 	static void CreateTerrain(Entity* terrain, IShader* shader)
 	{
 		terrain->SetName("terrain");
-		auto fileName = "res\\Textures\\Height0.png";
+		auto fileName = "res\\Textures\\Height1.png";
 		auto terrainComponent = std::make_unique<Terrain>();
 		terrain->AddComponent(std::move(terrainComponent));
 		terrain->SetScale(glm::vec3(1, 0.3, 1));

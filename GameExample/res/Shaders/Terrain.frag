@@ -29,7 +29,7 @@ void main()
 
 	vec4 lightingColour = (worldLight.colour * intensity);
 	
-	finalColour =  colour + lightingColour;
+	finalColour.xyz = position;
 	finalColour.a = 1;
 }
 
