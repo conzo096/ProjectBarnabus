@@ -10,6 +10,7 @@ public:
 	void InitGameUi();
 	void SetExampleText(std::string text);
 	void SetEntityInfoText(std::string text);
+	void UpdateBuildingPoolLimit(int currentCount, int maxCount);
 
 	void Draw() override;
 };

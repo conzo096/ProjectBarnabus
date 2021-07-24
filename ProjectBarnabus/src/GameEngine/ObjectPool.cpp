@@ -22,15 +22,29 @@ ObjectPool::ObjectPool(ObjectPoolType poolType) : m_poolType(poolType)
 		break;
 	};
 
-	for (int i = 0; i < MAX_OBJECT_COUNT; i++)
+	for (int i = 0; i < MaxObjectCount; i++)
 	{
 		m_entities[i] = new Entity( poolName + std::to_string(i) );
 	}
 }
 
+int ObjectPool::GetCurrentCount()
+{
+	int totalInUse = 0;
+	for (int i = 0; i < MaxObjectCount; i++)
+	{
+		if (m_entities[i]->InUse())
+		{
+			totalInUse++;
+		}
+	}
+
+	return totalInUse;
+}
+
 int ObjectPool::GetNextFreeEntity()
 {
-	for (int i = 0; i < MAX_OBJECT_COUNT; i++)
+	for (int i = 0; i < MaxObjectCount; i++)
 	{
 		if (!m_entities[i]->InUse())
 			return i;
@@ -41,14 +55,14 @@ int ObjectPool::GetNextFreeEntity()
 
 Entity * ObjectPool::GetEntity(int index)
 {
-	assert(index < MAX_OBJECT_COUNT);
+	assert(index < MaxObjectCount);
 	m_entities[index]->SetUse(true);
 	return m_entities[index];
 }
 
 void ObjectPool::FreeEntity(int index)
 {
-	assert(index < MAX_OBJECT_COUNT);
+	assert(index < MaxObjectCount);
 	m_entities[index]->ClearEntity();
 }
 

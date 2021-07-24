@@ -184,6 +184,8 @@ void MainLevel::LoadGameContent()
 
 	ui.InitGameUi();
 	ui.InitaliseAllQuads();
+
+	ui.UpdateBuildingPoolLimit(m_spawnableObjects.GetCurrentCount(), ObjectPool::MaxObjectCount);
 }
 
 MainLevel::GameMode MainLevel::GetCurrentMode()
@@ -287,6 +289,8 @@ void MainLevel::BuildingKeyCallback(float deltaTime)
 		EntityFactory::CreateBuilding(entity, newPosition, BarnabusGameEngine::Get().GetShader("red"));
 		AddEntity(entity->GetName(),entity );
 
+		ui.UpdateBuildingPoolLimit(m_spawnableObjects.GetCurrentCount(), ObjectPool::MaxObjectCount);
+
 		keyCooldown = 0;
 	}
 
@@ -299,6 +303,8 @@ void MainLevel::BuildingKeyCallback(float deltaTime)
 			// Update UI.
 			ui.SetEntityInfoText("");
 			m_selectedEntity.clear();
+
+			ui.UpdateBuildingPoolLimit(m_spawnableObjects.GetCurrentCount(), ObjectPool::MaxObjectCount);
 		}
 
 		keyCooldown = 0;
