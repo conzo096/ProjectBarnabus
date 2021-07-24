@@ -1,10 +1,30 @@
 #include "ObjectPool.h"
 
-ObjectPool::ObjectPool()
+ObjectPool::ObjectPool(ObjectPoolType poolType) : m_poolType(poolType)
 {
+	std::string poolName;
+	switch (poolType)
+	{
+	case MAIN:
+		poolName = "Main";
+		break;
+	case BUILDINGS:
+		poolName = "Building";
+		break;
+	case UNITS:
+		poolName = "Unit";
+		break;
+	case STATIC:
+		poolName = "Static";
+		break;
+	default:
+		poolName = "Undefined";
+		break;
+	};
+
 	for (int i = 0; i < MAX_OBJECT_COUNT; i++)
 	{
-		m_entities[i] = new Entity( std::string("Entity ") + std::to_string(i) );
+		m_entities[i] = new Entity( poolName + std::to_string(i) );
 	}
 }
 

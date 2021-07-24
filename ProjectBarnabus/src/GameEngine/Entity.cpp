@@ -46,6 +46,14 @@ void Entity::ClearEntity()
 	components.clear();
 	m_inUse = false;
 	active = true; // todo fix this.
+	
+	scale = glm::vec3(1.0);
+	rotation = glm::quat();
+	position = glm::vec3(0);
+	previousPosition = glm::vec3(0);
+	transform = glm::mat4(1);
+	changed = true;
+	UpdateTransforms();
 }
 
 const string Entity::GetName() const { return name; }

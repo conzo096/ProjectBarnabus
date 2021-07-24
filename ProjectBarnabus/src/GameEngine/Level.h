@@ -13,6 +13,7 @@ public:
 	const std::string GetName();
 	bool AddEntity(std::string name, Entity* entity);
 	Entity* GetEntity(std::string entityName);
+	void RemoveEntity(const std::string& entityName);
 	bool AddLight(std::string entityName, std::unique_ptr<Light> light);
 	Light* GetLight(std::string lightName);
 

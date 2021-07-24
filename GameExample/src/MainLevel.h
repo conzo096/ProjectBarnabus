@@ -13,6 +13,7 @@ public:
 		PLAYING,
 		BUILDING
 	};
+
 public:
 	MainLevel(std::string environmentName);
 
@@ -28,7 +29,7 @@ private:
 	void PlayingKeyCallback(float deltaTime);
 	void BuildingKeyCallback(float deltaTime);
 
-	Entity* GetEntityFromPool();
+	Entity* GetEntityFromPool(ObjectPool::ObjectPoolType poolType);
 private:
 	float duration = 100;
 	float currentTime = 0;
@@ -39,8 +40,9 @@ private:
 	Ray ray;
 	GameUi ui;
 
-	ObjectPool entityPool;
+	ObjectPool m_mainObjects;
+	ObjectPool m_spawnableObjects;
 
 	int m_oldMouseState = GLFW_RELEASE;
-	Entity* m_selectedEntity;
+	std::string m_selectedEntity;
 };

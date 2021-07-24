@@ -8,7 +8,15 @@
 class ObjectPool
 {
 public:
-	ObjectPool();
+	enum ObjectPoolType {
+		MAIN,
+		BUILDINGS,
+		UNITS,
+		STATIC,
+	};
+
+public:
+	ObjectPool(ObjectPoolType poolType);
 
 	int GetNextFreeEntity(); // Returns index location of next one. -1 if none are found.
 	Entity* GetEntity(int index); // inuse = true
@@ -18,4 +26,5 @@ public:
 	void Render(float deltaTime);
 private:
 	Entity* m_entities[MAX_OBJECT_COUNT]; // todo Use pointer?
+	ObjectPoolType m_poolType; // name of object pool
 };

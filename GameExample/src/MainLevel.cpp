@@ -16,7 +16,7 @@
 #include <math.h>
 
 #include <glm/matrix.hpp>
-MainLevel::MainLevel(std::string environmentName) : Level(environmentName),currentMode(PLAYING)
+MainLevel::MainLevel(std::string environmentName) : Level(environmentName),currentMode(PLAYING), m_mainObjects(ObjectPool::MAIN), m_spawnableObjects(ObjectPool::BUILDINGS)
 {
 	ray.SetDirection(glm::vec3(0, -1, 0));
 	ray.SetLength(150);
@@ -91,25 +91,27 @@ void MainLevel::Update(float deltaTime)
 				if (ray.IsCollision(*entity.second, poi))
 				{
 					ui.SetEntityInfoText(entity.second->GetName());
-					m_selectedEntity = entity.second;
+					m_selectedEntity = entity.first;
 					return;
 				}
 			}
-			if(!m_selectedEntity)
+			if (!m_selectedEntity.empty())
+			{
 				ui.SetEntityInfoText("");
+			}
 		}
-		if (newState == GLFW_PRESS && m_oldMouseState == GLFW_PRESS && m_selectedEntity) // Dragging actions.
+		if (newState == GLFW_PRESS && m_oldMouseState == GLFW_PRESS && !m_selectedEntity.empty()) // Dragging actions.
 		{
 			// Move entity
 			auto builderCam = GetEntity("builderCamera")->GetCompatibleComponent<FreeCamera>();
 			glm::vec3 newPosition = (ray.GetDirection() * builderCam->GetPosition().y) + ray.GetPosition();
 			newPosition.y = 0;
-			m_selectedEntity->SetPosition(newPosition);
+			GetEntity(m_selectedEntity)->SetPosition(newPosition);
 		}
-		if (newState == GLFW_RELEASE && m_oldMouseState == GLFW_RELEASE && m_selectedEntity)
+		if (newState == GLFW_RELEASE && m_oldMouseState == GLFW_RELEASE && !m_selectedEntity.empty())
 		{
 			ui.SetEntityInfoText("");
-			m_selectedEntity = NULL;
+			m_selectedEntity.clear();
 		}
 	
 
@@ -150,29 +152,29 @@ void MainLevel::LoadGameContent()
 		ShaderFactory::CreateShader<VkBasicShader>("red", "res\\Shaders\\Vulkan\\VkBasic");
 	}
 
-	Entity* newEntity = GetEntityFromPool();
+	Entity* newEntity = GetEntityFromPool(ObjectPool::MAIN);
 	EntityFactory::CreateCamera(newEntity);
 	AddEntity("camera", newEntity );
 
-	newEntity = GetEntityFromPool();
+	newEntity = GetEntityFromPool(ObjectPool::MAIN);
 	EntityFactory::CreateBuilderCamera(newEntity);
 	AddEntity("builderCamera", newEntity);
 
-	newEntity = GetEntityFromPool();
+	newEntity = GetEntityFromPool(ObjectPool::MAIN);
 	EntityFactory::CreateTerrain(newEntity, BarnabusGameEngine::Get().GetShader("terrain"));
 	AddEntity("terrain", newEntity);
 
-	newEntity = GetEntityFromPool();
+	newEntity = GetEntityFromPool(ObjectPool::MAIN);
 	EntityFactory::CreatePlayer(newEntity, glm::vec3(0), BarnabusGameEngine::Get().GetShader("animation"), &GetEntity("terrain")->GetComponent<Terrain>());
 	AddEntity("player", newEntity);
 
-	newEntity = GetEntityFromPool();
+	newEntity = GetEntityFromPool(ObjectPool::BUILDINGS);
 	EntityFactory::CreateBuilding(newEntity, glm::vec3(0), BarnabusGameEngine::Get().GetShader("red"));
 
 	AddEntity("building", newEntity);
 	GetEntity("building")->SetScale(glm::vec3(2, 2, 2));
 
-	newEntity = GetEntityFromPool();
+	newEntity = GetEntityFromPool(ObjectPool::MAIN);
 	EntityFactory::CreateSphere(newEntity, glm::vec3(100, 300, 100), BarnabusGameEngine::Get().GetShader("red"));
 
 	AddEntity("sun", newEntity);
@@ -281,18 +283,47 @@ void MainLevel::BuildingKeyCallback(float deltaTime)
 		newPosition.y = 0;
 
 
-		auto entity = GetEntityFromPool();
+		auto entity = GetEntityFromPool(ObjectPool::BUILDINGS);
 		EntityFactory::CreateBuilding(entity, newPosition, BarnabusGameEngine::Get().GetShader("red"));
 		AddEntity(entity->GetName(),entity );
 
 		keyCooldown = 0;
 	}
+
+	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_BACKSPACE) == GLFW_PRESS && keyCooldown > 0.3f)
+	{
+		// If there is a selected item remove it.
+		if ( !m_selectedEntity.empty() && m_selectedEntity != "player" )
+		{
+			RemoveEntity(m_selectedEntity);
+			// Update UI.
+			ui.SetEntityInfoText("");
+			m_selectedEntity.clear();
+		}
+
+		keyCooldown = 0;
+	}
 }
 
-Entity * MainLevel::GetEntityFromPool()
+Entity * MainLevel::GetEntityFromPool(ObjectPool::ObjectPoolType poolType)
 {
-	int nextFree = entityPool.GetNextFreeEntity();
+
+	ObjectPool* pool = NULL;
+
+	switch (poolType)
+	{
+	case ObjectPool::MAIN:
+		pool = &m_mainObjects;
+		break;
+	case ObjectPool::BUILDINGS:
+		pool = &m_spawnableObjects;
+		break;
+	};
+
+	assert(pool);
+
+	int nextFree = pool->GetNextFreeEntity();
 	// If nextFree is a valid entity
 	assert(nextFree != -1);
-	return entityPool.GetEntity(nextFree);
+	return pool->GetEntity(nextFree);
 }

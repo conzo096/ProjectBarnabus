@@ -89,6 +89,15 @@ Entity * Level::GetEntity(std::string entityName)
 	return it->second;
 }
 
+void Level::RemoveEntity(const std::string & entityName)
+{
+	auto entity = GetEntity(entityName);
+	assert(entity);
+
+	entity->ClearEntity();
+	entities.erase(entityName);
+}
+
 bool Level::AddLight(std::string name, std::unique_ptr<Light> light)
 {
 	light->SetName(name);
