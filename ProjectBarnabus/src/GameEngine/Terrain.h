@@ -13,10 +13,8 @@ public:
 	};
 public:
 	Terrain();
-	Terrain(const std::string filePath, TerrainType terrain);
 	glm::vec3 GetWorldPositionFromGrid(glm::vec3 worldPosition);
 
-private:
 	void LoadTerrainFromHeightMap(const std::string heightMapPath);
 
 private:

@@ -20,17 +20,12 @@ Terrain::Terrain()
 	token = "Terrain";
 }
 
-Terrain::Terrain(const std::string filePath, TerrainType terrain) : Terrain()
-{
-	LoadTerrainFromHeightMap(filePath);
-}
-
 glm::vec3 Terrain::GetWorldPositionFromGrid(glm::vec3 worldPosition)
 {
 	glm::vec3 convertedPosition = glm::vec4(worldPosition, 1) * glm::inverse(GetParent()->GetTransform());
 	glm::vec3 destination = worldPosition;
 
-	// Convert world space to local space.
+	// Convert world space to local space. This needs to take into account the offset. 
 	float terrainX = convertedPosition.x - GetParent()->GetPosition().x;
 	float terrainZ = convertedPosition.z - GetParent()->GetPosition().z;
 
@@ -59,7 +54,7 @@ glm::vec3 Terrain::GetWorldPositionFromGrid(glm::vec3 worldPosition)
 				heightPositionsGrid[gridX][gridZ + 1], 1), glm::vec2(xCoord, zCoord));
 	}
 
-	destination.y = yAnswer * GetParent()->GetScale().y;
+	destination.y = yAnswer;// *GetParent()->GetScale().y;
 	return destination;
 }
 
@@ -72,7 +67,7 @@ void Terrain::LoadTerrainFromHeightMap(const std::string heightMapPath)
 		int g = heightMap.GetData()[x * 4 + 1 + z * 4 * heightMap.GetWidth()];
 		int b = heightMap.GetData()[x * 4 + 2 + z * 4 * heightMap.GetWidth()];
 		int a = heightMap.GetData()[x * 4 + 3 + z * 4 * heightMap.GetWidth()];
-		unsigned int argb = r * g*b*a;
+		unsigned int argb = r*g*b*a;
 
 		return ((float)argb / (float)maxColour);
 	};
@@ -119,7 +114,7 @@ void Terrain::LoadTerrainFromHeightMap(const std::string heightMapPath)
 				mesh.InsertIndex(rightTop);
 			}
 
-			heightPositionsGrid[x][z] = (glm::vec4(vertex.position, 1) * GetTransform()).y;
+			heightPositionsGrid[x][z] = (glm::vec4(vertex.position, 1) * GetParent()->GetTransform()).y;
 		}
 	}
 

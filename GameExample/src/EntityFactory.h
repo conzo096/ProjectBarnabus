@@ -50,13 +50,15 @@ namespace EntityFactory
 	static void CreateTerrain(Entity* terrain, IShader* shader)
 	{
 		terrain->SetName("terrain");
-		auto fileName = "res\\Textures\\HeightMap.png";
-		auto terrainComponent = std::make_unique<Terrain>(fileName, Terrain::TerrainType::Image);
-		terrainComponent->SetShader(shader);
-		terrainComponent->InitModel();
+		auto fileName = "res\\Textures\\Height0.png";
+		auto terrainComponent = std::make_unique<Terrain>();
 		terrain->AddComponent(std::move(terrainComponent));
-
+		terrain->SetScale(glm::vec3(1, 0.3, 1));
 		terrain->SetPosition(glm::vec3(-50, 0, -50));
+		terrain->UpdateTransforms();
+		terrain->GetComponent<Terrain>().LoadTerrainFromHeightMap(fileName);
+		terrain->GetComponent<Terrain>().InitModel();
+		terrain->GetComponent<Terrain>().SetShader(shader);
 	}
 
 	static void CreateBuilding(Entity* building, glm::vec3 position, IShader* shader)
