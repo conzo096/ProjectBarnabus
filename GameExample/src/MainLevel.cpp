@@ -57,14 +57,8 @@ void MainLevel::Update(float deltaTime)
 	// Updates all the components.
 	Level::Update(deltaTime);
 
-	if (currentMode == MainLevel::PLAYING)
+	if (currentMode == BUILDING)
 	{
-		ui.SetExampleText("PLAYING");
-	}
-	else if (currentMode == BUILDING)
-	{
-		ui.SetExampleText("BUILDING");
-
 		auto builderCam = GetEntity("builderCamera")->GetCompatibleComponent<FreeCamera>();
 
 		double xpos, ypos;
@@ -90,14 +84,12 @@ void MainLevel::Update(float deltaTime)
 				glm::vec3 poi;
 				if (ray.IsCollision(*entity.second, poi))
 				{
-					ui.SetEntityInfoText(entity.second->GetName());
 					m_selectedEntity = entity.first;
 					return;
 				}
 			}
 			if (!m_selectedEntity.empty())
 			{
-				ui.SetEntityInfoText("");
 			}
 		}
 		if (newState == GLFW_PRESS && m_oldMouseState == GLFW_PRESS && !m_selectedEntity.empty()) // Dragging actions.
@@ -110,14 +102,13 @@ void MainLevel::Update(float deltaTime)
 		}
 		if (newState == GLFW_RELEASE && m_oldMouseState == GLFW_RELEASE && !m_selectedEntity.empty())
 		{
-			ui.SetEntityInfoText("");
 			m_selectedEntity.clear();
 		}
 	
-
 		m_oldMouseState = newState;
-
 	}
+
+	UpdateGameUI();
 }
 
 void MainLevel::Render(float deltaTime)
@@ -185,12 +176,32 @@ void MainLevel::LoadGameContent()
 	ui.InitGameUi();
 	ui.InitaliseAllQuads();
 
-	ui.UpdateBuildingPoolLimit(m_spawnableObjects.GetCurrentCount(), ObjectPool::MaxObjectCount);
+	UpdateGameUI();
 }
 
 MainLevel::GameMode MainLevel::GetCurrentMode()
 {
 	return currentMode;
+}
+
+void MainLevel::UpdateGameUI()
+{
+	ui.SetEntityInfoText(m_selectedEntity);
+	ui.UpdateBuildingPoolLimit(m_spawnableObjects.GetCurrentCount(), m_spawnableObjects.MaxObjectCount);
+	
+	std::string mode = "Playing";
+	switch (currentMode)
+	{
+	case PLAYING:
+		mode = "Playing";
+		break;
+	case BUILDING:
+		mode = "Building";
+		break;
+	};
+
+	ui.SetExampleText(mode);
+
 }
 
 void MainLevel::PlayingKeyCallback(float deltaTime)
@@ -288,9 +299,6 @@ void MainLevel::BuildingKeyCallback(float deltaTime)
 		auto entity = GetEntityFromPool(ObjectPool::BUILDINGS);
 		EntityFactory::CreateBuilding(entity, newPosition, BarnabusGameEngine::Get().GetShader("red"));
 		AddEntity(entity->GetName(),entity );
-
-		ui.UpdateBuildingPoolLimit(m_spawnableObjects.GetCurrentCount(), ObjectPool::MaxObjectCount);
-
 		keyCooldown = 0;
 	}
 
@@ -300,11 +308,7 @@ void MainLevel::BuildingKeyCallback(float deltaTime)
 		if ( !m_selectedEntity.empty() && m_selectedEntity != "player" )
 		{
 			RemoveEntity(m_selectedEntity);
-			// Update UI.
-			ui.SetEntityInfoText("");
 			m_selectedEntity.clear();
-
-			ui.UpdateBuildingPoolLimit(m_spawnableObjects.GetCurrentCount(), ObjectPool::MaxObjectCount);
 		}
 
 		keyCooldown = 0;

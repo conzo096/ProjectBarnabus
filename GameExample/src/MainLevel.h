@@ -24,6 +24,7 @@ public:
 	void LoadGameContent();
 public:
 	GameMode GetCurrentMode();
+	void UpdateGameUI();
 
 private:
 	void PlayingKeyCallback(float deltaTime);

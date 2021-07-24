@@ -91,7 +91,3 @@ GameUi::~GameUi()
 	}
 }
 
-void GameUi::Draw()
-{
-	UiDisplay::Draw();
-}
