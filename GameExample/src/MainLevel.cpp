@@ -294,8 +294,7 @@ void MainLevel::BuildingKeyCallback(float deltaTime)
 
 		auto builderCam = GetEntity("builderCamera")->GetCompatibleComponent<FreeCamera>();
 		glm::vec3 newPosition = (ray.GetDirection() * builderCam->GetPosition().y ) + ray.GetPosition();
-		newPosition.y = 0;
-
+		newPosition = GetEntity("terrain")->GetComponent<Terrain>().GetWorldPositionFromGrid(newPosition);
 
 		auto entity = GetEntityFromPool(ObjectPool::BUILDINGS);
 		if (entity != NULL)
