@@ -77,6 +77,25 @@ namespace EntityFactory
 		building->SetPosition(position);
 	}
 
+	static void CreateUnit(Entity* unit, glm::vec3 position, IShader* shader)
+	{
+		std::string fileName("res\\Models\\AnimatedModels\\Player.fbx");
+		auto animatedModelComponent = std::make_unique<AnimatedModel>(fileName);
+		animatedModelComponent->SetShader(shader);
+		animatedModelComponent->InitModel();
+		animatedModelComponent->SetAnimation("walk");
+
+		auto physicsComponent = std::make_unique<Physics::PhysicsContainer>(true);
+		physicsComponent->AddBoundingVolumes(animatedModelComponent->GetRootNode());
+		physicsComponent->SetShader(BarnabusGameEngine::Get().GetShader("red"));
+		physicsComponent->InitMeshes();
+
+		unit->AddComponent(std::move(animatedModelComponent));
+		unit->AddComponent(std::move(physicsComponent));
+
+		unit->SetPosition(position);
+	}
+
 	static void CreateCamera(Entity* camera)
 	{
 		camera->SetName("camera");

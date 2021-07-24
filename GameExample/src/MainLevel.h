@@ -42,7 +42,8 @@ private:
 	GameUi ui;
 
 	ObjectPool m_mainObjects;
-	ObjectPool m_spawnableObjects;
+	ObjectPool m_spawnableBuildings;
+	ObjectPool m_spawnableUnits;
 
 	int m_oldMouseState = GLFW_RELEASE;
 	std::string m_selectedEntity;

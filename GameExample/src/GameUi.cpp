@@ -25,7 +25,9 @@ GameUi::GameUi()
 	buildingLimitText->SetPosition(glm::vec2(500, 200));
 	uiElements.insert(std::pair<std::string, UiQuad*>("BuildingPoolLimit", buildingLimitText));
 
-	
+	TextQuad* unitLimitText = new TextQuad(glm::vec2(-1, -1), glm::vec2(1, 1));
+	unitLimitText->SetPosition(glm::vec2(1500, 200));
+	uiElements.insert(std::pair<std::string, UiQuad*>("UnitPoolLimit", unitLimitText));
 }
 
 void GameUi::InitGameUi()
@@ -46,6 +48,7 @@ void GameUi::InitGameUi()
 	uiElements.at("textExample")->GetMeshData().SetShader(BarnabusGameEngine::Get().GetShader("font"));
 	uiElements.at("entityInfoText")->GetMeshData().SetShader(BarnabusGameEngine::Get().GetShader("font"));
 	uiElements.at("BuildingPoolLimit")->GetMeshData().SetShader(BarnabusGameEngine::Get().GetShader("font"));
+	uiElements.at("UnitPoolLimit")->GetMeshData().SetShader(BarnabusGameEngine::Get().GetShader("font"));
 
 	ITexture* texture = nullptr;
 	if (BarnabusGameEngine::Get().GetRenderType() == IRenderer::OpenGL)
@@ -64,6 +67,7 @@ void GameUi::InitGameUi()
 	uiElements.at("textExample")->GetMeshData().SetTexture(texture);
 	uiElements.at("entityInfoText")->GetMeshData().SetTexture(texture);
 	uiElements.at("BuildingPoolLimit")->GetMeshData().SetTexture(texture);
+	uiElements.at("UnitPoolLimit")->GetMeshData().SetTexture(texture);
 }
 
 void GameUi::SetExampleText(std::string text)
@@ -78,9 +82,14 @@ void GameUi::SetEntityInfoText(std::string text)
 
 void GameUi::UpdateBuildingPoolLimit(int currentCount, int maxCount)
 {
-	std::string limit = "Building cap: " + std::to_string(currentCount) + " / " + std::to_string(maxCount);
-
+	std::string limit = "Buildings: " + std::to_string(currentCount) + " / " + std::to_string(maxCount);
 	static_cast<TextQuad*>(uiElements.at("BuildingPoolLimit"))->SetText(limit);
+}
+
+void GameUi::UpdateUnitPoolLimit(int currentCount, int maxCount)
+{
+	std::string limit = "Units: " + std::to_string(currentCount) + " / " + std::to_string(maxCount);
+	static_cast<TextQuad*>(uiElements.at("UnitPoolLimit"))->SetText(limit);
 }
 
 GameUi::~GameUi()

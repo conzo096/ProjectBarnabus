@@ -16,7 +16,7 @@
 #include <math.h>
 
 #include <glm/matrix.hpp>
-MainLevel::MainLevel(std::string environmentName) : Level(environmentName),currentMode(PLAYING), m_mainObjects(ObjectPool::MAIN), m_spawnableObjects(ObjectPool::BUILDINGS)
+MainLevel::MainLevel(std::string environmentName) : Level(environmentName),currentMode(PLAYING), m_mainObjects(ObjectPool::MAIN), m_spawnableBuildings(ObjectPool::BUILDINGS), m_spawnableUnits(ObjectPool::UNITS)
 {
 	ray.SetDirection(glm::vec3(0, -1, 0));
 	ray.SetLength(150);
@@ -187,8 +187,9 @@ MainLevel::GameMode MainLevel::GetCurrentMode()
 void MainLevel::UpdateGameUI()
 {
 	ui.SetEntityInfoText(m_selectedEntity);
-	ui.UpdateBuildingPoolLimit(m_spawnableObjects.GetCurrentCount(), m_spawnableObjects.MaxObjectCount);
-	
+	ui.UpdateBuildingPoolLimit(m_spawnableBuildings.GetCurrentCount(), m_spawnableBuildings.MaxObjectCount);
+	ui.UpdateUnitPoolLimit(m_spawnableUnits.GetCurrentCount(), m_spawnableUnits.MaxObjectCount);
+
 	std::string mode = "Playing";
 	switch (currentMode)
 	{
@@ -297,8 +298,29 @@ void MainLevel::BuildingKeyCallback(float deltaTime)
 
 
 		auto entity = GetEntityFromPool(ObjectPool::BUILDINGS);
-		EntityFactory::CreateBuilding(entity, newPosition, BarnabusGameEngine::Get().GetShader("red"));
-		AddEntity(entity->GetName(),entity );
+		if (entity != NULL)
+		{
+			EntityFactory::CreateBuilding(entity, newPosition, BarnabusGameEngine::Get().GetShader("red"));
+			AddEntity(entity->GetName(), entity);
+		}
+		keyCooldown = 0;
+	}
+
+	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_3) == GLFW_PRESS && keyCooldown > 0.3f)
+	{
+		// Position is height * direction against direction.
+
+		auto builderCam = GetEntity("builderCamera")->GetCompatibleComponent<FreeCamera>();
+		glm::vec3 newPosition = (ray.GetDirection() * builderCam->GetPosition().y) + ray.GetPosition();
+		newPosition.y = 0;
+
+
+		auto entity = GetEntityFromPool(ObjectPool::UNITS);
+		if (entity != NULL)
+		{
+			EntityFactory::CreateUnit(entity, newPosition, BarnabusGameEngine::Get().GetShader("animation"));
+			AddEntity(entity->GetName(), entity);
+		}
 		keyCooldown = 0;
 	}
 
@@ -326,14 +348,21 @@ Entity * MainLevel::GetEntityFromPool(ObjectPool::ObjectPoolType poolType)
 		pool = &m_mainObjects;
 		break;
 	case ObjectPool::BUILDINGS:
-		pool = &m_spawnableObjects;
+		pool = &m_spawnableBuildings;
 		break;
+	case ObjectPool::UNITS:
+		pool = &m_spawnableUnits;
+		break;
+	default: 
+		assert("Not implemented");
 	};
 
 	assert(pool);
-
 	int nextFree = pool->GetNextFreeEntity();
-	// If nextFree is a valid entity
-	assert(nextFree != -1);
+	
+	if (nextFree == -1)
+	{
+		return NULL;
+	}
 	return pool->GetEntity(nextFree);
 }
