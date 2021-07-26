@@ -65,7 +65,7 @@ void MainLevel::Update(float deltaTime)
 		glfwGetCursorPos(BarnabusGameEngine::Get().GetWindow(), &xpos, &ypos);
 
 		double winX = xpos;
-		double winY = 1080 - ypos;
+		double winY = BarnabusGameEngine::Get().height - ypos;
 	
 		auto near = glm::unProject(glm::vec3(winX, winY, 0.0), builderCam->GetView(), builderCam->GetProjection(),
 			glm::vec4(0, 0, BarnabusGameEngine::Get().width, BarnabusGameEngine::Get().height));
