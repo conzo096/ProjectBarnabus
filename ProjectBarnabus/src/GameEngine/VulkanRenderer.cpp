@@ -165,7 +165,7 @@ namespace
 		}
 		else
 		{
-			VkExtent2D actualExtent = { 1920, 1080 };
+			VkExtent2D actualExtent = { BarnabusGameEngine::Get().width, BarnabusGameEngine::Get().height };
 
 			actualExtent.width = std::max(capabilities.minImageExtent.width, std::min(capabilities.maxImageExtent.width, actualExtent.width));
 			actualExtent.height = std::max(capabilities.minImageExtent.height, std::min(capabilities.maxImageExtent.height, actualExtent.height));
@@ -225,7 +225,7 @@ bool VulkanRenderer::InitialiseGameEngine()
 
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-	window = glfwCreateWindow(1920, 1080, "Testing - Vulkan Renderer", NULL, NULL);
+	window = glfwCreateWindow(BarnabusGameEngine::Get().width, BarnabusGameEngine::Get().height, "Testing - Vulkan Renderer", NULL, NULL);
 	if (!window)
 	{
 		assert(window != NULL);
@@ -1174,8 +1174,8 @@ void VulkanRenderer::CreateAttachement(VkFormat format, VkImageUsageFlagBits usa
 	image.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 	image.imageType = VK_IMAGE_TYPE_2D;
 	image.format = format;
-	image.extent.width = 1920;
-	image.extent.height = 1080;
+	image.extent.width = BarnabusGameEngine::Get().width;
+	image.extent.height = BarnabusGameEngine::Get().height;
 	image.extent.depth = 1;
 	image.mipLevels = 1;
 	image.arrayLayers = 1;
@@ -1236,7 +1236,7 @@ void VulkanRenderer::CreateAttachement(VkFormat format, VkImageUsageFlagBits usa
 
 void VulkanRenderer::PrepareUIFramebuffer()
 {
-	uiFrameBuf.LoadFrameBuffer(1920, 1080);
+	uiFrameBuf.LoadFrameBuffer(BarnabusGameEngine::Get().width, BarnabusGameEngine::Get().height);
 
 	// Get textures
 	auto frameTexture = static_cast<VulkanTexture*>(uiFrameBuf.GetFrameTexture());
@@ -1261,7 +1261,7 @@ void VulkanRenderer::PrepareUIFramebuffer()
 
 void VulkanRenderer::PrepareOffscreenFramebuffer()
 {
-	offScreenFrameBuf.LoadFrameBuffer(1920, 1080);
+	offScreenFrameBuf.LoadFrameBuffer(BarnabusGameEngine::Get().width, BarnabusGameEngine::Get().height);
 
 	// Get textures
 	auto frameTexture = static_cast<VulkanTexture*>(offScreenFrameBuf.GetFrameTexture());

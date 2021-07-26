@@ -4,12 +4,12 @@
 // Update free camera for this frame
 void FreeCamera::Update(float deltaTime)
 {
-	projection = glm::perspective(fieldOfView, (float)1920 / 1080, 2.414f, 1000.0f);
+	projection = glm::perspective(fieldOfView, (float)BarnabusGameEngine::Get().width/ BarnabusGameEngine::Get().height, 2.414f, 1000.0f);
 	// The ratio of pixels to rotation
-	float ratioWidth = fieldOfView / static_cast<float>(1920);
-	float ratioHeight = (fieldOfView * (static_cast<float>(1080)
-		/ static_cast<float>(1920)))
-		/ static_cast<float>(1080);
+	float ratioWidth = fieldOfView / static_cast<float>(BarnabusGameEngine::Get().width);
+	float ratioHeight = (fieldOfView * (static_cast<float>(BarnabusGameEngine::Get().height)
+		/ static_cast<float>(BarnabusGameEngine::Get().width)))
+		/ static_cast<float>(BarnabusGameEngine::Get().height);
 
 	// Calculate the forward direction (spherical co-ordinates to Cartesian co-ordinates)
 	glm::dvec3 temp_forward(cos(pitch) * -sin(yaw), sin(pitch), -cos(yaw) * cos(pitch));

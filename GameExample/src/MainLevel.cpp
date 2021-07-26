@@ -68,9 +68,9 @@ void MainLevel::Update(float deltaTime)
 		double winY = 1080 - ypos;
 	
 		auto near = glm::unProject(glm::vec3(winX, winY, 0.0), builderCam->GetView(), builderCam->GetProjection(),
-			glm::vec4(0, 0, 1920,1080));
+			glm::vec4(0, 0, BarnabusGameEngine::Get().width, BarnabusGameEngine::Get().height));
 		auto far = glm::unProject(glm::vec3(winX, winY, 1.0), builderCam->GetView(), builderCam->GetProjection(),
-			glm::vec4(0, 0, 1920, 1080));
+			glm::vec4(0, 0, BarnabusGameEngine::Get().width, BarnabusGameEngine::Get().height));
 
 		ray.SetPosition(near);
 		far.z -= 1.0f;

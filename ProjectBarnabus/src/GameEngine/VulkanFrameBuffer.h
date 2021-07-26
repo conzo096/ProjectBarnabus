@@ -24,8 +24,8 @@ public:
 public:
 	VkRenderPass GetRenderPass();
 private:
-	unsigned int width = 1920;
-	unsigned int height = 1080;
+	unsigned int width;
+	unsigned int height;
 	VkRenderPass renderPass;
 	VkFramebuffer frameBuffer;
 	VulkanTexture frameTexture;

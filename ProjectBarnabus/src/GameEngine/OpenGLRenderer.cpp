@@ -28,7 +28,7 @@ bool OpenGLRenderer::InitialiseGameEngine()
 		return false;
 	}
 
-	window = glfwCreateWindow(1920, 1080, "Testing", NULL, NULL);
+	window = glfwCreateWindow(BarnabusGameEngine::Get().width, BarnabusGameEngine::Get().height, "Testing", NULL, NULL);
 
 	// Window is now initalised, now make it the current context.
 	glfwMakeContextCurrent(window);
@@ -61,11 +61,11 @@ bool OpenGLRenderer::InitialiseGameEngine()
 
 	backgroundColour = glm::vec4(0.1f, 0.0f, 0.4f, 1.0f);
 	auto main = new OpenGLFrameBuffer("main");
-	main->LoadFrameBuffer(1920, 1080);
+	main->LoadFrameBuffer(BarnabusGameEngine::Get().width, BarnabusGameEngine::Get().height);
 	auto pair = std::pair<std::string, OpenGLFrameBuffer*>(std::string("main"), main);
 	AddFramebuffer(pair);
 	auto ui = new OpenGLFrameBuffer("ui");
-	ui->LoadFrameBuffer(1920, 1080);
+	ui->LoadFrameBuffer(BarnabusGameEngine::Get().width, BarnabusGameEngine::Get().height);
 	pair = std::pair<std::string, OpenGLFrameBuffer*>(std::string("ui"), ui);
 	AddFramebuffer(pair);
 

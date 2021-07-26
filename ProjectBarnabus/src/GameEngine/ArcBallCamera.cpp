@@ -5,12 +5,11 @@ void ArcBallCamera::Update(float deltaTime)
 {
 	glfwSetInputMode(BarnabusGameEngine::Get().GetWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	fieldOfView = 70;
-	projection = glm::perspective(fieldOfView, (float)1920 / 1080, 2.414f, 1000.0f);
+	projection = glm::perspective(fieldOfView, (float)BarnabusGameEngine::Get().width / (float)BarnabusGameEngine::Get().height, 2.414f, 1000.0f);
 	// The ratio of pixels to rotation
-	double ratioWidth = fieldOfView / 1920.0;
-	double ratioHeight = (fieldOfView * (1080.0
-		/ 1920.0))
-		/ 1080.0;
+	double ratioWidth = fieldOfView / (double)BarnabusGameEngine::Get().width;
+	double ratioHeight = (fieldOfView * ((double)BarnabusGameEngine::Get().height / (double)BarnabusGameEngine::Get().width))
+		/ (double)BarnabusGameEngine::Get().height;
 
 	double currentX, currentY;
 

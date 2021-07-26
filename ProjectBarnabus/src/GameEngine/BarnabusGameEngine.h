@@ -40,6 +40,10 @@ public:
 
 	IRenderer::GraphicsRenderer GetRenderType();
 	IRenderer* GetRenderer();
+
+	// Should be in a settings class/struct
+	int width = 1920;
+	int height = 1080;
 public:
 	// For meshes
 	void InitialiseMesh(MeshData& data);
