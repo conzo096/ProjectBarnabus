@@ -47,4 +47,6 @@ private:
 
 	int m_oldMouseState = GLFW_RELEASE;
 	std::string m_selectedEntity;
+
+	Entity* m_tempEntity; // Entity user is creating.
 };

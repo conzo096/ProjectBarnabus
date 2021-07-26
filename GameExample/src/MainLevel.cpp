@@ -57,57 +57,6 @@ void MainLevel::Update(float deltaTime)
 	// Updates all the components.
 	Level::Update(deltaTime);
 
-	if (currentMode == BUILDING)
-	{
-		auto builderCam = GetEntity("builderCamera")->GetCompatibleComponent<FreeCamera>();
-
-		double xpos, ypos;
-		glfwGetCursorPos(BarnabusGameEngine::Get().GetWindow(), &xpos, &ypos);
-
-		double winX = xpos;
-		double winY = BarnabusGameEngine::Get().height - ypos;
-	
-		auto near = glm::unProject(glm::vec3(winX, winY, 0.0), builderCam->GetView(), builderCam->GetProjection(),
-			glm::vec4(0, 0, BarnabusGameEngine::Get().width, BarnabusGameEngine::Get().height));
-		auto far = glm::unProject(glm::vec3(winX, winY, 1.0), builderCam->GetView(), builderCam->GetProjection(),
-			glm::vec4(0, 0, BarnabusGameEngine::Get().width, BarnabusGameEngine::Get().height));
-
-		ray.SetPosition(near);
-		far.z -= 1.0f;
-		ray.SetDirection(glm::normalize(far - near));
-
-		int newState = glfwGetMouseButton(BarnabusGameEngine::Get().GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
-		if (newState == GLFW_RELEASE && m_oldMouseState == GLFW_PRESS)
-		{
-			for (auto const& entity : entities)
-			{
-				glm::vec3 poi;
-				if (ray.IsCollision(*entity.second, poi))
-				{
-					m_selectedEntity = entity.first;
-					return;
-				}
-			}
-			if (!m_selectedEntity.empty())
-			{
-			}
-		}
-		if (newState == GLFW_PRESS && m_oldMouseState == GLFW_PRESS && !m_selectedEntity.empty()) // Dragging actions.
-		{
-			// Move entity
-			auto builderCam = GetEntity("builderCamera")->GetCompatibleComponent<FreeCamera>();
-			glm::vec3 newPosition = (ray.GetDirection() * builderCam->GetPosition().y) + ray.GetPosition();
-			newPosition.y = 0;
-			GetEntity(m_selectedEntity)->SetPosition(newPosition);
-		}
-		if (newState == GLFW_RELEASE && m_oldMouseState == GLFW_RELEASE && !m_selectedEntity.empty())
-		{
-			m_selectedEntity.clear();
-		}
-	
-		m_oldMouseState = newState;
-	}
-
 	UpdateGameUI();
 }
 
@@ -290,19 +239,18 @@ void MainLevel::BuildingKeyCallback(float deltaTime)
 
 	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_2) == GLFW_PRESS && keyCooldown > 0.3f)
 	{
-		// Position is height * direction against direction.
-
-		auto builderCam = GetEntity("builderCamera")->GetCompatibleComponent<FreeCamera>();
-		glm::vec3 newPosition = (ray.GetDirection() * builderCam->GetPosition().y ) + ray.GetPosition();
-		newPosition = GetEntity("terrain")->GetComponent<Terrain>().GetWorldPositionFromGrid(newPosition);
-
-		auto entity = GetEntityFromPool(ObjectPool::BUILDINGS);
-		if (entity != NULL)
+		if (!m_tempEntity)
 		{
-			EntityFactory::CreateBuilding(entity, newPosition, BarnabusGameEngine::Get().GetShader("red"));
-			AddEntity(entity->GetName(), entity);
+			auto entity = GetEntityFromPool(ObjectPool::BUILDINGS);
+			if (entity != NULL)
+			{
+				// Position does not matter as it is updated each frame until it is placed.
+				EntityFactory::CreateBuilding(entity, glm::vec3(0), BarnabusGameEngine::Get().GetShader("red"));
+				AddEntity(entity->GetName(), entity);
+				m_tempEntity = entity;
+			}
+			keyCooldown = 0;
 		}
-		keyCooldown = 0;
 	}
 
 	if (glfwGetKey(BarnabusGameEngine::Get().GetWindow(), GLFW_KEY_3) == GLFW_PRESS && keyCooldown > 0.3f)
@@ -334,6 +282,79 @@ void MainLevel::BuildingKeyCallback(float deltaTime)
 
 		keyCooldown = 0;
 	}
+
+	// Update ray based on camera. 
+	auto builderCam = GetEntity("builderCamera")->GetCompatibleComponent<FreeCamera>();
+	double winX, winY;
+	glfwGetCursorPos(BarnabusGameEngine::Get().GetWindow(), &winX, &winY);
+	winY = BarnabusGameEngine::Get().height - winY;
+
+	auto near = glm::unProject(glm::vec3(winX, winY, 0.0), builderCam->GetView(), builderCam->GetProjection(),
+		glm::vec4(0, 0, BarnabusGameEngine::Get().width, BarnabusGameEngine::Get().height));
+	auto far = glm::unProject(glm::vec3(winX, winY, 1.0), builderCam->GetView(), builderCam->GetProjection(),
+		glm::vec4(0, 0, BarnabusGameEngine::Get().width, BarnabusGameEngine::Get().height));
+
+	ray.SetPosition(near);
+	far.z -= 1.0f;
+	ray.SetDirection(glm::normalize(far - near));
+
+	// Handle mouse actions
+
+	// First, handle if an entity has already been created
+	if ( m_tempEntity )
+	{
+		// Update entity position 
+		glm::vec3 newPosition = (ray.GetDirection() * builderCam->GetPosition().y) + ray.GetPosition();
+		newPosition = GetEntity("terrain")->GetComponent<Terrain>().GetWorldPositionFromGrid(newPosition);
+		m_tempEntity->SetPosition(newPosition);
+
+		// Check mouse button states.
+		auto rightClickState = glfwGetMouseButton(BarnabusGameEngine::Get().GetWindow(), GLFW_MOUSE_BUTTON_RIGHT);
+		auto leftClickState = glfwGetMouseButton(BarnabusGameEngine::Get().GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
+
+		if (rightClickState == GLFW_PRESS)
+		{
+			RemoveEntity(m_tempEntity->GetName());
+			m_tempEntity = NULL;
+		}
+		else if (leftClickState == GLFW_PRESS)
+		{
+			m_tempEntity = NULL;
+		}
+
+	}
+
+	// Handle left click
+	int newState = glfwGetMouseButton(BarnabusGameEngine::Get().GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
+	if (newState == GLFW_RELEASE && m_oldMouseState == GLFW_PRESS)
+	{
+		for (auto const& entity : entities)
+		{
+			glm::vec3 poi;
+			if (ray.IsCollision(*entity.second, poi))
+			{
+				m_selectedEntity = entity.first;
+				return;
+			}
+		}
+		if (!m_selectedEntity.empty())
+		{
+		}
+	}
+	if (newState == GLFW_PRESS && m_oldMouseState == GLFW_PRESS && !m_selectedEntity.empty()) // Dragging actions.
+	{
+		// Move entity
+		auto builderCam = GetEntity("builderCamera")->GetCompatibleComponent<FreeCamera>();
+		glm::vec3 newPosition = (ray.GetDirection() * builderCam->GetPosition().y) + ray.GetPosition();
+		newPosition.y = 0;
+		GetEntity(m_selectedEntity)->SetPosition(newPosition);
+	}
+	if (newState == GLFW_RELEASE && m_oldMouseState == GLFW_RELEASE && !m_selectedEntity.empty())
+	{
+		m_selectedEntity.clear();
+	}
+
+	m_oldMouseState = newState;
 }
 
 Entity * MainLevel::GetEntityFromPool(ObjectPool::ObjectPoolType poolType)
