@@ -312,6 +312,7 @@ void MainLevel::BuildingKeyCallback(float deltaTime)
 		m_tempEntity->GetComponent<Model>().SetMaterial(mat);
 
 		auto boundingVolumes = m_tempEntity->GetComponent<Physics::PhysicsContainer>().GetBoundingVolume();
+		bool positionInvalid = false;
 		for (auto bb : boundingVolumes->GetBoundingBoxes())
 		{
 			if (!GetEntity("terrain")->GetComponent<Terrain>().IsTerrainValid(bb))
@@ -319,6 +320,8 @@ void MainLevel::BuildingKeyCallback(float deltaTime)
 				Material mat;
 				mat.emissive = glm::vec4(1, 0, 0, 1);
 				m_tempEntity->GetComponent<Model>().SetMaterial(mat);
+
+				positionInvalid = true;
 				break;
 			}
 		}
@@ -332,7 +335,7 @@ void MainLevel::BuildingKeyCallback(float deltaTime)
 			RemoveEntity(m_tempEntity->GetName());
 			m_tempEntity = NULL;
 		}
-		else if (leftClickState == GLFW_PRESS)
+		else if (leftClickState == GLFW_PRESS && !positionInvalid)
 		{
 			m_tempEntity->GetComponent<Model>().SetMaterial(Material());
 			m_tempEntity = NULL;
