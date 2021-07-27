@@ -307,6 +307,21 @@ void MainLevel::BuildingKeyCallback(float deltaTime)
 		glm::vec3 newPosition = (ray.GetDirection() * builderCam->GetPosition().y) + ray.GetPosition();
 		newPosition = GetEntity("terrain")->GetComponent<Terrain>().GetWorldPositionFromGrid(newPosition);
 		m_tempEntity->SetPosition(newPosition);
+		Material mat;
+		mat.emissive = glm::vec4(0, 1, 0, 1);
+		m_tempEntity->GetComponent<Model>().SetMaterial(mat);
+
+		auto boundingVolumes = m_tempEntity->GetComponent<Physics::PhysicsContainer>().GetBoundingVolume();
+		for (auto bb : boundingVolumes->GetBoundingBoxes())
+		{
+			if (!GetEntity("terrain")->GetComponent<Terrain>().IsTerrainValid(bb))
+			{
+				Material mat;
+				mat.emissive = glm::vec4(1, 0, 0, 1);
+				m_tempEntity->GetComponent<Model>().SetMaterial(mat);
+				break;
+			}
+		}
 
 		// Check mouse button states.
 		auto rightClickState = glfwGetMouseButton(BarnabusGameEngine::Get().GetWindow(), GLFW_MOUSE_BUTTON_RIGHT);
@@ -319,6 +334,7 @@ void MainLevel::BuildingKeyCallback(float deltaTime)
 		}
 		else if (leftClickState == GLFW_PRESS)
 		{
+			m_tempEntity->GetComponent<Model>().SetMaterial(Material());
 			m_tempEntity = NULL;
 		}
 
@@ -336,9 +352,6 @@ void MainLevel::BuildingKeyCallback(float deltaTime)
 				m_selectedEntity = entity.first;
 				return;
 			}
-		}
-		if (!m_selectedEntity.empty())
-		{
 		}
 	}
 	if (newState == GLFW_PRESS && m_oldMouseState == GLFW_PRESS && !m_selectedEntity.empty()) // Dragging actions.

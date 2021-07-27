@@ -42,15 +42,15 @@ glm::vec3 Terrain::GetWorldPositionFromGrid(glm::vec3 worldPosition)
 	float yAnswer = 0;
 	if (xCoord <= (1 - zCoord))
 	{
-		yAnswer = BarryCentric(glm::vec3(0, heightPositionsGrid[gridX][gridZ], 0), glm::vec3(1,
-			heightPositionsGrid[gridX + 1][gridZ], 0), glm::vec3(0,
-				heightPositionsGrid[gridX][gridZ + 1], 1), glm::vec2(xCoord, zCoord));
+		yAnswer = BarryCentric(glm::vec3(0, heightPositionsGrid[gridX][gridZ].height, 0), glm::vec3(1,
+			heightPositionsGrid[gridX + 1][gridZ].height, 0), glm::vec3(0,
+				heightPositionsGrid[gridX][gridZ + 1].height, 1), glm::vec2(xCoord, zCoord));
 	}
 	else
 	{
-		yAnswer = BarryCentric(glm::vec3(1, heightPositionsGrid[gridX + 1][gridZ], 0), glm::vec3(1,
-			heightPositionsGrid[gridX + 1][gridZ + 1], 1), glm::vec3(0,
-				heightPositionsGrid[gridX][gridZ + 1], 1), glm::vec2(xCoord, zCoord));
+		yAnswer = BarryCentric(glm::vec3(1, heightPositionsGrid[gridX + 1][gridZ].height, 0), glm::vec3(1,
+			heightPositionsGrid[gridX + 1][gridZ + 1].height, 1), glm::vec3(0,
+				heightPositionsGrid[gridX][gridZ + 1].height, 1), glm::vec2(xCoord, zCoord));
 	}
 
 	destination.y = (yAnswer * GetParent()->GetScale().y) + GetParent()->GetPosition().y;
@@ -76,11 +76,11 @@ void Terrain::LoadTerrainFromHeightMap(const std::string heightMapPath)
 	m_length = heightMap.GetHeight();
 	std::vector<Vertex> vertices;
 
-	heightPositionsGrid = new float*[heightMap.GetWidth()];
+	heightPositionsGrid = new Grid*[heightMap.GetWidth()];
 
 	for (int i = 0; i < heightMap.GetWidth(); i++)
 	{
-		heightPositionsGrid[i] = new float[heightMap.GetHeight()];
+		heightPositionsGrid[i] = new Grid[heightMap.GetHeight()];
 	}
 
 	MeshData mesh;
@@ -113,7 +113,7 @@ void Terrain::LoadTerrainFromHeightMap(const std::string heightMapPath)
 				mesh.InsertIndex(rightTop);
 			}
 
-			heightPositionsGrid[x][z] = vertex.position.y;
+			heightPositionsGrid[x][z].height = vertex.position.y;
 		}
 	}
 
@@ -152,4 +152,28 @@ void Terrain::LoadTerrainFromHeightMap(const std::string heightMapPath)
 	rootNode->data.push_back(mesh);
 
 	BarnabusGameEngine::Get().AddMessageLog(StringLog("Terrain created from: " + heightMapPath, StringLog::Priority::Low));
+}
+
+bool Terrain::IsTerrainValid(BoundingVolumes::BoundingBox& const boundingBox)
+{
+	auto min = boundingBox.GetMinCoordinates();
+	auto range = boundingBox.GetMaxCoordinates() - min;
+
+	for (int x = min.x; x < min.x + range.x; x++)
+	{
+		for (int z = min.z; z < min.z + range.z; z++)
+		{
+			// Compare against grid. 
+
+			auto position = GetWorldPositionFromGrid({ x,min.y,z });
+			
+			// Check that the position is within tolorance
+			if (std::abs(position.y - min.y) > 5.0)
+			{
+				return false;
+			}
+		}
+	}
+
+	return true;
 }

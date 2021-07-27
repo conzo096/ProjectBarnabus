@@ -1,5 +1,6 @@
 #pragma once
 #include "Model.h"
+#include "BoundingBox.h"
 #include <Math.h>
 #include <limits>
 
@@ -11,15 +12,21 @@ public:
 		Image,
 		Model
 	};
+
+	struct Grid 
+	{
+		float height;
+		bool occupied = false;
+	};
 public:
 	Terrain();
 	glm::vec3 GetWorldPositionFromGrid(glm::vec3 worldPosition);
 
 	void LoadTerrainFromHeightMap(const std::string heightMapPath);
 
+	bool IsTerrainValid(BoundingVolumes::BoundingBox& const boundingBox);
 private:
-	float** heightPositionsGrid;
-	std::vector < std::vector<float>> m_grid;
+	Grid** heightPositionsGrid;
 
 	int width = 0, m_length = 0;
 };
