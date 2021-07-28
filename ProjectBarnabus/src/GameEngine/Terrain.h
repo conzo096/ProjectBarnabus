@@ -1,6 +1,6 @@
 #pragma once
 #include "Model.h"
-#include "BoundingBox.h"
+#include "PhysicsContainer.h"
 #include <Math.h>
 #include <limits>
 
@@ -24,7 +24,12 @@ public:
 
 	void LoadTerrainFromHeightMap(const std::string heightMapPath);
 
-	bool IsTerrainValid(BoundingVolumes::BoundingBox& const boundingBox);
+	bool IsTerrainValid(Physics::PhysicsContainer& const physicsContainer);
+
+	void UpdateTerrain(Physics::PhysicsContainer& const physicsContainer, bool occupied);
+
+private:
+	glm::ivec2 GetGridSquare(glm::vec3 position);
 private:
 	Grid** heightPositionsGrid;
 

@@ -24,21 +24,22 @@ glm::vec3 Terrain::GetWorldPositionFromGrid(glm::vec3 worldPosition)
 {
 	glm::vec3 destination = worldPosition;
 
-	// Convert world space to local space. This needs to take into account the offset. 
-	float terrainX = worldPosition.x - GetParent()->GetPosition().x;
-	float terrainZ = worldPosition.z - GetParent()->GetPosition().z;
 
-	float gridSquare = m_length / (m_length - 1);
-	int gridX = (int)floor(terrainX / gridSquare);
-	int gridZ = (int)floor(terrainZ / gridSquare);
+	auto gridPos = GetGridSquare(worldPosition);
+	int gridX = gridPos.x;
+	int gridZ = gridPos.y;
 	if (gridX >= m_length - 1 || gridZ >= m_length - 1 ||
 		gridX < 0 || gridZ < 0)
 	{
 		return worldPosition;
 	}
 
+	float terrainX = worldPosition.x - GetParent()->GetPosition().x;
+	float terrainZ = worldPosition.z - GetParent()->GetPosition().z;
+	float gridSquare = m_length / (m_length - 1);
 	float xCoord = fmodf(terrainX, gridSquare);
 	float zCoord = fmodf(terrainZ, gridSquare);
+
 	float yAnswer = 0;
 	if (xCoord <= (1 - zCoord))
 	{
@@ -154,26 +155,64 @@ void Terrain::LoadTerrainFromHeightMap(const std::string heightMapPath)
 	BarnabusGameEngine::Get().AddMessageLog(StringLog("Terrain created from: " + heightMapPath, StringLog::Priority::Low));
 }
 
-bool Terrain::IsTerrainValid(BoundingVolumes::BoundingBox& const boundingBox)
+bool Terrain::IsTerrainValid(Physics::PhysicsContainer& const physicsContainer)
 {
-	auto min = boundingBox.GetMinCoordinates();
-	auto range = boundingBox.GetMaxCoordinates() - min;
+	auto boundingBoxes = physicsContainer.GetBoundingVolume()->GetBoundingBoxes();
 
-	for (int x = min.x; x < min.x + range.x; x++)
+	for (auto bb : boundingBoxes)
 	{
-		for (int z = min.z; z < min.z + range.z; z++)
-		{
-			// Compare against grid. 
+		auto min = bb.GetMinCoordinates();
+		auto range = bb.GetMaxCoordinates() - min;
 
-			auto position = GetWorldPositionFromGrid({ x,min.y,z });
-			
-			// Check that the position is within tolorance
-			if (std::abs(position.y - min.y) > 5.0)
+		for (int x = min.x; x < min.x + range.x; x++)
+		{
+			for (int z = min.z; z < min.z + range.z; z++)
 			{
-				return false;
+				// Compare against grid. 
+
+				auto position = GetWorldPositionFromGrid({ x,min.y,z });
+				auto gridPos = GetGridSquare({ x,min.y,z });
+				// Check that the position is within tolorance and
+				// Grid is not already occupied.
+				if (std::abs(position.y - min.y) > 5.0 || heightPositionsGrid[gridPos.x][gridPos.y].occupied)
+				{
+					return false;
+				}
 			}
 		}
 	}
-
 	return true;
+}
+
+void Terrain::UpdateTerrain(Physics::PhysicsContainer& const physicsContainer, bool occupied)
+{
+	auto boundingBoxes = physicsContainer.GetBoundingVolume()->GetBoundingBoxes();
+
+	for (auto bb : boundingBoxes)
+	{
+		auto min = bb.GetMinCoordinates();
+		auto range = bb.GetMaxCoordinates() - min;
+
+		for (int x = min.x; x < min.x + range.x; x++)
+		{
+			for (int z = min.z; z < min.z + range.z; z++)
+			{
+				auto gridPos = GetGridSquare({ x,min.y,z });
+				heightPositionsGrid[gridPos.x][gridPos.y].occupied = occupied;
+			}
+		}
+	}
+}
+
+glm::ivec2 Terrain::GetGridSquare(glm::vec3 position)
+{
+	// Convert world space to local space. This needs to take into account the offset. 
+	float terrainX = position.x - GetParent()->GetPosition().x;
+	float terrainZ = position.z - GetParent()->GetPosition().z;
+
+	float gridSquare = m_length / (m_length - 1);
+	int gridX = (int)floor(terrainX / gridSquare);
+	int gridZ = (int)floor(terrainZ / gridSquare);
+
+	return { gridX, gridZ };
 }

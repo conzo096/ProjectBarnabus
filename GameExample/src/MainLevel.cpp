@@ -276,6 +276,12 @@ void MainLevel::BuildingKeyCallback(float deltaTime)
 		// If there is a selected item remove it.
 		if ( !m_selectedEntity.empty() && m_selectedEntity != "player" )
 		{
+			// Update the terrain if the entity is a building (callback/ event would be a better way of handling this)
+			if (m_selectedEntity.find(std::string("Building")) != std::string::npos)
+			{
+				GetEntity("terrain")->GetComponent<Terrain>().UpdateTerrain(*GetEntity(m_selectedEntity)->GetCompatibleComponent<Physics::PhysicsContainer>(), false);
+			}
+
 			RemoveEntity(m_selectedEntity);
 			m_selectedEntity.clear();
 		}
@@ -311,19 +317,14 @@ void MainLevel::BuildingKeyCallback(float deltaTime)
 		mat.emissive = glm::vec4(0, 1, 0, 1);
 		m_tempEntity->GetComponent<Model>().SetMaterial(mat);
 
-		auto boundingVolumes = m_tempEntity->GetComponent<Physics::PhysicsContainer>().GetBoundingVolume();
 		bool positionInvalid = false;
-		for (auto bb : boundingVolumes->GetBoundingBoxes())
+		if (!GetEntity("terrain")->GetComponent<Terrain>().IsTerrainValid(*m_tempEntity->GetCompatibleComponent<Physics::PhysicsContainer>()))
 		{
-			if (!GetEntity("terrain")->GetComponent<Terrain>().IsTerrainValid(bb))
-			{
-				Material mat;
-				mat.emissive = glm::vec4(1, 0, 0, 1);
-				m_tempEntity->GetComponent<Model>().SetMaterial(mat);
+			Material mat;
+			mat.emissive = glm::vec4(1, 0, 0, 1);
+			m_tempEntity->GetComponent<Model>().SetMaterial(mat);
 
-				positionInvalid = true;
-				break;
-			}
+			positionInvalid = true;
 		}
 
 		// Check mouse button states.
@@ -338,6 +339,7 @@ void MainLevel::BuildingKeyCallback(float deltaTime)
 		else if (leftClickState == GLFW_PRESS && !positionInvalid)
 		{
 			m_tempEntity->GetComponent<Model>().SetMaterial(Material());
+			GetEntity("terrain")->GetComponent<Terrain>().UpdateTerrain(*m_tempEntity->GetCompatibleComponent<Physics::PhysicsContainer>(),true);
 			m_tempEntity = NULL;
 		}
 
@@ -357,7 +359,7 @@ void MainLevel::BuildingKeyCallback(float deltaTime)
 			}
 		}
 	}
-	if (newState == GLFW_PRESS && m_oldMouseState == GLFW_PRESS && !m_selectedEntity.empty()) // Dragging actions.
+	if (newState == GLFW_PRESS && m_oldMouseState == GLFW_PRESS && !m_selectedEntity.empty() && !m_tempEntity) // Dragging actions.
 	{
 		// Move entity
 		auto builderCam = GetEntity("builderCamera")->GetCompatibleComponent<FreeCamera>();
