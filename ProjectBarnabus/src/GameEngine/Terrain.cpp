@@ -173,8 +173,12 @@ bool Terrain::IsTerrainValid(Physics::PhysicsContainer& const physicsContainer)
 				auto position = GetWorldPositionFromGrid({ x,min.y,z });
 				auto gridPos = GetGridSquare({ x,min.y,z });
 				// Check that the position is within tolorance and
-				// Grid is not already occupied.
-				if (std::abs(position.y - min.y) > 5.0 || heightPositionsGrid[gridPos.x][gridPos.y].occupied)
+				// Grid is not already occupied and within bounds 
+				// 
+				auto outOfBounds = (gridPos.x >= m_length - 1 || gridPos.y >= m_length - 1 ||
+					gridPos.x < 0 || gridPos.y < 0);
+
+				if (outOfBounds || std::abs(position.y - min.y) > 5.0 || heightPositionsGrid[gridPos.x][gridPos.y].occupied)
 				{
 					return false;
 				}
@@ -198,7 +202,14 @@ void Terrain::UpdateTerrain(Physics::PhysicsContainer& const physicsContainer, b
 			for (int z = min.z; z < min.z + range.z; z++)
 			{
 				auto gridPos = GetGridSquare({ x,min.y,z });
-				heightPositionsGrid[gridPos.x][gridPos.y].occupied = occupied;
+				auto outOfBounds = (gridPos.x >= m_length - 1 || gridPos.y >= m_length - 1 ||
+					gridPos.x < 0 || gridPos.y < 0);
+	
+
+				if (!outOfBounds)
+				{
+					heightPositionsGrid[gridPos.x][gridPos.y].occupied = occupied;
+				}
 			}
 		}
 	}
