@@ -304,15 +304,19 @@ void MainLevel::BuildingKeyCallback(float deltaTime)
 	far.z -= 1.0f;
 	ray.SetDirection(glm::normalize(far - near));
 
-	// Handle mouse actions
+	// camera ray to terrain.
+	glm::vec3 cameraRayPosToTerrain = (ray.GetDirection() * builderCam->GetPosition().y) + ray.GetPosition();
+	cameraRayPosToTerrain = GetEntity("terrain")->GetComponent<Terrain>().GetWorldPositionFromGrid(cameraRayPosToTerrain);
 
+	// Handle mouse actions
+	auto rightClickState = glfwGetMouseButton(BarnabusGameEngine::Get().GetWindow(), GLFW_MOUSE_BUTTON_RIGHT);
+	auto leftClickState = glfwGetMouseButton(BarnabusGameEngine::Get().GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
+	
 	// First, handle if an entity has already been created
-	if ( m_tempEntity )
+	if (m_tempEntity)
 	{
 		// Update entity position 
-		glm::vec3 newPosition = (ray.GetDirection() * builderCam->GetPosition().y) + ray.GetPosition();
-		newPosition = GetEntity("terrain")->GetComponent<Terrain>().GetWorldPositionFromGrid(newPosition);
-		m_tempEntity->SetPosition(newPosition);
+		m_tempEntity->SetPosition(cameraRayPosToTerrain);
 		Material mat;
 		mat.emissive = glm::vec4(0, 1, 0, 1);
 		m_tempEntity->GetComponent<Model>().SetMaterial(mat);
@@ -327,10 +331,6 @@ void MainLevel::BuildingKeyCallback(float deltaTime)
 			positionInvalid = true;
 		}
 
-		// Check mouse button states.
-		auto rightClickState = glfwGetMouseButton(BarnabusGameEngine::Get().GetWindow(), GLFW_MOUSE_BUTTON_RIGHT);
-		auto leftClickState = glfwGetMouseButton(BarnabusGameEngine::Get().GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
-
 		if (rightClickState == GLFW_PRESS)
 		{
 			RemoveEntity(m_tempEntity->GetName());
@@ -339,40 +339,28 @@ void MainLevel::BuildingKeyCallback(float deltaTime)
 		else if (leftClickState == GLFW_PRESS && !positionInvalid)
 		{
 			m_tempEntity->GetComponent<Model>().SetMaterial(Material());
-			GetEntity("terrain")->GetComponent<Terrain>().UpdateTerrain(*m_tempEntity->GetCompatibleComponent<Physics::PhysicsContainer>(),true);
+			GetEntity("terrain")->GetComponent<Terrain>().UpdateTerrain(*m_tempEntity->GetCompatibleComponent<Physics::PhysicsContainer>(), true);
 			m_tempEntity = NULL;
 		}
-
 	}
-
-	// Handle left click
-	int newState = glfwGetMouseButton(BarnabusGameEngine::Get().GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
-	if (newState == GLFW_RELEASE && m_oldMouseState == GLFW_PRESS)
+	else
 	{
-		for (auto const& entity : entities)
+		// Check if we are selecting an object
+		if (leftClickState == GLFW_PRESS)
 		{
-			glm::vec3 poi;
-			if (ray.IsCollision(*entity.second, poi))
+			m_selectedEntity.clear();
+			// Check through all entities and see if any are to be selected
+			for (auto const& entity : entities)
 			{
-				m_selectedEntity = entity.first;
-				return;
+				glm::vec3 poi;
+				if (ray.IsCollision(*entity.second, poi))
+				{
+					m_selectedEntity = entity.first;
+					break;
+				}
 			}
 		}
 	}
-	if (newState == GLFW_PRESS && m_oldMouseState == GLFW_PRESS && !m_selectedEntity.empty() && !m_tempEntity) // Dragging actions.
-	{
-		// Move entity
-		auto builderCam = GetEntity("builderCamera")->GetCompatibleComponent<FreeCamera>();
-		glm::vec3 newPosition = (ray.GetDirection() * builderCam->GetPosition().y) + ray.GetPosition();
-		newPosition.y = 0;
-		GetEntity(m_selectedEntity)->SetPosition(newPosition);
-	}
-	if (newState == GLFW_RELEASE && m_oldMouseState == GLFW_RELEASE && !m_selectedEntity.empty())
-	{
-		m_selectedEntity.clear();
-	}
-
-	m_oldMouseState = newState;
 }
 
 Entity * MainLevel::GetEntityFromPool(ObjectPool::ObjectPoolType poolType)
