@@ -43,6 +43,7 @@
 packages/*
 .vs/ProjectBarnabus/v15/*
 .vs/ProjectBarnabus/ProjectBarnabus/v15/*
+.vs/*
 ProjectBarnabusTest/x64/Debug/*
 ProjectBarnabusTest/x64/Release/*
 x64/Debug/*

@@ -12,5 +12,5 @@ public:
 	bool Render(float deltaTime) override;
 
 private:
-	MainLevel mainScene;
+	BarnabusFramework::MainLevel mainScene;
 };

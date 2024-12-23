@@ -4,6 +4,7 @@
 #include "Light.h"
 #include "IFramebuffer.h"
 
+#include <memory>
 #include <GLFW\glfw3.h>
 
 class IRenderer

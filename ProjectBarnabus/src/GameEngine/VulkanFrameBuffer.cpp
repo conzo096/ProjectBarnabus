@@ -1,6 +1,7 @@
 #include "VulkanFrameBuffer.h"
 #include "VulkanUtils.h"
 #include <array>
+#include <stdexcept>
 
 VulkanFrameBuffer::VulkanFrameBuffer()
 {

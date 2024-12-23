@@ -1,6 +1,7 @@
 #pragma once
 #include "IRenderer.h"
 #include <map>
+#include <memory>
 
 class IShader;
 class UiQuad;

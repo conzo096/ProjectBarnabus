@@ -1,4 +1,5 @@
 #include "VulkanUtils.h"
+#include <stdexcept>
 
 /// <summary>Creates an image view</summary>
 /// <param name="device">logical device that creates the image view.</param>  
