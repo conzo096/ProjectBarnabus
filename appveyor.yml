@@ -3,6 +3,7 @@ image:
 
 before_build:
 
+- cmd: nuget restore
 - ps: Start-FileDownload 'https://vulkan.lunarg.com/sdk/download/1.3.290.0/windows/VulkanSDK-1.3.290.0-Installer.exe?Human=true'
 - cmd: VulkanSDK-1.3.290.0-Installer.exe --accept-licenses --default-answer --confirm-command install
 - cmd: set VULKAN_SDK=C:\VulkanSDK\1.3.290.0
