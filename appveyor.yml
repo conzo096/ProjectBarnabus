@@ -21,10 +21,10 @@ artifacts:
   - path: myapp.zip
     name: MyApp
 
-test_script:
-- 'x64\Debug\ProjectBarnabusTest.exe --gtest_output=xml:report.xml'
+#test_script:
+#- 'x64\Debug\ProjectBarnabusTest.exe --gtest_output=xml:report.xml'
 
-after_test:
-- ps:
-    $wc = New-Object 'System.Net.WebClient'
-    $wc.UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\report.xml))
+#after_test:
+#- ps:
+#    $wc = New-Object 'System.Net.WebClient'
+#    $wc.UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\report.xml))
