@@ -14,6 +14,8 @@ test:
     - glew32.dll
     - glfw3d.dll
 
+after_build:
+- 7z a myapp.zip %APPVEYOR_BUILD_FOLDER%\x64\Debug\*
 
 test_script:
 - 'x64\Debug\ProjectBarnabusTest.exe --gtest_output=xml:report.xml'
