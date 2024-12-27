@@ -7,6 +7,14 @@ before_build:
 - cmd: VulkanSDK-1.3.290.0-Installer.exe --accept-licenses --default-answer --confirm-command install
 - cmd: set VULKAN_SDK=C:\VulkanSDK\1.3.290.0
 
+test:
+  assemblies:
+    only:
+    - assimpd.dll
+    - glew32.dll
+    - glfw3d.dll
+
+
 test_script:
 - 'x64\Debug\ProjectBarnabusTest.exe --gtest_output=xml:report.xml'
 
