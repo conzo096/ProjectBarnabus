@@ -11,4 +11,6 @@ int main(int argc, char *argv[])
 	{
 		std::cout << "Error in tests: " << ex.what() << std::endl;
 	}
+
+	return 0;
 }
