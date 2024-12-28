@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.106
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33414.496
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ProjectBarnabus", "ProjectBarnabus\ProjectBarnabus.vcxproj", "{BDEA051C-068A-49E9-A13B-B6FAF6C867C7}"
 EndProject
@@ -14,6 +14,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameExample", "GameExample\
 	ProjectSection(ProjectDependencies) = postProject
 		{BDEA051C-068A-49E9-A13B-B6FAF6C867C7} = {BDEA051C-068A-49E9-A13B-B6FAF6C867C7}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BarnabusTests", "BarnabusTests\BarnabusTests.vcxproj", "{5A975125-6D99-4868-A32C-CFA47654BDA3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,14 @@ Global
 		{FA84004E-1E43-4D79-9B08-6CE9BAD520C0}.Release|x64.ActiveCfg = Release|x64
 		{FA84004E-1E43-4D79-9B08-6CE9BAD520C0}.Release|x64.Build.0 = Release|x64
 		{FA84004E-1E43-4D79-9B08-6CE9BAD520C0}.Release|x86.ActiveCfg = Release|x64
+		{5A975125-6D99-4868-A32C-CFA47654BDA3}.Debug|x64.ActiveCfg = Debug|x64
+		{5A975125-6D99-4868-A32C-CFA47654BDA3}.Debug|x64.Build.0 = Debug|x64
+		{5A975125-6D99-4868-A32C-CFA47654BDA3}.Debug|x86.ActiveCfg = Debug|Win32
+		{5A975125-6D99-4868-A32C-CFA47654BDA3}.Debug|x86.Build.0 = Debug|Win32
+		{5A975125-6D99-4868-A32C-CFA47654BDA3}.Release|x64.ActiveCfg = Release|x64
+		{5A975125-6D99-4868-A32C-CFA47654BDA3}.Release|x64.Build.0 = Release|x64
+		{5A975125-6D99-4868-A32C-CFA47654BDA3}.Release|x86.ActiveCfg = Release|Win32
+		{5A975125-6D99-4868-A32C-CFA47654BDA3}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

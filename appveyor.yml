@@ -22,7 +22,7 @@ artifacts:
     name: MyApp
 
 test_script:
-- cmd: x64\Debug\ProjectBarnabusTest.exe --gtest_output=xml:report.xml
+- cmd: x64\Debug\BarnabusTests.exe --gtest_output=xml:report.xml
 
 after_test:
 - ps:
