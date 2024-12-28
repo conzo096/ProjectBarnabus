@@ -18,12 +18,12 @@ after_build:
 - 7z a myapp.zip %APPVEYOR_BUILD_FOLDER%\x64\Debug\*
 
 artifacts:
-  - path: myapp.zip
-    name: MyApp
+- path: myapp.zip
+  name: MyApp
 
 test_script:
 - cmd: x64\Debug\BarnabusTests.exe --gtest_output=xml:report.xml
 
-on_finish:
-  - sh: |
-      find "$APPVEYOR_BUILD_FOLDER" -type f -name 'report*.xml' -print0 | xargs -0 -I '{}' curl -F 'file=@{}' "https://ci.appveyor.com/api/testresults/junit/$APPVEYOR_JOB_ID"
+after_test:
+- sh: |
+    find "$APPVEYOR_BUILD_FOLDER" -type f -name 'report*.xml' -print0 | xargs -0 -I '{}' curl -F 'file=@{}' "https://ci.appveyor.com/api/testresults/junit/$APPVEYOR_JOB_ID"
